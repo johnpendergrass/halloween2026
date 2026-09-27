@@ -1,6 +1,6 @@
 # Halloween 2026 — Technical Specifications
 
-Last updated: 2026-09-27 14:43 (first day, second stretch)
+Last updated: 2026-09-27 16:34 (first day, third stretch)
 
 ## 1. Stack and hosting
 
@@ -21,7 +21,7 @@ index.html                 the app: 9:16 frame, top panel, game panel with <ifra
 manifest.json              Android/desktop full-screen ("standalone", portrait); icons: [] (TODO)
 app/styles.css             app CSS (frame, panels, drawer) - moved from the mockup
 app/app.js                 GAMES list, drawer, tabs, loadGame/startGame/goHome
-games/game0/               the home game (placeholder page for now)
+games/game0/               the home game: pumpkin patch + rising silhouettes (2025 art in assets/)
 games/game1/               Pie Maker: index.html, game1.css, game1.js, assets/pumpkin.svg, pie.svg
 games/game2..4/            placeholder pages
 games/*/README - <NAME>.md                   how each game was made
@@ -120,6 +120,27 @@ requirements doc are estimates (browser toolbars vary).
   `z-index: 1`, pumpkins `2`, so pies never block taps.
 - Settings constants at the top of game1.js (count 10, size 0.13–0.24,
   speed 0.08–0.22 widths/s with small = fast, spin ±60°/s).
+
+## 4d. game0 (Home) implementation notes
+
+- `.scene` div: `height: 100%`, `aspect-ratio: 950 / 714`,
+  `left: calc((100vw - 100vh * 950 / 714) * var(--crop-from-left))`, body
+  `overflow: hidden`. Everything inside is placed in **% of the painting**,
+  so the character always lines up with the layers at any panel size.
+- Layers back to front (DOM order): BACKGROUND painting, `#character`,
+  `justBelowHorizon` (tree line + field, sky transparent).
+- Character: `height: 35%`, `top: 54.2%` (2025's 250px at y 387 on 714).
+  Rise = CSS transition on `translate` to `0 -96%` (class `is-up`, % of
+  its own height); mirror = `scale: -1 1` (class `is-mirrored`), separate
+  properties so they don't fight. JS sets `transition-duration` each time.
+- JS: `rise()` → `afterSeconds(rise + topWait, sink)` → `sink()` →
+  `afterSeconds(sink + hiddenWait, rise)`. setTimeout chain, no
+  animationend. Settings at top of game0.js (`RISE_TIME`, `WAIT_AT_TOP`,
+  `WAIT_HIDDEN`, `FIRST_WAIT`, `LEFT_MOST`/`RIGHT_MOST` = 14–40%).
+- `assets/pumpkin_patch_950x714_justBelowPumpkins.png` is unused (front
+  popup dropped); kept because Claude can't delete files (deny list).
+- Measured 2026-09-27 at 390×844 in the app: panel 382 × 594, scene 790
+  wide, left −102. The 404 in the console is `/favicon.ico` (no icon yet).
 
 ## 5. iPhone "app" mode
 

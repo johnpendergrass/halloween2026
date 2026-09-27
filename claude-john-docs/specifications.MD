@@ -1,6 +1,6 @@
 # Halloween 2026 — Specifications (design decisions)
 
-Last updated: 2026-09-27 14:43 (first day, second stretch)
+Last updated: 2026-09-27 16:34 (first day, third stretch)
 
 This file records WHAT the app looks like and WHY. Technical "how" lives in
 `specifications-technical.MD`. Companion notes in this folder:
@@ -159,6 +159,27 @@ the edges; tap → pumpkin pie (stays put); timer from load to last pie;
 Play again. Sizes 13%–24% of width (was 12%; changed so the smallest is
 44px on iPhone SE). Timer not reported to the app yet (later comms test),
 and the number of pumpkins will later be a setting.
+
+## 6c. Home game: pumpkin patch (game0)
+
+Reused from the Halloween 2025 title screen (John, 2026-09-27): a painted
+pumpkin patch under a full moon; a character silhouette (19 of them:
+Batman, Totoro, Toy Story, etc.) slowly rises from behind the tree line,
+waits, sinks. Decisions:
+- **Art fit = "option 1"**: the 950 × 714 paintings are scaled so their
+  HEIGHT fills the game panel, sides cropped (`--crop-from-left: 0.25`
+  keeps the moon + big pumpkins). Looks soft (enlarged ~2.5× on a ×3
+  phone); accepted as a first try. Later options: painting in the lower
+  part with dark sky above, or new tall art at 1296 × 2016.
+- **Only the horizon popup.** A second popup behind the front pumpkins was
+  tried and dropped: the open bottom panel on the home screen covers that
+  area, so it was almost always hidden (likely why 2025 dropped it too).
+- **Timing**: rise 2–4 s, wait at top 1–4 s, sink 1 s faster than the rise,
+  hidden **4–12 s (middle 8 s; John asked for ~20% faster than 2025's
+  5–15 s)**. Characters dealt from a shuffled deck (no repeats until all
+  have shown); mirrored on the right half so they face inward.
+- Known: the open bottom panel hides the lower 55% of the scene on the
+  home screen; some silhouettes have a light halo (2025 files).
 
 ## 7. Lessons from Halloween2025 (`D:\dev\projects\halloween2025`)
 

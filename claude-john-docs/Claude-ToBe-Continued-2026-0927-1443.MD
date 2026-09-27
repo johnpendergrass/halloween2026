@@ -66,4 +66,21 @@ game folder; master = the game0 copy).
 - Mini-game spec extras: file/folder naming, file-size limits, sound rules,
   submit/test process, `CLAUDE.md`/`AGENTS.md`, template game, checker.
 - "Please rotate your phone" message; icons; GitHub Pages; friend workflow.
+- **CONSIDER: Chinese language switch for the whole app** (John, 2026-09-27;
+  display only, no keyboard entry). Simplified vs Traditional undecided
+  (depends on audience; could support both). Notes:
+  - Pages are already UTF-8. Use system fonts (font stack: Arial,
+    "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif) and set
+    `lang="zh-Hans"` / `lang="zh-Hant"`. No full Chinese web fonts (5-20 MB);
+    subset with pyftsubset, or draw titles as art.
+  - Design doc rules to add: Medium (58 canvas px) is the minimum size for
+    Chinese, no italics, line spacing ~1.5, ~20 chars/line at Medium.
+    Pinyin via `<ruby>`.
+  - A switch needs: app text in a per-language table, a language setting,
+    and the app telling each game the language (needs messaging first).
+    Games that can't do Chinese (spelling, anagrams) say "English only".
+  - Chinese game ideas: word search (找词, 2-4 character words / 成语),
+    find the odd character (汉字找茬, e.g. one 鬼 among look-alikes),
+    build a character (拼汉字, 木+木=林), idiom chain (成语接龙),
+    idiom fill-in (成语填空).
 - Deadline: 2026-10-31.

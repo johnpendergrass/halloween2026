@@ -1,7 +1,12 @@
-/* game0 - its own styles. Nothing here can affect the app or other games.
+/* game0 (Home) - its own styles. Nothing here can affect the app or other games.
 
    SIZING RULE: inside a game, 1vw = 1% of the GAME PANEL's width and
-   1vh = 1% of its height (the iframe is this page's whole "screen"). */
+   1vh = 1% of its height (the iframe is this page's whole "screen").
+
+   THE SCENE: the pumpkin patch paintings are 950 x 714 (wide). The scene
+   is scaled so its HEIGHT fills the panel; the sides are cropped off.
+   Everything inside the scene is positioned in % of the PAINTING, so the
+   characters always line up with the layers, whatever the panel's size. */
 
 * {
   box-sizing: border-box;
@@ -16,30 +21,63 @@ body {
 }
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
-  color: #2a2230;
-  background: #f5f1e8;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 10vw 6vw;
-  text-align: center;
+  background: #000;
+  /* No scrolling, zooming, text selection or "save image" pop-up. */
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
-.heading {
-  font-size: clamp(20px, 9vw, 46px);
-  font-weight: 900;
+/* ------------------------------------------------------------------------
+   The scene: as tall as the panel, as wide as the painting's shape needs.
+   --------------------------------------------------------------------- */
+
+.scene {
+  /* Which part of the painting's width to show:
+     0 = its left edge, 0.5 = the middle, 1 = its right edge.
+     0.25 keeps the moon and the big pumpkins in view. */
+  --crop-from-left: 0.25;
+
+  position: absolute;
+  top: 0;
+  height: 100%;
+  aspect-ratio: 950 / 714;
+  /* (panel width - scene width) is negative: that is how much is cut off. */
+  left: calc((100vw - 100vh * 950 / 714) * var(--crop-from-left));
 }
 
-.note {
-  margin-top: 3vw;
-  font-size: clamp(13px, 4.8vw, 26px);
-  color: #6b6272;
-  line-height: 1.4;
+.layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
-.size-readout {
-  margin-top: 4vw;
-  font-size: clamp(11px, 3.6vw, 18px);
-  color: #6b6272;
+/* ------------------------------------------------------------------------
+   The character (a silhouette). It rests just below the tree line, hidden
+   by the layer in front of it, and rises up above the trees.
+   game0.js sets which picture, how far across (left, in % of the
+   painting's width) and whether it is mirrored.
+   Sizes from last year's app: 250px tall, resting at y = 387, rising
+   240px, on the 714px-tall painting.
+   --------------------------------------------------------------------- */
+
+.character {
+  position: absolute;
+  height: 35%;   /* 250 / 714 */
+  width: auto;
+  top: 54.2%;    /* 387 / 714 */
+  transition-property: translate;
+  transition-timing-function: ease-in-out;
+  /* transition-duration is set by game0.js (random each time) */
+}
+
+.character.is-mirrored {
+  scale: -1 1;
+}
+
+/* Risen: slid up by 96% of its own height (240 of its 250px). */
+.character.is-up {
+  translate: 0 -96%;
 }

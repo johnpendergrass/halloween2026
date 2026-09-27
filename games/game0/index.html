@@ -3,16 +3,21 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>game0</title>
+    <title>Halloween 2026 - Home</title>
     <!-- This page is shown inside the app's game panel (an iframe), but it
      also works on its own: open games/game0/index.html directly to test it. -->
     <link rel="stylesheet" href="./game0.css" />
   </head>
 
   <body>
-    <h1 class="heading">game0</h1>
-    <p class="note">The home game. Shown at start and whenever no other game is active.</p>
-    <p class="size-readout" id="sizeReadout"></p>
+    <!-- The pumpkin patch scene. Listed back to front: each one covers the
+         ones above it in this list. The character hides behind the tree
+         line layer, then rises up above it. -->
+    <div class="scene">
+      <img class="layer" src="./assets/pumpkin_patch_BACKGROUND_950x714.png" alt="" draggable="false" />
+      <img class="character" id="character" alt="" draggable="false" />
+      <img class="layer" src="./assets/pumpkin_patch_950x714_justBelowHorizon.png" alt="" draggable="false" />
+    </div>
 
     <script src="./game0.js"></script>
   </body>
