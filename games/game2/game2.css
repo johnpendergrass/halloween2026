@@ -1,0 +1,45 @@
+/* game2 - its own styles. Nothing here can affect the app or other games.
+
+   SIZING RULE: inside a game, 1vw = 1% of the GAME PANEL's width and
+   1vh = 1% of its height (the iframe is this page's whole "screen"). */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #2a2230;
+  background: #dcebdc;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10vw 6vw;
+  text-align: center;
+}
+
+.heading {
+  font-size: clamp(20px, 9vw, 46px);
+  font-weight: 900;
+}
+
+.note {
+  margin-top: 3vw;
+  font-size: clamp(13px, 4.8vw, 26px);
+  color: #6b6272;
+  line-height: 1.4;
+}
+
+.size-readout {
+  margin-top: 4vw;
+  font-size: clamp(11px, 3.6vw, 18px);
+  color: #6b6272;
+}

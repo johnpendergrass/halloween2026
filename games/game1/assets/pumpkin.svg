@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- stem -->
+  <path d="M46 24 C45 13 50 6 58 3 L62 9 C56 12 53 17 54 24 Z" fill="#4f7a28"/>
+  <!-- outer ribs (darker), middle rib, and a soft highlight -->
+  <ellipse cx="30" cy="60" rx="23" ry="33" fill="#d2601a"/>
+  <ellipse cx="70" cy="60" rx="23" ry="33" fill="#d2601a"/>
+  <ellipse cx="50" cy="60" rx="25" ry="36" fill="#f07f22"/>
+  <ellipse cx="50" cy="58" rx="9" ry="32" fill="#f7a04a" opacity="0.6"/>
+</svg>

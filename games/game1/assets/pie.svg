@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- crust, seen from above -->
+  <circle cx="50" cy="50" r="47" fill="#b8793a"/>
+  <!-- crimped crust edge: a thick dashed ring with round ends -->
+  <circle cx="50" cy="50" r="41" fill="none" stroke="#e3ad68" stroke-width="9"
+          stroke-dasharray="5 4" stroke-linecap="round"/>
+  <!-- pumpkin filling -->
+  <circle cx="50" cy="50" r="34" fill="#c0601c"/>
+  <circle cx="44" cy="44" r="20" fill="#d4722a" opacity="0.6"/>
+  <!-- whipped cream -->
+  <circle cx="50" cy="50" r="12" fill="#fffaf0"/>
+  <circle cx="52" cy="47" r="6" fill="#ffffff"/>
+</svg>

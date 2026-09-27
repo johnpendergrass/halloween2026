@@ -4,82 +4,95 @@
     <meta charset="utf-8" />
 
     <!-- viewport-fit=cover lets the page reach under the iPhone notch and
-     home bar; the CSS then uses env(safe-area-inset-*) to keep the shell
-     clear of them. (Same setup as triageRush.) -->
+     home bar; the CSS then uses env(safe-area-inset-*) to keep the frame
+     clear of them. -->
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
-    <meta name="theme-color" content="#140c1c" />
 
     <!-- FULL-SCREEN "APP" MODE.
-     iPhone: when launched from a home-screen icon, these tags remove
-     Safari's address bar and toolbars. Android and desktop read
-     manifest.json instead for the same effect.
+     iPhone: when launched from a home-screen icon, these tags remove the
+     browser's address bar and toolbars. Android and desktop read
+     manifest.json instead.
      TODO: add an apple-touch-icon (180x180) once we have artwork. -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <!-- v6 TRIAL: "black-translucent" lets the purple page background show
+     behind the iPhone clock and battery. To undo: "black". iOS reads this
+     when the icon is ADDED, so delete and re-add the icon to see a change. -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Halloween 2026" />
+    <!-- v6 TRIAL: tints the browser's own bars. To undo: #07040a -->
+    <meta name="theme-color" content="#2e1a44" />
     <link rel="manifest" href="./manifest.json" />
 
     <title>Halloween 2026</title>
 
     <!-- The ?v= tag forces phones to fetch fresh code after a publish.
-     Change it (to today's date + a letter) whenever the code changes. -->
-    <link rel="stylesheet" href="./app/styles.css?v=2026-0927-scaffold1" />
+     Change it (and APP_VERSION in app.js) whenever the code changes. -->
+    <link rel="stylesheet" href="./app/styles.css?v=2026-0927-panels1" />
   </head>
 
   <body>
-    <!-- The 9:16 "phone" shell. Everything in the game lives inside it.
-     Only ONE view (screen) is visible at a time; app.js swaps them by
-     adding/removing the `hidden` attribute. -->
-    <div class="app-shell" id="appShell">
+    <!-- ======================================================================
+     THE 9:16 FRAME. Everything lives inside it. Top to bottom:
+       1. TOP PANEL     1/16 of the frame height, always visible
+       2. GAME PANEL    what is left -> 9:14. The current game's page is
+                        shown here in an <iframe>.
+       3. BOTTOM PANEL  a drawer. Closed = a full-width strip (1/16 tall).
+                        Open = slides up OVER the lower part of the game
+                        panel. The game panel never changes size.
+     ====================================================================== -->
+    <div class="app-shell">
 
-      <!-- ===================== HOME (the menu) ===================== -->
-      <section class="view view-home" id="view-home">
-        <h1 class="home-title">Halloween 2026</h1>
-        <p class="home-subtitle">Pick a game</p>
+      <!-- 1. TOP PANEL -->
+      <header class="top-panel">
+        <button class="top-icon" id="homeButton" aria-label="Home">🏠</button>
+        <div class="top-title" id="topTitle">Halloween 2026</div>
+        <button class="top-icon" id="menuButton" aria-label="Open or close panel">☰</button>
+      </header>
 
-        <nav class="menu">
-          <!-- data-show names the view a button opens. -->
-          <button class="menu-button" data-show="game1">Game 1</button>
-          <button class="menu-button" data-show="game2">Game 2</button>
-          <button class="menu-button" data-show="game3">Game 3</button>
-          <button class="menu-button" data-show="game4">Game 4</button>
-        </nav>
-      </section>
+      <div class="play-area">
 
-      <!-- ===================== GAME 1 ===================== -->
-      <section class="view view-game" id="view-game1" hidden>
-        <h2 class="game-title">Game 1</h2>
-        <p class="game-text">Game 1 will go here.</p>
-        <button class="home-button" data-show="home">Return to Home</button>
-      </section>
+        <!-- 2. GAME PANEL: app.js sets the iframe's src to the chosen
+         game's page, e.g. ./games/game1/index.html -->
+        <main class="game-panel">
+          <iframe class="game-frame" id="gameFrame" title="Game"></iframe>
+        </main>
 
-      <!-- ===================== GAME 2 ===================== -->
-      <section class="view view-game" id="view-game2" hidden>
-        <h2 class="game-title">Game 2</h2>
-        <p class="game-text">Game 2 will go here.</p>
-        <button class="home-button" data-show="home">Return to Home</button>
-      </section>
+        <!-- 3. BOTTOM PANEL: the strip + the content. Starts OPEN. -->
+        <section class="drawer is-open" id="drawer">
+          <button class="drawer-strip" id="drawerStrip" aria-label="Close panel">
+            <span class="drawer-arrow"></span>
+          </button>
 
-      <!-- ===================== GAME 3 ===================== -->
-      <section class="view view-game" id="view-game3" hidden>
-        <h2 class="game-title">Game 3</h2>
-        <p class="game-text">Game 3 will go here.</p>
-        <button class="home-button" data-show="home">Return to Home</button>
-      </section>
+          <!-- `inert` is added while the panel is closed, so its hidden
+           buttons cannot be reached with the keyboard. -->
+          <div class="drawer-content" id="drawerContent">
+            <div class="drawer-tabs">
+              <button class="is-active" data-tab="app">App</button>
+              <button data-tab="game">This Game</button>
+            </div>
 
-      <!-- ===================== GAME 4 ===================== -->
-      <section class="view view-game" id="view-game4" hidden>
-        <h2 class="game-title">Game 4</h2>
-        <p class="game-text">Game 4 will go here.</p>
-        <button class="home-button" data-show="home">Return to Home</button>
-      </section>
+            <!-- App tab: app.js fills in one button per game from GAMES. -->
+            <div class="drawer-body" id="tab-app">
+              <div class="game-buttons" id="gameButtons"></div>
+            </div>
 
+            <div class="drawer-body" id="tab-game" hidden>
+              <p><strong>This game's info</strong></p>
+              <ul>
+                <li>High scores for this game</li>
+                <li>Settings for this game</li>
+                <li>How to play</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+      </div>
     </div>
 
-    <script src="./app/app.js?v=2026-0927-scaffold1"></script>
+    <script src="./app/app.js?v=2026-0927-panels1"></script>
   </body>
 </html>

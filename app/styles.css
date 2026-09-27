@@ -1,31 +1,45 @@
 /* ============================================================================
-   Halloween 2026 - styles.css
+   Halloween 2026 - app/styles.css   (the APP only; each game has its own CSS)
 
    Section map:
-     1. Colors and base
-     2. The page "stage" and the 9:16 shell   (borrowed from triageRush)
-     3. Shared helpers
-     4. HOME view (the menu)
-     5. GAME views (placeholder screens)
+     1. Colours and base
+     2. The page "stage" and the 9:16 frame   (borrowed from triageRush)
+     3. Top panel
+     4. Game panel + the game's iframe
+     5. Bottom panel (the drawer)
      6. Reduced motion
 
-   SIZING RULE: inside the shell, sizes use `cqw` units.
-   1cqw = 1% of the SHELL's width (not the browser window's), so the whole
+   SIZING RULE: inside the frame, sizes use `cqw` units.
+   1cqw = 1% of the FRAME's width (not the browser window's), so the whole
    layout scales together on phone, tablet and PC. clamp(min, preferred, max)
    keeps things from getting too tiny or too huge.
    ========================================================================= */
 
 /* ------------------------------------------------------------------------
-   1. Colors and base
+   1. Colours and base
+   Every layer has its own colour AND a visible edge, so the layers are easy
+   to tell apart. These are placeholders for judging layout, not final art.
    --------------------------------------------------------------------- */
 
 :root {
-  --off-white: #f5f1e8;   /* the shell's background */
-  --ink: #2a2230;         /* main text */
-  --ink-soft: #6b6272;    /* quieter text */
-  --pumpkin: #e8741c;     /* menu buttons */
+  --ink: #2a2230;
+  --pumpkin: #e8741c;
   --pumpkin-dark: #b85510;
-  --night: #140c1c;       /* dark stage around the shell */
+
+  /* v6 TRIAL: the stage (outside the frame) matches the top panel purple.
+     TO UNDO: set back to #07040a, and change the two "v6 TRIAL" meta tags
+     in index.html back to "black" and #07040a. */
+  --stage-bg: #2e1a44;
+  --frame-edge: #e8741c;
+  --top-bg: #2e1a44;
+  --top-edge: #9b7cc4;
+  --game-bg: #eae2d2;      /* shows only while a game page is loading */
+  --drawer-bg: #173229;
+  --drawer-edge: #5fbf8f;
+
+  /* How far the bottom panel rises when open, as a share of the game
+     panel's height. */
+  --drawer-open-share: 0.55;
 }
 
 * {
@@ -40,13 +54,37 @@ body {
   overflow: hidden; /* the outer page never scrolls */
 }
 
+/* The hidden attribute must always win, even over display: flex. */
+[hidden] {
+  display: none !important;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  -webkit-tap-highlight-color: transparent;
+  /* Stops iOS zooming in on a quick double tap. */
+  touch-action: manipulation;
+}
+
+button:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: -3px;
+}
+
+/* ------------------------------------------------------------------------
+   2. The stage and the 9:16 frame (copied from triageRush, verified).
+   The frame fits whichever is smaller - screen width or screen height -
+   and keeps exactly 9:16. 0.5625 = 9/16, 1.7778 = 16/9.
+   --------------------------------------------------------------------- */
+
 body {
   font-family: Arial, Helvetica, sans-serif;
   color: var(--ink);
-  /* Dark spotlit stage behind the shell - on a PC it looks like a phone
-     lying on a desk. */
-  background: radial-gradient(circle at 50% 20%,
-    #3a2448 0%, #1e1228 40%, #07040a 100%);
+  background: var(--stage-bg);
   min-height: 100dvh;
   display: grid;
   place-items: center;
@@ -59,41 +97,33 @@ body {
     max(4px, env(safe-area-inset-left));
 }
 
-button {
-  font: inherit;
-  color: inherit;
-  cursor: pointer;
-  border: none;
-  background: none;
-  -webkit-tap-highlight-color: transparent;
-  /* Stops iOS zooming in on a quick double tap (pinch zoom still works). */
-  touch-action: manipulation;
-}
-
-button:focus-visible {
-  outline: 3px solid var(--ink);
-  outline-offset: 2px;
-}
-
-/* ------------------------------------------------------------------------
-   2. The 9:16 shell (copied from triageRush, verified 2026-09-27).
-   The shell fits whichever is smaller - screen width or screen height -
-   and keeps exactly 9:16. 0.5625 = 9/16, 1.7778 = 16/9.
-   --------------------------------------------------------------------- */
-
 .app-shell {
   position: relative;
   width: min(calc(100vw - 8px), calc(90dvh * 0.5625));
   height: min(90dvh, calc((100vw - 8px) * 1.7778));
   overflow: hidden;
-  background: var(--off-white);
-  box-shadow: 0 24px 80px #000c;
   container-type: inline-size; /* this is what makes cqw work */
-  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+
+  /* Slightly rounded corners on EVERY device. The top and bottom panels
+     use the same number so their outer corners follow the frame. */
+  --frame-radius: clamp(8px, 2.6cqw, 16px);
+  border-radius: var(--frame-radius);
+
+  /* The frame's edge, drawn as an outline so it takes no space. */
+  outline: 2px solid var(--frame-edge);
+  box-shadow: 0 24px 80px #000c;
+
+  /* THE key number: the top panel and the bottom strip are each 1/16 of
+     the frame's height. The frame is 16/9 of its width tall, so
+     1/16 of the height = 1/9 of the width = 11.111cqw.
+     Two bars of 1/16 leave the game panel 14/16 tall -> 9:14. */
+  --bar-h: 11.111cqw;
 }
 
-/* Better version for browsers that know "svh" (the screen height with
-   the browser's toolbars showing), so toolbars can't cut off the shell. */
+/* Better version for browsers that know "svh" (the screen height with the
+   browser's toolbars showing), so toolbars can't cut off the frame. */
 @supports (height: 100svh) {
   .app-shell {
     width: min(
@@ -109,123 +139,201 @@ button:focus-visible {
   }
 }
 
-/* Rounded corners only when the shell floats with room around it
-   (PC / tablet), not when it fills a phone edge to edge. */
-@media (min-width: 700px) and (min-height: 800px) {
-  .app-shell {
-    border-radius: 10px;
-  }
-}
-
 /* ------------------------------------------------------------------------
-   3. Shared helpers
+   3. TOP PANEL - always visible.
+   Rounded on its two TOP corners to match the frame; its bottom edge
+   (against the game panel) stays square and crisp.
    --------------------------------------------------------------------- */
 
-/* The hidden attribute must always win, even over display: flex. */
-[hidden] {
-  display: none !important;
-}
-
-/* Every view fills the whole shell. */
-.view {
-  position: absolute;
-  inset: 0;
+.top-panel {
+  height: var(--bar-h);
+  flex: 0 0 auto;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  padding: 8cqw 6cqw;
+  gap: 2cqw;
+  padding: 0 2cqw;
+  border-radius: var(--frame-radius) var(--frame-radius) 0 0;
+  background: var(--top-bg);
+  /* Drawn INSIDE the bar's height, so the bar stays exactly --bar-h tall -
+     the same as the bottom strip. */
+  border-bottom: 2px solid var(--top-edge);
+  color: #fff;
+}
+
+.top-icon {
+  height: 100%;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  font-size: clamp(16px, 6cqw, 30px);
+}
+
+.top-title {
+  flex: 1;
+  text-align: center;
+  font-weight: 900;
+  font-size: clamp(14px, 5cqw, 26px);
+  white-space: nowrap;
 }
 
 /* ------------------------------------------------------------------------
-   4. HOME view (the menu)
+   4. GAME PANEL - everything below the top panel and above the bottom
+   strip. The bottom panel slides around inside .play-area.
    --------------------------------------------------------------------- */
 
-.home-title {
-  font-size: clamp(24px, 10cqw, 56px);
-  font-weight: 900;
-  margin-top: 6cqw;
-  text-align: center;
+.play-area {
+  position: relative;
+  flex: 1 1 auto;
+  overflow: hidden;
 }
 
-.home-subtitle {
-  font-size: clamp(14px, 4.5cqw, 24px);
-  color: var(--ink-soft);
-  margin-top: 2cqw;
+/* Stops exactly where the bottom strip begins -> 9:14. */
+.game-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: var(--bar-h);
+  overflow: hidden;
+  background: var(--game-bg);
 }
 
-/* The four buttons stack in a column, centered in the space left over. */
-.menu {
-  flex: 1;
+/* The game's own page fills the game panel exactly. Inside that page,
+   100vw x 100vh = the game panel, so games size themselves with ordinary
+   vw/vh units. */
+.game-frame {
+  display: block;
   width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------------
+   5. BOTTOM PANEL (the drawer)
+   One piece: the full-width strip on top, the panel content below.
+   Its height = the strip + a share of the game panel.
+   CLOSED: slid down so only the strip shows, in its own space.
+   OPEN:   slid up, covering the lower part of the game panel.
+   --------------------------------------------------------------------- */
+
+.drawer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: calc(var(--bar-h) + (100% - var(--bar-h)) * var(--drawer-open-share));
+  z-index: 5;
+  /* Rounded on its two BOTTOM corners to match the frame. */
+  border-radius: 0 0 var(--frame-radius) var(--frame-radius);
+  background: var(--drawer-bg);
+  /* Inside the height, so the visible closed strip is exactly --bar-h. */
+  border-top: 2px solid var(--drawer-edge);
+  color: #fff;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 5cqw;
+  transform: translateY(calc(100% - var(--bar-h)));
+  transition: transform 300ms ease, box-shadow 300ms ease;
 }
 
-.menu-button {
+/* The shadow only exists while open (closed, it leaked up as a smudge). */
+.drawer.is-open {
+  transform: translateY(0);
+  box-shadow: 0 -2cqw 6cqw #0006;
+}
+
+/* The strip: the whole width is one big button.
+   bar-h minus the 2px edge above it, so edge + strip = bar-h. */
+.drawer-strip {
+  flex: 0 0 calc(var(--bar-h) - 2px);
   width: 100%;
-  min-height: 44px; /* comfortable finger target on the smallest phone */
-  padding: 4.5cqw 0;
+  display: grid;
+  place-items: center;
+}
+
+/* A gentle up arrow: a soft chevron drawn with two borders. It turns over
+   to point down when the panel is open. */
+.drawer-arrow {
+  width: 5cqw;
+  height: 5cqw;
+  border-left: 0.9cqw solid #fff;
+  border-top: 0.9cqw solid #fff;
+  border-radius: 0.4cqw;
+  opacity: 0.6;
+  transform: translateY(1.2cqw) rotate(45deg);
+  transition: transform 300ms ease;
+}
+
+.drawer.is-open .drawer-arrow {
+  transform: translateY(-1.2cqw) rotate(225deg);
+}
+
+.drawer-content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.drawer-tabs {
+  display: flex;
+  border-bottom: 1px solid #ffffff33;
+}
+
+.drawer-tabs button {
+  flex: 1;
+  min-height: 44px;
+  font-weight: 700;
+  font-size: clamp(13px, 4.2cqw, 22px);
+  opacity: 0.55;
+}
+
+.drawer-tabs button.is-active {
+  opacity: 1;
+  box-shadow: inset 0 -3px 0 var(--pumpkin);
+}
+
+.drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4cqw 6cqw;
+  font-size: clamp(13px, 4.2cqw, 22px);
+  line-height: 1.6;
+}
+
+.drawer-body li {
+  margin-left: 5cqw;
+}
+
+/* The game buttons: two per row. */
+.game-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4cqw;
+}
+
+.game-button {
+  min-height: 44px;
+  padding: 4cqw 0;
   border-radius: 3cqw;
   background: var(--pumpkin);
   color: #fff;
-  font-size: clamp(16px, 6cqw, 32px);
+  font-size: clamp(15px, 5.2cqw, 28px);
   font-weight: 700;
-  letter-spacing: 0.04em;
   box-shadow: 0 1.2cqw 0 var(--pumpkin-dark);
 }
 
-/* A little "press down" when tapped. */
-.menu-button:active {
+.game-button:active {
   transform: translateY(1cqw);
   box-shadow: 0 0.2cqw 0 var(--pumpkin-dark);
 }
 
 /* ------------------------------------------------------------------------
-   5. GAME views (placeholders for now)
-   --------------------------------------------------------------------- */
-
-.game-title {
-  font-size: clamp(22px, 9cqw, 48px);
-  font-weight: 900;
-  margin-top: 6cqw;
-}
-
-/* flex: 1 lets the text take the middle and pushes the button down. */
-.game-text {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  font-size: clamp(14px, 5cqw, 26px);
-  color: var(--ink-soft);
-  text-align: center;
-}
-
-.home-button {
-  min-height: 44px;
-  padding: 3.5cqw 7cqw;
-  border-radius: 3cqw;
-  border: 0.6cqw solid var(--ink);
-  font-size: clamp(14px, 4.8cqw, 24px);
-  font-weight: 700;
-}
-
-.home-button:active {
-  background: rgb(0 0 0 / 8%);
-}
-
-/* ------------------------------------------------------------------------
-   6. Reduced motion: people who turn on "reduce motion" get (almost) no
-   animation. Harmless now; matters once games start animating.
+   6. Reduced motion: no sliding for people who turn on "reduce motion".
    --------------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 1ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 1ms !important;
+  .drawer,
+  .drawer-arrow {
+    transition: none;
   }
 }
