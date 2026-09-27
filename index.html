@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+
+    <!-- viewport-fit=cover lets the page reach under the iPhone notch and
+     home bar; the CSS then uses env(safe-area-inset-*) to keep the shell
+     clear of them. (Same setup as triageRush.) -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#140c1c" />
+
+    <!-- FULL-SCREEN "APP" MODE.
+     iPhone: when launched from a home-screen icon, these tags remove
+     Safari's address bar and toolbars. Android and desktop read
+     manifest.json instead for the same effect.
+     TODO: add an apple-touch-icon (180x180) once we have artwork. -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="Halloween 2026" />
+    <link rel="manifest" href="./manifest.json" />
+
+    <title>Halloween 2026</title>
+
+    <!-- The ?v= tag forces phones to fetch fresh code after a publish.
+     Change it (to today's date + a letter) whenever the code changes. -->
+    <link rel="stylesheet" href="./app/styles.css?v=2026-0927-scaffold1" />
+  </head>
+
+  <body>
+    <!-- The 9:16 "phone" shell. Everything in the game lives inside it.
+     Only ONE view (screen) is visible at a time; app.js swaps them by
+     adding/removing the `hidden` attribute. -->
+    <div class="app-shell" id="appShell">
+
+      <!-- ===================== HOME (the menu) ===================== -->
+      <section class="view view-home" id="view-home">
+        <h1 class="home-title">Halloween 2026</h1>
+        <p class="home-subtitle">Pick a game</p>
+
+        <nav class="menu">
+          <!-- data-show names the view a button opens. -->
+          <button class="menu-button" data-show="game1">Game 1</button>
+          <button class="menu-button" data-show="game2">Game 2</button>
+          <button class="menu-button" data-show="game3">Game 3</button>
+          <button class="menu-button" data-show="game4">Game 4</button>
+        </nav>
+      </section>
+
+      <!-- ===================== GAME 1 ===================== -->
+      <section class="view view-game" id="view-game1" hidden>
+        <h2 class="game-title">Game 1</h2>
+        <p class="game-text">Game 1 will go here.</p>
+        <button class="home-button" data-show="home">Return to Home</button>
+      </section>
+
+      <!-- ===================== GAME 2 ===================== -->
+      <section class="view view-game" id="view-game2" hidden>
+        <h2 class="game-title">Game 2</h2>
+        <p class="game-text">Game 2 will go here.</p>
+        <button class="home-button" data-show="home">Return to Home</button>
+      </section>
+
+      <!-- ===================== GAME 3 ===================== -->
+      <section class="view view-game" id="view-game3" hidden>
+        <h2 class="game-title">Game 3</h2>
+        <p class="game-text">Game 3 will go here.</p>
+        <button class="home-button" data-show="home">Return to Home</button>
+      </section>
+
+      <!-- ===================== GAME 4 ===================== -->
+      <section class="view view-game" id="view-game4" hidden>
+        <h2 class="game-title">Game 4</h2>
+        <p class="game-text">Game 4 will go here.</p>
+        <button class="home-button" data-show="home">Return to Home</button>
+      </section>
+
+    </div>
+
+    <script src="./app/app.js?v=2026-0927-scaffold1"></script>
+  </body>
+</html>

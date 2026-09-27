@@ -1,0 +1,12 @@
+{
+  "name": "Halloween 2026",
+  "short_name": "Halloween 2026",
+  "description": "A collection of Halloween mini games.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#140c1c",
+  "theme_color": "#140c1c",
+  "icons": []
+}

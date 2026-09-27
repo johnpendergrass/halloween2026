@@ -1,0 +1,231 @@
+/* ============================================================================
+   Halloween 2026 - styles.css
+
+   Section map:
+     1. Colors and base
+     2. The page "stage" and the 9:16 shell   (borrowed from triageRush)
+     3. Shared helpers
+     4. HOME view (the menu)
+     5. GAME views (placeholder screens)
+     6. Reduced motion
+
+   SIZING RULE: inside the shell, sizes use `cqw` units.
+   1cqw = 1% of the SHELL's width (not the browser window's), so the whole
+   layout scales together on phone, tablet and PC. clamp(min, preferred, max)
+   keeps things from getting too tiny or too huge.
+   ========================================================================= */
+
+/* ------------------------------------------------------------------------
+   1. Colors and base
+   --------------------------------------------------------------------- */
+
+:root {
+  --off-white: #f5f1e8;   /* the shell's background */
+  --ink: #2a2230;         /* main text */
+  --ink-soft: #6b6272;    /* quieter text */
+  --pumpkin: #e8741c;     /* menu buttons */
+  --pumpkin-dark: #b85510;
+  --night: #140c1c;       /* dark stage around the shell */
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden; /* the outer page never scrolls */
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--ink);
+  /* Dark spotlit stage behind the shell - on a PC it looks like a phone
+     lying on a desk. */
+  background: radial-gradient(circle at 50% 20%,
+    #3a2448 0%, #1e1228 40%, #07040a 100%);
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  /* 5% of screen height above and below; bigger if the phone's notch or
+     home bar needs it. At least 4px at the sides. */
+  padding:
+    max(5dvh, env(safe-area-inset-top))
+    max(4px, env(safe-area-inset-right))
+    max(5dvh, env(safe-area-inset-bottom))
+    max(4px, env(safe-area-inset-left));
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  -webkit-tap-highlight-color: transparent;
+  /* Stops iOS zooming in on a quick double tap (pinch zoom still works). */
+  touch-action: manipulation;
+}
+
+button:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------------------
+   2. The 9:16 shell (copied from triageRush, verified 2026-09-27).
+   The shell fits whichever is smaller - screen width or screen height -
+   and keeps exactly 9:16. 0.5625 = 9/16, 1.7778 = 16/9.
+   --------------------------------------------------------------------- */
+
+.app-shell {
+  position: relative;
+  width: min(calc(100vw - 8px), calc(90dvh * 0.5625));
+  height: min(90dvh, calc((100vw - 8px) * 1.7778));
+  overflow: hidden;
+  background: var(--off-white);
+  box-shadow: 0 24px 80px #000c;
+  container-type: inline-size; /* this is what makes cqw work */
+  isolation: isolate;
+}
+
+/* Better version for browsers that know "svh" (the screen height with
+   the browser's toolbars showing), so toolbars can't cut off the shell. */
+@supports (height: 100svh) {
+  .app-shell {
+    width: min(
+      calc(100svw - max(4px, env(safe-area-inset-left))
+                  - max(4px, env(safe-area-inset-right))),
+      calc((100svh - max(5svh, env(safe-area-inset-top))
+                   - max(5svh, env(safe-area-inset-bottom))) * 0.5625));
+    height: min(
+      calc(100svh - max(5svh, env(safe-area-inset-top))
+                  - max(5svh, env(safe-area-inset-bottom))),
+      calc((100svw - max(4px, env(safe-area-inset-left))
+                   - max(4px, env(safe-area-inset-right))) * 1.7778));
+  }
+}
+
+/* Rounded corners only when the shell floats with room around it
+   (PC / tablet), not when it fills a phone edge to edge. */
+@media (min-width: 700px) and (min-height: 800px) {
+  .app-shell {
+    border-radius: 10px;
+  }
+}
+
+/* ------------------------------------------------------------------------
+   3. Shared helpers
+   --------------------------------------------------------------------- */
+
+/* The hidden attribute must always win, even over display: flex. */
+[hidden] {
+  display: none !important;
+}
+
+/* Every view fills the whole shell. */
+.view {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8cqw 6cqw;
+}
+
+/* ------------------------------------------------------------------------
+   4. HOME view (the menu)
+   --------------------------------------------------------------------- */
+
+.home-title {
+  font-size: clamp(24px, 10cqw, 56px);
+  font-weight: 900;
+  margin-top: 6cqw;
+  text-align: center;
+}
+
+.home-subtitle {
+  font-size: clamp(14px, 4.5cqw, 24px);
+  color: var(--ink-soft);
+  margin-top: 2cqw;
+}
+
+/* The four buttons stack in a column, centered in the space left over. */
+.menu {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5cqw;
+}
+
+.menu-button {
+  width: 100%;
+  min-height: 44px; /* comfortable finger target on the smallest phone */
+  padding: 4.5cqw 0;
+  border-radius: 3cqw;
+  background: var(--pumpkin);
+  color: #fff;
+  font-size: clamp(16px, 6cqw, 32px);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  box-shadow: 0 1.2cqw 0 var(--pumpkin-dark);
+}
+
+/* A little "press down" when tapped. */
+.menu-button:active {
+  transform: translateY(1cqw);
+  box-shadow: 0 0.2cqw 0 var(--pumpkin-dark);
+}
+
+/* ------------------------------------------------------------------------
+   5. GAME views (placeholders for now)
+   --------------------------------------------------------------------- */
+
+.game-title {
+  font-size: clamp(22px, 9cqw, 48px);
+  font-weight: 900;
+  margin-top: 6cqw;
+}
+
+/* flex: 1 lets the text take the middle and pushes the button down. */
+.game-text {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  font-size: clamp(14px, 5cqw, 26px);
+  color: var(--ink-soft);
+  text-align: center;
+}
+
+.home-button {
+  min-height: 44px;
+  padding: 3.5cqw 7cqw;
+  border-radius: 3cqw;
+  border: 0.6cqw solid var(--ink);
+  font-size: clamp(14px, 4.8cqw, 24px);
+  font-weight: 700;
+}
+
+.home-button:active {
+  background: rgb(0 0 0 / 8%);
+}
+
+/* ------------------------------------------------------------------------
+   6. Reduced motion: people who turn on "reduce motion" get (almost) no
+   animation. Harmless now; matters once games start animating.
+   --------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+}

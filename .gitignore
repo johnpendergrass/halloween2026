@@ -1,0 +1,38 @@
+# ---------------------------------------------------------------------------
+# ONE RULE: if it is in github-excluded/, it does not go to GitHub.
+# Use it for hi-res art masters, raw audio, private notes - anything that
+# should stay on this PC. (Same rule as triageRush.)
+# ---------------------------------------------------------------------------
+github-excluded/
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Dependencies and generated output
+node_modules/
+dist/
+build/
+*.log
+
+# Python tooling
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Editor and operating-system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*~
