@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <!-- v6 TRIAL: "black-translucent" lets the page's own background show
+     behind the iPhone clock and battery (home-screen app mode only). The
+     old value was "black" = a solid black strip. iOS reads this when the
+     icon is ADDED, so delete and re-add the home-screen icon to see it. -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Layout Test" />
+    <!-- v6 TRIAL: was #07040a. Tints the browser's own bars to match. -->
+    <meta name="theme-color" content="#2e1a44" />
+    <title>Layout Mockup</title>
+
+    <!-- ======================================================================
+     THROWAWAY MOCKUP (2026-09-27, v3) - for judging layout and flow only.
+     Not part of the app. Open it at http://localhost:8091/mockups/layout-mockup.html
+
+     Inside the 9:16 frame, top to bottom:
+       TOP PANEL     1/16 of frame height, always visible
+       GAME PANEL    what is left -> exactly 9:14. NOTHING overlaps it
+                     unless the player opens the bottom panel.
+       BOTTOM STRIP  1/16 of frame height, full width, a gentle up arrow.
+                     It is the top edge of the bottom panel; tap it and the
+                     panel slides up OVER the game panel.
+
+     v3 change (John): no pull tab poking into the game panel. The closed
+     bottom panel is a full-width strip with its own space, so a game
+     designer never has to work around it.
+
+     THE FLOW
+       Start      -> game0 (the default screen) showing, panel OPEN
+       Tap Game N -> "Playing Game N" in the game panel, panel CLOSES
+       Quit Game  -> back to game0, panel OPENS again
+
+     NOTE: the games here are plain screens inside the game panel. In the
+     real app each game will be its own page inside an iframe.
+     ====================================================================== -->
+    <style>
+      /* LAYER COLOURS (v4): every layer gets its own clearly different
+         colour AND a visible edge, so the layers can be told apart at a
+         glance - especially in iPhone full-screen "app" mode.
+           stage (behind the frame)  near-black
+           frame edge                pumpkin outline
+           top panel                 deep purple, lighter purple edge below
+           game panel                off-white with a faint grid
+           bottom panel              dark swamp green, green edge above */
+      :root {
+        --off-white: #f5f1e8;
+        --ink: #2a2230;
+        --ink-soft: #6b6272;
+        --pumpkin: #e8741c;
+        --pumpkin-dark: #b85510;
+
+        /* v6 TRIAL (John, 2026-09-27): the stage matches the top panel's
+           purple. TO UNDO: set this back to #07040a, and set the two meta
+           tags marked "v6 TRIAL" back to "black" and #07040a. */
+        --stage-bg: #2e1a44;
+        --frame-edge: #e8741c;
+        --top-bg: #2e1a44;
+        --top-edge: #9b7cc4;
+        --drawer-bg: #173229;
+        --drawer-edge: #5fbf8f;
+
+        /* How far the bottom panel rises when open, as a share of the
+           game panel's height. Try changing this. */
+        --drawer-open-share: 0.55;
+      }
+
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body { height: 100%; overflow: hidden; }
+      [hidden] { display: none !important; }
+
+      /* ---- stage + 9:16 frame: identical to app/styles.css ---- */
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        color: var(--ink);
+        background: var(--stage-bg);
+        min-height: 100dvh;
+        display: grid;
+        place-items: center;
+        padding:
+          max(5dvh, env(safe-area-inset-top))
+          max(4px, env(safe-area-inset-right))
+          max(5dvh, env(safe-area-inset-bottom))
+          max(4px, env(safe-area-inset-left));
+      }
+
+      button {
+        font: inherit; color: inherit; cursor: pointer;
+        border: none; background: none;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+      }
+
+      .app-shell {
+        position: relative;
+        width: min(calc(100vw - 8px), calc(90dvh * 0.5625));
+        height: min(90dvh, calc((100vw - 8px) * 1.7778));
+        overflow: hidden;
+        background: var(--off-white);
+        /* Slightly rounded corners on EVERY device (v5, John). About 10px
+           on a phone, 16px at most on a big screen. The top and bottom
+           panels use the same number so their outer corners follow the
+           frame exactly. */
+        --frame-radius: clamp(8px, 2.6cqw, 16px);
+        border-radius: var(--frame-radius);
+
+        /* The frame's edge, drawn as an outline so it takes no space and
+           cannot change any measurement inside the frame. An outline
+           follows border-radius, so it rounds with the corners. */
+        outline: 2px solid var(--frame-edge);
+        box-shadow: 0 24px 80px #000c;
+        container-type: inline-size;
+        display: flex;
+        flex-direction: column;
+
+        /* THE key number: the top panel and the bottom strip are each
+           1/16 of the frame's height. The frame is 16/9 of its width
+           tall, so 1/16 of the height = 1/9 of the width = 11.111cqw.
+           Two bars of 1/16 leave the game panel 14/16 tall -> 9:14. */
+        --bar-h: 11.111cqw;
+      }
+
+      @supports (height: 100svh) {
+        .app-shell {
+          width: min(
+            calc(100svw - max(4px, env(safe-area-inset-left))
+                        - max(4px, env(safe-area-inset-right))),
+            calc((100svh - max(5svh, env(safe-area-inset-top))
+                         - max(5svh, env(safe-area-inset-bottom))) * 0.5625));
+          height: min(
+            calc(100svh - max(5svh, env(safe-area-inset-top))
+                        - max(5svh, env(safe-area-inset-bottom))),
+            calc((100svw - max(4px, env(safe-area-inset-left))
+                         - max(4px, env(safe-area-inset-right))) * 1.7778));
+        }
+      }
+
+      /* ---- 1. TOP PANEL ----
+         Rounded on its two TOP corners to match the frame; its bottom
+         edge (against the game panel) stays square and crisp. */
+      .top-panel {
+        height: var(--bar-h);
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        gap: 2cqw;
+        padding: 0 2cqw;
+        border-radius: var(--frame-radius) var(--frame-radius) 0 0;
+        background: var(--top-bg);
+        /* Drawn INSIDE the bar's height (border-box), so the bar stays
+           exactly --bar-h tall - the same as the bottom strip. */
+        border-bottom: 2px solid var(--top-edge);
+        color: #fff;
+      }
+
+      .top-icon {
+        height: 100%;
+        aspect-ratio: 1;
+        display: grid;
+        place-items: center;
+        font-size: clamp(16px, 6cqw, 30px);
+      }
+
+      .top-title {
+        flex: 1;
+        text-align: center;
+        font-weight: 900;
+        font-size: clamp(14px, 5cqw, 26px);
+        white-space: nowrap;
+      }
+
+      /* Everything below the top panel: the game panel plus the bottom
+         strip. The bottom panel slides around inside this area. */
+      .play-area {
+        position: relative;
+        flex: 1 1 auto;
+        overflow: hidden;
+      }
+
+      /* ---- 2. GAME PANEL ----
+         Stops exactly where the bottom strip begins. */
+      .game-panel {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: var(--bar-h);
+        overflow: hidden;
+        /* A faint grid so the space is easy to judge. */
+        background-color: #eae2d2;
+        background-image:
+          linear-gradient(#0000000f 1px, transparent 1px),
+          linear-gradient(90deg, #0000000f 1px, transparent 1px);
+        background-size: 10% 6%;
+      }
+
+      /* One screen at a time fills the game panel. */
+      .game-screen {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 10cqw 6cqw 6cqw;
+        text-align: center;
+      }
+
+      .game-heading {
+        font-size: clamp(20px, 8cqw, 42px);
+        font-weight: 900;
+      }
+
+      .game-note {
+        margin-top: 3cqw;
+        font-size: clamp(13px, 4.5cqw, 24px);
+        color: var(--ink-soft);
+        line-height: 1.4;
+      }
+
+      .size-readout {
+        margin-top: 4cqw;
+        font-size: clamp(11px, 3.4cqw, 16px);
+        color: var(--ink-soft);
+      }
+
+      /* Pushes the Quit button to the bottom of the playing screen. */
+      .spacer { flex: 1; }
+
+      .quit-button {
+        min-height: 44px;
+        padding: 3cqw 7cqw;
+        border-radius: 3cqw;
+        border: 0.6cqw solid var(--ink);
+        background: #fff8;
+        font-size: clamp(14px, 4.8cqw, 24px);
+        font-weight: 700;
+      }
+
+      .quit-button:active { background: rgb(0 0 0 / 8%); }
+
+      /* ---- 3. BOTTOM PANEL ----
+         One piece: the full-width strip on top, the panel content below.
+         Its height = the strip + a share of the game panel.
+         CLOSED: slid down so only the strip shows, sitting in its own
+                 space under the game panel.
+         OPEN:   slid up to its full height, covering the lower part of
+                 the game panel. The game panel never changes size. */
+      .drawer {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: calc(var(--bar-h)
+                     + (100% - var(--bar-h)) * var(--drawer-open-share));
+        z-index: 5;
+        /* Rounded on its two BOTTOM corners to match the frame; its top
+           edge (against the game panel) stays square and crisp. */
+        border-radius: 0 0 var(--frame-radius) var(--frame-radius);
+        background: var(--drawer-bg);
+        /* Mirrors the top panel's edge. Inside the height, so the visible
+           closed strip is exactly --bar-h tall. */
+        border-top: 2px solid var(--drawer-edge);
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        transform: translateY(calc(100% - var(--bar-h)));
+        transition: transform 300ms ease, box-shadow 300ms ease;
+      }
+
+      /* The shadow only exists while open. */
+      .drawer.is-open {
+        transform: translateY(0);
+        box-shadow: 0 -2cqw 6cqw #0006;
+      }
+
+      /* The strip: the whole width is one big button. */
+      /* bar-h minus the 2px edge above it, so edge + strip = bar-h. */
+      .drawer-strip {
+        flex: 0 0 calc(var(--bar-h) - 2px);
+        width: 100%;
+        display: grid;
+        place-items: center;
+      }
+
+      /* A gentle up arrow: a soft chevron drawn with two borders, not a
+         bold triangle. It turns over to point down when the panel is
+         open. */
+      .drawer-arrow {
+        width: 5cqw;
+        height: 5cqw;
+        border-left: 0.9cqw solid #fff;
+        border-top: 0.9cqw solid #fff;
+        border-radius: 0.4cqw;
+        opacity: 0.6;
+        transform: translateY(1.2cqw) rotate(45deg);
+        transition: transform 300ms ease;
+      }
+
+      .drawer.is-open .drawer-arrow {
+        transform: translateY(-1.2cqw) rotate(225deg);
+      }
+
+      .drawer-content {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .drawer-tabs {
+        display: flex;
+        border-bottom: 1px solid #ffffff33;
+      }
+
+      .drawer-tabs button {
+        flex: 1;
+        min-height: 44px;
+        font-weight: 700;
+        font-size: clamp(13px, 4.2cqw, 22px);
+        opacity: 0.55;
+      }
+
+      .drawer-tabs button.is-active {
+        opacity: 1;
+        box-shadow: inset 0 -3px 0 var(--pumpkin);
+      }
+
+      .drawer-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 4cqw 6cqw;
+        font-size: clamp(13px, 4.2cqw, 22px);
+        line-height: 1.6;
+      }
+
+      .drawer-body li { margin-left: 5cqw; }
+
+      /* The four game buttons: a 2 x 2 grid. */
+      .game-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4cqw;
+      }
+
+      .game-button {
+        min-height: 44px;
+        padding: 4cqw 0;
+        border-radius: 3cqw;
+        background: var(--pumpkin);
+        color: #fff;
+        font-size: clamp(15px, 5.2cqw, 28px);
+        font-weight: 700;
+        box-shadow: 0 1.2cqw 0 var(--pumpkin-dark);
+      }
+
+      .game-button:active {
+        transform: translateY(1cqw);
+        box-shadow: 0 0.2cqw 0 var(--pumpkin-dark);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .drawer, .drawer-arrow { transition: none; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="app-shell">
+
+      <!-- 1. TOP PANEL: always visible -->
+      <header class="top-panel">
+        <button class="top-icon" id="homeButton" aria-label="Home">🏠</button>
+        <div class="top-title" id="topTitle">Halloween 2026</div>
+        <button class="top-icon" id="menuButton" aria-label="Open or close panel">☰</button>
+      </header>
+
+      <div class="play-area">
+
+        <!-- 2. GAME PANEL: the iframe will live here in the real app -->
+        <main class="game-panel" id="gamePanel">
+
+          <!-- game0: the default screen, with nothing to do -->
+          <div class="game-screen" id="game0Screen">
+            <h2 class="game-heading">game0</h2>
+            <p class="game-note">This is the default game screen.</p>
+            <p class="size-readout" id="sizeReadout"></p>
+          </div>
+
+          <!-- The "playing" screen, reused for games 1-4 -->
+          <div class="game-screen" id="playingScreen" hidden>
+            <h2 class="game-heading" id="playingHeading">Playing Game 1</h2>
+            <p class="game-note">(The game would be here.)</p>
+            <div class="spacer"></div>
+            <button class="quit-button" id="quitButton">Quit Game</button>
+          </div>
+        </main>
+
+        <!-- 3. BOTTOM PANEL: the strip + the content. Starts OPEN. -->
+        <section class="drawer is-open" id="drawer">
+          <button class="drawer-strip" id="drawerStrip" aria-label="Close panel">
+            <span class="drawer-arrow"></span>
+          </button>
+
+          <!-- `inert` is added while the panel is closed, so its hidden
+           buttons cannot be reached with the keyboard. -->
+          <div class="drawer-content" id="drawerContent">
+            <div class="drawer-tabs">
+              <button class="is-active" data-tab="app">App</button>
+              <button data-tab="game">This Game</button>
+            </div>
+
+            <div class="drawer-body" id="tab-app">
+              <div class="game-buttons">
+                <button class="game-button" data-game="1">Game 1</button>
+                <button class="game-button" data-game="2">Game 2</button>
+                <button class="game-button" data-game="3">Game 3</button>
+                <button class="game-button" data-game="4">Game 4</button>
+              </div>
+            </div>
+
+            <div class="drawer-body" id="tab-game" hidden>
+              <p><strong>This game's info</strong></p>
+              <ul>
+                <li>High scores for this game</li>
+                <li>Settings for this game</li>
+                <li>How to play</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script>
+      /* ================================================================
+         Bottom panel: open, close, toggle
+         ================================================================ */
+      const drawer = document.getElementById("drawer");
+      const drawerStrip = document.getElementById("drawerStrip");
+      const drawerContent = document.getElementById("drawerContent");
+
+      function openDrawer() {
+        drawer.classList.add("is-open");
+        drawerContent.inert = false;
+        drawerStrip.setAttribute("aria-label", "Close panel");
+      }
+
+      function closeDrawer() {
+        drawer.classList.remove("is-open");
+        drawerContent.inert = true;
+        drawerStrip.setAttribute("aria-label", "Open panel");
+      }
+
+      function toggleDrawer() {
+        if (drawer.classList.contains("is-open")) {
+          closeDrawer();
+        } else {
+          openDrawer();
+        }
+      }
+
+      drawerStrip.addEventListener("click", toggleDrawer);
+      document.getElementById("menuButton").addEventListener("click", toggleDrawer);
+
+      /* ================================================================
+         Panel tabs: App / This Game
+         ================================================================ */
+      document.querySelectorAll("[data-tab]").forEach((button) => {
+        button.addEventListener("click", () => {
+          document.querySelectorAll("[data-tab]").forEach((b) =>
+            b.classList.toggle("is-active", b === button));
+          document.getElementById("tab-app").hidden = button.dataset.tab !== "app";
+          document.getElementById("tab-game").hidden = button.dataset.tab !== "game";
+        });
+      });
+
+      /* ================================================================
+         Switching games
+         ================================================================ */
+      const game0Screen = document.getElementById("game0Screen");
+      const playingScreen = document.getElementById("playingScreen");
+      const playingHeading = document.getElementById("playingHeading");
+      const topTitle = document.getElementById("topTitle");
+
+      /** Start game 1, 2, 3 or 4: show its screen and get the panel out of the way. */
+      function startGame(gameNumber) {
+        game0Screen.hidden = true;
+        playingScreen.hidden = false;
+        playingHeading.textContent = "Playing Game " + gameNumber;
+        topTitle.textContent = "Game " + gameNumber;
+        closeDrawer();
+      }
+
+      /** Back to game0 (the default screen) with the panel open again. */
+      function quitGame() {
+        playingScreen.hidden = true;
+        game0Screen.hidden = false;
+        topTitle.textContent = "Halloween 2026";
+        openDrawer();
+      }
+
+      document.querySelectorAll("[data-game]").forEach((button) => {
+        button.addEventListener("click", () => startGame(button.dataset.game));
+      });
+
+      document.getElementById("quitButton").addEventListener("click", quitGame);
+
+      // The Home icon in the top panel does the same thing as Quit Game.
+      document.getElementById("homeButton").addEventListener("click", quitGame);
+
+      /* ================================================================
+         Live size readout on game0, for checking each device
+         ================================================================ */
+      const gamePanel = document.getElementById("gamePanel");
+      const sizeReadout = document.getElementById("sizeReadout");
+
+      function showSize() {
+        const w = Math.round(gamePanel.clientWidth);
+        const h = Math.round(gamePanel.clientHeight);
+        sizeReadout.textContent =
+          "Game panel: " + w + " × " + h + " px (9:14 = 1.556, this = " +
+          (h / w).toFixed(3) + ")";
+      }
+
+      showSize();
+      window.addEventListener("resize", showSize);
+    </script>
+  </body>
+</html>
