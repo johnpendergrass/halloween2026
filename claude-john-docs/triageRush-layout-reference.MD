@@ -1,5 +1,11 @@
 # Layout reference borrowed from triageRush
 
+> **Historical source document.** The device sizes below (367 × 652 for the
+> smallest phone, 1296 × 2304 art) are triageRush *estimates* for the whole
+> frame. Halloween 2026's measured numbers, and the game-panel canvas of
+> 1296 × 2016, are in `specifications-technical.MD` §4b and
+> `games/README - game design requirements.md`. Where they differ, those win.
+
 Extracted 2026-09-27 from `D:\dev\projects\triageRush\` (v0.19.2, Aug 2026).
 **Only the screen/shell/device specs are borrowed — none of triageRush's game
 content, art, or rules.**

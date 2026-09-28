@@ -1,49 +1,57 @@
 /* game0 (Home) - its own styles. Nothing here can affect the app or other games.
 
-   SIZING RULE: inside a game, 1vw = 1% of the GAME PANEL's width and
-   1vh = 1% of its height (the iframe is this page's whole "screen").
+   Inside a game, 1vw = 1% of the GAME PANEL's width and 1vh = 1% of its
+   height (the iframe is this page's whole "screen").
 
-   THE SCENE: the pumpkin patch paintings are 950 x 714 (wide). The scene
-   is scaled so its HEIGHT fills the panel; the sides are cropped off.
-   Everything inside the scene is positioned in % of the PAINTING, so the
-   characters always line up with the layers, whatever the panel's size. */
+   THE SCENE: the pumpkin patch paintings are 950 x 714 (wide). The scene is
+   scaled so its HEIGHT fills the panel and the sides are cropped. Everything
+   inside the scene is positioned in % of the PAINTING, so the character
+   always lines up with the layers, whatever the panel's size. (This is a
+   deliberate departure from the requirements' "vw only" rule; see
+   README - GAME0.md.) */
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+/* ---- Page setup, copied from "README - game design requirements.md" 2.2 ---- */
 
-html,
-body {
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
   height: 100%;
-  overflow: hidden;
+  overflow: hidden;              /* the page never scrolls */
 }
 
 body {
-  background: #000;
-  /* No scrolling, zooming, text selection or "save image" pop-up. */
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.35;
+  /* Taps are for the game: no scrolling, zooming, selecting, or the
+     iPhone "save image" pop-up. */
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* ------------------------------------------------------------------------
-   The scene: as tall as the panel, as wide as the painting's shape needs.
-   --------------------------------------------------------------------- */
+[hidden] { display: none !important; }   /* hidden always wins, even over flex */
+
+img { -webkit-user-drag: none; }   /* plus draggable="false" on each <img> */
+
+/* ---- The scene ---- */
+
+body {
+  background: #000;
+}
 
 .scene {
-  /* Which part of the painting's width to show:
-     0 = its left edge, 0.5 = the middle, 1 = its right edge.
-     0.25 keeps the moon and the big pumpkins in view. */
+  /* Which part of the painting's width to show: 0 = its left edge,
+     0.5 = the middle, 1 = its right edge. 0.25 keeps the moon and the big
+     pumpkins in view. */
   --crop-from-left: 0.25;
 
   position: absolute;
   top: 0;
   height: 100%;
   aspect-ratio: 950 / 714;
-  /* (panel width - scene width) is negative: that is how much is cut off. */
+  /* (panel width - scene width) is negative: the amount cut off. */
   left: calc((100vw - 100vh * 950 / 714) * var(--crop-from-left));
 }
 
@@ -54,15 +62,11 @@ body {
   height: 100%;
 }
 
-/* ------------------------------------------------------------------------
-   The character (a silhouette). It rests just below the tree line, hidden
-   by the layer in front of it, and rises up above the trees.
-   game0.js sets which picture, how far across (left, in % of the
-   painting's width) and whether it is mirrored.
-   Sizes from last year's app: 250px tall, resting at y = 387, rising
-   240px, on the 714px-tall painting.
-   --------------------------------------------------------------------- */
-
+/* The character rests just below the tree line, hidden by the layer in
+   front of it, and rises above the trees. game0.js sets which picture, how
+   far across (`left`) and whether it is mirrored.
+   Numbers from the 2025 app: 250px tall, resting at y = 387, rising 240px,
+   on the 714px-tall painting. */
 .character {
   position: absolute;
   height: 35%;   /* 250 / 714 */
@@ -70,14 +74,15 @@ body {
   top: 54.2%;    /* 387 / 714 */
   transition-property: translate;
   transition-timing-function: ease-in-out;
-  /* transition-duration is set by game0.js (random each time) */
+  /* transition-duration is set by game0.js, random each time */
 }
 
+/* Mirroring uses `scale` and rising uses `translate`: separate properties,
+   so one can change without touching the other. */
 .character.is-mirrored {
   scale: -1 1;
 }
 
-/* Risen: slid up by 96% of its own height (240 of its 250px). */
 .character.is-up {
-  translate: 0 -96%;
+  translate: 0 -96%;   /* 240 of its own 250px */
 }

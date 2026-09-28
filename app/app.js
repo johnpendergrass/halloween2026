@@ -15,7 +15,7 @@
 
 // Bump this (and the ?v= tags in index.html) whenever code changes, so
 // phones fetch fresh copies instead of old cached ones.
-const APP_VERSION = "2026-0927-panels1";
+const APP_VERSION = "2026-0927-rules3";
 
 /* ------------------------------------------------------------------------
    1. The list of games. THE ONE PLACE to add a game.
@@ -50,7 +50,7 @@ function openDrawer() {
 
 function closeDrawer() {
   drawer.classList.remove("is-open");
-  drawerContent.inert = true; // hidden buttons can't be reached by keyboard
+  drawerContent.inert = true;
   drawerStrip.setAttribute("aria-label", "Open panel");
 }
 

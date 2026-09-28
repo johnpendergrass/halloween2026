@@ -1,26 +1,21 @@
 /* ============================================================================
-   Pie Maker (game1) - its own code.
+   Pie Maker (game1)
 
-   "Asteroids, but pumpkins, and no gun": pumpkins drift across the field in
-   straight lines, slowly spinning. A pumpkin that drifts off one edge comes
-   back on the opposite edge. Tap a pumpkin and it turns into a pumpkin pie
-   (which stays put). Turn all of them into pies as fast as you can.
+   "Asteroids, but pumpkins, and no gun." Pumpkins drift across the field in
+   straight lines, spinning; one that leaves by one edge comes back by the
+   opposite edge. Tap a pumpkin and it becomes a pie, which stays put. Turn
+   all of them into pies as fast as you can.
 
-   The timer starts when the game starts and stops at the last pie. It is
-   NOT sent to the app yet - that is a later communications test.
+   UNITS: positions, sizes and speeds are in "field widths" (x = 0.5 is
+   halfway across, size = 0.2 is 20% of the width). Pixels are worked out
+   every frame from the field's current width, so the game looks the same
+   at any panel size and survives a resize.
 
-   UNITS: every position, size and speed is measured in "field widths".
-   x = 0.5 means halfway across; size = 0.2 means 20% of the width. The
-   pixel numbers are worked out fresh every frame, so the game keeps its
-   look at any size - even if the game panel changes shape later.
+   The time is not reported to the app yet (app <-> game messaging is a
+   later step).
 
-   Section map:
-     1. Settings (fixed for now; later the app may change them)
-     2. Game state
-     3. Making the pumpkins
-     4. Moving and drawing (the animation loop)
-     5. Tapping: pumpkin -> pie
-     6. Start, finish, play again
+   Sections: 1 Settings, 2 State, 3 Making pumpkins, 4 Animation,
+             5 Tapping, 6 Start and finish
    ========================================================================= */
 
 /* ------------------------------------------------------------------------
@@ -29,24 +24,24 @@
 
 const PUMPKIN_COUNT = 10;
 
-// Pumpkin sizes, as a share of the field's width. 0.13 is 44px on an
-// iPhone SE (the smallest phone) - the smallest comfortable finger target.
+// Pumpkin sizes, as a share of the field's width. 0.13 (13vw) is the
+// requirements' smallest tap target: 44px on an iPhone SE.
 const SMALLEST_SIZE = 0.13;
 const BIGGEST_SIZE = 0.24;
 
-// Drift speeds, in field widths per second. Small pumpkins get the fast
-// end, big pumpkins the slow end.
+// Drift speed, in field widths per second. Small pumpkins get the fast end,
+// big ones the slow end.
 const SLOWEST_SPEED = 0.08;
 const FASTEST_SPEED = 0.22;
 
-// Spin, in degrees per second (either direction).
+// Spin, in degrees per second, either direction.
 const MOST_SPIN = 60;
 
 const PUMPKIN_IMAGE = "./assets/pumpkin.svg";
 const PIE_IMAGE = "./assets/pie.svg";
 
 /* ------------------------------------------------------------------------
-   2. Game state
+   2. State
    --------------------------------------------------------------------- */
 
 const field = document.getElementById("field");
@@ -58,30 +53,30 @@ const doneTime = document.getElementById("doneTime");
 // One object per pumpkin: { image, x, y, size, speedX, speedY, angle, spin, isPie }
 let pumpkins = [];
 let piesMade = 0;
-let startTime = 0;        // when this round started (milliseconds)
-let lastFrameTime = 0;    // when the previous frame was drawn
+let startTime = 0;        // performance.now() when this round started
+let lastFrameTime = 0;
 let isPlaying = false;
 
 document.getElementById("pumpkinTotal").textContent = PUMPKIN_COUNT;
 
 /* ------------------------------------------------------------------------
-   3. Making the pumpkins
+   3. Making pumpkins
    --------------------------------------------------------------------- */
 
 function randomBetween(low, high) {
   return low + Math.random() * (high - low);
 }
 
-/** How tall the field is, in field widths (e.g. 1.4 = 1.4 times as tall as wide). */
+/** The field's height in field widths (1.4 = 1.4 times as tall as wide). */
 function fieldHeightInWidths() {
   return field.clientHeight / field.clientWidth;
 }
 
-/** Make one pumpkin at a random place, drifting in a random direction. */
+/** One pumpkin at a random place, drifting in a random direction. */
 function makePumpkin() {
   const size = randomBetween(SMALLEST_SIZE, BIGGEST_SIZE);
 
-  // 0 for the smallest pumpkin, 1 for the biggest.
+  // 0 for the smallest possible pumpkin, 1 for the biggest.
   const bigness = (size - SMALLEST_SIZE) / (BIGGEST_SIZE - SMALLEST_SIZE);
   const speed = FASTEST_SPEED - bigness * (FASTEST_SPEED - SLOWEST_SPEED);
   const direction = randomBetween(0, 2 * Math.PI);
@@ -105,17 +100,17 @@ function makePumpkin() {
     isPie: false,
   };
 
-  // pointerdown (not click) so a tap counts the instant the finger lands -
-  // important for moving targets.
+  // pointerdown, not click: a tap on a moving target must count the instant
+  // the finger lands, not when it lifts.
   image.addEventListener("pointerdown", () => turnIntoPie(pumpkin));
   return pumpkin;
 }
 
 /* ------------------------------------------------------------------------
-   4. Moving and drawing
+   4. Animation
    --------------------------------------------------------------------- */
 
-/** Move a pumpkin along its path. Off one edge -> back on the opposite edge. */
+/** Move a pumpkin along its path; off one edge means back on the opposite edge. */
 function movePumpkin(pumpkin, seconds) {
   const height = fieldHeightInWidths();
 
@@ -123,14 +118,14 @@ function movePumpkin(pumpkin, seconds) {
   pumpkin.y += pumpkin.speedY * seconds;
   pumpkin.angle += pumpkin.spin * seconds;
 
-  // Wait until it is completely off the field before it jumps across.
+  // Only jump across once the pumpkin is completely off the field.
   if (pumpkin.x > 1) pumpkin.x = -pumpkin.size;
   if (pumpkin.x < -pumpkin.size) pumpkin.x = 1;
   if (pumpkin.y > height) pumpkin.y = -pumpkin.size;
   if (pumpkin.y < -pumpkin.size) pumpkin.y = height;
 }
 
-/** Turn a pumpkin's field-width numbers into pixels on screen. */
+/** Field widths -> pixels on screen. */
 function drawPumpkin(pumpkin) {
   const pixelsPerWidth = field.clientWidth;
   const style = pumpkin.image.style;
@@ -144,12 +139,10 @@ function showTime(milliseconds) {
   timerText.textContent = (milliseconds / 1000).toFixed(1) + " s";
 }
 
-/** One frame of animation. The browser calls this about 60 times a second. */
 function animate(now) {
   if (!isPlaying) return;
 
-  // Seconds since the last frame. Capped, so a pause (e.g. switching away
-  // from the tab) doesn't make pumpkins jump a long way at once.
+  // Capped, so a pause (switching tabs, say) doesn't make everything jump.
   const seconds = Math.min((now - lastFrameTime) / 1000, 0.1);
   lastFrameTime = now;
 
@@ -183,7 +176,7 @@ function turnIntoPie(pumpkin) {
 }
 
 /* ------------------------------------------------------------------------
-   6. Start, finish, play again
+   6. Start and finish
    --------------------------------------------------------------------- */
 
 function startGame() {

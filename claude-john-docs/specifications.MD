@@ -1,6 +1,6 @@
 # Halloween 2026 — Specifications (design decisions)
 
-Last updated: 2026-09-27 16:34 (first day, third stretch)
+Last updated: 2026-09-27 17:33 (first day, fourth stretch: audit)
 
 This file records WHAT the app looks like and WHY. Technical "how" lives in
 `specifications-technical.MD`. Companion notes in this folder:
@@ -29,6 +29,20 @@ tablets and PC browsers. Released on GitHub Pages at
 
 Because other people's AIs will follow these docs, rules must be precise,
 checkable, and backed by a working example game.
+
+### What the app is right now (John, 2026-09-27, after the audit)
+
+**A template for others to insert mini games into.** The frame and the docs
+are the product. game0 (pumpkin patch) and game1 (Pie Maker) are **demos**:
+not part of the final package, they may change or go. Consequences:
+
+- **The requirements doc is the source of truth; the demos follow it**, not
+  the other way round. Where a demo departs from a rule, its own README
+  says so in a section "Where this game breaks the requirements, and why",
+  so nobody mistakes the exception for the rule.
+- **Code is written for an intermediate JavaScript front-end programmer**
+  (the friends who will copy it), not for John. Comments explain *why* a
+  game does something, not what standard JavaScript or CSS does.
 
 ---
 
@@ -64,8 +78,9 @@ checkable, and backed by a working example game.
 
 - **Top panel and closed bottom strip are the same height** (symmetric).
   Measured 42.44px each on a 390px-wide phone.
-- **Game panel = exactly 9:14.** Sizes: smallest phone 367 × 571, iPhone Pro
-  Max 432 × 672, 1080p PC 547 × 850. Full-sharpness art ≈ 1296 × 2016.
+- **Game panel = exactly 9:14.** Measured sizes: iPhone SE (smallest phone)
+  338 × 526, iPhone Pro Max 432 × 672, 1080p PC about 547 × 850. Full-
+  sharpness art = 1296 × 2016 (the Pro Max panel at ×3 = the design canvas).
   (Was 3:5 while the bottom panel was a pull tab poking into the game area;
   John rejected the tab so game designers never work around it.)
 - **Bottom panel = a drawer.** Closed: just the strip, in its own space.
@@ -100,7 +115,7 @@ Every layer has its own colour AND a visible edge:
 | Stage (outside the frame) | purple `#2e1a44` (v6 TRIAL, was `#07040a`) | — |
 | Frame | — | 2px pumpkin `#e8741c` outline |
 | Top panel | purple `#2e1a44` | 2px `#9b7cc4` below |
-| Game panel | off-white `#f5f1e8`/`#eae2d2` + faint grid | — |
+| Game panel | parchment `#eae2d2` (seen only while a game page loads) | — |
 | Bottom panel | swamp green `#173229` | 2px `#5fbf8f` above |
 | Buttons | pumpkin `#e8741c`, shadow `#b85510` | — |
 
@@ -124,14 +139,16 @@ clock. John may "nix it" → back to `#07040a` and `black`.
 - The app owns: the frame, Home button, sound setting, high scores, loading.
 - Folders: `games/game0` … `games/game4` (John: each with its own js, css,
   html, assets). Each has a `README - <GAME NAME>.md` describing how it was
-  made (John's naming), plus a copy of `README - game design requirements.md`.
+  made (John's naming). The rules live in **one** file,
+  `games/README - game design requirements.md` (was five identical copies
+  until the 2026-09-27 audit; copies drift, one file can't).
 - Messaging (score, pause, settings) is **deliberately postponed** until the
   test games exist to try it on.
 
-## 6a. Game design requirements (for game authors) — v2
+## 6a. Game design requirements (for game authors) — v3
 
-Full text: `games/<id>/README - game design requirements.md` (identical copy
-in every game folder; the game0 copy is the master). Key decisions (John):
+Full text: `games/README - game design requirements.md` (the only copy).
+Key decisions (John):
 
 - **One design canvas: 1296 × 2016 real pixels** = the iPhone 16 Pro Max
   game panel at ×3. Designers draw, measure and export in canvas pixels
@@ -140,18 +157,27 @@ in every game folder; the game0 copy is the master). Key decisions (John):
 - **The whole panel belongs to the game.** The app's edge lines (top
   lavender, bottom mint, side pumpkin outline, 2 CSS px = 6 canvas px) sit
   outside it. A game that wants a border draws it inside its own space.
-- Tap target minimum **168 canvas px (13vw)** = 44 CSS px on iPhone SE.
-  Moving targets 260 (20vw). Gaps 26 (2vw). Keep important taps out of the
-  bottom 65 (5vw). Grids: at most 7 tappable columns.
+- Tap target minimum **168 canvas px (13vw)** = 44 CSS px on iPhone SE,
+  **still or moving** (v3: the separate 20vw "should" for moving targets was
+  dropped; John tested 13vw moving pumpkins on an iPhone 16 Pro and found
+  them fine). Gaps 26 (2vw). Keep important taps out of the bottom 65 (5vw).
+  Grids: at most 7 tappable columns.
 - **Text: three sizes** Small 47 / Medium 58 / Large 117 canvas px
-  (3.6 / 4.5 / 9vw, with px floors). Arial for now; normal or bold; italics
-  ok; no underline; strikethrough only with meaning; line spacing 1.35.
+  (3.6 / 4.5 / 9vw, with px floors). v3: the MUST is the *size* (nothing
+  below Small); the `.text-*` classes are a SHOULD, since a class name
+  cannot be enforced, only a size can (and a checker can read it). Arial
+  for now; normal or bold; italics ok; no underline; strikethrough only with
+  meaning; line spacing 1.35.
+- **`px` floors only, no ceilings** (v3): `max(14px, 4.5vw)` yes,
+  `clamp(…, 28px)` no. The panel is never wider than ~730 CSS px, so a cap
+  does nothing useful and hides the real size.
 - Sprites PNG (transparent) or SVG; backgrounds JPG at 1296 × 2016.
-- Structure: Part 1 designers, Part 2 coders + AI (18 MUST/SHOULD rules),
-  appendix per-device sizes. Information stated once (John: repetition was
-  confusing).
+- Colour table (1.7) lists only colours the app itself uses (v3).
+- Structure: Part 1 designers (canvas pixels only, never CSS px), Part 2
+  coders + AI (18 MUST/SHOULD rules), appendix per-device sizes.
+  Information stated once (John: repetition was confusing).
 
-## 6b. Test game: Pie Maker (game1)
+## 6b. Demo game: Pie Maker (game1)
 
 John's design: "asteroids but for pumpkins and without a gun, just tapping."
 10 pumpkins of varying size drift in straight lines, spin, and wrap around
@@ -160,7 +186,12 @@ Play again. Sizes 13%–24% of width (was 12%; changed so the smallest is
 44px on iPhone SE). Timer not reported to the app yet (later comms test),
 and the number of pumpkins will later be a setting.
 
-## 6c. Home game: pumpkin patch (game0)
+After the audit (2026-09-27) it follows the requirements exactly: the 2.2
+page-setup block copied verbatim, the `.text-*` classes for all text, no px
+ceilings, button `min-height: 13vw`. Its README lists no exceptions. Its
+README no longer repeats the device tables from the requirements doc.
+
+## 6c. Demo home game: pumpkin patch (game0)
 
 Reused from the Halloween 2025 title screen (John, 2026-09-27): a painted
 pumpkin patch under a full moon; a character silhouette (19 of them:
@@ -180,6 +211,11 @@ waits, sinks. Decisions:
   have shown); mirrored on the right half so they face inward.
 - Known: the open bottom panel hides the lower 55% of the scene on the
   home screen; some silhouettes have a light halo (2025 files).
+- **Declared exceptions** (in its README): uses `vh` and `%` of the
+  painting instead of `vw` (must fill the panel's height; keeps the
+  character aligned with the layers); art is 950 × 714, not 1296 × 2016
+  (reused). All 19 silhouettes are preloaded at start so none pops in late
+  on a slow connection.
 
 ## 7. Lessons from Halloween2025 (`D:\dev\projects\halloween2025`)
 

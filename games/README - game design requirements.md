@@ -3,7 +3,7 @@
 *For anyone making a mini game for Halloween 2026, and for their AI
 assistants.*
 
-Version 2, 2026-09-27. This version covers **sizes, text, artwork and
+Version 3, 2026-09-27. This version covers **sizes, text, artwork and
 colours only**. Later versions will add: talking to the app (scores, game
 over, pause), high scores, settings, sound, and file-size limits.
 
@@ -18,11 +18,15 @@ over, pause), high scores, settings, sound, and file-size limits.
 > treat every MUST as a requirement and check your work against it before
 > finishing.
 
-A worked example is **Pie Maker** in `games/game1/` (see its
-`README - PIE MAKER.md`).
+**Demo games.** `games/game1/` (Pie Maker) and `games/game0/` (the home
+screen) are demos, written to follow these rules. They are not part of the
+finished app and may change. Where a demo departs from a rule, its own
+`README - <NAME>.md` has a section *"Where this game breaks the
+requirements, and why"*. If the demo and this document disagree and the
+demo's README does not explain it, **this document is right**.
 
-*An identical copy of this file is in every game folder. It is maintained
-by the project owner: don't edit your copy. Newer versions will replace it.*
+*This is the only copy of this file. It lives in `games/` and is maintained
+by the project owner. Don't copy it into your game folder: link to it.*
 
 ---
 
@@ -84,9 +88,8 @@ The "In code" column is for coders (see 2.1). Designers can ignore it.
 | Thing | Canvas pixels | In code |
 |---|---|---|
 | **The canvas** | **1296 × 2016** | 100vw × 100vh |
-| **Smallest tap target** (anything the player touches) | **168 × 168** | 13vw |
+| **Smallest tap target** (anything the player touches, still or moving) | **168 × 168** | 13vw |
 | Comfortable tap target | 200 to 260 | 15–20vw |
-| Moving tap target (should be at least) | 260 | 20vw |
 | Space between tap targets (at least) | 26 | 2vw |
 | Main button (Start, Play again) | 170–210 tall, 520–1040 wide | 13–16vw × 40–80vw |
 | Keep important buttons out of the bottom strip of | 65 | 5vw |
@@ -98,11 +101,12 @@ The "In code" column is for coders (see 2.1). Designers can ignore it.
 | Sprite, main character | 428 | 33vw |
 | Sprite, boss / big object | 648 | 50vw |
 
-- **The smallest tap target is 168 × 168, in both directions.** Smaller
-  than that and a finger misses it on small phones. For text buttons, 168
-  is the minimum *height*.
-- A moving target is much harder to hit than a still one: make moving
-  targets 260 or more.
+- **The smallest tap target is 168 × 168, in both directions**, whether it
+  moves or not. On the smallest phone that is a fingertip (44 CSS px, the
+  size Apple recommends as a minimum), so 168 is the floor, not a
+  comfortable size. For text buttons, 168 is the minimum *height*.
+  (Pie Maker's smallest pumpkin is exactly 168, and was tested fine on an
+  iPhone 16 Pro.)
 - Over about 648 (half the width), a sprite leaves little room to move, and
   as a button it stops looking like something to tap.
 - Nothing that matters may depend on hovering (fingers can't hover), a
@@ -115,9 +119,11 @@ set in a drawing program on the canvas.
 
 | Size | Canvas px | In code | Use for |
 |---|---|---|---|
-| **Small**: the minimum, nothing smaller | 47 | `text-small` | labels, fine print |
-| **Medium** | 58 | `text-medium` | scores, timers, instructions |
-| **Large** | 117 | `text-large` | titles, "Game Over", big numbers |
+| **Small**: the minimum, nothing smaller | 47 | `.text-small` (3.6vw) | labels, fine print |
+| **Medium** | 58 | `.text-medium` (4.5vw) | scores, timers, instructions |
+| **Large** | 117 | `.text-large` (9vw) | titles, "Game Over", big numbers |
+
+Sizes in between are allowed. **Nothing smaller than Small.**
 
 **Standard text styles:**
 
@@ -178,7 +184,8 @@ Square cells filling the full width (1296):
 
 **Your colours are entirely up to you.** You may match these so your game
 feels part of the app, borrow them, or ignore them.
-*These are the current test colours and may change before release.*
+*These are the current test colours and may change before release.* Only
+colours the app itself uses are listed; the demo games choose their own.
 
 | Colour | Hex | Where the app uses it |
 |---|---|---|
@@ -188,10 +195,9 @@ feels part of the app, borrow them, or ignore them.
 | Mint green | `#5fbf8f` | line along the **bottom** edge of your canvas |
 | Pumpkin orange | `#e8741c` | buttons; the frame's outline (along your **left and right** edges) |
 | Dark pumpkin | `#b85510` | button shadows |
-| Off-white | `#f5f1e8` | light backgrounds |
-| Ink | `#2a2230` | main text on light backgrounds |
-| Soft ink | `#6b6272` | quieter text on light backgrounds |
-| White | `#ffffff` | text on dark backgrounds |
+| Parchment | `#eae2d2` | the game panel while your page is loading |
+| Ink | `#2a2230` | the app's default text colour |
+| White | `#ffffff` | text on the top and bottom panels |
 
 **The edges around your canvas** (all owned by the app, all outside your
 space), in case you want to echo them inside your game:
@@ -223,6 +229,10 @@ Your page runs inside the game panel, so **inside your page, `100vw` ×
   shrinks by the same amount and shapes stay true. `100vh` equals 155.6vw.
 - Borders and lines of 1 to 3 CSS px may stay in `px` (the app's own lines
   are `2px`, which is the 6 canvas pixels in 1.7).
+- **A `px` floor is fine, a `px` ceiling is not.** `max(14px, 4.5vw)` keeps
+  text readable if the panel is ever shown very small. Don't cap sizes with
+  `clamp(..., 28px)`: the panel is never wider than about 730 CSS px, so a
+  cap does nothing useful and hides the real size.
 
 **In JavaScript**, convert with the page's current width:
 
@@ -258,8 +268,12 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+[hidden] { display: none !important; }   /* hidden always wins, even over flex */
+
 img { -webkit-user-drag: none; }   /* plus draggable="false" on each <img> */
 ```
+
+Copy it as is (the demo games do). Add your own rules below it.
 
 ## 2.3 The three text sizes in code
 
@@ -273,6 +287,11 @@ img { -webkit-user-drag: none; }   /* plus draggable="false" on each <img> */
 /* Text over busy art */
 .text-on-art { color: #fff; text-shadow: 0 0.3vw 0.6vw rgb(0 0 0 / 70%); }
 ```
+
+These classes are a convenience, not a fence: nothing stops a page from
+setting any `font-size` it likes. The rule that matters is the **size**
+(rule 13). Using the classes is the easy way to be sure you meet it, and it
+lets a checker read your CSS.
 
 ## 2.4 The rules
 
@@ -294,14 +313,14 @@ Sizes refer to the table in 1.3.
 
 5. All sizes MUST be relative to the width: `vw` in CSS, or
    `canvasToScreen()` / shares of `window.innerWidth` in JS. `px` is allowed
-   only as a floor inside `max()` / `clamp()`, and for lines of 1 to 3 px.
+   only as a **floor** inside `max()`, and for lines of 1 to 3 px. No `px`
+   ceilings (no `clamp(..., Npx)`).
 6. Check the layout at 338 × 526 CSS px (smallest phone) and 547 × 850
    (PC). See the appendix for more sizes.
 
 **Touch**
 
-7. Every tap target MUST be at least 13vw × 13vw. Moving targets SHOULD be
-   at least 20vw.
+7. Every tap target MUST be at least 13vw × 13vw, still or moving.
 8. Tap targets SHOULD be at least 2vw apart.
 9. Important tap targets SHOULD NOT be in the bottom 5vw.
 10. Grids of individually tapped cells MUST have at most 7 columns (cells
@@ -313,8 +332,9 @@ Sizes refer to the table in 1.3.
 
 **Text**
 
-13. All text MUST use the three sizes in 2.3 (or sizes between Small and
-    Large). Nothing smaller than `.text-small`.
+13. No text MUST be smaller than Small (`3.6vw`, 47 canvas px). Text
+    SHOULD use the three classes in 2.3; sizes between Small and Large
+    are allowed.
 14. Font MUST be Arial/Helvetica/sans-serif. Text MUST NOT be underlined.
     Weights: normal or bold only.
 15. Text MUST contrast clearly with its background. Text over images

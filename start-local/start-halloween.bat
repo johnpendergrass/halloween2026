@@ -6,6 +6,11 @@ rem index.html is. "%~dp0.." is this script's folder plus "..".
 cd /d "%~dp0.."
 
 set "HALLOWEEN_PORT=8091"
+
+rem Find this PC's Wi-Fi address, to print for the phone. PowerShell opens a
+rem UDP socket "towards" 8.8.8.8 (nothing is sent) and reads which local
+rem address Windows chose for it. More reliable than parsing ipconfig, which
+rem lists every adapter. Falls back to a placeholder if it fails.
 for /f "usebackq delims=" %%I in (`powershell -NoProfile -Command "$udp = [System.Net.Sockets.UdpClient]::new(); try { $udp.Connect('8.8.8.8', 65530); $udp.Client.LocalEndPoint.Address.IPAddressToString } catch { 'YOUR-COMPUTER-IP' } finally { $udp.Dispose() }"`) do set "HALLOWEEN_IP=%%I"
 
 echo.

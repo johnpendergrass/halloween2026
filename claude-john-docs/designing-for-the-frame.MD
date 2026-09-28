@@ -57,8 +57,9 @@ and cannot hover.
   (no hover-only tooltips, no hover-only menus).
 - **No keyboard on a phone.** Keyboard controls are fine as a bonus, but
   never the *only* way to play.
-- **Big tap targets.** Anything you tap should be at least about 44 pixels
-  across on the smallest frame.
+- **Big tap targets.** Anything you tap must be at least 168 canvas pixels
+  across (13vw), which is a fingertip on the smallest phone. The exact
+  numbers are in `games/README - game design requirements.md`.
 - **The phone's own gestures fight back.** Dragging inside a game can make
   the page scroll, trigger pull-to-refresh, trigger Safari's swipe-back, or
   start selecting text with the magnifying loupe. The app can switch these
@@ -76,7 +77,8 @@ The layout is identical, but the frame is a very different *physical* size:
 | Phone | about 6.5 cm / 2.5 in |
 | PC monitor | about 15 cm / 6 in |
 
-**Always design for the smallest frame** — about **367 × 652** CSS pixels.
+**Design on the 1296 × 2016 canvas, then check on the smallest phone.** On an
+iPhone SE your game panel is shown at **338 × 526** CSS pixels (measured).
 If your text is readable and your buttons are tappable there, they will be
 fine everywhere. Bigger screens simply scale everything up.
 
@@ -88,7 +90,9 @@ A phone screen crams about **3 real pixels into every 1 pixel** of layout.
 That means a phone needs *more detailed* artwork than a normal PC monitor,
 even though its screen is smaller.
 
-- Full-frame background art should be about **1296 × 2304** pixels.
+- A background for your whole game panel is **1296 × 2016** pixels (the
+  requirements' design canvas). The full 9:16 frame around it would be
+  1296 × 2304, but games never paint that; only the app does.
 - It will simply look extra crisp on a PC.
 
 *Who handles it:* **the game author** (size art for the phone).

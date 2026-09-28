@@ -1,6 +1,6 @@
 # Halloween 2026 — Technical Specifications
 
-Last updated: 2026-09-27 16:34 (first day, third stretch)
+Last updated: 2026-09-27 17:33 (first day, fourth stretch: audit)
 
 ## 1. Stack and hosting
 
@@ -24,9 +24,8 @@ app/app.js                 GAMES list, drawer, tabs, loadGame/startGame/goHome
 games/game0/               the home game: pumpkin patch + rising silhouettes (2025 art in assets/)
 games/game1/               Pie Maker: index.html, game1.css, game1.js, assets/pumpkin.svg, pie.svg
 games/game2..4/            placeholder pages
-games/*/README - <NAME>.md                   how each game was made
-games/*/README - game design requirements.md identical copies; game0's is the master
-mockups/layout-mockup.html superseded mockup (kept for reference)
+games/README - game design requirements.md   THE RULES (one copy; each game README links to it)
+games/*/README - <NAME>.md                   how each game was made + "Where this game breaks the requirements"
 start-local/start-halloween.bat   double-click launcher, port 8091, prints LAN URL for iPhone
 start-local/no-cache-server.py    dev server: code no-store, anything under /assets/ no-cache
 claude-john-docs/          these notes
@@ -34,7 +33,20 @@ claude-john-docs/          these notes
 ```
 
 The three-panel design now lives in the real `index.html`/`app/` (the first
-single-column scaffold was replaced on 2026-09-27).
+single-column scaffold was replaced on 2026-09-27; the `mockups/` folder is
+superseded and is to be deleted by John: see the delete command in the
+2026-0927-1824 ToBeContinued).
+
+**Code style (John, 2026-09-27):** written for an intermediate JavaScript
+front-end programmer. Small named functions, settings at the top, a section
+map in each file. Comments say *why* (design decisions, non-obvious CSS
+tricks), not *what* standard JS/CSS does.
+
+**Every game's CSS starts with the same two blocks**, copied verbatim from
+the requirements doc: the 2.2 page setup (`*` reset, `html, body`, `body`
+touch rules, `[hidden]`, `img`) and the 2.3 `.text-small/medium/large`
+classes. The game's own styles follow. This is what makes the demos
+checkable against the doc.
 
 ## 3. The 9:16 shell (in both index.html and the mockup)
 
@@ -91,7 +103,10 @@ meta is required for the `env(safe-area-inset-*)` values.
 - `loadGame()` sets `gameFrame.src = "./games/<id>/index.html?v=" + APP_VERSION`.
   Changing `src` throws the old game away completely (no stop() needed).
 - `APP_VERSION` in app.js must match the `?v=` tags in index.html
-  (currently `2026-0927-panels1`).
+  (currently `2026-0927-rules3`). The game pages' own `<link>`/`<script>`
+  tags carry no `?v=`: on GitHub Pages (10-minute cache) a phone may run a
+  new game HTML with the old CSS/JS for up to 10 minutes after a publish.
+  Accepted; friends would forget to bump a tag inside their game.
 - No postMessage yet. Game pages must also run standalone.
 - Inside a game page, `100vw × 100vh` = the game panel.
 
@@ -120,6 +135,10 @@ requirements doc are estimates (browser toolbars vary).
   `z-index: 1`, pumpkins `2`, so pies never block taps.
 - Settings constants at the top of game1.js (count 10, size 0.13–0.24,
   speed 0.08–0.22 widths/s with small = fast, spin ±60°/s).
+- Text via `.text-medium` / `.text-large` classes in the HTML. The
+  `.play-again` button uses `font-family: inherit`, not `font: inherit`:
+  the shorthand would reset `font-size` and beat the `.text-medium` class
+  (same specificity, later rule wins).
 
 ## 4d. game0 (Home) implementation notes
 
@@ -137,8 +156,11 @@ requirements doc are estimates (browser toolbars vary).
   `afterSeconds(sink + hiddenWait, rise)`. setTimeout chain, no
   animationend. Settings at top of game0.js (`RISE_TIME`, `WAIT_AT_TOP`,
   `WAIT_HIDDEN`, `FIRST_WAIT`, `LEFT_MOST`/`RIGHT_MOST` = 14–40%).
-- `assets/pumpkin_patch_950x714_justBelowPumpkins.png` is unused (front
-  popup dropped); kept because Claude can't delete files (deny list).
+- `CHARACTERS` holds short names (`"totoro"`); `imageFor(name)` builds the
+  file name `silhouette_<name>_transparent_250h.png`. All 19 are preloaded
+  with `new Image().src` at start-up.
+- `assets/pumpkin_patch_950x714_justBelowPumpkins.png` (front popup layer,
+  dropped) is unused; John is to delete it (Claude can't delete files).
 - Measured 2026-09-27 at 390×844 in the app: panel 382 × 594, scene 790
   wide, left −102. The 404 in the console is `/favicon.ico` (no icon yet).
 
@@ -158,8 +180,10 @@ requirements doc are estimates (browser toolbars vary).
 ## 6. Local testing
 
 - `start-local/start-halloween.bat` → `http://localhost:8091/`, prints the LAN
-  URL for the phone (same Wi-Fi; allow Python on Private networks).
-- Mockup: `/mockups/layout-mockup.html`.
+  URL for the phone (same Wi-Fi; allow Python on Private networks). The LAN
+  address comes from a PowerShell UDP-socket trick (commented in the .bat).
+- `manifest.json` `background_color`/`theme_color` = `#2e1a44`, the current
+  stage purple (was an unrelated `#140c1c`). Change with the v6 verdict.
 - Claude tests with chrome-devtools emulation (375×812 and 390×844 @3x, touch;
   1920×1080) and stops its own server afterwards so the .bat can use 8091.
 
