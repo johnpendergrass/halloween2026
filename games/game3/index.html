@@ -3,16 +3,36 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Game 3</title>
-    <!-- Shown inside the app's game panel (an iframe), but also works on its
-     own: open games/game3/index.html directly to test it. -->
+    <title>Wrong: fixed phone px</title>
+    <!-- DELIBERATELY WRONG TEST GAME. Built in fixed px for "my phone"
+     (390 wide), with ordinary web-page text sizes and small buttons, and
+     a page that is taller than the screen. See the README. -->
     <link rel="stylesheet" href="./game3.css" />
   </head>
 
   <body>
-    <h1 class="text-large">Game 3</h1>
-    <p class="note text-medium">Placeholder page for Game 3.</p>
-    <p class="size-readout text-small" id="sizeReadout"></p>
+    <div class="page">
+      <h1>Ghost Count</h1>
+      <p>Built in fixed pixels for a 390-wide phone. Normal web text (16px),
+        small buttons (32px tall), and a page longer than the screen.</p>
+
+      <div class="board" id="board"></div>
+
+      <p>Ghosts found: <span id="found">0</span> of 12</p>
+      <button id="reset" class="small-button">Reset</button>
+      <a href="#" class="small-link">How to play</a>
+
+      <h2>Instructions</h2>
+      <ol>
+        <li>Tap a square to reveal it.</li>
+        <li>Find all twelve ghosts.</li>
+        <li>Squares are 40px: fine with a mouse, tricky with a finger.</li>
+        <li>This list exists to make the page scroll.</li>
+        <li>Scrolling inside the game panel fights the game's own taps.</li>
+        <li>On a PC the whole page sits small in the top-left corner.</li>
+        <li>On the smallest iPhone the 390px board is cut off at the right.</li>
+      </ol>
+    </div>
 
     <script src="./game3.js"></script>
   </body>

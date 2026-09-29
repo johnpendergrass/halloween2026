@@ -1,0 +1,17 @@
+Halloween 2026 - project status (the glance; details in claude-john-docs/)
+
+2026 0929  Claude + John: games.json is now the list of games (app.js never edited
+           by designers). game2/game3 turned into deliberately wrong test games.
+           games.json v2 fields designed, written up, not built. Committed + pushed.
+2026 0927  Claude + John: first day. Frame, three panels, iframe games, game0 home
+           (pumpkin patch), game1 Pie Maker, requirements doc v3, audit.
+
+NOT YET
+ - run the delete command (stale rules copies in game1-4, mockups/, unused game0 PNG)
+ - build games.json v2 (folder, shortTitle, icon, designer, date, role, status ...)
+ - decide contribution workflow + who names folders; write "Adding your game" + CLAUDE.md
+ - switch on GitHub Pages; test on the iPhone from the home screen
+ - John's verdicts: home art, drawer over Home, v6 colours, title font
+ - later: message contract (scores, pause, settings, sound), checker script
+
+DETAIL  claude-john-docs/Claude-ToBe-Continued-2026-0929-1540.MD, specifications.MD

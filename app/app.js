@@ -1,38 +1,43 @@
 /* ============================================================================
    Halloween 2026 - app/app.js   (the APP: frame, panels, switching games)
 
-   Each game is its own little web page in games/<id>/index.html. The app
+   Each game is its own little web page in games/<slot>/index.html. The app
    shows the chosen game by pointing the game panel's <iframe> at that page.
    The app and the games do not talk to each other yet - that comes later.
 
+   The list of games is NOT in this file. It is in games.json, next to
+   index.html, and the app reads it at start-up (section 5). A game author
+   only touches their own games/<slot>/ folder and their entry in games.json.
+
    Section map:
-     1. The list of games
+     1. Settings and the games list
      2. Bottom panel: open, close, toggle
      3. Bottom panel tabs: App / This Game
      4. Switching games
-     5. Start up
+     5. Start up: read games.json, build the buttons, show the home game
    ========================================================================= */
 
 // Bump this (and the ?v= tags in index.html) whenever code changes, so
 // phones fetch fresh copies instead of old cached ones.
-const APP_VERSION = "2026-0927-rules3";
+const APP_VERSION = "2026-0929-gamesjson";
 
 /* ------------------------------------------------------------------------
-   1. The list of games. THE ONE PLACE to add a game.
-   id    = its folder name under games/ (lowercase, no spaces)
-   title = shown on its button and in the top panel
-   game0 is the default "home" game: loaded at start and whenever no other
-   game is active. It does not get a button.
+   1. Settings and the games list
+
+   games.json holds one entry per slot: { slot, title, author, description }.
+   slot  = the folder name under games/ (game0 ... game4)
+   title = shown on the game's button and in the top panel
+   The slot named HOME_SLOT is the home game: loaded at start and whenever
+   no other game is active. It gets no button.
+   These two variables are filled in by startUp() once games.json has been
+   read; until then they are empty.
    --------------------------------------------------------------------- */
 
-const HOME_GAME = { id: "game0", title: "Halloween 2026" };
+const GAMES_FILE = "./games.json";
+const HOME_SLOT = "game0";
 
-const GAMES = [
-  { id: "game1", title: "Pie Maker" },
-  { id: "game2", title: "Game 2" },
-  { id: "game3", title: "Game 3" },
-  { id: "game4", title: "Game 4" },
-];
+let homeGame = null;   // the games.json entry for HOME_SLOT
+let games = [];        // every other entry, in games.json order
 
 /* ------------------------------------------------------------------------
    2. Bottom panel: open, close, toggle
@@ -91,7 +96,7 @@ const topTitle = document.getElementById("topTitle");
 /** Show a game's page in the game panel and put its name in the top panel.
     Changing the iframe's src throws the old game away completely. */
 function loadGame(game) {
-  gameFrame.src = "./games/" + game.id + "/index.html?v=" + APP_VERSION;
+  gameFrame.src = "./games/" + game.slot + "/index.html?v=" + APP_VERSION;
   gameFrame.title = game.title;
   topTitle.textContent = game.title;
 }
@@ -104,17 +109,17 @@ function startGame(game) {
 
 /** Back to game0 (the home game) with the bottom panel open. */
 function goHome() {
-  loadGame(HOME_GAME);
+  loadGame(homeGame);
   showTab("app");
   openDrawer();
 }
 
 document.getElementById("homeButton").addEventListener("click", goHome);
 
-/** Make one button in the App tab for each game in GAMES. */
+/** Make one button in the App tab for each game (the home game has none). */
 function makeGameButtons() {
   const holder = document.getElementById("gameButtons");
-  GAMES.forEach((game) => {
+  games.forEach((game) => {
     const button = document.createElement("button");
     button.className = "game-button";
     button.textContent = game.title;
@@ -124,8 +129,57 @@ function makeGameButtons() {
 }
 
 /* ------------------------------------------------------------------------
-   5. Start up: build the buttons, show game0, panel open.
+   5. Start up: read games.json, build the buttons, show the home game.
+
+   fetch() only works over http(s), not when index.html is opened straight
+   from the disk (file://). Always test through start-local/ or a web
+   server. If games.json cannot be read, the app says so in the App tab
+   instead of showing a blank frame.
    --------------------------------------------------------------------- */
 
-makeGameButtons();
-goHome();
+/** Read games.json and return its "games" array. Throws if anything fails. */
+async function readGamesFile() {
+  // Same ?v= trick as the scripts: a phone must not reuse an old copy.
+  const response = await fetch(GAMES_FILE + "?v=" + APP_VERSION);
+  if (!response.ok) {
+    throw new Error(GAMES_FILE + " returned " + response.status);
+  }
+  const data = await response.json();
+  if (!Array.isArray(data.games)) {
+    throw new Error(GAMES_FILE + ' has no "games" list');
+  }
+  return data.games;
+}
+
+/** Put a readable message where the game buttons would have been. */
+function showStartupError(error) {
+  const holder = document.getElementById("gameButtons");
+  holder.textContent =
+    "Could not read the list of games (" + error.message + "). " +
+    "Open the app through start-local/start-halloween.bat or a web server, " +
+    "not by double-clicking index.html.";
+  console.error("Halloween 2026 start-up failed:", error);
+}
+
+async function startUp() {
+  let allGames;
+  try {
+    allGames = await readGamesFile();
+  } catch (error) {
+    showStartupError(error);
+    return;
+  }
+
+  homeGame = allGames.find((game) => game.slot === HOME_SLOT);
+  games = allGames.filter((game) => game.slot !== HOME_SLOT);
+
+  if (!homeGame) {
+    showStartupError(new Error('no "' + HOME_SLOT + '" entry in ' + GAMES_FILE));
+    return;
+  }
+
+  makeGameButtons();
+  goHome();
+}
+
+startUp();

@@ -1,6 +1,6 @@
 # Halloween 2026 — Specifications (design decisions)
 
-Last updated: 2026-09-27 17:33 (first day, fourth stretch: audit)
+Last updated: 2026-09-29 15:40 (second day, fifth stretch: games.json)
 
 This file records WHAT the app looks like and WHY. Technical "how" lives in
 `specifications-technical.MD`. Companion notes in this folder:
@@ -95,8 +95,8 @@ not part of the final package, they may change or go. Consequences:
 
 ## 4. The flow (real app, 2026-09-27)
 
-- App starts on **game0**, with the bottom panel **open** showing the game
-  buttons. **game0 is a real game** (its own folder, html/css/js/assets),
+- App starts on the **home game** (`game0`), with the bottom panel **open**
+  showing one button per game listed in `games.json`. **game0 is a real game** (its own folder, html/css/js/assets),
   special only because it is the default: shown at start and whenever no
   other game is active. It will become the HOME screen with animations.
 - Tap a game → its page loads in the game panel, bottom panel **closes**,
@@ -137,6 +137,15 @@ clock. John may "nix it" → back to `#07040a` and `black`.
 - **Games cannot draw in the bottom panel.** They send data; the app draws
   scores and settings controls. Keeps every game's panel consistent.
 - The app owns: the frame, Home button, sound setting, high scores, loading.
+- **The list of games is `games.json` at the root (John, 2026-09-29).**
+  Goal: *a true import scaffold*. A designer puts their files in their
+  `games/<slot>/` folder and fills in their entry in games.json. **app.js,
+  index.html and styles.css are stable and are never edited by a
+  designer**; app.js reads the file at start-up and does the importing
+  and (later) the communication. Slots `game0`–`game4` are a convention:
+  app.js does not know the number five, it makes a button for every entry
+  and only insists that a home entry exists. Benching a game = removing
+  its entry; the folder can stay.
 - Folders: `games/game0` … `games/game4` (John: each with its own js, css,
   html, assets). Each has a `README - <GAME NAME>.md` describing how it was
   made (John's naming). The rules live in **one** file,
@@ -217,6 +226,60 @@ waits, sinks. Decisions:
   (reused). All 19 silhouettes are preloaded at start so none pops in late
   on a slow connection.
 
+## 6d. Test games: game2 and game3 are deliberately wrong (2026-09-29)
+
+John asked what a designer sees if they drop in a page that was not
+written for the panel. Answer, verified: **the app does nothing to it**.
+The iframe fills the panel and the page is shown as is, no scaling,
+cropping or repair. To make that visible, the two placeholders became
+permanent test games, labelled "wrong on purpose" in their titles, page
+comments and READMEs, with a "what you will see" section each:
+
+- **game2 "Wrong: desktop size"**: a fixed 1280 × 720 stage in px, the way
+  Halloween 2025's games were built. On a phone only the top-left corner
+  shows (score, one pumpkin); the page pans with a finger drag; the Reset
+  button is off-screen. On a 1080p PC the panel is still under half the
+  stage.
+- **game3 "Wrong: fixed phone px"**: written for one 390-wide phone in px,
+  ordinary 16 px web text, 40 px squares, a 32 px button, an underlined
+  link, a page that scrolls. Nearly right on an iPhone 15/16 (the trap),
+  clipped on the SE, huddled small in the top-left corner on a PC.
+
+They are the argument for the rules doc. Both must be replaced wholesale
+when a real game takes the slot.
+
+## 6e. games.json v2 (designed 2026-09-29, NOT implemented)
+
+John wants each entry to carry, optionally: folder name, long name, short
+name, icon, designer, date. Agreed shape, split by whether the app can use
+the field today (fields nobody reads go stale):
+
+| Field | Use |
+|---|---|
+| `folder` | replaces `slot`; the only required field |
+| `title` | long name, on the button |
+| `shortTitle` | top bar (narrow, shares space with two icons); falls back to `title` |
+| `icon` | path relative to the game folder, e.g. `assets/icon.svg`; on the button and beside the top-bar title; default pumpkin when missing |
+| `designer` | free text |
+| `date` | `YYYY-MM-DD`, finished or last changed |
+| `role` | `"home"` on one entry; removes the hidden "home must be game0" rule |
+| `status` | `ready` / `test` / `hidden`; hidden = no button, entry stays; test = small tag on the button |
+| `description` | one or two sentences, This Game tab |
+| `howToPlay` | short paragraph (later: a file path), This Game tab |
+| `credits` | art / sound / idea sources, About area |
+
+**Deferred until the message contract exists:** `scoring`
+(none / points / time), `settings`, `sound`, `pausable`.
+
+**Not added, on purpose:** button order (array order does it), per-game
+colours (the app's buttons should look alike), translated titles (a
+second file if the Chinese switch happens).
+
+**Icon convention:** every game keeps `assets/icon.svg` (or a square
+256 px PNG). Drawn at about 60 canvas px in the top bar, about 120 on the
+button. Goes into requirements doc v4 with a "your games.json entry"
+section.
+
 ## 7. Lessons from Halloween2025 (`D:\dev\projects\halloween2025`)
 
 Desktop-only 1280 × 720, a host (`js/main.js`) with games exposing
@@ -224,7 +287,8 @@ Desktop-only 1280 × 720, a host (`js/main.js`) with games exposing
 - Keep: iframe wrapper for standalone games; `games/<id>/` folder convention;
   placeholder when a game fails to load; one switch function (stop old →
   render → start new).
-- Fix: adding a game meant editing 3 places (→ one list); built-in games shared
+- Fix: adding a game meant editing 3 places (→ one entry in games.json,
+  nothing in the app's code); built-in games shared
   global CSS names and document listeners (→ iframes); iframe games could not
   report scores (→ message contract); unprefixed localStorage keys (→ prefix
   with game id).

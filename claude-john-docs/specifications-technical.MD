@@ -1,6 +1,6 @@
 # Halloween 2026 — Technical Specifications
 
-Last updated: 2026-09-27 17:33 (first day, fourth stretch: audit)
+Last updated: 2026-09-29 15:40 (second day, fifth stretch: games.json)
 
 ## 1. Stack and hosting
 
@@ -18,12 +18,15 @@ Last updated: 2026-09-27 17:33 (first day, fourth stretch: audit)
 
 ```text
 index.html                 the app: 9:16 frame, top panel, game panel with <iframe id=gameFrame>, drawer
+games.json                 THE LIST OF GAMES: "_about" block + "games" array of { slot, title, author, description }
 manifest.json              Android/desktop full-screen ("standalone", portrait); icons: [] (TODO)
 app/styles.css             app CSS (frame, panels, drawer) - moved from the mockup
-app/app.js                 GAMES list, drawer, tabs, loadGame/startGame/goHome
+app/app.js                 reads games.json at start-up; drawer, tabs, loadGame/startGame/goHome. Never edited by designers
 games/game0/               the home game: pumpkin patch + rising silhouettes (2025 art in assets/)
 games/game1/               Pie Maker: index.html, game1.css, game1.js, assets/pumpkin.svg, pie.svg
-games/game2..4/            placeholder pages
+games/game2/               TEST GAME, deliberately wrong: fixed 1280 x 720 desktop stage in px
+games/game3/               TEST GAME, deliberately wrong: fixed px for a 390-wide phone, small text, scrolls
+games/game4/               placeholder page
 games/README - game design requirements.md   THE RULES (one copy; each game README links to it)
 games/*/README - <NAME>.md                   how each game was made + "Where this game breaks the requirements"
 start-local/start-halloween.bat   double-click launcher, port 8091, prints LAN URL for iPhone
@@ -95,15 +98,33 @@ meta is required for the `env(safe-area-inset-*)` values.
   `toggleDrawer`, `showTab`, `loadGame(game)`, `startGame(game)`, `goHome()`,
   `makeGameButtons()`.
 
-## 4a. Games in iframes
+## 4a. Games in iframes, and games.json (2026-09-29)
 
-- `GAMES` array at the top of `app/app.js` = **the one place to add a game**
-  (`{ id, title }`; id = folder name). `HOME_GAME = { id: "game0", ... }`
-  has no button. The App tab's buttons are generated from `GAMES`.
-- `loadGame()` sets `gameFrame.src = "./games/<id>/index.html?v=" + APP_VERSION`.
+- **`games.json`** (root, beside index.html) = **the one place to add a
+  game**. Shape: `{ "_about": [...strings...], "games": [ { slot, title,
+  author, description }, ... ] }`. `_about` is the file's own
+  documentation (JSON has no comments); the app ignores it. `slot` = the
+  folder name under `games/`.
+- **app.js section 5, `startUp()`** (async): `readGamesFile()` fetches
+  `./games.json?v=APP_VERSION` (same cache-busting as the scripts), checks
+  `response.ok` and that `data.games` is an array, then `homeGame` = the
+  entry whose slot is `HOME_SLOT` (`"game0"`), `games` = every other
+  entry in file order. Then `makeGameButtons()` and `goHome()`. Any
+  failure → `showStartupError()` writes a plain message into
+  `#gameButtons` ("Could not read the list of games (...). Open the app
+  through start-local/start-halloween.bat or a web server, not by
+  double-clicking index.html.") and logs to the console. **`fetch()` does
+  not work over `file://`**, which is why that message exists; tested.
+- app.js contains no game names. Nothing in `app/` changes when a game is
+  added, renamed or removed; verified by `git status` after the two test
+  games were written (only `games/game2/`, `games/game3/` and games.json
+  changed).
+- `loadGame()` sets `gameFrame.src = "./games/<slot>/index.html?v=" + APP_VERSION`.
   Changing `src` throws the old game away completely (no stop() needed).
 - `APP_VERSION` in app.js must match the `?v=` tags in index.html
-  (currently `2026-0927-rules3`). The game pages' own `<link>`/`<script>`
+  (currently `2026-0929-gamesjson`). **An edit to games.json also needs
+  the bump** before a push, or phones keep the old list for up to 10
+  minutes; the local server never caches it. The game pages' own `<link>`/`<script>`
   tags carry no `?v=`: on GitHub Pages (10-minute cache) a phone may run a
   new game HTML with the old CSS/JS for up to 10 minutes after a publish.
   Accepted; friends would forget to bump a tag inside their game.
@@ -164,6 +185,31 @@ requirements doc are estimates (browser toolbars vary).
 - Measured 2026-09-27 at 390×844 in the app: panel 382 × 594, scene 790
   wide, left −102. The 404 in the console is `/favicon.ico` (no icon yet).
 
+## 4e. The two wrong test games (game2, game3)
+
+Plain pages with no page-setup block, so the iframe's default scrolling
+shows. game2: `#stage { width: 1280px; height: 720px }`, `click`
+handlers, a `:hover` colour. game3: `.page { width: 390px }`, an 8-column
+grid of 40 px `.square`s (12 random ghosts via a `Set` of indices), 16 px
+body text. Each README lists the rule numbers it breaks. Verified with
+chrome-devtools at 390×844×3 mobile and 1920×1080: panel 547 × 851 on the
+PC; game3 sits in the top-left with a blank strip on the right.
+
+## 4f. games.json v2: how it would be implemented (not done)
+
+Design in `specifications.MD` 6e. Code plan:
+- app.js: `HOME_SLOT` goes away; `homeGame = entries.find(e => e.role === "home")`,
+  `games = entries.filter(e => e.role !== "home" && e.status !== "hidden")`.
+  `loadGame()` uses `entry.folder`. Top bar shows `entry.shortTitle ||
+  entry.title` and an `<img>` at `./games/<folder>/<icon>`, with an
+  `onerror`/missing-field fallback to a default pumpkin SVG in `app/`.
+- index.html / styles.css: an icon `<img>` before `#topTitle`; buttons
+  become icon + label (flex row). Icon sizes in cqw so they scale with
+  the frame (about 60 canvas px in the bar, 120 on a button).
+- Each game: `assets/icon.svg` (or a 256 px square PNG).
+- Validation stays minimal: a missing optional field falls back; a
+  missing `folder` or no home entry → `showStartupError()`.
+
 ## 5. iPhone "app" mode
 
 - Tags: `apple-mobile-web-app-capable`, `mobile-web-app-capable`,
@@ -189,8 +235,9 @@ requirements doc are estimates (browser toolbars vary).
 
 ## 7. Future implementation notes
 
-- Registry is currently the `GAMES` array in app.js; may move to its own
-  file (id, title, author, icon) when friends start adding games.
+- Registry moved to `games.json` on 2026-09-29 (see 4a, 4f). The deferred
+  fields `scoring`, `settings`, `sound`, `pausable` arrive with the message
+  contract.
 - Message contract via `postMessage` + a helper script games include; the
   helper must no-op when the game runs standalone (no parent).
 - Also planned: `CLAUDE.md` + `AGENTS.md` at repo root pointing contributors'

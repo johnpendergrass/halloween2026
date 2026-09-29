@@ -1,0 +1,45 @@
+{
+  "_about": [
+    "Halloween 2026 - the list of games. THE ONE PLACE to add, rename or describe a game.",
+    "The app reads this file when it starts and makes one button per game in the bottom panel.",
+    "There are five slots, game0 to game4. Each slot is the folder games/<slot>/ with an index.html inside.",
+    "A game's author fills in their slot's entry here and puts their files in that slot's folder. Nothing else changes.",
+    "game0 is the HOME game: shown at start and after the Home button. It gets no button.",
+    "Fields: slot = folder name (fixed), title = shown on the button and in the top panel,",
+    "author = who made it, description = one line about it (not shown yet).",
+    "More fields will be added later, when games start talking to the app (scores, settings, sound).",
+    "JSON cannot hold comments, which is why this _about block exists. The app ignores it."
+  ],
+  "games": [
+    {
+      "slot": "game0",
+      "title": "Halloween 2026",
+      "author": "John Pendergrass, art from Halloween 2025",
+      "description": "The home screen: a pumpkin patch where silhouettes rise from behind the trees."
+    },
+    {
+      "slot": "game1",
+      "title": "Pie Maker",
+      "author": "John Pendergrass",
+      "description": "Tap the drifting pumpkins to turn them into pies as fast as you can."
+    },
+    {
+      "slot": "game2",
+      "title": "Wrong: desktop size",
+      "author": "Claude Code (test)",
+      "description": "DELIBERATELY WRONG: a 1280 x 720 desktop game in fixed px, to show what the app does with it."
+    },
+    {
+      "slot": "game3",
+      "title": "Wrong: fixed phone px",
+      "author": "Claude Code (test)",
+      "description": "DELIBERATELY WRONG: sized in px for one phone, small text and buttons, page scrolls."
+    },
+    {
+      "slot": "game4",
+      "title": "Game 4",
+      "author": "",
+      "description": "Empty slot. Placeholder page."
+    }
+  ]
+}
