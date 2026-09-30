@@ -25,8 +25,32 @@
       "how_to_play": "Tap a pumpkin and it becomes a pie. The clock runs from the start until the last pie. Play again for a fresh round."
     },
     {
-      "folder_name": "game2",
+      "folder_name": "stack-o-lantern",
       "goes_in_slot": 2,
+      "title": "Stack-o'-Lantern",
+      "short_title": "Stack",
+      "icon": "assets/stack.svg",
+      "designer": "Claude",
+      "credits": "Designed and written by Claude Code at John's invitation",
+      "date": "September 29, 2026",
+      "description": "Pumpkin slabs slide across the night sky. Tap to drop each one on the tower. Whatever hangs over the edge gets sliced off, so sloppy drops make the tower narrower until one misses. The moon is judging you.",
+      "how_to_play": "Tap anywhere to drop the sliding pumpkin onto the one below. Line the edges up: a perfect drop keeps the full width, and three perfects in a row grow it back. Stack as many as you can before a slab misses."
+    },
+    {
+      "folder_name": "game1",
+      "goes_in_slot": "",
+      "title": "Game 1",
+      "short_title": "Game 1",
+      "icon": "",
+      "designer": "",
+      "credits": "",
+      "date": "",
+      "description": "Placeholder for a game not written yet.",
+      "how_to_play": ""
+    },
+    {
+      "folder_name": "game2",
+      "goes_in_slot": 3,
       "title": "Wrong: desktop size",
       "short_title": "Wrong: desktop",
       "icon": "",
@@ -38,7 +62,7 @@
     },
     {
       "folder_name": "game3",
-      "goes_in_slot": "",
+      "goes_in_slot": 4,
       "title": "Wrong: fixed phone px",
       "short_title": "Wrong: phone px",
       "icon": "",
@@ -49,28 +73,64 @@
       "how_to_play": "Tap squares to find the twelve hidden ghosts. Notice how small the squares are for a finger."
     },
     {
-      "folder_name": "hollow-hill",
-      "goes_in_slot": 3,
-      "title": "Hollow Hill",
-      "short_title": "Hollow Hill",
-      "icon": "assets/hill.svg",
-      "designer": "Claude",
-      "credits": "Story, art and code by Claude Code at John's invitation",
-      "date": "September 29, 2026",
-      "description": "A tap-only adventure. The Great Pumpkin on Hollow Hill has gone dark and the trick-or-treaters are lost. Talk to a vampire mayor, a sulking scarecrow, a headless skeleton and a ghost organist, solve three little puzzles, and relight the hill. Ten to fifteen minutes.",
-      "how_to_play": "Tap people and things to talk or look. Tap the orange arrows on the edges to walk. Tap an item in the strip at the bottom to hold it, then tap what to use it on. Stuck? Tap the ? for a hint."
+      "folder_name": "game4",
+      "goes_in_slot": "",
+      "title": "Game 4",
+      "short_title": "Game 4",
+      "icon": "",
+      "designer": "",
+      "credits": "",
+      "date": "",
+      "description": "Placeholder for a game not written yet.",
+      "how_to_play": ""
     },
     {
-      "folder_name": "game4",
-      "goes_in_slot": 4,
-      "title": "Stack-o'-Lantern",
-      "short_title": "Stack",
-      "icon": "assets/stack.svg",
-      "designer": "Claude",
-      "credits": "Designed and written by Claude Code at John's invitation",
-      "date": "September 29, 2026",
-      "description": "Pumpkin slabs slide across the night sky. Tap to drop each one on the tower. Whatever hangs over the edge gets sliced off, so sloppy drops make the tower narrower until one misses. The moon is judging you.",
-      "how_to_play": "Tap anywhere to drop the sliding pumpkin onto the one below. Line the edges up: a perfect drop keeps the full width, and three perfects in a row grow it back. Stack as many as you can before a slab misses."
+      "folder_name": "game5",
+      "goes_in_slot": 5,
+      "title": "Game 5",
+      "short_title": "Game 5",
+      "icon": "",
+      "designer": "",
+      "credits": "",
+      "date": "",
+      "description": "Placeholder for a game not written yet.",
+      "how_to_play": ""
+    },
+    {
+      "folder_name": "game6",
+      "goes_in_slot": 6,
+      "title": "Game 6",
+      "short_title": "Game 6",
+      "icon": "",
+      "designer": "",
+      "credits": "",
+      "date": "",
+      "description": "Placeholder for a game not written yet.",
+      "how_to_play": ""
+    },
+    {
+      "folder_name": "game7",
+      "goes_in_slot": 7,
+      "title": "Game 7",
+      "short_title": "Game 7",
+      "icon": "",
+      "designer": "",
+      "credits": "",
+      "date": "",
+      "description": "Placeholder for a game not written yet.",
+      "how_to_play": ""
+    },
+    {
+      "folder_name": "game8",
+      "goes_in_slot": 8,
+      "title": "Game 8",
+      "short_title": "Game 8",
+      "icon": "",
+      "designer": "",
+      "credits": "",
+      "date": "",
+      "description": "Placeholder for a game not written yet.",
+      "how_to_play": ""
     }
   ],
 

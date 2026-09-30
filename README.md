@@ -3,9 +3,10 @@
 A collection of Halloween mini games for phone, tablet and PC browser.
 
 **Status: template (September 2026).** The three-panel frame (top bar, game
-panel, sliding bottom panel) is the app. The five games in it are demos and
+panel, sliding bottom panel) is the app. The games in it are demos and
 placeholders for others to copy: a pumpkin-patch home screen, Pie Maker,
-and three slots (two of them deliberately wrong test games). **The rules for writing a mini game
+Stack-o'-Lantern, two deliberately wrong test games and six empty
+placeholders. **The rules for writing a mini game
 are in `games/README - game design requirements.md`.**
 
 ## Running it on your own machine
@@ -24,7 +25,9 @@ app/                the app's CSS and JavaScript (reads games.json, builds the b
 games/README - game design requirements.md   THE RULES for mini games (the only copy)
 games/pumpkin-patch/  the home game: shown at start and when no other game is active
 games/pie-maker/      the demo game that follows the rules
-games/game2..4/       one folder per slot: index.html, its own css/js, assets/, README
+games/stack-o-lantern/  a second finished game (a one-tap stacker)
+games/game1..8/       one folder per game: index.html, its own css/js, assets/, README
+                      (game2, game3 = wrong on purpose; game1, game4..8 = placeholders)
 start-local/        a small web server for testing on this machine
 claude-john-docs/   design notes and session summaries
 ```

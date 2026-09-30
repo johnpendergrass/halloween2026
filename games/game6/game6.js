@@ -1,4 +1,4 @@
-/* game4 - its own code. Placeholder for now: it only shows how big the game
+/* game6 - its own code. Placeholder for now: it only shows how big the game
    panel is, so sizes can be checked on each device. */
 
 const sizeReadout = document.getElementById("sizeReadout");

@@ -1,0 +1,297 @@
+/* Stack-o'-Lantern (folder stack-o-lantern) - its own styles. Nothing here can affect
+   the app or other games.
+
+   Inside a game, 1vw = 1% of the GAME PANEL's width (the iframe is this
+   page's whole "screen"). Canvas pixels / 12.96 = vw. */
+
+/* ---- Page setup, copied from "README - game design requirements.md" 2.2 ---- */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;              /* the page never scrolls */
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.35;
+  /* Taps are for the game: no scrolling, zooming, selecting, or the
+     iPhone "save image" pop-up. */
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+[hidden] { display: none !important; }   /* hidden always wins, even over flex */
+
+img { -webkit-user-drag: none; }   /* plus draggable="false" on each <img> */
+
+/* ---- The three text sizes, from the requirements 2.3 ---- */
+
+.text-small  { font-size: max(12px, 3.6vw); }
+.text-medium { font-size: max(14px, 4.5vw); }
+.text-large  { font-size: max(24px, 9vw); font-weight: 700; }
+
+.text-on-art { color: #fff; text-shadow: 0 0.3vw 0.6vw rgb(0 0 0 / 70%); }
+
+/* ---- Stack-o'-Lantern ---- */
+
+/* The sizes stack-o-lantern.js also needs are CSS variables, so CSS and JS agree.
+   stack-o-lantern.js reads them once at start with getComputedStyle. */
+:root {
+  --slab-h: 9vw;          /* one pumpkin slab, 117 canvas px */
+  --ground-h: 10vw;       /* the pumpkin patch at the bottom */
+}
+
+body {
+  color: #fff;
+  background: #120a1f;
+  display: flex;
+  flex-direction: column;
+}
+
+.info-bar {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: space-between;
+  padding: 2.5vw 5vw;
+  background: #1d1233;
+  border-bottom: 2px solid #9b7cc4;   /* echoes the app's lavender line */
+}
+
+/* Night sky. The gradient gets lighter towards the ground, like a town
+   glowing below the horizon. */
+.stage {
+  position: relative;
+  flex: 1 1 auto;
+  overflow: hidden;
+  background: linear-gradient(#0f0822 0%, #2e1a44 55%, #5a2f6a 100%);
+  cursor: pointer;
+}
+
+/* Stars are three layers of tiny radial gradients, repeated at
+   different spacings so they do not line up into a grid. The layer is
+   taller than the stage so it can slide down (parallax) as the tower
+   grows without running out of stars. stack-o-lantern.js moves it with translate. */
+.stars {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -300vw;
+  height: 600vw;
+  background-image:
+    radial-gradient(circle, rgb(255 255 255 / 90%) 0 0.35vw, transparent 0.6vw),
+    radial-gradient(circle, rgb(255 255 255 / 60%) 0 0.25vw, transparent 0.5vw),
+    radial-gradient(circle, rgb(255 255 255 / 45%) 0 0.2vw, transparent 0.45vw);
+  background-size: 41vw 37vw, 29vw 23vw, 53vw 47vw;
+  background-position: 7vw 3vw, 19vw 11vw, 31vw 29vw;
+  pointer-events: none;
+}
+
+/* The moon: a pale disc with a face. The mouth is one element whose shape
+   changes with a class on .moon (see stack-o-lantern.js, moonReacts). */
+.moon {
+  position: absolute;
+  right: 8vw;
+  top: 9vw;
+  width: 24vw;
+  height: 24vw;
+  border-radius: 50%;
+  background: #f6e7b0;
+  box-shadow: 0 0 7vw rgb(246 231 176 / 45%), inset -2vw -2vw 0 rgb(0 0 0 / 8%);
+  pointer-events: none;
+}
+
+.moon .eye {
+  position: absolute;
+  top: 8.5vw;
+  width: 2.6vw;
+  height: 3vw;
+  border-radius: 50%;
+  background: #2a2230;
+}
+.moon .eye-left  { left: 7vw; }
+.moon .eye-right { right: 7vw; }
+
+/* Default: a smile (the bottom half of a ring). */
+.moon .mouth {
+  position: absolute;
+  left: 8.5vw;
+  top: 12.5vw;
+  width: 7vw;
+  height: 4vw;
+  border: 0.9vw solid #2a2230;
+  border-top-color: transparent;
+  border-radius: 0 0 7vw 7vw / 0 0 5vw 5vw;
+  transition: all 150ms ease-out;
+}
+
+/* PERFECT: eyes wide, mouth a round "o". */
+.moon.is-wow .eye { height: 4.2vw; top: 7.5vw; }
+.moon.is-wow .mouth {
+  left: 10vw; top: 13vw; width: 4vw; height: 4vw;
+  border-top-color: #2a2230;
+  border-radius: 50%;
+}
+
+/* A sloppy drop: a flat line. */
+.moon.is-meh .mouth {
+  top: 14.5vw; height: 0;
+  border-width: 0 0 0.9vw 0;
+  border-radius: 0;
+}
+
+/* A miss: the smile turned upside down. */
+.moon.is-sad .mouth {
+  top: 13vw;
+  border-top-color: #2a2230;
+  border-bottom-color: transparent;
+  border-radius: 7vw 7vw 0 0 / 5vw 5vw 0 0;
+}
+.moon.is-sad .eye { height: 2vw; top: 9.5vw; }
+
+.ground {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--ground-h);
+  background: #173229;
+  border-top: 2px solid #5fbf8f;      /* echoes the app's mint line */
+}
+
+.tower {
+  position: absolute;
+  inset: 0;
+}
+
+/* One pumpkin slab. stack-o-lantern.js sets left, bottom and width (all vw) and the
+   --tone colour. The ribs are a repeating gradient in vw, so they stay the
+   same spacing however narrow the slab gets. */
+.slab {
+  position: absolute;
+  height: var(--slab-h);
+  border-radius: 2.4vw / 3.6vw;
+  background-color: var(--tone, #e8741c);
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0 5.4vw,
+    rgb(0 0 0 / 14%) 5.4vw 6.4vw
+  );
+  box-shadow:
+    inset 0 -1.5vw 0 rgb(0 0 0 / 24%),       /* shaded underside */
+    inset 0 1vw 0 rgb(255 255 255 / 16%);    /* highlight on top */
+}
+
+/* The stem, only on the top slab and the moving slab. */
+.slab.has-stem::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -3vw;
+  width: 3vw;
+  height: 3.6vw;
+  margin-left: -1.5vw;
+  border-radius: 1vw 1vw 0.4vw 0.4vw;
+  background: #4f7a2e;
+  box-shadow: inset -0.7vw 0 0 rgb(0 0 0 / 20%);
+}
+
+/* A freshly placed slab squashes for a moment. */
+.slab.is-new {
+  transform-origin: 50% 100%;
+  animation: squash 220ms ease-out;
+}
+
+@keyframes squash {
+  0%   { transform: scaleY(0.72) scaleX(1.06); }
+  60%  { transform: scaleY(1.06) scaleX(0.98); }
+  100% { transform: none; }
+}
+
+/* The reaction word rises and fades. The class is re-applied for every
+   drop; stack-o-lantern.js restarts the animation (see showReaction). */
+.reaction {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 32%;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  letter-spacing: 0.1em;
+}
+.reaction.is-perfect { color: #ffd34d; }
+.reaction.is-miss    { color: #ff6b6b; }
+
+.reaction.is-shown {
+  animation: rise 800ms ease-out forwards;
+}
+
+@keyframes rise {
+  0%   { opacity: 0; transform: translateY(4vw) scale(0.7); }
+  20%  { opacity: 1; transform: translateY(0)   scale(1.1); }
+  70%  { opacity: 1; transform: translateY(-3vw) scale(1); }
+  100% { opacity: 0; transform: translateY(-8vw) scale(1); }
+}
+
+/* Start and end screens cover the stage. */
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5vw;
+  padding: 8vw;
+  text-align: center;
+  background: rgb(18 10 31 / 72%);
+}
+
+.overlay .title { line-height: 1.1; }
+
+.overlay .hint {
+  margin-top: 6vw;
+  animation: blink 1.6s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.35; }
+}
+
+.overlay .compare {
+  font-style: italic;
+  opacity: 0.9;
+}
+
+/* The same look as the app's buttons (requirements 1.7). */
+.play-again {
+  min-height: 13vw;       /* the smallest tap target */
+  margin-top: 3vw;
+  padding: 3.5vw 8vw;
+  border: none;
+  border-radius: 3vw;
+  background: #e8741c;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 700;
+  box-shadow: 0 1.2vw 0 #b85510;
+  cursor: pointer;
+}
+
+.play-again:active {
+  transform: translateY(1vw);
+  box-shadow: 0 0.2vw 0 #b85510;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slab.is-new { animation: none; }
+  .overlay .hint { animation: none; }
+  .moon .mouth { transition: none; }
+}

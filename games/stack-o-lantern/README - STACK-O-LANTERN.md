@@ -18,8 +18,8 @@ giraffe" comparisons.
 
 ```text
 index.html                 info bar, the stage (stars, moon, ground, tower), start and end screens
-game4.css                  page setup and text classes (copied from the requirements), then the game's own styles
-game4.js                   the game: settings, state, slabs, taps, camera, end screen
+stack-o-lantern.css        page setup and text classes (copied from the requirements), then the game's own styles
+stack-o-lantern.js         the game: settings, state, slabs, taps, camera, end screen
 assets/stack.svg           the icon for the app's picker (256 x 256, square viewBox)
 README - STACK-O-LANTERN.md  this file
 ```
@@ -44,7 +44,7 @@ README - STACK-O-LANTERN.md  this file
 
 ## How it is built
 
-- **Every number in game4.js is in vw.** Positions are written into
+- **Every number in stack-o-lantern.js is in vw.** Positions are written into
   `style.left/bottom/width` as `"Nvw"` strings, so the browser does the
   pixel maths and a resize costs nothing. The slab height and the ground
   height are CSS variables (`--slab-h`, `--ground-h`) read once by JS, so

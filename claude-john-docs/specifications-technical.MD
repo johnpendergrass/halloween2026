@@ -1,6 +1,6 @@
 # Halloween 2026 — Technical Specifications
 
-Last updated: 2026-09-29 17:51 (second day, sixth stretch: games.json v2, icons, picker, This Game)
+Last updated: 2026-09-30 16:55 (third day: Hollow Hill shelved, stack-o-lantern folder, placeholders game1..game8)
 
 ## 1. Stack and hosting
 
@@ -27,20 +27,20 @@ games/pumpkin-patch/       the home game (was game0): index.html, pumpkin-patch.
 games/pie-maker/           Pie Maker (was game1): index.html, pie-maker.css/.js, assets/pumpkin.svg, pie.svg (also its icon)
 games/game2/               TEST GAME, deliberately wrong: fixed 1280 x 720 desktop stage in px
 games/game3/               TEST GAME, deliberately wrong: fixed px for a 390-wide phone, small text, scrolls
-games/game4/               STACK-O'-LANTERN (Claude's stacker): index.html, game4.css/.js, assets/stack.svg
-games/hollow-hill/         HOLLOW HILL (Claude's adventure): index.html, hollow-hill.css, hollow-hill.js (story + engine), hollow-hill-art.js (SVG art), assets/hill.svg
+games/stack-o-lantern/     STACK-O'-LANTERN (Claude's stacker, was game4): index.html, stack-o-lantern.css/.js, assets/stack.svg
+games/game1, game4..game8/ NEUTRAL PLACEHOLDERS (see 4i): index.html, gameN.css/.js, empty assets/, README - GAME N.md
+games/_NOT-USED-hollow-hill-cc/   HOLLOW HILL, SHELVED (no games.json entry): index.html, hollow-hill.css, hollow-hill.js (story + engine), hollow-hill-art.js (SVG art), assets/hill.svg
 games/README - game design requirements.md   THE RULES (one copy; each game README links to it)
 games/*/README - <NAME>.md                   how each game was made + "Where this game breaks the requirements"
-start-local/start-halloween.bat   double-click launcher, port 8091, prints LAN URL for iPhone
+start-local/start-halloween.bat   double-click launcher, port 8091 (confirmed by John 2026-09-30), prints LAN URL for iPhone
 start-local/no-cache-server.py    dev server: code no-store, anything under /assets/ no-cache
 claude-john-docs/          these notes
 .gitignore                 anything in github-excluded/ never goes to GitHub
 ```
 
 The three-panel design now lives in the real `index.html`/`app/` (the first
-single-column scaffold was replaced on 2026-09-27; the `mockups/` folder is
-superseded and is to be deleted by John: see the delete command in the
-2026-0927-1824 ToBeContinued).
+single-column scaffold was replaced on 2026-09-27; the old `mockups/`
+folder was removed on 2026-09-29).
 
 **Code style (John, 2026-09-27):** written for an intermediate JavaScript
 front-end programmer. Small named functions, settings at the top, a section
@@ -139,7 +139,8 @@ meta is required for the `env(safe-area-inset-*)` values.
 - `loadGame()` sets `gameFrame.src = "./games/<folder_name>/index.html?v=" + APP_VERSION`.
   Changing `src` throws the old game away completely (no stop() needed).
 - `APP_VERSION` in app.js must match the `?v=` tags in index.html
-  (currently `2026-0930-slots8`). **An edit to games.json also needs
+  (currently `2026-0930-stack`; check app.js, this line has gone stale
+  before). **An edit to games.json also needs
   the bump** before a push, or phones keep the old list for up to 10
   minutes; the local server never caches it. The game pages' own `<link>`/`<script>`
   tags carry no `?v=`: on GitHub Pages (10-minute cache) a phone may run a
@@ -171,7 +172,7 @@ requirements doc are estimates (browser toolbars vary).
 - Wrap-around: a pumpkin jumps to the opposite edge only once fully off.
 - `pointerdown` per pumpkin image (instant on touch). Pies get
   `z-index: 1`, pumpkins `2`, so pies never block taps.
-- Settings constants at the top of game1.js (count 10, size 0.13–0.24,
+- Settings constants at the top of pie-maker.js (count 10, size 0.13–0.24,
   speed 0.08–0.22 widths/s with small = fast, spin ±60°/s).
 - Text via `.text-medium` / `.text-large` classes in the HTML. The
   `.play-again` button uses `font-family: inherit`, not `font: inherit`:
@@ -192,13 +193,13 @@ requirements doc are estimates (browser toolbars vary).
   properties so they don't fight. JS sets `transition-duration` each time.
 - JS: `rise()` → `afterSeconds(rise + topWait, sink)` → `sink()` →
   `afterSeconds(sink + hiddenWait, rise)`. setTimeout chain, no
-  animationend. Settings at top of game0.js (`RISE_TIME`, `WAIT_AT_TOP`,
+  animationend. Settings at top of pumpkin-patch.js (`RISE_TIME`, `WAIT_AT_TOP`,
   `WAIT_HIDDEN`, `FIRST_WAIT`, `LEFT_MOST`/`RIGHT_MOST` = 14–40%).
 - `CHARACTERS` holds short names (`"totoro"`); `imageFor(name)` builds the
   file name `silhouette_<name>_transparent_250h.png`. All 19 are preloaded
   with `new Image().src` at start-up.
-- `assets/pumpkin_patch_950x714_justBelowPumpkins.png` (front popup layer,
-  dropped) is unused; John is to delete it (Claude can't delete files).
+- The unused front popup layer (`..._justBelowPumpkins.png`) was removed on
+  2026-09-29.
 - Measured 2026-09-27 at 390×844 in the app: panel 382 × 594, scene 790
   wide, left −102. The 404 in the console is `/favicon.ico` (no icon yet).
 
@@ -289,9 +290,9 @@ icon in the top bar next to `short_title`; only if John asks.
   chrome-devtools `evaluate_script`; results and console warnings matched
   the spec. The PNGs were deleted afterwards.
 
-## 4g. Stack-o'-Lantern implementation notes (games/game4/)
+## 4g. Stack-o'-Lantern implementation notes (games/stack-o-lantern/)
 
-- **Every number in game4.js is in vw**; positions are written as `"Nvw"`
+- **Every number in stack-o-lantern.js is in vw**; positions are written as `"Nvw"`
   strings into `style.left/bottom/width`, so the browser does the pixel
   maths and resizing is free. `--slab-h` (9vw) and `--ground-h` (10vw) are
   CSS variables read once by JS (`readVw`), so CSS and JS cannot disagree.
@@ -315,7 +316,7 @@ icon in the top bar next to `short_title`; only if John asks.
   animation (`animationPlayState = "paused"`) since a screenshot call
   arrives after 800 ms.
 
-## 4h. Hollow Hill implementation notes (games/hollow-hill/)
+## 4h. Hollow Hill implementation notes (games/_NOT-USED-hollow-hill-cc/, shelved)
 
 - **Three files**: `hollow-hill-art.js` (an `ART` object: `scenes.{square,
   gate, graveyard, crypt, chapel, bog, hilltop}(flags)` returning SVG
@@ -354,6 +355,43 @@ icon in the top bar next to `short_title`; only if John asks.
   into the page outlined the hotspots for the screenshots (not in code).
   Sizes 382×594, 338×526 (three-line dialogue fits, no overflow),
   547×850; picker + This Game in the app.
+
+## 4i. Placeholder folders and the 2026-09-30 reshuffle
+
+- **Where a neutral placeholder comes from**: the original game4
+  placeholder in git, commit `c44f4de` (the last commit before
+  Stack-o'-Lantern overwrote it). game2 and game3 cannot be the source,
+  they are the wrong-on-purpose tests. Recipe for game N: `git show
+  "c44f4de:games/game4/<file>"` piped through `sed` swapping `game4`,
+  `Game 4` and `GAME 4` for the new number, for `index.html`,
+  `game4.css`, `game4.js`, `README - GAME 4.md` (file names renamed the
+  same way), plus an empty `assets/.gitkeep`. Made this way: game1,
+  game4, game5, game6, game7, game8; identical apart from the number.
+- **A placeholder page**: `<h1>` name, "Placeholder page for Game N.",
+  and `#sizeReadout` filled by `showSize()` ("Game panel: 382 × 594 px
+  (9:14 = 1.556, this = 1.555)"), refreshed on `resize`. CSS = the 2.2
+  page-setup block + the 2.3 text classes + a lilac page (`#efdcef`).
+- **Stack-o'-Lantern's move**: `git mv games/game4 games/stack-o-lantern`,
+  then `git mv` of `game4.css/.js` to `stack-o-lantern.css/.js`, then the
+  `<link>`/`<script>` tags and the comments and README inside the folder.
+  The old placeholder's `assets/.gitkeep` travelled with it (harmless).
+- **Hollow Hill**: John renamed the folder in Explorer (git sees delete +
+  add and pairs them as a rename when staged). Only two things in the app
+  named it: the games.json entry and the version tag `2026-0929-hollow`.
+  Its own files still say `hollow-hill` and `games/hollow-hill/` in
+  comments; left alone on purpose until it is brought back. Its old
+  games.json entry is in git, commit `c979de7`.
+- **Editing games.json by script**: work on the text (find the entry,
+  insert before a marker such as the line `"folder_name": "game5",`),
+  assert each marker occurs exactly once, then `json.loads` the result as
+  the check. `json.dump` of the parsed file would flatten John's
+  hand-made layout.
+- **Test method**: at 390×844×3 in the app, `click()` every
+  `.board-row .game-button` in turn and read `gameFrame.src`, the iframe's
+  `document.title`, the top title and `.is-current`. Benched games have no
+  button, so their three files are `fetch`ed and the status codes read.
+  Stack-o'-Lantern: two `pointerdown` events on `.stage`, then count
+  `.slab` (1 → 3).
 
 ## 5. iPhone "app" mode
 

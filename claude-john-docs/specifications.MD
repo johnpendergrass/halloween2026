@@ -1,6 +1,6 @@
 # Halloween 2026 — Specifications (design decisions)
 
-Last updated: 2026-09-29 17:51 (second day, sixth stretch: games.json v2, icons, picker, This Game)
+Last updated: 2026-09-30 16:55 (third day: Hollow Hill shelved, stack-o-lantern folder, placeholders game1..game8)
 
 This file records WHAT the app looks like and WHY. Technical "how" lives in
 `specifications-technical.MD`. Companion notes in this folder:
@@ -33,7 +33,7 @@ checkable, and backed by a working example game.
 ### What the app is right now (John, 2026-09-27, after the audit)
 
 **A template for others to insert mini games into.** The frame and the docs
-are the product. game0 (pumpkin patch) and game1 (Pie Maker) are **demos**:
+are the product. The Pumpkin Patch and Pie Maker (first named game0 and game1) are **demos**:
 not part of the final package, they may change or go. Consequences:
 
 - **The requirements doc is the source of truth; the demos follow it**, not
@@ -157,7 +157,7 @@ was opened from disk (`file:`), since that is the only time it applies.
 
 - App starts on the **home game** (the games.json entry with
   `goes_in_slot: "home"`, currently `pumpkin-patch`), with the bottom panel
-  **open** on the App tab: the five-icon picker (see 3a). **game0 is a real game** (its own folder, html/css/js/assets),
+  **open** on the App tab: the icon picker (see 3a). **The home game is a real game** (its own folder, html/css/js/assets),
   special only because it is the default: shown at start and whenever no
   other game is active. It will become the HOME screen with animations.
 - Tap a game's icon → its page loads in the game panel, the bottom panel
@@ -228,8 +228,9 @@ clock. John may "nix it" → back to `#07040a` and `black`.
   every field. Dropped from Claude's earlier proposal: `role` and `status`
   (`goes_in_slot` does both jobs), button order (array order), per-game
   colours, translated titles (a second file if the Chinese switch happens).
-- Folders: `games/pumpkin-patch/` (home), `games/pie-maker/`, `games/game2..4/`
-  (renamed from game0/game1 on 2026-09-29; any lowercase name works). Each
+- Folders: `games/pumpkin-patch/` (home), `games/pie-maker/`,
+  `games/stack-o-lantern/`, `games/game1..8/` (see 6h for which is what;
+  any lowercase name works). Each
   has a `README - <GAME NAME>.md` describing how it was made (John's
   naming). The rules live in **one** file,
   `games/README - game design requirements.md` (was five identical copies
@@ -329,9 +330,14 @@ comments and READMEs, with a "what you will see" section each:
   clipped on the SE, huddled small in the top-left corner on a PC.
 
 They are the argument for the rules doc. Both must be replaced wholesale
-when a real game takes the slot.
+when a real game takes the slot. Since 2026-09-30 both are on the board
+again (slots 3 and 4; game3 had been benched for one night to make room
+for Hollow Hill).
 
-## 6f. Stack-o'-Lantern (folder `game4`, by Claude, 2026-09-29)
+## 6f. Stack-o'-Lantern (folder `stack-o-lantern`, by Claude, 2026-09-29)
+
+Written in the `game4` folder; moved to its own named folder on 2026-09-30
+(John), which freed `game4` to be a placeholder again.
 
 John invited Claude to "design and write a good little game of your own...
 whimsical... meme-worthy... something folks will want to play over and
@@ -354,7 +360,14 @@ over." Claude chose a one-tap stacker.
   ground is part of the scrolling world (a pinned ground made the lower
   slabs look like they sank); Best is per visit (rule 18).
 
-## 6g. Hollow Hill (folder `hollow-hill`, by Claude, 2026-09-29)
+## 6g. Hollow Hill (SHELVED 2026-09-30; folder `_NOT-USED-hollow-hill-cc`)
+
+**Status (John, 2026-09-30):** "keep the game folder... remove all
+references to it in the actual game, game json and such. we will consider
+changes to it and using it later." John renamed the folder himself; the
+games.json entry is gone and nothing in the app points at it. The files
+inside are untouched. What follows describes the game as built on
+2026-09-29.
 
 John then asked for "a more complicated and involved adventure type game...
 10-15 minutes... Freddi Fish or Pajama Sam... d&d type games in caves...
@@ -394,6 +407,35 @@ yourself". Claude pitched and built a point-and-click adventure.
   own lowercase folder. Layout: scene 112vw tall + dialogue 26vw +
   inventory 17.6vw = the 155.6vw panel. All art is flat SVG drawn in code
   (no downloads, no licences). No saving (rule 18): one sitting.
+
+## 6h. The folders and the board (John, 2026-09-30)
+
+John wants a complete set of numbered placeholder folders next to the
+named games, so a designer always has a neutral folder to copy or take
+over. After the session:
+
+| Folder | What it is | Slot |
+|---|---|---|
+| `pumpkin-patch` | the home game | home |
+| `pie-maker` | demo that follows the rules | 1 (John) |
+| `stack-o-lantern` | Claude's stacker | 2 (John) |
+| `game2` | wrong on purpose: desktop px | 3 |
+| `game3` | wrong on purpose: phone px | 4 |
+| `game5`..`game8` | neutral placeholders | 5–8 |
+| `game1`, `game4` | neutral placeholders | "" (benched) |
+| `_NOT-USED-hollow-hill-cc` | shelved, no entry | none |
+
+- **A neutral placeholder** shows its name ("Game 5"), the line
+  "Placeholder page for Game 5." and the measured size of the game panel.
+  It follows the rules doc (page-setup block, text classes), so it is a
+  correct starting point, unlike game2/game3. Its games.json entry has a
+  title and short title only; the button shows the text fallback.
+- **Slots 1 and 2 are John's.** The rest is Claude's choice, flagged to
+  John and open: nine games for eight cells means one or more sit out,
+  and Claude benched the two newest placeholders rather than the wrong
+  test games. Changing it is one number per entry in games.json.
+- There is no `game1`..`game8` to slot 1..8 rule. The folder name and the
+  slot are independent (that is the point of `goes_in_slot`).
 
 ## 6e. games.json v2: the first proposal (2026-09-29, superseded)
 
