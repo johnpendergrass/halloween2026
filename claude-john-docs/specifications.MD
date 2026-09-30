@@ -331,6 +331,70 @@ comments and READMEs, with a "what you will see" section each:
 They are the argument for the rules doc. Both must be replaced wholesale
 when a real game takes the slot.
 
+## 6f. Stack-o'-Lantern (folder `game4`, by Claude, 2026-09-29)
+
+John invited Claude to "design and write a good little game of your own...
+whimsical... meme-worthy... something folks will want to play over and
+over." Claude chose a one-tap stacker.
+
+- **Play**: pumpkin slabs slide across the sky above a tower; tap to drop.
+  The overlap with the slab below becomes the new slab; the overhang is
+  sliced off and tumbles away. Less than 0.8vw overlap = a miss = game
+  over. A drop within 1.6vw of the edge is **PERFECT**: snaps into line,
+  full width kept; every third perfect in a row grows the slab 3vw back
+  (up to the 46vw start). Speed 42vw/s × 1.035 per slab, capped at 110.
+- **Whimsy**: a giant reaction word per drop (PERFECT x5 in gold, nice,
+  close one, yikes, oof, SPLAT.), a moon with a face (wide-eyed "o" on
+  perfect, flat mouth on sloppy, frown at the end), every 7th slab a pale
+  ghost pumpkin, and an end screen that turns the count into a height
+  ("10 = a basketball hoop, 18 = a giraffe, 320 = Big Ben. Please go
+  outside."). John: "that was a fine little game."
+- **Decisions**: no images at all (slabs, stars, moon are CSS) so it loads
+  instantly; the camera keeps the tower top at 42% of the stage; the
+  ground is part of the scrolling world (a pinned ground made the lower
+  slabs look like they sank); Best is per visit (rule 18).
+
+## 6g. Hollow Hill (folder `hollow-hill`, by Claude, 2026-09-29)
+
+John then asked for "a more complicated and involved adventure type game...
+10-15 minutes... Freddi Fish or Pajama Sam... d&d type games in caves...
+easy controls... tap friendly around the game edges... create the artwork
+yourself". Claude pitched and built a point-and-click adventure.
+
+- **Story**: the Great Pumpkin on Hollow Hill has gone dark; the vampire
+  mayor (in a bathrobe) sends you to relight it. Three things needed: a
+  way through the hill gate, a candle, and a true Halloween flame (a
+  will-o'-wisp).
+- **Map**: village square (hub) with exits to the hill gate (north), the
+  graveyard (east, then the crypt), the chapel (west) and the bog (south);
+  the hilltop beyond the gate. Seven scenes.
+- **Three chains, any order**: (1) scarecrow Stitch wants his hat; the
+  crows trade it for something shiny; a spoon is stuck in the bog mud
+  (three pulls; the frogs hint). (2) Ghost organist Madame Wail's pipes
+  are full of bats; bats love candy corn (you start with a bag); she gives
+  her last beeswax candle. (3) Skeleton Fibula has a spare jar but lost
+  his skull in the crypt; the crypt door opens by tapping its four
+  carvings moon, bat, pumpkin (order carved on his tombstone; a wrong tap
+  resets); return the skull, get the jar, catch a drifting wisp.
+- **Finale**: through the gate, up the hill, candle first, then the wisp;
+  the pumpkin blazes, the village windows light, the mayor: "THE CANDY
+  ECONOMY IS SAVED!" End screen: time + rank (<6 min Legend, <10 Night
+  Navigator, <15 Steady Lantern-Bearer, else Thorough Trick-or-Treater).
+- **Controls (all taps)**: hotspots in the picture (glow once on entering
+  a scene, ring while an item is held, never under 14vw); orange arrow
+  tabs on the scene edges labelled with the destination (16vw); an
+  inventory strip (14vw tiles: tap to hold, tap a target to use); a
+  dialogue box (three Medium lines; tap to continue); a **?** hint button
+  that names exactly the next step and pulses after a minute without
+  progress. Every character answers every item, usually with a joke. No
+  dead ends, nothing can be lost.
+- **Decisions Claude made while John was away**: first person (no player
+  sprite: halves the art, Myst-style), a hint button (yes), the wrong test
+  game `game3` benched (slot "") rather than deleted, Hollow Hill in its
+  own lowercase folder. Layout: scene 112vw tall + dialogue 26vw +
+  inventory 17.6vw = the 155.6vw panel. All art is flat SVG drawn in code
+  (no downloads, no licences). No saving (rule 18): one sitting.
+
 ## 6e. games.json v2: the first proposal (2026-09-29, superseded)
 
 Kept for the reasoning. The shape actually built is in section 6 above;

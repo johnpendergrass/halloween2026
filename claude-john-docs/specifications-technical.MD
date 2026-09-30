@@ -27,7 +27,8 @@ games/pumpkin-patch/       the home game (was game0): index.html, pumpkin-patch.
 games/pie-maker/           Pie Maker (was game1): index.html, pie-maker.css/.js, assets/pumpkin.svg, pie.svg (also its icon)
 games/game2/               TEST GAME, deliberately wrong: fixed 1280 x 720 desktop stage in px
 games/game3/               TEST GAME, deliberately wrong: fixed px for a 390-wide phone, small text, scrolls
-games/game4/               placeholder page
+games/game4/               STACK-O'-LANTERN (Claude's stacker): index.html, game4.css/.js, assets/stack.svg
+games/hollow-hill/         HOLLOW HILL (Claude's adventure): index.html, hollow-hill.css, hollow-hill.js (story + engine), hollow-hill-art.js (SVG art), assets/hill.svg
 games/README - game design requirements.md   THE RULES (one copy; each game README links to it)
 games/*/README - <NAME>.md                   how each game was made + "Where this game breaks the requirements"
 start-local/start-halloween.bat   double-click launcher, port 8091, prints LAN URL for iPhone
@@ -287,6 +288,72 @@ icon in the top bar next to `short_title`; only if John asks.
   path, built into buttons via the page's own `makeIconButton()` from
   chrome-devtools `evaluate_script`; results and console warnings matched
   the spec. The PNGs were deleted afterwards.
+
+## 4g. Stack-o'-Lantern implementation notes (games/game4/)
+
+- **Every number in game4.js is in vw**; positions are written as `"Nvw"`
+  strings into `style.left/bottom/width`, so the browser does the pixel
+  maths and resizing is free. `--slab-h` (9vw) and `--ground-h` (10vw) are
+  CSS variables read once by JS (`readVw`), so CSS and JS cannot disagree.
+- **World vs camera**: slab positions are world coordinates (y up from the
+  stage bottom). The camera is ONE `translateY` on the `.tower` container
+  (stars ×0.25 and moon ×0.12 for parallax), so placed slabs are set once.
+  The ground element is created inside `.tower` by `reset()` so it scrolls
+  away too.
+- `drop()`: perfect if `|mover.x - top.x| <= PERFECT_TOLERANCE`; else
+  overlap = `min(rights) - max(lefts)`; `< MIN_OVERLAP` = miss (the whole
+  slab becomes a falling piece); else the overhang becomes a piece
+  (`addFallingPiece`, gravity 320vw/s², spin) and the mover settles
+  (`settle()` → `placeSlab`, `updateLabels`, `spawnMover`).
+- Reaction word restarts its CSS animation via `void el.offsetWidth`
+  between removing and adding `.is-shown`. The moon's mouth is one element
+  restyled by class (`is-happy/is-wow/is-meh/is-sad`).
+- `requestAnimationFrame` loop, dt capped at 0.05 s. `pointerdown` on the
+  stage; Space/Enter as a keyboard extra.
+- Tested with `evaluate_script` driving `pointerdown` events and waiting
+  for alignment; the reaction word was screenshotted by pausing its
+  animation (`animationPlayState = "paused"`) since a screenshot call
+  arrives after 800 ms.
+
+## 4h. Hollow Hill implementation notes (games/hollow-hill/)
+
+- **Three files**: `hollow-hill-art.js` (an `ART` object: `scenes.{square,
+  gate, graveyard, crypt, chapel, bog, hilltop}(flags)` returning SVG
+  markup for a `viewBox="0 0 1000 1120"`, plus `ITEM_ICONS`), and
+  `hollow-hill.js` in three parts: STORY (data), ENGINE, START/END.
+- **STORY shape**: `STORY[sceneId] = { name, art, exits: [{to, side,
+  label, when?, blocked?}], hotspots: [{id, label, x, y, w, h, when?,
+  tap(item)}] }`. `tap` returns `[[who, text], ...]` or `{ lines, then }`.
+  Story helpers: `flags()`, `set(flag, value)`, `has/give/take(item)`.
+  `FRESH_FLAGS` is deep-copied on `start()`. Lines with `who === ""` are
+  narration (italic). `hintFor(flags)` is an ordered if-chain.
+- **ENGINE**: `showScene(id, glow)` draws art, builds hotspot buttons
+  (picture units → %: `x/10`, `y/11.2`; min 140 units) and exit buttons;
+  `tapHotspot` runs `tap(held)`, then `say()`, then redraws ONLY if the
+  flags changed (a JSON compare), so the SVG animations are not restarted
+  by every tap; `say/advance` run the queue, and `then` fires when the
+  LAST line is shown so an item pops in while the line mentioning it is
+  on screen; `hold(item)` toggles `.is-holding` on the scene (rings).
+  Taps anywhere on the scene or box advance dialogue; hotspots/exits
+  `stopPropagation`.
+- **Crypt door**: `pressSymbol()` appends to `flags.doorCode`; a wrong
+  symbol resets; complete → `doorOpen` and `showScene("crypt")` in `then`.
+  Door symbol hotspots have `when: () => !doorOpen`; the skull hotspot
+  `when: doorOpen && !skullTaken`.
+- **SVG gotcha**: a CSS `transform` animation on an SVG element REPLACES
+  its `transform` attribute, so every animated group (`.bob`, `.sway`,
+  `.drift-*`) sits inside a plain positioned `<g transform=...>`.
+  `stars(seed, ...)` uses a tiny LCG so the sky is stable across redraws.
+- Layout: `body` flex column; `.scene` flex 1 (≈112vw on 9:14), `.dialogue`
+  26vw, `.inventory` 17.6vw. The SVG uses `preserveAspectRatio="xMidYMid
+  slice"`; the hotspot percentages assume the 1000:1120 shape, so on
+  9:13–9:15 panels they drift slightly (accepted by rule 3's SHOULD).
+- **Test method**: `evaluate_script` playthrough using the REAL buttons by
+  `aria-label` ("Go to Bog", "Two crows", "Shiny spoon"), reading dialogue
+  by tapping the box, including wrong turns; a debug `<style>` injected
+  into the page outlined the hotspots for the screenshots (not in code).
+  Sizes 382×594, 338×526 (three-line dialogue fits, no overflow),
+  547×850; picker + This Game in the app.
 
 ## 5. iPhone "app" mode
 

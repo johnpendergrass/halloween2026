@@ -1,0 +1,22 @@
+Halloween 2026 - project status (the glance; details in claude-john-docs/)
+
+2026 0929 night Claude (John afk): two games of Claude's own. Stack-o'-Lantern (one-tap
+              stacker, games/game4, John: "a fine little game") and Hollow Hill (tap-only
+              point-and-click adventure, 7 scenes, 10-15 min, games/hollow-hill, slot 3,
+              awaiting John's verdict). game3 benched. Committed + pushed.
+2026 0929 eve picker = board of 2 x 4 fixed cells (goes_in_slot 1-8, a lone row is centred);
+              plain "invalid JSON" start-up message; stale files deleted. Committed + pushed.
+2026 0929 pm  games.json v2, folders renamed pumpkin-patch / pie-maker, icon picker with
+              pressed "current game" button, icon spec + text fallback, This Game tab.
+2026 0929 am  games.json replaces the GAMES list in app.js; game2/game3 became wrong test games.
+2026 0927     first day: frame, three panels, iframe games, home + Pie Maker demos, rules v3.
+
+NOT YET
+ - John plays Hollow Hill: keep? tune length/lines? rename game4 folder to stack-o-lantern?
+ - requirements doc v4: "your games.json entry" (1-8 board) + icon spec (256, 200-300, +-10)
+ - decide contribution workflow (zip to John?); write "Adding your game" + root CLAUDE.md
+ - maybe revisit the board: "each row centres itself" (option B), John's call
+ - switch on GitHub Pages; test on the iPhone from the home screen
+ - later: message contract (scores, pause, save, sound), checker script
+
+DETAIL  claude-john-docs/Claude-ToBe-Continued-2026-0929-2120.MD, specifications.MD 6f/6g

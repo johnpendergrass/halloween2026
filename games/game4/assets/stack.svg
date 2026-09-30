@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="256" height="256">
+  <!-- Stack-o'-Lantern icon: three pumpkin slabs under a watching moon,
+       on a rounded night square. Everything is clipped to the rounded
+       square so nothing pokes out of the corners. -->
+  <defs>
+    <clipPath id="rounded">
+      <rect x="0" y="0" width="100" height="100" rx="22" ry="22"/>
+    </clipPath>
+  </defs>
+  <g clip-path="url(#rounded)">
+    <rect width="100" height="100" fill="#2e1a44"/>
+    <!-- moon with a face -->
+    <circle cx="74" cy="26" r="14" fill="#f6e7b0"/>
+    <circle cx="69" cy="24" r="1.6" fill="#2a2230"/>
+    <circle cx="79" cy="24" r="1.6" fill="#2a2230"/>
+    <path d="M69 30 Q74 34 79 30" stroke="#2a2230" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <!-- ground -->
+    <rect x="0" y="88" width="100" height="12" fill="#173229"/>
+    <rect x="0" y="87" width="100" height="1.5" fill="#5fbf8f"/>
+    <!-- slabs, narrowing upward, a bit off-centre -->
+    <rect x="14" y="74" width="60" height="13" rx="4" fill="#e8741c"/>
+    <rect x="14" y="83" width="60" height="4" rx="2" fill="#b85510"/>
+    <rect x="22" y="61" width="44" height="13" rx="4" fill="#f0862a"/>
+    <rect x="22" y="70" width="44" height="4" rx="2" fill="#b85510"/>
+    <rect x="30" y="48" width="30" height="13" rx="4" fill="#f59a3c"/>
+    <rect x="30" y="57" width="30" height="4" rx="2" fill="#b85510"/>
+    <!-- stem on top -->
+    <rect x="43" y="42" width="5" height="7" rx="1.5" fill="#4f7a2e"/>
+    <!-- ribs -->
+    <g stroke="#0002" stroke-width="1.5">
+      <line x1="26" y1="75" x2="26" y2="86"/><line x1="38" y1="75" x2="38" y2="86"/>
+      <line x1="50" y1="75" x2="50" y2="86"/><line x1="62" y1="75" x2="62" y2="86"/>
+      <line x1="33" y1="62" x2="33" y2="73"/><line x1="44" y1="62" x2="44" y2="73"/>
+      <line x1="55" y1="62" x2="55" y2="73"/>
+      <line x1="38" y1="49" x2="38" y2="60"/><line x1="50" y1="49" x2="50" y2="60"/>
+    </g>
+  </g>
+</svg>

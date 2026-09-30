@@ -38,7 +38,7 @@
     },
     {
       "folder_name": "game3",
-      "goes_in_slot": 3,
+      "goes_in_slot": "",
       "title": "Wrong: fixed phone px",
       "short_title": "Wrong: phone px",
       "icon": "",
@@ -49,16 +49,28 @@
       "how_to_play": "Tap squares to find the twelve hidden ghosts. Notice how small the squares are for a finger."
     },
     {
+      "folder_name": "hollow-hill",
+      "goes_in_slot": 3,
+      "title": "Hollow Hill",
+      "short_title": "Hollow Hill",
+      "icon": "assets/hill.svg",
+      "designer": "Claude",
+      "credits": "Story, art and code by Claude Code at John's invitation",
+      "date": "September 29, 2026",
+      "description": "A tap-only adventure. The Great Pumpkin on Hollow Hill has gone dark and the trick-or-treaters are lost. Talk to a vampire mayor, a sulking scarecrow, a headless skeleton and a ghost organist, solve three little puzzles, and relight the hill. Ten to fifteen minutes.",
+      "how_to_play": "Tap people and things to talk or look. Tap the orange arrows on the edges to walk. Tap an item in the strip at the bottom to hold it, then tap what to use it on. Stuck? Tap the ? for a hint."
+    },
+    {
       "folder_name": "game4",
       "goes_in_slot": 4,
-      "title": "Game 4",
-      "short_title": "Game 4",
-      "icon": "",
-      "designer": "",
-      "credits": "",
-      "date": "",
-      "description": "Empty slot. Placeholder page that shows the game panel's size.",
-      "how_to_play": ""
+      "title": "Stack-o'-Lantern",
+      "short_title": "Stack",
+      "icon": "assets/stack.svg",
+      "designer": "Claude",
+      "credits": "Designed and written by Claude Code at John's invitation",
+      "date": "September 29, 2026",
+      "description": "Pumpkin slabs slide across the night sky. Tap to drop each one on the tower. Whatever hangs over the edge gets sliced off, so sloppy drops make the tower narrower until one misses. The moon is judging you.",
+      "how_to_play": "Tap anywhere to drop the sliding pumpkin onto the one below. Line the edges up: a perfect drop keeps the full width, and three perfects in a row grow it back. Stack as many as you can before a slab misses."
     }
   ],
 

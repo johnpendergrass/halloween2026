@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hollow Hill</title>
+    <!-- Shown inside the app's game panel (an iframe), but also works on its
+     own: open games/hollow-hill/index.html directly to test it. -->
+    <link rel="stylesheet" href="./hollow-hill.css" />
+  </head>
+
+  <body>
+    <!-- HOLLOW HILL: a tap-only point-and-click adventure. The Great Pumpkin
+         on the hill has gone dark; find a way through the gate, a candle and
+         a will-o'-wisp to relight it. Everything is a tap: characters and
+         objects in the scene, arrow tabs on the edges to move, items in the
+         strip at the bottom. -->
+
+    <!-- The scene: hollow-hill.js draws the SVG picture and lays the
+         tappable hotspots and exits over it. -->
+    <main class="scene" id="scene">
+      <svg class="scene-art" id="sceneArt" viewBox="0 0 1000 1120" preserveAspectRatio="xMidYMid slice"></svg>
+      <div class="hotspots" id="hotspots"></div>
+      <div class="exits" id="exits"></div>
+      <p class="scene-name text-small text-on-art" id="sceneName"></p>
+    </main>
+
+    <!-- Who is talking and what they said. Tap to continue. -->
+    <section class="dialogue" id="dialogue">
+      <p class="speaker text-small" id="speaker"></p>
+      <p class="line text-medium" id="line"></p>
+      <p class="more text-small" id="more" hidden>tap to continue</p>
+    </section>
+
+    <!-- What you are carrying. Tap an item to hold it, then tap what to use
+         it on. The ? gives a hint. -->
+    <footer class="inventory" id="inventory">
+      <div class="items" id="items"></div>
+      <button class="hint text-large" id="hintButton" aria-label="Hint">?</button>
+    </footer>
+
+    <!-- Title screen. -->
+    <div class="overlay" id="titleScreen">
+      <p class="title text-large text-on-art">Hollow Hill</p>
+      <p class="text-medium text-on-art">
+        The Great Pumpkin has gone dark<br />
+        and the trick-or-treaters are lost.<br />
+        Somebody has to relight it.<br />
+        That somebody is you.
+      </p>
+      <p class="hint-line text-medium text-on-art">Tap anywhere to begin</p>
+    </div>
+
+    <!-- The end. -->
+    <div class="overlay is-end" id="endScreen" hidden>
+      <p class="title text-large text-on-art">The hill glows again!</p>
+      <p class="text-medium text-on-art" id="endTime"></p>
+      <p class="text-medium text-on-art rank" id="endRank"></p>
+      <button class="play-again text-medium" id="playAgain">Play again</button>
+    </div>
+
+    <script src="./hollow-hill-art.js"></script>
+    <script src="./hollow-hill.js"></script>
+  </body>
+</html>

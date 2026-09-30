@@ -3,16 +3,61 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Game 4</title>
+    <title>Stack-o'-Lantern</title>
     <!-- Shown inside the app's game panel (an iframe), but also works on its
      own: open games/game4/index.html directly to test it. -->
     <link rel="stylesheet" href="./game4.css" />
   </head>
 
   <body>
-    <h1 class="text-large">Game 4</h1>
-    <p class="note text-medium">Placeholder page for Game 4.</p>
-    <p class="size-readout text-small" id="sizeReadout"></p>
+    <!-- STACK-O'-LANTERN: pumpkin slabs slide across the sky; tap to drop
+         each one on the tower. Whatever hangs over the edge is sliced off,
+         so the tower gets narrower with every sloppy drop. A perfect drop
+         keeps the full width. The moon has opinions. -->
+
+    <header class="info-bar text-medium">
+      <span>Stacked <b id="count">0</b></span>
+      <span>Best <b id="best">0</b></span>
+    </header>
+
+    <!-- Everything moves inside the stage. game4.js positions the slabs,
+         the falling pieces and the camera; all numbers are in vw. -->
+    <main class="stage" id="stage">
+      <div class="stars" id="stars"></div>
+
+      <!-- The moon watches. Its mouth changes with the quality of a drop. -->
+      <div class="moon is-happy" id="moon" aria-hidden="true">
+        <span class="eye eye-left"></span>
+        <span class="eye eye-right"></span>
+        <span class="mouth"></span>
+      </div>
+
+      <!-- The ground, the placed slabs, the moving slab and the falling
+           pieces all live here, so one transform scrolls them together. -->
+      <div class="tower" id="tower"></div>
+
+      <!-- Big reaction word after each drop: PERFECT!, nice, yikes... -->
+      <p class="reaction text-large text-on-art" id="reaction" aria-live="polite"></p>
+
+      <!-- Start screen: the first tap anywhere starts the game. -->
+      <div class="overlay" id="startScreen">
+        <p class="title text-large text-on-art">Stack-o'-Lantern</p>
+        <p class="text-medium text-on-art">
+          Tap to drop the pumpkin.<br />
+          Line it up. Stack it high.<br />
+          The moon is judging you.
+        </p>
+        <p class="hint text-medium text-on-art">Tap anywhere to start</p>
+      </div>
+
+      <!-- End screen. -->
+      <div class="overlay" id="endScreen" hidden>
+        <p class="title text-large text-on-art" id="endWord">SPLAT.</p>
+        <p class="text-medium text-on-art" id="endCount"></p>
+        <p class="text-medium text-on-art compare" id="endCompare"></p>
+        <button class="play-again text-medium" id="playAgain">Stack again</button>
+      </div>
+    </main>
 
     <script src="./game4.js"></script>
   </body>

@@ -1,0 +1,340 @@
+/* Hollow Hill (folder hollow-hill) - its own styles. Nothing here can affect
+   the app or other games.
+
+   Inside a game, 1vw = 1% of the GAME PANEL's width (the iframe is this
+   page's whole "screen"). Canvas pixels / 12.96 = vw. */
+
+/* ---- Page setup, copied from "README - game design requirements.md" 2.2 ---- */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;              /* the page never scrolls */
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.35;
+  /* Taps are for the game: no scrolling, zooming, selecting, or the
+     iPhone "save image" pop-up. */
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+[hidden] { display: none !important; }   /* hidden always wins, even over flex */
+
+img { -webkit-user-drag: none; }   /* plus draggable="false" on each <img> */
+
+/* ---- The three text sizes, from the requirements 2.3 ---- */
+
+.text-small  { font-size: max(12px, 3.6vw); }
+.text-medium { font-size: max(14px, 4.5vw); }
+.text-large  { font-size: max(24px, 9vw); font-weight: 700; }
+
+.text-on-art { color: #fff; text-shadow: 0 0.3vw 0.6vw rgb(0 0 0 / 70%); }
+
+/* ---- Hollow Hill ---- */
+
+/* The three bands, top to bottom: scene (takes what is left, about 112vw
+   on a 9:14 panel), dialogue box, inventory strip. */
+body {
+  color: #fff;
+  background: #120a1f;
+  display: flex;
+  flex-direction: column;
+}
+
+.scene {
+  position: relative;
+  flex: 1 1 auto;
+  overflow: hidden;
+  background: #1a0f30;
+}
+
+.scene-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.scene-name {
+  position: absolute;
+  left: 3vw;
+  top: 2vw;
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+/* Hotspots are invisible buttons over the picture. hollow-hill.js sets
+   left/top/width/height in %. When a scene opens they glow for a moment
+   so a player knows where to tap (fingers cannot hover). */
+.hotspot {
+  position: absolute;
+  border: none;
+  background: transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+}
+
+.hotspot.is-glowing {
+  animation: glow 1.4s ease-out 1;
+}
+
+@keyframes glow {
+  0%   { box-shadow: 0 0 0 0 rgb(255 220 120 / 0); }
+  30%  { box-shadow: 0 0 3vw 1vw rgb(255 220 120 / 55%); }
+  100% { box-shadow: 0 0 0 0 rgb(255 220 120 / 0); }
+}
+
+/* While an item is held, everything tappable gets a soft ring so the
+   player sees where it could go. */
+.scene.is-holding .hotspot {
+  box-shadow: 0 0 0 0.6vw rgb(255 220 120 / 45%);
+}
+
+/* Exits: arrow tabs on the scene edges with the destination under the
+   arrow. 16vw square, comfortably over the 13vw minimum. */
+.exit {
+  position: absolute;
+  width: 16vw;
+  height: 16vw;
+  border: none;
+  border-radius: 3vw;
+  background: rgb(232 116 28 / 88%);      /* the app's pumpkin orange */
+  color: #fff;
+  font-family: inherit;
+  font-weight: 700;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3vw;
+  box-shadow: 0 1vw 0 #b85510;
+  cursor: pointer;
+}
+
+.exit .arrow { font-size: max(18px, 6vw); line-height: 1; }
+.exit .where { font-size: max(12px, 3.6vw); line-height: 1.1; }
+
+.exit.side-left   { left: 2vw;  top: 46%; transform: translateY(-50%); }
+.exit.side-right  { right: 2vw; top: 46%; transform: translateY(-50%); }
+.exit.side-top    { top: 2vw;   left: 50%; transform: translateX(-50%); }
+.exit.side-bottom { bottom: 2vw; left: 50%; transform: translateX(-50%); }
+
+.exit:active { box-shadow: 0 0.2vw 0 #b85510; }
+.exit.side-left:active, .exit.side-right:active { transform: translateY(-50%) translateY(0.8vw); }
+.exit.side-top:active, .exit.side-bottom:active { transform: translateX(-50%) translateY(0.8vw); }
+
+/* The dialogue box. Tapping it moves the story on. */
+.dialogue {
+  flex: 0 0 26vw;
+  padding: 2vw 4vw;
+  background: #1d1233;
+  border-top: 2px solid #9b7cc4;
+  position: relative;
+  cursor: pointer;
+}
+
+.speaker {
+  font-weight: 700;
+  color: #ffd34d;
+  min-height: 1.35em;
+}
+
+.line {
+  color: #fff;
+}
+
+.line.is-narration {
+  font-style: italic;
+  color: #d9cfe8;
+}
+
+/* Sits on the speaker's row, top right, so it never lands on the third
+   line of text on the smallest phone. */
+.more {
+  position: absolute;
+  right: 4vw;
+  top: 2vw;
+  opacity: 0.6;
+  animation: blink 1.6s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 0.6; }
+  50%      { opacity: 0.2; }
+}
+
+/* The inventory strip: item tiles and the hint button. */
+.inventory {
+  flex: 0 0 17.6vw;
+  display: flex;
+  align-items: center;
+  gap: 2vw;
+  padding: 0 2vw;
+  background: #173229;
+  border-top: 2px solid #5fbf8f;
+}
+
+.items {
+  flex: 1 1 auto;
+  display: flex;
+  gap: 2vw;
+  overflow: hidden;
+}
+
+.item {
+  flex: 0 0 auto;
+  width: 14vw;
+  height: 14vw;
+  border: none;
+  border-radius: 2.5vw;
+  background: #2a4a3c;
+  padding: 1.5vw;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 0.4vw rgb(255 255 255 / 10%);
+}
+
+.item svg { width: 100%; height: 100%; display: block; }
+
+.item.is-held {
+  background: #e8741c;
+  box-shadow: 0 0 0 0.8vw #ffd34d, 0 0 3vw #ffd34d88;
+}
+
+.item.is-new {
+  animation: pop 400ms ease-out;
+}
+
+@keyframes pop {
+  0%   { transform: scale(0.4); }
+  70%  { transform: scale(1.15); }
+  100% { transform: none; }
+}
+
+.hint {
+  flex: 0 0 auto;
+  width: 13vw;
+  height: 13vw;
+  border: none;
+  border-radius: 50%;
+  background: #2a4a3c;
+  color: #ffd34d;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 0.4vw rgb(255 255 255 / 10%);
+}
+
+.hint.is-nudging {
+  animation: nudge 1.2s ease-in-out infinite;
+}
+
+@keyframes nudge {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(255 211 77 / 0); }
+  50%      { box-shadow: 0 0 0 1.2vw rgb(255 211 77 / 60%); }
+}
+
+/* Title and end screens cover everything. */
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5vw;
+  padding: 8vw;
+  text-align: center;
+  background: rgb(18 10 31 / 80%);
+}
+
+.overlay .title { line-height: 1.1; }
+
+/* The end screen is lighter, so the lit pumpkin still shows through. */
+.overlay.is-end { background: rgb(18 10 31 / 55%); }
+
+.overlay .hint-line {
+  margin-top: 6vw;
+  animation: blink 1.6s ease-in-out infinite;
+}
+
+.overlay .rank {
+  font-weight: 700;
+  color: #ffd34d;
+}
+
+/* The same look as the app's buttons (requirements 1.7). */
+.play-again {
+  min-height: 13vw;
+  margin-top: 3vw;
+  padding: 3.5vw 8vw;
+  border: none;
+  border-radius: 3vw;
+  background: #e8741c;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 700;
+  box-shadow: 0 1.2vw 0 #b85510;
+  cursor: pointer;
+}
+
+.play-again:active {
+  transform: translateY(1vw);
+  box-shadow: 0 0.2vw 0 #b85510;
+}
+
+/* ---- Small animations inside the scene art (classes on SVG groups) ---- */
+
+.bob    { animation: bob 2.6s ease-in-out infinite; }
+.bob-slow { animation: bob 4s ease-in-out infinite; }
+.flicker { animation: flicker 1.1s ease-in-out infinite; }
+.drift-a { animation: drift-a 7s ease-in-out infinite; }
+.drift-b { animation: drift-b 9s ease-in-out infinite; }
+.drift-c { animation: drift-c 8s ease-in-out infinite; }
+.sway   { animation: sway 3.2s ease-in-out infinite; transform-origin: 50% 100%; transform-box: fill-box; }
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-14px); }
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  40%      { opacity: 0.75; }
+  60%      { opacity: 0.95; }
+}
+
+@keyframes drift-a {
+  0%, 100% { transform: translate(0, 0); }
+  33%      { transform: translate(60px, -40px); }
+  66%      { transform: translate(-30px, 30px); }
+}
+
+@keyframes drift-b {
+  0%, 100% { transform: translate(0, 0); }
+  33%      { transform: translate(-70px, 30px); }
+  66%      { transform: translate(40px, -50px); }
+}
+
+@keyframes drift-c {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(50px, 50px); }
+}
+
+@keyframes sway {
+  0%, 100% { transform: rotate(-3deg); }
+  50%      { transform: rotate(3deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bob, .bob-slow, .flicker, .drift-a, .drift-b, .drift-c, .sway,
+  .more, .overlay .hint-line, .hint.is-nudging, .item.is-new { animation: none; }
+}
