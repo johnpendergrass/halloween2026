@@ -1,4 +1,4 @@
-# Pie Maker (game1)
+# Pie Maker (folder `pie-maker`)
 
 Tap the drifting pumpkins to turn them into pumpkin pies. Make all ten as
 fast as you can. *Asteroids, but with pumpkins, and no gun.*
@@ -21,8 +21,8 @@ fast as you can. *Asteroids, but with pumpkins, and no gun.*
 
 ```text
 index.html          info bar, playing field, "All pies made!" message
-game1.css           page setup and text classes (copied from the requirements), then Pie Maker's own styles
-game1.js            settings, pumpkins, animation, tapping, start/finish
+pie-maker.css           page setup and text classes (copied from the requirements), then Pie Maker's own styles
+pie-maker.js            settings, pumpkins, animation, tapping, start/finish
 assets/pumpkin.svg  pumpkin (100 × 100 viewBox)
 assets/pie.svg      pumpkin pie seen from above (100 × 100 viewBox)
 README - PIE MAKER.md  this file
@@ -33,7 +33,7 @@ Plain HTML/CSS/JavaScript. No libraries, no build step, no sound.
 ## How it fits in the app
 
 - The app shows this page in an `<iframe>` that fills the game panel. It also
-  runs on its own: open `games/game1/index.html` directly.
+  runs on its own: open `games/pie-maker/index.html` directly.
 - **It does not talk to the app yet.** The time is not reported, and opening
   the app's bottom panel does not pause the game. Both wait for the
   messaging step.
@@ -49,7 +49,7 @@ Two choices worth knowing about:
 - Pumpkins are SVG, so the artwork-size rules (1.6) don't apply: SVG is
   sharp at any size.
 
-## Settings (top of `game1.js`)
+## Settings (top of `pie-maker.js`)
 
 | Setting | Value | Meaning |
 |---|---|---|
@@ -62,7 +62,7 @@ Two choices worth knowing about:
 
 Fixed for now. Later, the app's "This Game" tab may let players change them.
 
-## How it works (`game1.js`)
+## How it works (`pie-maker.js`)
 
 Everything is measured in **field widths** (`x = 0.5` is halfway across,
 `size = 0.2` is 20% of the width) and converted to pixels every frame from

@@ -4,7 +4,7 @@
    - a fixed 1280 x 720 stage (the Halloween 2025 games were built this way)
    - px sizes everywhere, no vw
    - none of the required page setup (no overflow:hidden, no touch rules)
-   Compare with game1 (Pie Maker), which follows the rules. */
+   Compare with games/pie-maker (Pie Maker), which follows the rules. */
 
 body {
   margin: 0;

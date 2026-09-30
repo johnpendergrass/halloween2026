@@ -7,7 +7,7 @@ the game panel's size.
 - **Status:** placeholder. Replace this file when the real game is written.
 - **The rules** every game follows are in
   [`../README - game design requirements.md`](../README%20-%20game%20design%20requirements.md).
-  For a finished example, see `games/game1/README - PIE MAKER.md` (Pie Maker).
+  For a finished example, see `games/pie-maker/README - PIE MAKER.md` (Pie Maker).
 
 ## Files
 

@@ -18,8 +18,8 @@ over, pause), high scores, settings, sound, and file-size limits.
 > treat every MUST as a requirement and check your work against it before
 > finishing.
 
-**Demo games.** `games/game1/` (Pie Maker) and `games/game0/` (the home
-screen) are demos, written to follow these rules. They are not part of the
+**Demo games.** `games/pie-maker/` (Pie Maker) and `games/pumpkin-patch/`
+(the home screen) are demos, written to follow these rules. They are not part of the
 finished app and may change. Where a demo departs from a rule, its own
 `README - <NAME>.md` has a section *"Where this game breaks the
 requirements, and why"*. If the demo and this document disagree and the

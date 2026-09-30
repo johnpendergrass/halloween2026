@@ -1,4 +1,4 @@
-/* game0 (Home) - its own styles. Nothing here can affect the app or other games.
+/* pumpkin-patch (Home) - its own styles. Nothing here can affect the app or other games.
 
    Inside a game, 1vw = 1% of the GAME PANEL's width and 1vh = 1% of its
    height (the iframe is this page's whole "screen").
@@ -63,7 +63,7 @@ body {
 }
 
 /* The character rests just below the tree line, hidden by the layer in
-   front of it, and rises above the trees. game0.js sets which picture, how
+   front of it, and rises above the trees. pumpkin-patch.js sets which picture, how
    far across (`left`) and whether it is mirrored.
    Numbers from the 2025 app: 250px tall, resting at y = 387, rising 240px,
    on the 714px-tall painting. */
@@ -74,7 +74,7 @@ body {
   top: 54.2%;    /* 387 / 714 */
   transition-property: translate;
   transition-timing-function: ease-in-out;
-  /* transition-duration is set by game0.js, random each time */
+  /* transition-duration is set by pumpkin-patch.js, random each time */
 }
 
 /* Mirroring uses `scale` and rising uses `translate`: separate properties,

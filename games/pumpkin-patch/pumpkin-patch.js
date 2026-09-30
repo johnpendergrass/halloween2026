@@ -1,11 +1,11 @@
 /* ============================================================================
-   game0 (Home)
+   pumpkin-patch (Home)
 
    A painted pumpkin patch under a full moon. Every so often a character's
    silhouette rises from behind the tree line, waits, and sinks back down.
    Based on the title screen of the Halloween 2025 app.
 
-   The movement itself is a CSS transition (game0.css). This code picks a
+   The movement itself is a CSS transition (pumpkin-patch.css). This code picks a
    character, places it, and adds or removes the "is-up" class on a timer.
 
    Sections: 1 Settings, 2 The deck of characters, 3 Rise and sink, 4 Start

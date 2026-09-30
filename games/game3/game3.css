@@ -7,7 +7,7 @@
    - no page setup block: default body margin, the page scrolls, taps
      select text and zoom
    - an underlined link
-   Compare with game1 (Pie Maker), which follows the rules. */
+   Compare with games/pie-maker (Pie Maker), which follows the rules. */
 
 body {
   font-family: Arial, Helvetica, sans-serif;

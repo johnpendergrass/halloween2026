@@ -31,7 +31,7 @@
 
     <!-- The ?v= tag forces phones to fetch fresh code after a publish.
      Change it (and APP_VERSION in app.js) whenever the code changes. -->
-    <link rel="stylesheet" href="./app/styles.css?v=2026-0929-gamesjson" />
+    <link rel="stylesheet" href="./app/styles.css?v=2026-0929-pressed" />
   </head>
 
   <body>
@@ -75,24 +75,34 @@
               <button data-tab="game">This Game</button>
             </div>
 
-            <!-- App tab: app.js fills in one button per game listed in games.json. -->
+            <!-- App tab: app.js fills in one icon button per game in games.json:
+             the home game first on its own row, then two per row. -->
             <div class="drawer-body" id="tab-app">
               <div class="game-buttons" id="gameButtons"></div>
             </div>
 
-            <div class="drawer-body" id="tab-game" hidden>
-              <p><strong>This game's info</strong></p>
-              <ul>
-                <li>High scores for this game</li>
-                <li>Settings for this game</li>
-                <li>How to play</li>
-              </ul>
+            <!-- This Game tab: app.js fills every part from the current
+             game's games.json entry (fillThisGameTab). Empty fields are
+             hidden, so a half-filled entry still reads cleanly. -->
+            <div class="drawer-body this-game" id="tab-game" hidden>
+              <div class="this-game-head">
+                <img class="this-game-icon" id="thisGameIcon" alt="" draggable="false" hidden />
+                <div>
+                  <div class="this-game-title" id="thisGameTitle"></div>
+                  <div class="this-game-byline" id="thisGameByline"></div>
+                </div>
+              </div>
+              <p id="thisGameDescription"></p>
+              <h3 class="this-game-heading" id="thisGameHowHeading">How to play</h3>
+              <p id="thisGameHowToPlay"></p>
+              <p class="this-game-credits" id="thisGameCredits"></p>
+              <p class="this-game-later">High scores and settings for this game will appear here later.</p>
             </div>
           </div>
         </section>
       </div>
     </div>
 
-    <script src="./app/app.js?v=2026-0929-gamesjson"></script>
+    <script src="./app/app.js?v=2026-0929-pressed"></script>
   </body>
 </html>

@@ -1,0 +1,20 @@
+Halloween 2026 - project status (the glance; details in claude-john-docs/)
+
+2026 0929 pm  Claude + John: games.json v2 (folder_name, goes_in_slot, icon, short_title,
+              how_to_play ...), folders renamed pumpkin-patch / pie-maker, five-icon picker
+              with pressed "current game" button, icon spec + text fallback, This Game tab
+              filled from games.json. Committed + pushed.
+2026 0929 am  games.json replaces the GAMES list in app.js; game2/game3 became deliberately
+              wrong test games. Committed + pushed.
+2026 0927     first day: frame, three panels, iframe games, home + Pie Maker demos,
+              requirements doc v3, audit.
+
+NOT YET
+ - run the delete command (stale rules copies in pie-maker/game2-4, mockups/, unused PNG)
+ - requirements doc v4: "your games.json entry" + icon spec (256, 200-300, +-10)
+ - decide contribution workflow (zip to John?); write "Adding your game" + root CLAUDE.md
+ - switch on GitHub Pages; test on the iPhone from the home screen
+ - John's verdicts: home art, drawer over Home, v6 colours, title font
+ - later: message contract (scores, pause, settings, sound), checker script
+
+DETAIL  claude-john-docs/Claude-ToBe-Continued-2026-0929-1751.MD, specifications.MD

@@ -304,27 +304,126 @@ body {
   margin-left: 5cqw;
 }
 
-/* The game buttons: two per row. */
+/* The game picker: square icon-only buttons. The home game's button sits
+   alone and centred on the first row; the slot games follow two per row.
+   Sizes are in cqw so the grid scales with the frame. On a phone a button
+   is about 70 px: well over the 44 px fingertip minimum. Three rows plus
+   gaps fit inside the open drawer with a little to spare. */
 .game-buttons {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4cqw;
+  grid-template-columns: repeat(2, var(--game-button-size));
+  justify-content: center;
+  gap: 3cqw;
+  --game-button-size: 18cqw;
 }
 
 .game-button {
-  min-height: 44px;
-  padding: 4cqw 0;
+  width: var(--game-button-size);
+  height: var(--game-button-size);
+  padding: 2cqw;                 /* the orange margin around the icon */
   border-radius: 3cqw;
   background: var(--pumpkin);
-  color: #fff;
-  font-size: clamp(15px, 5.2cqw, 28px);
-  font-weight: 700;
   box-shadow: 0 1.2cqw 0 var(--pumpkin-dark);
+  display: grid;
+  place-items: center;
+}
+
+/* The home button spans both columns and centres itself in that space. */
+.game-button.is-home {
+  grid-column: 1 / -1;
+  justify-self: center;
+}
+
+.game-button img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;          /* taps land on the button, not the image */
+}
+
+/* No usable icon: the short title, centred, at most two short lines.
+   About ten characters fit per line, which is why short_title exists. */
+.game-button.is-text {
+  padding: 1.5cqw;
+  color: #fff;
+  font-weight: 700;
+  font-size: clamp(11px, 3.4cqw, 18px);
+  line-height: 1.15;
+  text-align: center;
+  overflow-wrap: anywhere;
+  overflow: hidden;
 }
 
 .game-button:active {
   transform: translateY(1cqw);
   box-shadow: 0 0.2cqw 0 var(--pumpkin-dark);
+}
+
+/* The game now in the panel: its button stays pressed IN. Pushed down by
+   the full height of its shadow (so it sits 1.2cqw lower than the others),
+   no shadow underneath, darker orange, a dark inset shadow along the top
+   as if sunk into the panel, and a mint ring so it also reads for anyone
+   who does not see the depth cue. The icon is dimmed a touch. */
+.game-button.is-current {
+  transform: translateY(1.2cqw);
+  background: var(--pumpkin-dark);
+  box-shadow:
+    inset 0 1.6cqw 2cqw #0007,
+    inset 0 0 0 0.8cqw #0003;
+  outline: 0.8cqw solid var(--drawer-edge);
+  outline-offset: 0.4cqw;
+}
+
+.game-button.is-current img,
+.game-button.is-current.is-text {
+  opacity: 0.85;
+}
+
+/* The This Game tab: icon + title + byline on top, then plain paragraphs.
+   All text inherits the drawer-body size; only the title is bigger. */
+.this-game-head {
+  display: flex;
+  align-items: center;
+  gap: 3cqw;
+  margin-bottom: 2cqw;
+}
+
+.this-game-icon {
+  width: 14cqw;
+  height: 14cqw;
+  flex: none;
+  border-radius: 2.5cqw;
+  background: var(--pumpkin);   /* same orange frame as the picker buttons */
+  padding: 1.2cqw;
+  object-fit: contain;
+}
+
+.this-game-title {
+  font-size: clamp(16px, 5.4cqw, 28px);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.this-game-byline,
+.this-game-credits,
+.this-game-later {
+  opacity: 0.7;
+  font-size: 0.85em;
+}
+
+.this-game p {
+  margin-bottom: 2cqw;
+}
+
+.this-game-heading {
+  margin-top: 3cqw;
+  font-size: 1em;
+  font-weight: 700;
+}
+
+.this-game-later {
+  margin-top: 4cqw;
+  font-style: italic;
 }
 
 /* ------------------------------------------------------------------------

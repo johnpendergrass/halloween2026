@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Icon for The Pumpkin Patch: night sky, full moon, tree line, one pumpkin.
+       Square, drawn on a 100 x 100 box; the app scales it to any size. -->
+  <!-- everything is clipped to the rounded square, so the ground and the
+       pumpkin can't poke out of the bottom corners -->
+  <clipPath id="rounded"><rect width="100" height="100" rx="18"/></clipPath>
+  <g clip-path="url(#rounded)">
+  <rect width="100" height="100" fill="#1b1230"/>
+  <!-- moon with a soft halo -->
+  <circle cx="68" cy="30" r="17" fill="#f6e7b2" opacity="0.25"/>
+  <circle cx="68" cy="30" r="12" fill="#f6e7b2"/>
+  <!-- tree line: a row of dark triangles -->
+  <path fill="#0f0b1c" d="M0 62 L8 46 L16 62 L22 40 L30 62 L36 50 L42 62 L50 38 L58 62 L64 52 L70 62 L78 44 L86 62 L92 54 L100 62 Z"/>
+  <!-- ground -->
+  <path fill="#173229" d="M0 60 Q50 52 100 60 L100 100 L0 100 Z"/>
+  <!-- pumpkin: three overlapping lobes, stem, one highlight -->
+  <ellipse cx="50" cy="78" rx="26" ry="18" fill="#e8741c"/>
+  <ellipse cx="38" cy="78" rx="11" ry="17" fill="#d2601a"/>
+  <ellipse cx="62" cy="78" rx="11" ry="17" fill="#d2601a"/>
+  <ellipse cx="50" cy="78" rx="10" ry="18" fill="#f07f22"/>
+  <rect x="47" y="54" width="6" height="10" rx="2" fill="#4f7a28"/>
+  <ellipse cx="44" cy="70" rx="4" ry="6" fill="#f7a04a" opacity="0.7"/>
+  </g>
+</svg>

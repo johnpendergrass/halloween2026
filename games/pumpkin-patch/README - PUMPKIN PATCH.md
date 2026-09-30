@@ -1,4 +1,4 @@
-# game0 (Home)
+# The Pumpkin Patch (the home game, folder `pumpkin-patch`)
 
 The home game: loaded when the app starts, and shown again whenever no other
 game is active (🏠).
@@ -17,12 +17,12 @@ silhouette slowly rises from behind the tree line, waits, and sinks back down.
 
 ```text
 index.html    the scene: 2 painted layers with the character between them
-game0.css     page setup (from the requirements), scene scaling and cropping, the rise/sink movement
-game0.js      picks characters (shuffled deck) and times the rise and sink
+pumpkin-patch.css     page setup (from the requirements), scene scaling and cropping, the rise/sink movement
+pumpkin-patch.js      picks characters (shuffled deck) and times the rise and sink
 assets/pumpkin_patch_BACKGROUND_950x714.png        full painting (back)
 assets/pumpkin_patch_950x714_justBelowHorizon.png  tree line + field, sky cut away (front)
 assets/silhouettes/  19 character silhouettes, each 250px tall, transparent PNG
-README - GAME0.md    this file
+README - PUMPKIN PATCH.md    this file
 ```
 
 ## How the layers work
@@ -40,7 +40,7 @@ covers that part of the scene, so those characters were almost always hidden.
 
 ## Where this game breaks the requirements, and why
 
-| Rule | What game0 does instead | Why |
+| Rule | What this game does instead | Why |
 |---|---|---|
 | 5: all sizes relative to the width (`vw`) | The scene is `100vh` tall; everything inside it is in `%` of the painting. | The paintings are wide (950 × 714) and must fill the panel's *height*, with the sides cropped. Placing the character in % of the painting keeps it lined up with the layers at any size. |
 | 16: full-panel backgrounds 1296 × 2016 | 950 × 714 paintings, enlarged about 2.5× on a phone. | Reused 2025 art. This is why it looks soft; new tall art may replace it. |
@@ -48,7 +48,7 @@ covers that part of the scene, so those characters were almost always hidden.
 
 ## Sizes and timing
 
-- `--crop-from-left` in game0.css picks which part of the painting shows
+- `--crop-from-left` in pumpkin-patch.css picks which part of the painting shows
   (0.25 keeps the moon and big pumpkins). On an iPhone 15/16 the panel is
   382 × 594 CSS px and the scene is 790 wide, so about half of it shows.
 
@@ -59,7 +59,7 @@ covers that part of the scene, so those characters were almost always hidden.
 | Rises by | 96% of its own height |
 | Across (left edge) | 14%–40% |
 
-| Setting (top of game0.js) | Value |
+| Setting (top of pumpkin-patch.js) | Value |
 |---|---|
 | Rise | 2–4 s |
 | Wait at the top | 1–4 s |

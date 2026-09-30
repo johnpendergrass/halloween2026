@@ -1,5 +1,5 @@
 /* ============================================================================
-   Pie Maker (game1)
+   Pie Maker (folder pie-maker)
 
    "Asteroids, but pumpkins, and no gun." Pumpkins drift across the field in
    straight lines, spinning; one that leaves by one edge comes back by the

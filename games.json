@@ -1,45 +1,94 @@
 {
-  "_about": [
-    "Halloween 2026 - the list of games. THE ONE PLACE to add, rename or describe a game.",
-    "The app reads this file when it starts and makes one button per game in the bottom panel.",
-    "There are five slots, game0 to game4. Each slot is the folder games/<slot>/ with an index.html inside.",
-    "A game's author fills in their slot's entry here and puts their files in that slot's folder. Nothing else changes.",
-    "game0 is the HOME game: shown at start and after the Home button. It gets no button.",
-    "Fields: slot = folder name (fixed), title = shown on the button and in the top panel,",
-    "author = who made it, description = one line about it (not shown yet).",
-    "More fields will be added later, when games start talking to the app (scores, settings, sound).",
-    "JSON cannot hold comments, which is why this _about block exists. The app ignores it."
-  ],
   "games": [
     {
-      "slot": "game0",
-      "title": "Halloween 2026",
-      "author": "John Pendergrass, art from Halloween 2025",
-      "description": "The home screen: a pumpkin patch where silhouettes rise from behind the trees."
+      "folder_name": "pumpkin-patch",
+      "goes_in_slot": "home",
+      "title": "The Pumpkin Patch",
+      "short_title": "Patch",
+      "icon": "assets/patch.svg",
+      "designer": "John, Claude, Chatty",
+      "credits": "originally from Halloween 2025",
+      "date": "October 31, 2025",
+      "description": "Spooky silhouettes rise from the pumpkin patch!  Not interactive - just watch and enjoy!",
+      "how_to_play": "Just sit back and watch the spooky silhouettes rise from the pumpkin patch!"
     },
     {
-      "slot": "game1",
+      "folder_name": "pie-maker",
+      "goes_in_slot": 1,
       "title": "Pie Maker",
-      "author": "John Pendergrass",
-      "description": "Tap the drifting pumpkins to turn them into pies as fast as you can."
+      "short_title": "Pie Maker",
+      "icon": "assets/pie.svg",
+      "designer": "John, Claude",
+      "credits": "",
+      "date": "September 27, 2026",
+      "description": "Ten pumpkins drift and spin across the field. Tap them all to turn them into pies, as fast as you can.",
+      "how_to_play": "Tap a pumpkin and it becomes a pie. The clock runs from the start until the last pie. Play again for a fresh round."
     },
     {
-      "slot": "game2",
+      "folder_name": "game2",
+      "goes_in_slot": 2,
       "title": "Wrong: desktop size",
-      "author": "Claude Code (test)",
-      "description": "DELIBERATELY WRONG: a 1280 x 720 desktop game in fixed px, to show what the app does with it."
+      "short_title": "Wrong: desktop",
+      "icon": "",
+      "designer": "Claude (test game)",
+      "credits": "",
+      "date": "September 29, 2026",
+      "description": "DELIBERATELY WRONG: a 1280 x 720 desktop game in fixed px, to show what the app does with it (nothing).",
+      "how_to_play": "Click the pumpkins. Most of them are off-screen on a phone; drag around to find them."
     },
     {
-      "slot": "game3",
+      "folder_name": "game3",
+      "goes_in_slot": 3,
       "title": "Wrong: fixed phone px",
-      "author": "Claude Code (test)",
-      "description": "DELIBERATELY WRONG: sized in px for one phone, small text and buttons, page scrolls."
+      "short_title": "Wrong: phone px",
+      "icon": "",
+      "designer": "Claude (test game)",
+      "credits": "",
+      "date": "September 29, 2026",
+      "description": "DELIBERATELY WRONG: sized in px for one phone, with small text and buttons, and a page that scrolls.",
+      "how_to_play": "Tap squares to find the twelve hidden ghosts. Notice how small the squares are for a finger."
     },
     {
-      "slot": "game4",
+      "folder_name": "game4",
+      "goes_in_slot": 4,
       "title": "Game 4",
-      "author": "",
-      "description": "Empty slot. Placeholder page."
+      "short_title": "Game 4",
+      "icon": "",
+      "designer": "",
+      "credits": "",
+      "date": "",
+      "description": "Empty slot. Placeholder page that shows the game panel's size.",
+      "how_to_play": ""
     }
-  ]
+  ],
+
+  "_about": {
+    "what_this_file_is": [
+      "Halloween 2026 - the list of games. THE ONE PLACE to add, rename, reorder or describe a game.",
+      "The app reads this file when it starts and makes one button per game in the bottom panel.",
+      "Add a game: put its files in games/<folder_name>/ (with an index.html inside) and add an entry above.",
+      "Nothing in app/ ever changes. app.js reads this file; a game designer never edits app.js.",
+      "What goes here: anything the player might want while BROWSING games, before tapping one.",
+      "Everything else (assets, settings, sizes) lives in the game's own folder; the app never reads it.",
+      "If the same fact is in both places, this file wins: the app shows what is written here.",
+      "JSON cannot hold comments, which is why this _about block exists. The app ignores it.",
+      "It sits at the bottom so the data comes first."
+    ],
+    "fields": {
+      "folder_name": "The game's folder under games/. LOWERCASE ONLY (GitHub Pages is case-sensitive). Required.",
+      "goes_in_slot": "Where the game appears: \"home\" for the home game (shown at start, no button), or 1 to 4 for the button positions. A number above 4 means the game is listed but not shown - an easy way to bench a game. If two entries claim the same slot, the first one in the file wins.",
+      "title": "The game's full name, shown on its button.",
+      "short_title": "A short name, about 12 characters at most: shown in the narrow top bar, and on the button when there is no usable icon (the button fits about ten characters per line, two lines). Leave it the same as title if the title is short.",
+      "icon": "Path to the game's icon, relative to the game's folder, e.g. assets/icon.png. SPEC: a square 256 x 256 real pixels, PNG with a transparent background (or an SVG with a square viewBox). Draw anything that fills the square; it is shown inside an orange rounded button with a small orange margin, so plan for orange around it. Wiggle room: each side may be 200 to 300 pixels and the two sides may differ by up to 10; the app scales it. Outside that, or missing, or a bad path: the button shows short_title as text instead (and says why in the browser console).",
+      "designer": "Who made the game. Free text.",
+      "credits": "Where art, sound or ideas came from. Free text, may be empty.",
+      "date": "When the game was finished or last changed. Free text, for display only.",
+      "description": "One or two sentences about the game, shown in the This Game tab.",
+      "how_to_play": "Short instructions, shown in the This Game tab. Keep it to a few sentences."
+    },
+    "coming_later": [
+      "When games can talk to the app: scoring (none / points / time), settings, sound, pausable.",
+      "Every field except folder_name is optional. A missing or empty field falls back to something sensible."
+    ]
+  }
 }

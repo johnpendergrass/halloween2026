@@ -1,6 +1,6 @@
 # Halloween 2026 — Technical Specifications
 
-Last updated: 2026-09-29 15:40 (second day, fifth stretch: games.json)
+Last updated: 2026-09-29 17:51 (second day, sixth stretch: games.json v2, icons, picker, This Game)
 
 ## 1. Stack and hosting
 
@@ -18,12 +18,13 @@ Last updated: 2026-09-29 15:40 (second day, fifth stretch: games.json)
 
 ```text
 index.html                 the app: 9:16 frame, top panel, game panel with <iframe id=gameFrame>, drawer
-games.json                 THE LIST OF GAMES: "_about" block + "games" array of { slot, title, author, description }
+games.json                 THE LIST OF GAMES: "games" array (v2 entries, see 4a) then an "_about" block documenting every field
 manifest.json              Android/desktop full-screen ("standalone", portrait); icons: [] (TODO)
 app/styles.css             app CSS (frame, panels, drawer) - moved from the mockup
-app/app.js                 reads games.json at start-up; drawer, tabs, loadGame/startGame/goHome. Never edited by designers
-games/game0/               the home game: pumpkin patch + rising silhouettes (2025 art in assets/)
-games/game1/               Pie Maker: index.html, game1.css, game1.js, assets/pumpkin.svg, pie.svg
+app/app.js                 reads games.json at start-up; picker buttons, This Game tab, drawer, loadGame/startGame/goHome. Never edited by designers
+app/default-icon.svg       the ghost shown on a button that has neither a usable icon nor a title
+games/pumpkin-patch/       the home game (was game0): index.html, pumpkin-patch.css/.js, assets/ (2025 art, patch.svg icon)
+games/pie-maker/           Pie Maker (was game1): index.html, pie-maker.css/.js, assets/pumpkin.svg, pie.svg (also its icon)
 games/game2/               TEST GAME, deliberately wrong: fixed 1280 x 720 desktop stage in px
 games/game3/               TEST GAME, deliberately wrong: fixed px for a 390-wide phone, small text, scrolls
 games/game4/               placeholder page
@@ -98,31 +99,40 @@ meta is required for the `env(safe-area-inset-*)` values.
   `toggleDrawer`, `showTab`, `loadGame(game)`, `startGame(game)`, `goHome()`,
   `makeGameButtons()`.
 
-## 4a. Games in iframes, and games.json (2026-09-29)
+## 4a. Games in iframes, and games.json v2 (2026-09-29)
 
 - **`games.json`** (root, beside index.html) = **the one place to add a
-  game**. Shape: `{ "_about": [...strings...], "games": [ { slot, title,
-  author, description }, ... ] }`. `_about` is the file's own
-  documentation (JSON has no comments); the app ignores it. `slot` = the
-  folder name under `games/`.
+  game**. Shape: `{ "games": [ {entry}, ... ], "_about": { what_this_file_is:
+  [...], fields: { field: "explanation", ... }, coming_later: [...] } }`.
+  `_about` is the file's own documentation (JSON has no comments) and is
+  deliberately LAST; the app ignores it.
+- **Entry fields** (snake_case): `folder_name`, `goes_in_slot`, `title`,
+  `short_title`, `icon`, `designer`, `credits`, `date`, `description`,
+  `how_to_play`. Only `folder_name` is required in principle; the app
+  copes with blanks (text fallbacks, hidden lines).
 - **app.js section 5, `startUp()`** (async): `readGamesFile()` fetches
   `./games.json?v=APP_VERSION` (same cache-busting as the scripts), checks
-  `response.ok` and that `data.games` is an array, then `homeGame` = the
-  entry whose slot is `HOME_SLOT` (`"game0"`), `games` = every other
-  entry in file order. Then `makeGameButtons()` and `goHome()`. Any
-  failure → `showStartupError()` writes a plain message into
-  `#gameButtons` ("Could not read the list of games (...). Open the app
-  through start-local/start-halloween.bat or a web server, not by
+  `response.ok` and that `data.games` is an array. Then `homeGame` = the
+  entry with `goes_in_slot === "home"`, `games = pickButtonGames(all)`:
+  keeps entries whose slot is an integer 1..`LAST_SLOT` (4), first entry
+  wins a duplicate slot (`console.warn`), anything else is skipped with a
+  `console.info`; result sorted by slot. Then `makeGameButtons()` and
+  `goHome()`. Any failure → `showStartupError()` writes a plain message
+  into `#gameButtons` ("Could not read the list of games (...). Open the
+  app through start-local/start-halloween.bat or a web server, not by
   double-clicking index.html.") and logs to the console. **`fetch()` does
   not work over `file://`**, which is why that message exists; tested.
+- **`loadGame(game)`** now also sets the top title to `short_title ||
+  title`, calls `fillThisGameTab(game)` and `markCurrentButton(game)`.
+  `startGame()` additionally `showTab("game")` before closing the drawer.
 - app.js contains no game names. Nothing in `app/` changes when a game is
   added, renamed or removed; verified by `git status` after the two test
   games were written (only `games/game2/`, `games/game3/` and games.json
   changed).
-- `loadGame()` sets `gameFrame.src = "./games/<slot>/index.html?v=" + APP_VERSION`.
+- `loadGame()` sets `gameFrame.src = "./games/<folder_name>/index.html?v=" + APP_VERSION`.
   Changing `src` throws the old game away completely (no stop() needed).
 - `APP_VERSION` in app.js must match the `?v=` tags in index.html
-  (currently `2026-0929-gamesjson`). **An edit to games.json also needs
+  (currently `2026-0929-pressed`). **An edit to games.json also needs
   the bump** before a push, or phones keep the old list for up to 10
   minutes; the local server never caches it. The game pages' own `<link>`/`<script>`
   tags carry no `?v=`: on GitHub Pages (10-minute cache) a phone may run a
@@ -146,7 +156,7 @@ SE is height-limited (frame fits the height); the others are width-limited.
 Pro Max panel ×3 = 1296 × 2016 → the design canvas. PC/Mac figures in the
 requirements doc are estimates (browser toolbars vary).
 
-## 4c. Pie Maker implementation notes
+## 4c. Pie Maker (folder `pie-maker`, was game1) implementation notes
 
 - All positions/sizes/speeds in "field widths"; pixels computed every frame
   from `field.clientWidth`, so it survives resizes.
@@ -161,7 +171,7 @@ requirements doc are estimates (browser toolbars vary).
   the shorthand would reset `font-size` and beat the `.text-medium` class
   (same specificity, later rule wins).
 
-## 4d. game0 (Home) implementation notes
+## 4d. The Pumpkin Patch (home, folder `pumpkin-patch`, was game0) implementation notes
 
 - `.scene` div: `height: 100%`, `aspect-ratio: 950 / 714`,
   `left: calc((100vw - 100vh * 950 / 714) * var(--crop-from-left))`, body
@@ -185,6 +195,43 @@ requirements doc are estimates (browser toolbars vary).
 - Measured 2026-09-27 at 390×844 in the app: panel 382 × 594, scene 790
   wide, left −102. The 404 in the console is `/favicon.ico` (no icon yet).
 
+## 4b2. The picker, icons and This Game (app.js sections 3–4, styles.css section 5)
+
+- **`makeIconButton(game)`**: `<button class="game-button" aria-label=title
+  title=title data-folder=folder_name>` holding one `<img>`. Listeners are
+  attached BEFORE `img.src` is set. On `load`: `iconQualifies(img)` or
+  `showTextInstead()`. On `error`: `showTextInstead()`. No `icon` field:
+  `showTextInstead()` straight away.
+- **`iconQualifies(img)`**: `.svg` → true. Else `naturalWidth/Height` each
+  in `ICON_MIN..ICON_MAX` (200..300) and `|w − h| <= ICON_SQUARE_SLACK`
+  (10). Constants at the top of app.js. Rejections `console.warn` the real
+  size and the rule.
+- **`showTextInstead(button, game)`**: `short_title || title` as text with
+  class `is-text` (`clamp(11px, 3.4cqw, 18px)`, bold, two lines, `overflow:
+  hidden`); if no text, an `<img src=DEFAULT_ICON>` (`./app/default-icon.svg`).
+- **`makeGameButtons()`**: home button first with class `is-home`, then
+  `games` in slot order, all into `#gameButtons`.
+- **CSS**: `.game-buttons { display:grid; grid-template-columns: repeat(2,
+  var(--game-button-size)); justify-content:center; gap:3cqw;
+  --game-button-size:18cqw }`; `.is-home { grid-column: 1 / -1;
+  justify-self:center }`; `.game-button` is a square `18cqw`, `padding:2cqw`,
+  `place-items:center`, orange with the `1.2cqw` dark drop shadow; `img
+  { width/height:100%; object-fit:contain; pointer-events:none }`.
+  Measured: tab body 282 px, grid 229 px on 390×844; 244 / 203 on 375×667.
+- **`markCurrentButton(game)`**: toggles `.is-current` + `aria-current` on
+  the button whose `data-folder` matches. CSS `.is-current { transform:
+  translateY(1.2cqw); background: var(--pumpkin-dark); box-shadow: inset 0
+  1.6cqw 2cqw #0007, inset 0 0 0 0.8cqw #0003; outline: 0.8cqw solid
+  var(--drawer-edge); outline-offset: 0.4cqw }`, icon/text at 0.85 opacity.
+- **`fillThisGameTab(game)`** + `setTextOrHide(id, text)`: writes into
+  `#thisGameTitle`, `#thisGameByline` ("designer, date", joined from the
+  non-empty parts), `#thisGameDescription`, `#thisGameHowToPlay` (and hides
+  `#thisGameHowHeading` with it), `#thisGameCredits` ("Credits: …"), and
+  `#thisGameIcon` (hidden until `load` passes `iconQualifies`). The
+  skeleton with these ids is in index.html; `.this-game-*` styles in
+  styles.css (`.this-game-icon` 14cqw orange tile; title
+  `clamp(16px, 5.4cqw, 28px)`; byline/credits/later at 0.7 opacity).
+
 ## 4e. The two wrong test games (game2, game3)
 
 Plain pages with no page-setup block, so the iframe's default scrolling
@@ -195,20 +242,26 @@ body text. Each README lists the rule numbers it breaks. Verified with
 chrome-devtools at 390×844×3 mobile and 1920×1080: panel 547 × 851 on the
 PC; game3 sits in the top-left with a blank strip on the right.
 
-## 4f. games.json v2: how it would be implemented (not done)
+## 4f. games.json v2: implemented 2026-09-29
 
-Design in `specifications.MD` 6e. Code plan:
-- app.js: `HOME_SLOT` goes away; `homeGame = entries.find(e => e.role === "home")`,
-  `games = entries.filter(e => e.role !== "home" && e.status !== "hidden")`.
-  `loadGame()` uses `entry.folder`. Top bar shows `entry.shortTitle ||
-  entry.title` and an `<img>` at `./games/<folder>/<icon>`, with an
-  `onerror`/missing-field fallback to a default pumpkin SVG in `app/`.
-- index.html / styles.css: an icon `<img>` before `#topTitle`; buttons
-  become icon + label (flex row). Icon sizes in cqw so they scale with
-  the frame (about 60 canvas px in the bar, 120 on a button).
-- Each game: `assets/icon.svg` (or a 256 px square PNG).
-- Validation stays minimal: a missing optional field falls back; a
-  missing `folder` or no home entry → `showStartupError()`.
+Built as described in 4a and 4b2 (the plan that used to sit here was
+superseded by John's `goes_in_slot` / snake_case shape). Not built: an
+icon in the top bar next to `short_title`; only if John asks.
+- **Renames** were done with `git mv` so history follows: `game0` →
+  `pumpkin-patch` (+ `pumpkin-patch.css/.js`, `README - PUMPKIN PATCH.md`),
+  `game1` → `pie-maker` (+ `pie-maker.css/.js`). Every old reference was
+  replaced (their own files, game2–4 READMEs and CSS comments, the
+  requirements doc, the root README).
+- **Icons**: `games/pumpkin-patch/assets/patch.svg` (100×100 viewBox, all
+  shapes inside a `<clipPath>` rounded square so the ground doesn't poke
+  out of the corners); Pie Maker points its `icon` at the existing
+  `assets/pie.svg` sprite. `app/default-icon.svg` is a ghost on
+  transparent.
+- **Test method** for the icon check: three throwaway PNGs made with
+  Pillow (256×250 ok, 150×150 too small, 256×230 lopsided) plus a missing
+  path, built into buttons via the page's own `makeIconButton()` from
+  chrome-devtools `evaluate_script`; results and console warnings matched
+  the spec. The PNGs were deleted afterwards.
 
 ## 5. iPhone "app" mode
 

@@ -11,7 +11,7 @@ problem; do not copy it.
   this slot.
 - **The rules** it ignores are in
   [`../README - game design requirements.md`](../README%20-%20game%20design%20requirements.md).
-  For a game that follows them, see `games/game1/` (Pie Maker).
+  For a game that follows them, see `games/pie-maker/` (Pie Maker).
 
 ## What it is
 
