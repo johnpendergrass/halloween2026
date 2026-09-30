@@ -114,14 +114,20 @@ meta is required for the `env(safe-area-inset-*)` values.
   `./games.json?v=APP_VERSION` (same cache-busting as the scripts), checks
   `response.ok` and that `data.games` is an array. Then `homeGame` = the
   entry with `goes_in_slot === "home"`, `games = pickButtonGames(all)`:
-  keeps entries whose slot is an integer 1..`LAST_SLOT` (4), first entry
+  keeps entries whose slot is an integer 1..`LAST_SLOT` (8), first entry
   wins a duplicate slot (`console.warn`), anything else is skipped with a
   `console.info`; result sorted by slot. Then `makeGameButtons()` and
-  `goHome()`. Any failure → `showStartupError()` writes a plain message
-  into `#gameButtons` ("Could not read the list of games (...). Open the
-  app through start-local/start-halloween.bat or a web server, not by
-  double-clicking index.html.") and logs to the console. **`fetch()` does
-  not work over `file://`**, which is why that message exists; tested.
+  `goHome()`. `readGamesFile()` reads the body as text and runs
+  `JSON.parse` itself inside try/catch so a punctuation mistake becomes
+  one plain sentence ("... has some invalid JSON in it. You need to fix
+  that file. (A JSON checker such as jsonlint.com will point at the
+  line.)"); no line-number detection, by John's decision (spec 3c). Any
+  failure → `showStartupError()` swaps `#gameButtons` to class
+  `.startup-error` (pre-wrap text) and writes "Could not read the list of
+  games." + the error's message; when `location.protocol === "file:"` it
+  adds the hint to open the app through start-local/start-halloween.bat
+  or a web server. **`fetch()` does not work over `file://`**, which is
+  why that hint exists; tested.
 - **`loadGame(game)`** now also sets the top title to `short_title ||
   title`, calls `fillThisGameTab(game)` and `markCurrentButton(game)`.
   `startGame()` additionally `showTab("game")` before closing the drawer.
@@ -132,7 +138,7 @@ meta is required for the `env(safe-area-inset-*)` values.
 - `loadGame()` sets `gameFrame.src = "./games/<folder_name>/index.html?v=" + APP_VERSION`.
   Changing `src` throws the old game away completely (no stop() needed).
 - `APP_VERSION` in app.js must match the `?v=` tags in index.html
-  (currently `2026-0929-pressed`). **An edit to games.json also needs
+  (currently `2026-0930-slots8`). **An edit to games.json also needs
   the bump** before a push, or phones keep the old list for up to 10
   minutes; the local server never caches it. The game pages' own `<link>`/`<script>`
   tags carry no `?v=`: on GitHub Pages (10-minute cache) a phone may run a
@@ -209,15 +215,34 @@ requirements doc are estimates (browser toolbars vary).
 - **`showTextInstead(button, game)`**: `short_title || title` as text with
   class `is-text` (`clamp(11px, 3.4cqw, 18px)`, bold, two lines, `overflow:
   hidden`); if no text, an `<img src=DEFAULT_ICON>` (`./app/default-icon.svg`).
-- **`makeGameButtons()`**: home button first with class `is-home`, then
-  `games` in slot order, all into `#gameButtons`.
-- **CSS**: `.game-buttons { display:grid; grid-template-columns: repeat(2,
-  var(--game-button-size)); justify-content:center; gap:3cqw;
-  --game-button-size:18cqw }`; `.is-home { grid-column: 1 / -1;
-  justify-self:center }`; `.game-button` is a square `18cqw`, `padding:2cqw`,
-  `place-items:center`, orange with the `1.2cqw` dark drop shadow; `img
-  { width/height:100%; object-fit:contain; pointer-events:none }`.
-  Measured: tab body 282 px, grid 229 px on 390×844; 244 / 203 on 375×667.
+- **`makeGameButtons()`** (board version, 2026-09-29 evening): the home
+  button straight into `#gameButtons`, then a `div.game-board` holding up
+  to two `div.board-row`s: `upperRow = games.filter(slot <= SLOTS_PER_ROW)`,
+  `lowerRow = games.filter(slot > SLOTS_PER_ROW)`; a row with no games is
+  not created. Each button gets `style.gridColumn = ((slot - 1) %
+  SLOTS_PER_ROW) + 1` (slots 1 and 5 → column 1, and so on). Constants:
+  `LAST_SLOT = 8`, `SLOTS_PER_ROW = 4`.
+- **CSS**: `.game-buttons { display:flex; flex-direction:column;
+  align-items:center; gap:4.5cqw; --game-button-size:18cqw }` (the gap is
+  wider than the board's 3cqw because the pressed home button sinks 1.2cqw
+  and its mint ring was touching the row below); `.game-board {
+  display:flex; flex-direction:column; justify-content:center; gap:3cqw;
+  height: calc(2 * var(--game-button-size) + 3cqw) }` — a fixed two-row
+  space, so a lone row lands in the middle; `.board-row { display:grid;
+  grid-template-columns: repeat(4, var(--game-button-size)); gap:3cqw }` —
+  four cells always, 81cqw wide, empty cells simply empty. `.game-button`
+  is a square `18cqw`, `padding:2cqw`, `place-items:center`, orange with
+  the `1.2cqw` dark drop shadow; `img { width/height:100%;
+  object-fit:contain; pointer-events:none }`. Measured on 390×844: tab
+  body 282 px, picker 235 px (three rows). Four text-fallback buttons
+  across a row are narrow enough that "Wrong: phone px" wraps to three
+  lines; still legible.
+- **Test method for layouts**: edit slot numbers in games.json, reload,
+  read `getBoundingClientRect()` of each `.board-row` child via
+  chrome-devtools `evaluate_script`. WARNING: John loads the same working
+  tree live on his own server and phone, so such edits must be announced
+  and restored (see the 2026-09-29 mix-up: his phone showed a 3+1 test
+  layout while the desktop showed 4 across).
 - **`markCurrentButton(game)`**: toggles `.is-current` + `aria-current` on
   the button whose `data-folder` matches. CSS `.is-current { transform:
   translateY(1.2cqw); background: var(--pumpkin-dark); box-shadow: inset 0

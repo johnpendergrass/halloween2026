@@ -305,16 +305,51 @@ body {
 }
 
 /* The game picker: square icon-only buttons. The home game's button sits
-   alone and centred on the first row; the slot games follow two per row.
-   Sizes are in cqw so the grid scales with the frame. On a phone a button
-   is about 70 px: well over the 44 px fingertip minimum. Three rows plus
-   gaps fit inside the open drawer with a little to spare. */
+   alone and centred at the top. Below it is the board, a space exactly two
+   button rows tall. app.js fills it with an upper row (slots 1..4) and a
+   lower row (slots 5..8). Each row is a grid of four fixed cells and every
+   button is placed in the cell its slot names, so empty cells stay empty
+   and a game never moves when another is added. When only one row has
+   games, the board centres that row vertically.
+   Sizes are in cqw so the board scales with the frame. Four buttons plus
+   three gaps are 81cqw wide, leaving about 9cqw of breathing room each
+   side. On a phone a button is about 70 px: well over the 44 px fingertip
+   minimum. Three rows plus gaps fit inside the open drawer with a little
+   to spare. */
 .game-buttons {
-  display: grid;
-  grid-template-columns: repeat(2, var(--game-button-size));
-  justify-content: center;
-  gap: 3cqw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4.5cqw;                   /* home to board: the pressed home button
+                                    sinks 1.2cqw, so it needs extra room */
   --game-button-size: 18cqw;
+}
+
+/* Start-up failed (usually a typo in games.json): the message replaces the
+   board. pre-wrap keeps the line breaks app.js puts in, and lets the quoted
+   line of JSON wrap instead of stretching the drawer. */
+.startup-error {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
+  font-size: clamp(12px, 3.6cqw, 16px);
+}
+
+.game-board {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;       /* a lone row sits in the middle */
+  gap: 3cqw;
+  height: calc(2 * var(--game-button-size) + 3cqw);
+}
+
+/* One row of the board: four cells, always the same width, so the row is
+   81cqw wide even when three cells are empty. app.js sets each button's
+   grid-column. */
+.board-row {
+  display: grid;
+  grid-template-columns: repeat(4, var(--game-button-size));
+  gap: 3cqw;
 }
 
 .game-button {
@@ -326,12 +361,6 @@ body {
   box-shadow: 0 1.2cqw 0 var(--pumpkin-dark);
   display: grid;
   place-items: center;
-}
-
-/* The home button spans both columns and centres itself in that space. */
-.game-button.is-home {
-  grid-column: 1 / -1;
-  justify-self: center;
 }
 
 .game-button img {

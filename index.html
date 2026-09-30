@@ -31,7 +31,7 @@
 
     <!-- The ?v= tag forces phones to fetch fresh code after a publish.
      Change it (and APP_VERSION in app.js) whenever the code changes. -->
-    <link rel="stylesheet" href="./app/styles.css?v=2026-0929-pressed" />
+    <link rel="stylesheet" href="./app/styles.css?v=2026-0930-slots8" />
   </head>
 
   <body>
@@ -76,7 +76,9 @@
             </div>
 
             <!-- App tab: app.js fills in one icon button per game in games.json:
-             the home game first on its own row, then two per row. -->
+             the home game alone at the top, then a board of two rows by
+             four fixed cells; a game sits in the cell its goes_in_slot
+             names (1-4 upper row, 5-8 lower row). -->
             <div class="drawer-body" id="tab-app">
               <div class="game-buttons" id="gameButtons"></div>
             </div>
@@ -103,6 +105,6 @@
       </div>
     </div>
 
-    <script src="./app/app.js?v=2026-0929-pressed"></script>
+    <script src="./app/app.js?v=2026-0930-slots8"></script>
   </body>
 </html>

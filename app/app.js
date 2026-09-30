@@ -19,7 +19,7 @@
 
 // Bump this (and the ?v= tags in index.html) whenever code changes, so
 // phones fetch fresh copies instead of old cached ones.
-const APP_VERSION = "2026-0929-pressed";
+const APP_VERSION = "2026-0930-slots8";
 
 /* ------------------------------------------------------------------------
    1. Settings and the games list
@@ -27,7 +27,8 @@ const APP_VERSION = "2026-0929-pressed";
    games.json holds one entry per game. The fields the app uses here:
      folder_name  = the folder under games/ (lowercase)
      goes_in_slot = "home" for the home game, or 1..LAST_SLOT for a button
-                    position. Anything else (say 9) = listed but not shown.
+                    on the board (see makeGameButtons). Anything else (say
+                    9, or "") = listed but not shown.
      title        = the button's spoken name (aria-label) and tooltip
      short_title  = in the top panel
      icon         = a square picture inside the button, relative to the
@@ -40,7 +41,14 @@ const APP_VERSION = "2026-0929-pressed";
    --------------------------------------------------------------------- */
 
 const GAMES_FILE = "./games.json";
-const LAST_SLOT = 4;   // buttons are slots 1..4; more would not fit the panel
+// The button board is two rows of four fixed cells. A slot number is a
+// cell: 1..4 across the upper row, 5..8 across the lower row, and a game
+// always sits in its own cell (slot 1 is always top far left). Cells nobody
+// claimed stay empty. The one exception: when only ONE row has games, that
+// row is drawn in the middle of the board's space instead of at the top or
+// bottom of it.
+const LAST_SLOT = 8;
+const SLOTS_PER_ROW = 4;
 const DEFAULT_ICON = "./app/default-icon.svg";   // only when there is no text either
 
 // The icon spec, in real pixels. Designers are told "256 x 256, square",
@@ -252,14 +260,34 @@ function makeIconButton(game) {
   return button;
 }
 
-/** The App tab: the home game's button alone on the first row, then the
-    slot games two per row (the CSS grid does the placing). */
+/** The App tab: the home game's button alone at the top, then the board:
+    an upper row for slots 1..4 and a lower row for slots 5..8. Each row is
+    a four-column CSS grid, and every button is told which column is its
+    cell, so slot 1 is always far left and slot 4 always far right, however
+    many games there are. A row with no games is not drawn at all, and the
+    board's CSS then centres the remaining row in the two-row space. */
 function makeGameButtons() {
   const holder = document.getElementById("gameButtons");
-  const homeButton = makeIconButton(homeGame);
-  homeButton.classList.add("is-home");
-  holder.appendChild(homeButton);
-  games.forEach((game) => holder.appendChild(makeIconButton(game)));
+  holder.appendChild(makeIconButton(homeGame));
+
+  const board = document.createElement("div");
+  board.className = "game-board";
+  const upperRow = games.filter((game) => game.goes_in_slot <= SLOTS_PER_ROW);
+  const lowerRow = games.filter((game) => game.goes_in_slot > SLOTS_PER_ROW);
+  [upperRow, lowerRow].forEach((rowGames) => {
+    if (rowGames.length === 0) return;   // an empty row is not drawn
+    const row = document.createElement("div");
+    row.className = "board-row";
+    rowGames.forEach((game) => {
+      const button = makeIconButton(game);
+      // Slots 1 and 5 are column 1, 2 and 6 column 2, and so on.
+      const column = ((game.goes_in_slot - 1) % SLOTS_PER_ROW) + 1;
+      button.style.gridColumn = String(column);
+      row.appendChild(button);
+    });
+    board.appendChild(row);
+  });
+  holder.appendChild(board);
 }
 
 /* ------------------------------------------------------------------------
@@ -278,7 +306,17 @@ async function readGamesFile() {
   if (!response.ok) {
     throw new Error(GAMES_FILE + " returned " + response.status);
   }
-  const data = await response.json();
+  // JSON.parse throws on any punctuation mistake in a hand-edited file.
+  // Browsers word that error differently and rarely say where it is, so
+  // the app just says the file needs fixing (a JSON checker finds the line).
+  let data;
+  try {
+    data = JSON.parse(await response.text());
+  } catch (parseError) {
+    throw new Error(GAMES_FILE + " has some invalid JSON in it. You need to " +
+                    "fix that file. (A JSON checker such as jsonlint.com will " +
+                    "point at the line.)");
+  }
   if (!Array.isArray(data.games)) {
     throw new Error(GAMES_FILE + ' has no "games" list');
   }
@@ -312,10 +350,14 @@ function pickButtonGames(allGames) {
 /** Put a readable message where the game buttons would have been. */
 function showStartupError(error) {
   const holder = document.getElementById("gameButtons");
-  holder.textContent =
-    "Could not read the list of games (" + error.message + "). " +
-    "Open the app through start-local/start-halloween.bat or a web server, " +
-    "not by double-clicking index.html.";
+  holder.className = "startup-error";     // plain text, not the button board
+  let message = "Could not read the list of games.\n" + error.message;
+  if (location.protocol === "file:") {
+    message += "\n\nfetch() cannot read files opened straight from the disk. " +
+               "Open the app through start-local/start-halloween.bat or a " +
+               "web server, not by double-clicking index.html.";
+  }
+  holder.textContent = message;
   console.error("Halloween 2026 start-up failed:", error);
 }
 

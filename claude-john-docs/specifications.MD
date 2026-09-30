@@ -93,12 +93,24 @@ not part of the final package, they may change or go. Consequences:
 - Rounded corners: top panel's two TOP corners and bottom panel's two BOTTOM
   corners follow the frame. The game panel's edges stay square and crisp.
 
-## 3a. The App tab: a five-icon picker (John, 2026-09-29)
+## 3a. The App tab: an icon picker with an eight-cell board (John, 2026-09-29)
 
-- **Layout**: the home game's button alone and centred on the first row,
-  then the four slot games two per row. John: "there is ample room" (it
-  fits with no scrolling on every phone measured: 3 rows of 69 px buttons
-  on a 390-wide phone, 61 px on the iPhone SE).
+- **Layout (v2, evening of 2026-09-29)**: the home game's button alone and
+  centred at the top, then a **board of two rows by four fixed cells**.
+  `goes_in_slot` 1–4 are the upper row left to right, 5–8 the lower row.
+  A game always sits in its own cell (slot 1 is always top far left),
+  empty cells stay empty, so the designer decides the picture. **One
+  exception**: when only one row has games, that row is drawn in the
+  middle of the two-row space rather than at its top or bottom. Three
+  rows of 69 px buttons on a 390-wide phone (61 px on the SE), no
+  scrolling; four across is 81% of the panel width with ~9% air each side.
+- **Why fixed cells** (John): "keep it simple... absolute positions", "it
+  is easy and done." Claude's alternative, kept for later: *option B*, the
+  slot picks the row and each row centres itself, which staggers odd
+  counts like bowling pins (4 over 3, 2 under 3). John liked it, saw that
+  1, 3 over 6, 8 "looks funky" with fixed cells, and may revisit.
+- **Layout v1** (afternoon): four slots, two per row under the home
+  button. Superseded the same day.
 - **A button is just the button shape with the icon inside, no name**
   (John). Orange rounded square, small orange margin, icon scaled inside.
   The name goes to `aria-label` and the mouse tooltip.
@@ -129,6 +141,17 @@ description, a **How to play** heading + text, "Credits: …", then an
 italic "High scores and settings for this game will appear here later."
 Blank fields hide together with their headings. Interim design until
 scoring and settings exist.
+
+## 3c. When games.json will not parse (John, 2026-09-29)
+
+One plain message in the App tab: "games.json has some invalid JSON in it.
+You need to fix that file. (A JSON checker such as jsonlint.com will point
+at the line.)" Claude built and tested line-number detection from the
+browsers' own error messages; John had it removed: "chasing errors is not
+the way to go. error codes can change. different devices/browsers." A
+line number belongs in the future checker script, not in the app. The
+hint about opening through the .bat file appears only when the page really
+was opened from disk (`file:`), since that is the only time it applies.
 
 ## 4. The flow (real app, 2026-09-27; icons and tabs 2026-09-29)
 
@@ -195,9 +218,10 @@ clock. John may "nix it" → back to `#07040a` and `black`.
   it is the app owner's file). High scores will follow the same principle
   later: the app stores them, keyed by `folder_name`.
 - **Entry shape v2** (John's field names, snake_case): `folder_name`
-  (lowercase, required), `goes_in_slot` (`"home"`, or 1–4 = button
-  position; any other value = listed but not shown, an easy way to bench
-  a game; a duplicate slot goes to the first entry in the file),
+  (lowercase, required), `goes_in_slot` (`"home"`, or a whole number 1–8
+  = a fixed cell on the two-by-four board, see 3a; any other value, 9 or
+  "" say, = listed but not shown, an easy way to bench a game; a duplicate
+  slot goes to the first entry in the file),
   `title`, `short_title`, `icon`, `designer`, `credits`, `date` (free text,
   display only), `description`, `how_to_play`. The `_about` block sits at
   the **bottom** of the file so a reader sees data first; it documents
