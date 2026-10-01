@@ -1,6 +1,6 @@
 # Halloween 2026 — Technical Specifications
 
-Last updated: 2026-09-30 16:55 (third day: Hollow Hill shelved, stack-o-lantern folder, placeholders game1..game8)
+Last updated: 2026-10-01 09:45 (fourth day: the `_TABLED GAMES` folder; Pie Maker and the two wrong test games tabled; game1..game8 all placeholders)
 
 ## 1. Stack and hosting
 
@@ -24,12 +24,13 @@ app/styles.css             app CSS (frame, panels, drawer) - moved from the mock
 app/app.js                 reads games.json at start-up; picker buttons, This Game tab, drawer, loadGame/startGame/goHome. Never edited by designers
 app/default-icon.svg       the ghost shown on a button that has neither a usable icon nor a title
 games/pumpkin-patch/       the home game (was game0): index.html, pumpkin-patch.css/.js, assets/ (2025 art, patch.svg icon)
-games/pie-maker/           Pie Maker (was game1): index.html, pie-maker.css/.js, assets/pumpkin.svg, pie.svg (also its icon)
-games/game2/               TEST GAME, deliberately wrong: fixed 1280 x 720 desktop stage in px
-games/game3/               TEST GAME, deliberately wrong: fixed px for a 390-wide phone, small text, scrolls
 games/stack-o-lantern/     STACK-O'-LANTERN (Claude's stacker, was game4): index.html, stack-o-lantern.css/.js, assets/stack.svg
-games/game1, game4..game8/ NEUTRAL PLACEHOLDERS (see 4i): index.html, gameN.css/.js, empty assets/, README - GAME N.md
-games/_NOT-USED-hollow-hill-cc/   HOLLOW HILL, SHELVED (no games.json entry): index.html, hollow-hill.css, hollow-hill.js (story + engine), hollow-hill-art.js (SVG art), assets/hill.svg
+games/game1..game8/        NEUTRAL PLACEHOLDERS (see 4i): index.html, gameN.css/.js, empty assets/, README - GAME N.md
+games/_TABLED GAMES/wrong-desktop/    TEST GAME, deliberately wrong (was game2): fixed 1280 x 720 desktop stage in px; wrong-desktop.css/.js
+games/_TABLED GAMES/wrong-phone/      TEST GAME, deliberately wrong (was game3): fixed px for a 390-wide phone, small text, scrolls; wrong-phone.css/.js
+games/_TABLED GAMES/       written + tested games that are NOT used in the app (John, 2026-10-01); nothing in the app points here
+games/_TABLED GAMES/pie-maker/        PIE MAKER, TABLED 2026-10-01 (no games.json entry; was game1): index.html, pie-maker.css/.js, assets/pumpkin.svg, pie.svg (also its icon)
+games/_TABLED GAMES/hollow-hill-cc/   HOLLOW HILL, TABLED (no games.json entry): index.html, hollow-hill.css, hollow-hill.js (story + engine), hollow-hill-art.js (SVG art), assets/hill.svg
 games/README - game design requirements.md   THE RULES (one copy; each game README links to it)
 games/*/README - <NAME>.md                   how each game was made + "Where this game breaks the requirements"
 start-local/start-halloween.bat   double-click launcher, port 8091 (confirmed by John 2026-09-30), prints LAN URL for iPhone
@@ -139,7 +140,7 @@ meta is required for the `env(safe-area-inset-*)` values.
 - `loadGame()` sets `gameFrame.src = "./games/<folder_name>/index.html?v=" + APP_VERSION`.
   Changing `src` throws the old game away completely (no stop() needed).
 - `APP_VERSION` in app.js must match the `?v=` tags in index.html
-  (currently `2026-0930-stack`; check app.js, this line has gone stale
+  (currently `2026-1001-tabled`; check app.js, this line has gone stale
   before). **An edit to games.json also needs
   the bump** before a push, or phones keep the old list for up to 10
   minutes; the local server never caches it. The game pages' own `<link>`/`<script>`
@@ -164,7 +165,7 @@ SE is height-limited (frame fits the height); the others are width-limited.
 Pro Max panel ×3 = 1296 × 2016 → the design canvas. PC/Mac figures in the
 requirements doc are estimates (browser toolbars vary).
 
-## 4c. Pie Maker (folder `pie-maker`, was game1) implementation notes
+## 4c. Pie Maker (folder `_TABLED GAMES/pie-maker`, tabled 2026-10-01, was game1) implementation notes
 
 - All positions/sizes/speeds in "field widths"; pixels computed every frame
   from `field.clientWidth`, so it survives resizes.
@@ -259,10 +260,10 @@ requirements doc are estimates (browser toolbars vary).
   styles.css (`.this-game-icon` 14cqw orange tile; title
   `clamp(16px, 5.4cqw, 28px)`; byline/credits/later at 0.7 opacity).
 
-## 4e. The two wrong test games (game2, game3)
+## 4e. The two wrong test games (wrong-desktop, wrong-phone; were game2, game3; tabled 2026-10-01)
 
 Plain pages with no page-setup block, so the iframe's default scrolling
-shows. game2: `#stage { width: 1280px; height: 720px }`, `click`
+shows. (Below, "game2" = wrong-desktop and "game3" = wrong-phone.) game2: `#stage { width: 1280px; height: 720px }`, `click`
 handlers, a `:hover` colour. game3: `.page { width: 390px }`, an 8-column
 grid of 40 px `.square`s (12 random ghosts via a `Set` of indices), 16 px
 body text. Each README lists the rule numbers it breaks. Verified with
@@ -316,7 +317,7 @@ icon in the top bar next to `short_title`; only if John asks.
   animation (`animationPlayState = "paused"`) since a screenshot call
   arrives after 800 ms.
 
-## 4h. Hollow Hill implementation notes (games/_NOT-USED-hollow-hill-cc/, shelved)
+## 4h. Hollow Hill implementation notes (games/_TABLED GAMES/hollow-hill-cc/, tabled)
 
 - **Three files**: `hollow-hill-art.js` (an `ART` object: `scenes.{square,
   gate, graveyard, crypt, chapel, bog, hilltop}(flags)` returning SVG
@@ -380,7 +381,38 @@ icon in the top bar next to `short_title`; only if John asks.
   named it: the games.json entry and the version tag `2026-0929-hollow`.
   Its own files still say `hollow-hill` and `games/hollow-hill/` in
   comments; left alone on purpose until it is brought back. Its old
-  games.json entry is in git, commit `c979de7`.
+  games.json entry is in git, commit `c979de7`. On 2026-10-01 John moved
+  the folder again, to `games/_TABLED GAMES/hollow-hill-cc/` (the first
+  name was `games/_NOT-USED-hollow-hill-cc/`).
+- **Pie Maker tabled (2026-10-01)**: `git mv games/pie-maker
+  "games/_TABLED GAMES/pie-maker"`, entry deleted from games.json,
+  `stack-o-lantern` changed from slot 2 to slot 1, version tag bumped to
+  `2026-1001-tabled`. Every "see Pie Maker for an example" pointer now
+  names `games/stack-o-lantern/`: the requirements doc (four places), the
+  root README, the six placeholder READMEs, and game2/game3's READMEs and
+  CSS comments. Pie Maker's own files are untouched; its README's
+  relative link to the requirements doc no longer resolves from the
+  tabled location (same policy as Hollow Hill: fix when brought back).
+  To bring it back: move the folder up to `games/` and restore its entry
+  from git (commit `a5bdbf7`). Tested at 390×844: seven board buttons
+  all load, Stack-o'-Lantern sits in column 1, cell 2 is empty,
+  `games/pie-maker/index.html` answers 404.
+- **The wrong test games tabled (2026-10-01)**: `git mv games/game2
+  "games/_TABLED GAMES/wrong-desktop"` and `game3` → `wrong-phone`, then
+  `git mv` of the inner files (`wrong-desktop.css/.js`, `README - WRONG
+  DESKTOP.md`, same for wrong-phone), the `<link>`/`<script>` tags, the
+  first comment line of each css/js ("wrong-desktop (was game2) - ..."),
+  and each README's title, status line and link to the requirements doc
+  (now `../../README...`, so it resolves from the tabled location). Both
+  still run when opened directly (tested in an iframe: click scores 1 on
+  the 1280px stage; 48 squares on the 390px page).
+- **New `game2` and `game3` placeholders**: copied from `game5` with
+  `sed` swapping `game5`, `Game 5`, `GAME 5` for the new number (simpler
+  than the `c44f4de` recipe above, same result; `diff` against game4 with
+  the numbers masked says identical). games.json: the game2, game3 and
+  game4 entries rewritten as placeholder entries in slots 2, 3, 4.
+  Tested at 390×844: eight board buttons, gameN in cell N, each loads its
+  page; `game1` (benched) files answer 200.
 - **Editing games.json by script**: work on the text (find the entry,
   insert before a marker such as the line `"folder_name": "game5",`),
   assert each marker occurs exactly once, then `json.loads` the result as

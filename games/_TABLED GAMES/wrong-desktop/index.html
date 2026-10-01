@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wrong: desktop size</title>
+    <!-- DELIBERATELY WRONG TEST GAME. This page is built the way a desktop
+     game would be: a fixed 1280 x 720 stage measured in px. It ignores the
+     requirements on purpose, so you can see what the app does with a game
+     that was not designed for the game panel. See the README. -->
+    <link rel="stylesheet" href="./wrong-desktop.css" />
+  </head>
+
+  <body>
+    <div id="stage">
+      <div class="hud">Score: <span id="score">0</span></div>
+      <p class="hint">Click the pumpkins. Built for a 1280 x 720 desktop window.</p>
+      <div class="pumpkin" style="left: 150px; top: 200px"></div>
+      <div class="pumpkin" style="left: 500px; top: 400px"></div>
+      <div class="pumpkin" style="left: 800px; top: 150px"></div>
+      <div class="pumpkin" style="left: 1100px; top: 500px"></div>
+      <button id="reset">Reset</button>
+    </div>
+
+    <script src="./wrong-desktop.js"></script>
+  </body>
+</html>

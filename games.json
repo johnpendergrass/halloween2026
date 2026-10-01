@@ -13,20 +13,8 @@
       "how_to_play": "Just sit back and watch the spooky silhouettes rise from the pumpkin patch!"
     },
     {
-      "folder_name": "pie-maker",
-      "goes_in_slot": 1,
-      "title": "Pie Maker",
-      "short_title": "Pie Maker",
-      "icon": "assets/pie.svg",
-      "designer": "John, Claude",
-      "credits": "",
-      "date": "September 27, 2026",
-      "description": "Ten pumpkins drift and spin across the field. Tap them all to turn them into pies, as fast as you can.",
-      "how_to_play": "Tap a pumpkin and it becomes a pie. The clock runs from the start until the last pie. Play again for a fresh round."
-    },
-    {
       "folder_name": "stack-o-lantern",
-      "goes_in_slot": 2,
+      "goes_in_slot": 1,
       "title": "Stack-o'-Lantern",
       "short_title": "Stack",
       "icon": "assets/stack.svg",
@@ -50,31 +38,31 @@
     },
     {
       "folder_name": "game2",
-      "goes_in_slot": 3,
-      "title": "Wrong: desktop size",
-      "short_title": "Wrong: desktop",
+      "goes_in_slot": 2,
+      "title": "Game 2",
+      "short_title": "Game 2",
       "icon": "",
-      "designer": "Claude (test game)",
+      "designer": "",
       "credits": "",
-      "date": "September 29, 2026",
-      "description": "DELIBERATELY WRONG: a 1280 x 720 desktop game in fixed px, to show what the app does with it (nothing).",
-      "how_to_play": "Click the pumpkins. Most of them are off-screen on a phone; drag around to find them."
+      "date": "",
+      "description": "Placeholder for a game not written yet.",
+      "how_to_play": ""
     },
     {
       "folder_name": "game3",
-      "goes_in_slot": 4,
-      "title": "Wrong: fixed phone px",
-      "short_title": "Wrong: phone px",
+      "goes_in_slot": 3,
+      "title": "Game 3",
+      "short_title": "Game 3",
       "icon": "",
-      "designer": "Claude (test game)",
+      "designer": "",
       "credits": "",
-      "date": "September 29, 2026",
-      "description": "DELIBERATELY WRONG: sized in px for one phone, with small text and buttons, and a page that scrolls.",
-      "how_to_play": "Tap squares to find the twelve hidden ghosts. Notice how small the squares are for a finger."
+      "date": "",
+      "description": "Placeholder for a game not written yet.",
+      "how_to_play": ""
     },
     {
       "folder_name": "game4",
-      "goes_in_slot": "",
+      "goes_in_slot": 4,
       "title": "Game 4",
       "short_title": "Game 4",
       "icon": "",

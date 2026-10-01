@@ -18,9 +18,9 @@ over, pause), high scores, settings, sound, and file-size limits.
 > treat every MUST as a requirement and check your work against it before
 > finishing.
 
-**Demo games.** `games/pie-maker/` (Pie Maker) and `games/pumpkin-patch/`
-(the home screen) are demos, written to follow these rules. They are not part of the
-finished app and may change. Where a demo departs from a rule, its own
+**Demo games.** `games/stack-o-lantern/` (Stack-o'-Lantern) and
+`games/pumpkin-patch/` (the home screen) are demos, written to follow these
+rules. They may change. Where a demo departs from a rule, its own
 `README - <NAME>.md` has a section *"Where this game breaks the
 requirements, and why"*. If the demo and this document disagree and the
 demo's README does not explain it, **this document is right**.
@@ -105,8 +105,8 @@ The "In code" column is for coders (see 2.1). Designers can ignore it.
   moves or not. On the smallest phone that is a fingertip (44 CSS px, the
   size Apple recommends as a minimum), so 168 is the floor, not a
   comfortable size. For text buttons, 168 is the minimum *height*.
-  (Pie Maker's smallest pumpkin is exactly 168, and was tested fine on an
-  iPhone 16 Pro.)
+  (Moving pumpkins exactly 168 across were tested fine on an iPhone 16
+  Pro.)
 - Over about 648 (half the width), a sprite leaves little room to move, and
   as a button it stops looking like something to tap.
 - Nothing that matters may depend on hovering (fingers can't hover), a
@@ -175,7 +175,7 @@ Square cells filling the full width (1296):
 - **Sprites: PNG with a transparent background.**
 - **Backgrounds and photos: JPG** (much smaller files).
 - **SVG** is sharp at any size and usually tiny, and suits flat, simple art
-  (Pie Maker's pumpkins and pies are SVG). For SVG, only the shape matters,
+  (the two demo games' icons are SVG). For SVG, only the shape matters,
   not the pixel size.
 - Up to 1.5× the canvas size is fine. Much bigger only makes the game
   slower to load, with no visible gain.
@@ -211,7 +211,7 @@ space), in case you want to echo them inside your game:
 **The app's button look**, if you want your buttons to match: pumpkin
 orange, white bold text, rounded corners (39 canvas pixels), a dark-pumpkin
 "shadow" 16 pixels deep directly below, and the button presses down when
-tapped. Pie Maker's **Play again** button copies it.
+tapped. Stack-o'-Lantern's **Stack again** button copies it.
 
 ---
 

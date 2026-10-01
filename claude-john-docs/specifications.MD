@@ -1,6 +1,6 @@
 # Halloween 2026 — Specifications (design decisions)
 
-Last updated: 2026-09-30 16:55 (third day: Hollow Hill shelved, stack-o-lantern folder, placeholders game1..game8)
+Last updated: 2026-10-01 09:45 (fourth day: the `_TABLED GAMES` folder; Pie Maker and the two wrong test games tabled; game1..game8 all placeholders)
 
 This file records WHAT the app looks like and WHY. Technical "how" lives in
 `specifications-technical.MD`. Companion notes in this folder:
@@ -34,7 +34,9 @@ checkable, and backed by a working example game.
 
 **A template for others to insert mini games into.** The frame and the docs
 are the product. The Pumpkin Patch and Pie Maker (first named game0 and game1) are **demos**:
-not part of the final package, they may change or go. Consequences:
+not part of the final package, they may change or go. (Update
+2026-10-01: Pie Maker is tabled; John now counts the Pumpkin Patch and
+Stack-o'-Lantern as "the game". See 6h.) Consequences:
 
 - **The requirements doc is the source of truth; the demos follow it**, not
   the other way round. Where a demo departs from a rule, its own README
@@ -228,9 +230,9 @@ clock. John may "nix it" → back to `#07040a` and `black`.
   every field. Dropped from Claude's earlier proposal: `role` and `status`
   (`goes_in_slot` does both jobs), button order (array order), per-game
   colours, translated titles (a second file if the Chinese switch happens).
-- Folders: `games/pumpkin-patch/` (home), `games/pie-maker/`,
-  `games/stack-o-lantern/`, `games/game1..8/` (see 6h for which is what;
-  any lowercase name works). Each
+- Folders: `games/pumpkin-patch/` (home), `games/stack-o-lantern/`,
+  `games/game1..8/`, and `games/_TABLED GAMES/` for games not in use
+  (see 6h for which is what; any lowercase name works). Each
   has a `README - <GAME NAME>.md` describing how it was made (John's
   naming). The rules live in **one** file,
   `games/README - game design requirements.md` (was five identical copies
@@ -270,7 +272,14 @@ Key decisions (John):
   coders + AI (18 MUST/SHOULD rules), appendix per-device sizes.
   Information stated once (John: repetition was confusing).
 
-## 6b. Demo game: Pie Maker (folder `pie-maker`, was game1)
+## 6b. Demo game: Pie Maker (TABLED 2026-10-01; folder `_TABLED GAMES/pie-maker`, was game1)
+
+**Status (John, 2026-10-01):** moved out of the games root into
+`games/_TABLED GAMES/pie-maker/` and removed from games.json. Its files
+are untouched. Stack-o'-Lantern took over slot 1 and the role of "the
+example that follows the rules" in the requirements doc, the root README
+and the placeholder/test game READMEs. What follows describes the game as
+built.
 
 John's design: "asteroids but for pumpkins and without a gun, just tapping."
 10 pumpkins of varying size drift in straight lines, spin, and wrap around
@@ -310,7 +319,16 @@ waits, sinks. Decisions:
   (reused). All 19 silhouettes are preloaded at start so none pops in late
   on a slow connection.
 
-## 6d. Test games: game2 and game3 are deliberately wrong (2026-09-29)
+## 6d. Test games: wrong-desktop and wrong-phone are deliberately wrong (2026-09-29; TABLED 2026-10-01)
+
+**Status (John, 2026-10-01):** "get rid of wrong desktop and wrong
+phone... rename those games to those names and put them into the _TABLED
+GAMES folder." They were the folders `game2` and `game3` (board slots 3
+and 4); they are now `games/_TABLED GAMES/wrong-desktop/` and
+`games/_TABLED GAMES/wrong-phone/`, with their files renamed to match,
+and they are out of games.json. `game2` and `game3` are neutral
+placeholders again. The text below was written while they were still
+called game2 and game3.
 
 John asked what a designer sees if they drop in a page that was not
 written for the panel. Answer, verified: **the app does nothing to it**.
@@ -360,14 +378,15 @@ over." Claude chose a one-tap stacker.
   ground is part of the scrolling world (a pinned ground made the lower
   slabs look like they sank); Best is per visit (rule 18).
 
-## 6g. Hollow Hill (SHELVED 2026-09-30; folder `_NOT-USED-hollow-hill-cc`)
+## 6g. Hollow Hill (TABLED 2026-09-30; folder `_TABLED GAMES/hollow-hill-cc`)
 
 **Status (John, 2026-09-30):** "keep the game folder... remove all
 references to it in the actual game, game json and such. we will consider
 changes to it and using it later." John renamed the folder himself; the
 games.json entry is gone and nothing in the app points at it. The files
-inside are untouched. What follows describes the game as built on
-2026-09-29.
+inside are untouched. On 2026-10-01 John moved it from
+`games/_NOT-USED-hollow-hill-cc/` into the new `games/_TABLED GAMES/`
+folder (see 6h). What follows describes the game as built on 2026-09-29.
 
 John then asked for "a more complicated and involved adventure type game...
 10-15 minutes... Freddi Fish or Pajama Sam... d&d type games in caves...
@@ -412,28 +431,42 @@ yourself". Claude pitched and built a point-and-click adventure.
 
 John wants a complete set of numbered placeholder folders next to the
 named games, so a designer always has a neutral folder to copy or take
-over. After the session:
+over. As of 2026-10-01 (Pie Maker and the two wrong test games tabled,
+Stack-o'-Lantern moved from slot 2 to slot 1):
 
 | Folder | What it is | Slot |
 |---|---|---|
 | `pumpkin-patch` | the home game | home |
-| `pie-maker` | demo that follows the rules | 1 (John) |
-| `stack-o-lantern` | Claude's stacker | 2 (John) |
-| `game2` | wrong on purpose: desktop px | 3 |
-| `game3` | wrong on purpose: phone px | 4 |
-| `game5`..`game8` | neutral placeholders | 5–8 |
-| `game1`, `game4` | neutral placeholders | "" (benched) |
-| `_NOT-USED-hollow-hill-cc` | shelved, no entry | none |
+| `stack-o-lantern` | Claude's stacker, the example that follows the rules | 1 (John) |
+| `game2`..`game8` | neutral placeholders | 2–8 (same number as the folder) |
+| `game1` | neutral placeholder | "" (benched: Stack-o'-Lantern has cell 1) |
+| `_TABLED GAMES/pie-maker` | tabled 2026-10-01, no entry | none |
+| `_TABLED GAMES/wrong-desktop` | was `game2`, wrong on purpose: desktop px; tabled 2026-10-01 | none |
+| `_TABLED GAMES/wrong-phone` | was `game3`, wrong on purpose: phone px; tabled 2026-10-01 | none |
+| `_TABLED GAMES/hollow-hill-cc` | tabled, no entry | none |
 
+John (2026-10-01): the game now consists of only `pumpkin-patch` (home)
+and `stack-o-lantern` (game 1); "keep default demo game folders 1-8 in
+the games folder". The placeholders' slots (gameN in cell N, `game1`
+benched) are Claude's choice, to be confirmed.
+
+- **`games/_TABLED GAMES/` (John, 2026-10-01)** holds games that were
+  written and tested and are worth keeping, but are not used in the app.
+  **Only a game that is actually used in the app has its own folder
+  directly under `games/`** (`stack-o-lantern`, `pumpkin-patch`, ...).
+  Tabling a game = move its folder in there and remove its games.json
+  entry; nothing in the app points into that folder, so its capitals and
+  the space in its name are harmless.
 - **A neutral placeholder** shows its name ("Game 5"), the line
   "Placeholder page for Game 5." and the measured size of the game panel.
   It follows the rules doc (page-setup block, text classes), so it is a
-  correct starting point, unlike game2/game3. Its games.json entry has a
+  correct starting point, unlike the two wrong test games. Its games.json entry has a
   title and short title only; the button shows the text fallback.
-- **Slots 1 and 2 are John's.** The rest is Claude's choice, flagged to
-  John and open: nine games for eight cells means one or more sit out,
-  and Claude benched the two newest placeholders rather than the wrong
-  test games. Changing it is one number per entry in games.json.
+- **Slot 1 is John's** (on 2026-09-30 slots 1 and 2 were: Pie Maker and
+  Stack-o'-Lantern). The rest is Claude's choice, flagged to
+  John and open: nine entries for eight cells means one sits out
+  (`game1`, since Stack-o'-Lantern has cell 1). Changing it is one number
+  per entry in games.json.
 - There is no `game1`..`game8` to slot 1..8 rule. The folder name and the
   slot are independent (that is the point of `goes_in_slot`).
 

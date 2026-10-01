@@ -1,21 +1,16 @@
-/* game2 - DELIBERATELY WRONG test game: desktop-style, fixed 1280 x 720.
-   The only "game": click a pumpkin to score a point; Reset brings them back.
-   Uses click, not pointerdown, like a typical desktop page. */
+/* game2 - its own code. Placeholder for now: it only shows how big the game
+   panel is, so sizes can be checked on each device. */
 
-const scoreBox = document.getElementById("score");
-const pumpkins = document.querySelectorAll(".pumpkin");
-let score = 0;
+const sizeReadout = document.getElementById("sizeReadout");
 
-pumpkins.forEach((pumpkin) => {
-  pumpkin.addEventListener("click", () => {
-    pumpkin.hidden = true;
-    score += 1;
-    scoreBox.textContent = score;
-  });
-});
+/** Show this page's size. Inside the app, that is the game panel's size. */
+function showSize() {
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  sizeReadout.textContent =
+    "Game panel: " + w + " × " + h + " px (9:14 = 1.556, this = " +
+    (h / w).toFixed(3) + ")";
+}
 
-document.getElementById("reset").addEventListener("click", () => {
-  pumpkins.forEach((pumpkin) => { pumpkin.hidden = false; });
-  score = 0;
-  scoreBox.textContent = score;
-});
+showSize();
+window.addEventListener("resize", showSize);

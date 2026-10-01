@@ -1,0 +1,21 @@
+Halloween 2026 - project status (the glance; details in claude-john-docs/)
+
+2026 1001     John + Claude: new folder games/_TABLED GAMES (written + tested, not used in the app).
+              In it: hollow-hill-cc, pie-maker, wrong-desktop (was game2), wrong-phone (was game3);
+              none is in games.json. The game is now Pumpkin Patch (home) + Stack-o'-Lantern
+              (slot 1). game1..game8 are all neutral placeholders: game2..8 in slots 2-8, game1
+              benched. Docs updated. Committed + pushed.
+2026 0930     Hollow Hill shelved. Stack-o'-Lantern moved from game4 to its own folder.
+              Placeholder folders game1 and game4..game8. Committed + pushed.
+2026 0929     games.json v2, named folders, icon picker, board of 2 x 4 fixed cells, This Game tab.
+              Night: Stack-o'-Lantern and Hollow Hill written.
+2026 0927     first day: frame, three panels, iframe games, home + Pie Maker demos, rules v3.
+
+NOT YET
+ - John to confirm the placeholder slots (gameN in cell N, game1 benched) - Claude's choice
+ - requirements doc v4: "your games.json entry" (1-8 board) + icon spec (256, 200-300, +-10)
+ - decide contribution workflow (zip to John?); write "Adding your game" + root CLAUDE.md
+ - switch on GitHub Pages; test on the iPhone from the home screen
+ - later: Hollow Hill changes, message contract (scores, pause, save, sound), checker script
+
+DETAIL  claude-john-docs/Claude-ToBe-Continued-2026-1001-0945.MD, specifications.MD 6h

@@ -3,24 +3,16 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Wrong: desktop size</title>
-    <!-- DELIBERATELY WRONG TEST GAME. This page is built the way a desktop
-     game would be: a fixed 1280 x 720 stage measured in px. It ignores the
-     requirements on purpose, so you can see what the app does with a game
-     that was not designed for the game panel. See the README. -->
+    <title>Game 2</title>
+    <!-- Shown inside the app's game panel (an iframe), but also works on its
+     own: open games/game2/index.html directly to test it. -->
     <link rel="stylesheet" href="./game2.css" />
   </head>
 
   <body>
-    <div id="stage">
-      <div class="hud">Score: <span id="score">0</span></div>
-      <p class="hint">Click the pumpkins. Built for a 1280 x 720 desktop window.</p>
-      <div class="pumpkin" style="left: 150px; top: 200px"></div>
-      <div class="pumpkin" style="left: 500px; top: 400px"></div>
-      <div class="pumpkin" style="left: 800px; top: 150px"></div>
-      <div class="pumpkin" style="left: 1100px; top: 500px"></div>
-      <button id="reset">Reset</button>
-    </div>
+    <h1 class="text-large">Game 2</h1>
+    <p class="note text-medium">Placeholder page for Game 2.</p>
+    <p class="size-readout text-small" id="sizeReadout"></p>
 
     <script src="./game2.js"></script>
   </body>
