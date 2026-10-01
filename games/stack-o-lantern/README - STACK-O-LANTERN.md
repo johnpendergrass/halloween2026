@@ -72,15 +72,29 @@ lines); the whole stage is the tap target; the Stack again button is
 13vw tall; all text uses the three classes; Arial; colours contrast
 (white text with the `.text-on-art` shadow over the sky; ink face on the
 pale moon); no localStorage, no postMessage, nothing loaded from outside
-the folder. Tested at 382 x 594 (iPhone 16), 338 x 526 (SE) and 547 x 850
+the folder except the app's own `../game-helper.js`. Tested at 382 x 594 (iPhone 16), 338 x 526 (SE) and 547 x 850
 (PC) through chrome-devtools, and standalone.
 
-**Best** in the info bar is this visit only. Rule 18 forbids
-`localStorage` until the app defines how scores are kept; when it does,
-the app should own the high score.
+**Best** in the info bar is this visit only. The lasting list, the five
+best counts on this device, is kept by the app and shown in the This Game
+tab (see below).
 
 ## Talks to the app?
 
-No. The app just loads the page; 🏠 in the top panel leaves it. When the
-message contract exists, the natural messages are: score (the count) at
-game over, and pause when the drawer opens (freeze the mover).
+Yes, one thing (since 2026-10-01): at game over it reports the count.
+`index.html` includes `../game-helper.js` before the game's own script,
+and `gameOver()` calls `Halloween.reportScore(count)`. The app keeps the
+five best and shows them in the This Game tab. A count of 0 is not
+recorded. Opened on its own, outside the app, the call does nothing, so
+the game still runs standalone.
+
+Not yet: the "Easy / Hard" switch the app shows for this game does
+nothing so far (a game cannot read its switches yet).
+
+## Pause
+
+None (John's decision, 2026-10-01). The app does not pause a game when
+its bottom panel opens, and a game cannot tell that it opened; pausing is
+each game's own job (rule 18). This game has no pause of its own, so the
+pumpkin keeps sliding behind an open panel. A round is short, and a tap
+on the panel does not drop the pumpkin.

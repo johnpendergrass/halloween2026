@@ -3,9 +3,11 @@
 *For anyone making a mini game for Halloween 2026, and for their AI
 assistants.*
 
-Version 3, 2026-09-27. This version covers **sizes, text, artwork and
-colours only**. Later versions will add: talking to the app (scores, game
-over, pause), high scores, settings, sound, and file-size limits.
+Version 4, 2026-10-01. This version covers **sizes, text, artwork and
+colours**, and, new in version 4, **how your game lives with the app**:
+the bottom panel, pausing, high scores, sound and settings (1.8, 2.5 and
+rules 18 to 22). Later versions will add file-size limits, naming rules,
+and how to test and submit.
 
 - **Part 1 is for designers.** Everything is measured on one drawing
   canvas, in real pixels.
@@ -62,8 +64,9 @@ stretched or cropped. The shape (9 wide : 14 tall) is the same everywhere.
   inside your canvas. It uses up some of your space.
 - The corners are square.
 - **The app's bottom panel can slide up over the lower 55% of the canvas**
-  (about the bottom 1109 pixels) when the player opens it. Later, the app
-  will tell your game to pause when that happens.
+  (about the bottom 1109 pixels). The player can open it at any time, also
+  in the middle of a game, and **the app does not pause your game** when
+  they do. See 1.8.
 
 ## 1.2 Measure in canvas pixels, always
 
@@ -213,6 +216,61 @@ orange, white bold text, rounded corners (39 canvas pixels), a dark-pumpkin
 "shadow" 16 pixels deep directly below, and the button presses down when
 tapped. Stack-o'-Lantern's **Stack again** button copies it.
 
+## 1.8 Living with the app: the bottom panel, pausing, scores, sound, settings
+
+The idea behind all of this: **you drop your game in and it runs.** The app
+does very little to your game, so a few things are your game's own job.
+
+### The bottom panel does not pause your game
+
+- **The player can call up the app's bottom panel at any time**, also in
+  the middle of a game (the ☰ button, or the strip under your canvas). It
+  slides up over **about the lower half of your canvas (55%)** and stays
+  there until the player closes it. Taps on the panel do not reach your
+  game.
+- **Nothing happens to your game when it opens or closes.** The app does
+  not pause it, stop it, or tell it. Whatever moves keeps moving behind the
+  panel, and a clock keeps counting. Your game has no way to know whether
+  the panel is open.
+- **Pausing and continuing are your game's own responsibility.** If your
+  game needs a pause (things move by themselves, or a clock runs), give it
+  its own pause button and its own way to continue, inside your canvas. A
+  game that only changes when the player taps needs nothing.
+- The same goes for starting and restarting: your own start screen, your
+  own "play again".
+- When the player taps Home or picks another game, your page is simply
+  closed. Nothing of it is kept, except scores it has reported.
+
+### High scores
+
+- The app keeps **the five best scores of each game** and shows them in
+  the bottom panel's **This Game** tab, each with the date it was made,
+  for example `1.  42  (10-01-2026)`. The list is shown for every game,
+  with `---` where there is no score yet. The player can clear a game's
+  list there.
+- Your game only has to tell the app the result when a game ends: **a
+  number**, where higher is better. It may add **a short text to show in
+  place of the number**, for example "Master Chef". The list is still
+  ordered by the number. About 11 characters fit.
+- Scores are kept **on the player's own phone or PC**. Players do not see
+  each other's scores.
+- A game without scores does nothing; its list just stays empty.
+
+### Sound and settings (the switches in the bottom panel)
+
+- The This Game tab shows **one Sound switch**, always first. It is one
+  switch for the whole app: off in one game is off in all of them.
+- Below it, the tab shows **up to three on/off switches of your game's
+  own**, if you name them in your `games.json` entry, for example
+  "Easy / Hard" (the `_about` block in `games.json` says how).
+- The app draws these switches and remembers each player's choices on
+  their device. **That is all they do today: no game can read them, so
+  they change nothing in any game.**
+- So any sound control or setting your game really needs, including
+  anything that should change in the middle of a game, is **your game's
+  own responsibility**: build it inside your canvas (options on your own
+  start screen, for instance).
+
 ---
 
 # PART 2 — For coders and AI assistants
@@ -302,7 +360,8 @@ Sizes refer to the table in 1.3.
 
 1. MUST be a normal web page at `games/<game-id>/index.html`, with its CSS,
    JS and `assets/` in that same folder. MUST use relative paths (`./...`)
-   and MUST NOT load anything from outside its own folder.
+   and MUST NOT load anything from outside its own folder. The one
+   exception is the app's helper file, `../game-helper.js` (2.5).
 2. MUST include the page setup in 2.2 (fills the panel, never scrolls,
    touch settings).
 3. MUST work at any size with a 9:14 shape, and SHOULD still look right at
@@ -348,11 +407,79 @@ Sizes refer to the table in 1.3.
 17. Sprites SHOULD be PNG with transparency (or SVG); backgrounds and
     photos SHOULD be JPG.
 
+**Living with the app** (explained in 1.8; the code is in 2.5)
+
+18. **Pausing is the game's own job.** The player can open the app's
+    bottom panel at any time, also during play. It covers the lower 55% of
+    the game panel, and the app does not pause, stop or notify the game.
+    A game that needs a pause (anything that moves or counts by itself)
+    MUST provide its own pause and its own way to continue, inside its own
+    page. A game MUST NOT expect the app to pause it or to tell it that
+    the panel opened or closed.
+19. **Scores.** A game MAY report a score when a game ends, and MUST do it
+    only with `Halloween.reportScore(number)` or
+    `Halloween.reportScore(number, text)` from the helper file (2.5). The
+    number is required and higher MUST mean better.
+20. **Sound and settings.** A game MAY declare up to three on/off switches
+    in its `games.json` entry; the app shows them under its Sound switch
+    and remembers them. A game cannot read the Sound switch or its own
+    switches, and MUST NOT try to (rule 21). Any sound control or setting
+    a game needs, including one that changes during a game, is the game's
+    own job, inside its own page.
+21. MUST NOT use `window.parent`, `postMessage`, cookies or `localStorage`
+    itself. The helper file is the only link between a game and the app.
+
 **Not defined yet (do not invent your own)**
 
-18. Talking to the app, scores, settings, sound and file-size limits are
-    not defined yet. MUST NOT use `window.parent`, `postMessage`, cookies
-    or `localStorage` until a later version of this document says how.
+22. Sound rules (formats, volume, the iPhone's "no sound before the first
+    tap") and file-size limits are not defined yet.
+
+## 2.5 Talking to the app: the helper file
+
+Read 1.8 first: it says what the app does and does not do for a game.
+
+A game talks to the app only through **one small file the app provides,
+`games/game-helper.js`**. Include it before your own script:
+
+```html
+<script src="../game-helper.js"></script>
+<script src="./my-game.js"></script>
+```
+
+It gives your code an object called `Halloween`. **Available now:**
+
+```js
+// When a game ends. The number is always given: the app ranks by it,
+// higher is better, and keeps the five best with today's date.
+Halloween.reportScore(42);
+
+// The same, but the list shows the text in place of the number.
+Halloween.reportScore(42, "Master Chef");
+```
+
+- A score that is not a number, or is 0 or less, is not recorded.
+- Opened on its own, outside the app, `reportScore` does nothing (it
+  leaves a note in the browser console), so rule 4 still holds.
+- `games/stack-o-lantern/` is the worked example: one `<script>` line in
+  its `index.html`, one call in `gameOver()`.
+
+**That is the helper's only call.** A game cannot read the Sound switch or
+its own switches. The switches can be declared (the `settings` field, see
+the `_about` block of `games.json`); the app shows and remembers them, and
+nothing more.
+
+**Pausing.** There is no helper call for it, on purpose: the app sends
+your game no signal when the bottom panel opens or closes, and your page
+cannot detect it. A game that needs a pause builds its own (rule 18). One
+thing the browser itself does tell every page is when it stops being
+visible, such as the phone locking or the player switching to another
+app. You may use that to pause:
+
+```js
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) pauseMyGame();   // your own function
+});
+```
 
 ---
 
@@ -382,9 +509,11 @@ The canvas is shrunk to fit each device.
 
 ## Coming in later versions
 
-- Talking to the app: reporting a score, saying "game over", pausing when
-  the bottom panel opens
-- High scores (saved by the app, shown in the bottom panel)
-- Settings (declared by your game, shown by the app)
+- A way for games to use the Sound switch and their own switches
 - Sound rules (iPhones play nothing until the first tap)
+- Your `games.json` entry and your icon (for now, the `_about` block at
+  the bottom of `games.json` explains every field)
 - File-size limits, folder and file naming rules, how to test and submit
+
+Not coming: the app pausing your game. That stays your game's own job
+(rule 18).

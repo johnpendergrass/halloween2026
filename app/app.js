@@ -3,23 +3,24 @@
 
    Each game is its own little web page in games/<folder_name>/index.html. The app
    shows the chosen game by pointing the game panel's <iframe> at that page.
-   The app and the games do not talk to each other yet - that comes later.
+   A game can tell the app one thing so far: its score (section 4).
 
    The list of games is NOT in this file. It is in games.json, next to
-   index.html, and the app reads it at start-up (section 5). A game author
+   index.html, and the app reads it at start-up (section 6). A game author
    only touches their own games/<folder_name>/ folder and their entry in games.json.
 
    Section map:
      1. Settings and the games list
      2. Bottom panel: open, close, toggle
      3. Bottom panel tabs: App / This Game (and filling This Game)
-     4. Switching games
-     5. Start up: read games.json, build the buttons, show the home game
+     4. High scores and switches (the two columns in the This Game tab)
+     5. Switching games
+     6. Start up: read games.json, build the buttons, show the home game
    ========================================================================= */
 
 // Bump this (and the ?v= tags in index.html) whenever code changes, so
 // phones fetch fresh copies instead of old cached ones.
-const APP_VERSION = "2026-1001-tabled";
+const APP_VERSION = "2026-1001-scores";
 
 /* ------------------------------------------------------------------------
    1. Settings and the games list
@@ -34,6 +35,8 @@ const APP_VERSION = "2026-1001-tabled";
      icon         = a square picture inside the button, relative to the
                     game's folder. Missing or not up to spec (see
                     iconQualifies) = the short_title as text instead.
+     settings     = up to three on/off switches for the This Game tab
+                    (section 4).
    The full field list is in the _about block at the bottom of games.json.
    The home game is loaded at start and whenever no other game is active.
    It gets no button. homeGame and games are filled in by startUp() once
@@ -61,6 +64,7 @@ const ICON_SQUARE_SLACK = 10;
 
 let homeGame = null;   // the entry whose goes_in_slot is "home"
 let games = [];        // the entries with a button, sorted by slot
+let currentGame = null;   // the entry of the game now in the game panel
 
 /* ------------------------------------------------------------------------
    2. Bottom panel: open, close, toggle
@@ -77,6 +81,7 @@ function openDrawer() {
 }
 
 function closeDrawer() {
+  showClearQuestion(false);   // an unanswered "You sure?" does not wait around
   drawer.classList.remove("is-open");
   drawerContent.inert = true;
   drawerStrip.setAttribute("aria-label", "Open panel");
@@ -98,6 +103,7 @@ document.getElementById("menuButton").addEventListener("click", toggleDrawer);
    --------------------------------------------------------------------- */
 
 function showTab(tabName) {
+  showClearQuestion(false);   // as in closeDrawer()
   document.querySelectorAll("[data-tab]").forEach((button) => {
     button.classList.toggle("is-active", button.dataset.tab === tabName);
   });
@@ -118,10 +124,12 @@ function setTextOrHide(id, text) {
 }
 
 /** Fill the This Game tab from a games.json entry. Called whenever a game
-    is loaded, so the tab always describes what is in the game panel. For
-    now it is all static text from the file; scores and settings come
-    later, once games can talk to the app. */
+    is loaded, so the tab always describes what is in the game panel. The
+    text comes straight from the file; the high scores and the switches
+    are section 4. */
 function fillThisGameTab(game) {
+  fillScores(game);
+  fillSwitches(game);
   setTextOrHide("thisGameTitle", game.title);
   // "Designer, date" on one line, whichever parts exist.
   setTextOrHide("thisGameByline", [game.designer, game.date].filter(Boolean).join(", "));
@@ -141,7 +149,280 @@ function fillThisGameTab(game) {
 }
 
 /* ------------------------------------------------------------------------
-   4. Switching games
+   4. High scores and switches (the two columns in the This Game tab)
+
+   WHERE THESE ARE KEPT. A web page can read games.json but cannot write
+   to it: a web server such as GitHub Pages only hands files out. What a
+   page CAN do is keep small notes in the browser's own storage on this
+   device, called localStorage. Each note has a name (a "key") and holds
+   text; the app stores JSON text in two kinds of note:
+
+     "halloween2026:app"            { "sound": true }
+     "halloween2026:<folder_name>"  { "scores": [ ... ], "settings": [0, 1] }
+
+   one for the whole app, and one per game. So the scores and the switch
+   positions belong to this phone or PC only; another player's phone has
+   its own. (To look at them: the browser's developer tools, Application,
+   Local Storage.)
+
+   SCORES COME FROM THE GAMES. A game includes games/game-helper.js and
+   calls Halloween.reportScore(42) when a game is over; the helper passes
+   that on to reportScore() below, through window.halloweenApp.
+
+   THE SWITCHES ARE NOT CONNECTED TO THE GAMES. They are shown and
+   remembered, but no game can read them, so they change nothing in a game.
+   --------------------------------------------------------------------- */
+
+const STORAGE_PREFIX = "halloween2026:";
+const APP_STORAGE_KEY = STORAGE_PREFIX + "app";
+const SCORES_SHOWN = 5;          // the High scores list is always this long
+const MAX_GAME_SWITCHES = 3;     // a game's own switches; Sound is extra
+
+/** The name of a game's note in the browser's storage. */
+function storageKeyFor(game) {
+  return STORAGE_PREFIX + game.folder_name;
+}
+
+/** Read one note and return it as an object. Returns {} when there is no
+    note yet, and also when the storage cannot be read (some private
+    browsing modes) or holds something unexpected, so the app carries on
+    with nothing remembered rather than stopping. */
+function readSaved(key) {
+  try {
+    const data = JSON.parse(localStorage.getItem(key));
+    const isPlainObject = data !== null && typeof data === "object" && !Array.isArray(data);
+    return isPlainObject ? data : {};
+  } catch (error) {
+    return {};
+  }
+}
+
+/** Write one note. If the browser refuses, the choice simply is not
+    remembered next time. */
+function writeSaved(key, data) {
+  try {
+    localStorage.setItem(key, JSON.stringify(data));
+  } catch (error) {
+    console.warn("Could not save " + key + " in this browser:", error);
+  }
+}
+
+/** Today's date on this device, as "2026-10-01" (year-month-day). That
+    is how a score's date is saved: it cannot be misread, whatever country
+    the reader is from. */
+function todayAsText() {
+  const now = new Date();
+  const month = String(now.getMonth() + 1).padStart(2, "0");   // months count from 0
+  const day = String(now.getDate()).padStart(2, "0");
+  return now.getFullYear() + "-" + month + "-" + day;
+}
+
+/** A saved date such as "2026-10-01" the way the list shows it:
+    "(10-01-2026)", month-day-year. No date saved = nothing shown. */
+function dateForList(savedDate) {
+  if (typeof savedDate !== "string") return "";
+  const [year, month, day] = savedDate.split("-");
+  if (!year || !month || !day) return "";
+  return "(" + month + "-" + day + "-" + year + ")";
+}
+
+/** The five lines of the High scores column: "1." to "5.", then the score
+    (right-adjusted) or "---" where there is none yet, then the date the
+    score was made, e.g.  1.  42 (10-01-2026). A saved score looks like
+      { "value": 42, "date": "2026-10-01" }                         or
+      { "value": 42, "text": "Master Chef", "date": "2026-10-01" }
+    and the text, when a game gave one, is shown in place of the number. */
+function fillScores(game) {
+  const savedScores = readSaved(storageKeyFor(game)).scores;
+  const scores = Array.isArray(savedScores) ? savedScores : [];
+
+  // Nothing to clear = the Clear scores button is dimmed and does nothing.
+  document.getElementById("clearScores").disabled = scores.length === 0;
+  // A list drawn afresh never starts with the "You sure?" question showing.
+  showClearQuestion(false);
+
+  const list = document.getElementById("thisGameScores");
+  list.replaceChildren();
+  for (let place = 1; place <= SCORES_SHOWN; place += 1) {
+    const score = scores[place - 1];
+
+    const rank = document.createElement("span");
+    rank.textContent = place + ".";
+    const value = document.createElement("span");
+    value.className = "score-value";
+    value.textContent = score ? (score.text || String(score.value)) : "---";
+    const date = document.createElement("span");
+    date.className = "score-date";
+    date.textContent = score ? dateForList(score.date) : "";
+
+    const row = document.createElement("div");
+    row.className = "score-row";
+    row.append(rank, value, date);
+    list.appendChild(row);
+  }
+}
+
+/** A game reports a result (through games/game-helper.js). `value` is a
+    number, higher is better; `text` is optional and is shown in place of
+    the number. The app adds today's date. The score joins the list of the
+    game now in the panel, the list is sorted best first and cut back to
+    five, saved, and drawn again.
+    A value that is not a number, or is 0 or less, is not recorded. */
+function reportScore(value, text) {
+  if (!currentGame) return;
+  if (typeof value !== "number" || !Number.isFinite(value) || value <= 0) {
+    console.info('"' + currentGame.title + '" reported the score ' +
+                 JSON.stringify(value) + ", which is not recorded (a score " +
+                 "must be a number above 0).");
+    return;
+  }
+
+  const score = { value: value, date: todayAsText() };
+  const hasText = text !== undefined && text !== null && String(text).trim() !== "";
+  if (hasText) score.text = String(text).trim();
+
+  const data = readSaved(storageKeyFor(currentGame));
+  const scores = Array.isArray(data.scores) ? data.scores : [];
+  scores.push(score);
+  // Highest value first. Equal values keep their order, so of two equal
+  // scores the earlier one stays above the newer one.
+  scores.sort((a, b) => b.value - a.value);
+  data.scores = scores.slice(0, SCORES_SHOWN);
+  writeSaved(storageKeyFor(currentGame), data);
+
+  fillScores(currentGame);
+}
+
+/** Clearing takes two taps, so a stray touch cannot wipe the list. The
+    Clear scores button only swaps the column's top line for the question
+    "You sure?  Yes  No" (isAsking = true); No, or leaving the tab, swaps
+    it back (isAsking = false). Only Yes clears. */
+function showClearQuestion(isAsking) {
+  document.getElementById("scoreHead").hidden = isAsking;
+  document.getElementById("clearQuestion").hidden = !isAsking;
+}
+
+/** The Yes button: forget every saved score of the game now in the panel.
+    There is no undo. The game's switch positions are kept, and so are the
+    other games' scores. */
+function clearScores() {
+  if (!currentGame) return;
+  const data = readSaved(storageKeyFor(currentGame));
+  delete data.scores;
+  writeSaved(storageKeyFor(currentGame), data);
+  fillScores(currentGame);   // redraws the list and puts the top line back
+}
+
+document.getElementById("clearScores").addEventListener("click", () => showClearQuestion(true));
+document.getElementById("clearNo").addEventListener("click", () => showClearQuestion(false));
+document.getElementById("clearYes").addEventListener("click", clearScores);
+
+// What a game's page can reach. The game sits in an iframe, and from in
+// there window.parent is this page; games/game-helper.js looks for this
+// object on it. Only what is listed here is meant for games.
+window.halloweenApp = {
+  reportScore: reportScore,
+};
+
+/** Is sound switched on? One answer for the whole app, on until the
+    player turns it off. */
+function soundIsOn() {
+  return readSaved(APP_STORAGE_KEY).sound !== false;
+}
+
+function saveSound(isOn) {
+  const data = readSaved(APP_STORAGE_KEY);
+  data.sound = isOn;
+  writeSaved(APP_STORAGE_KEY, data);
+}
+
+/** The switches a game asks for in its games.json entry: a list of
+    { "label": "Easy / Hard", "default": 0 }. No list = no switches. */
+function gameSwitches(game) {
+  const list = Array.isArray(game.settings) ? game.settings : [];
+  if (list.length > MAX_GAME_SWITCHES) {
+    console.warn('games.json: "' + game.title + '" has ' + list.length +
+                 " settings; only the first " + MAX_GAME_SWITCHES + " are shown.");
+  }
+  return list.slice(0, MAX_GAME_SWITCHES);
+}
+
+/** Where each of a game's switches stands now, as a list of 0 (left) and
+    1 (right), in the same order as in games.json. A switch the player has
+    touched uses the saved position; one never touched uses its default. */
+function currentSettings(game) {
+  const savedSettings = readSaved(storageKeyFor(game)).settings;
+  const saved = Array.isArray(savedSettings) ? savedSettings : [];
+  return gameSwitches(game).map((entry, index) => {
+    if (saved[index] === 0 || saved[index] === 1) return saved[index];
+    return entry.default === 1 ? 1 : 0;
+  });
+}
+
+/** Remember one switch of one game. Only the switch that was touched is
+    written; the places of untouched switches stay empty (null in the
+    saved text), so those keep following their games.json default. */
+function saveSetting(game, index, value) {
+  const data = readSaved(storageKeyFor(game));
+  const settings = Array.isArray(data.settings) ? data.settings : [];
+  settings[index] = value;
+  data.settings = settings;
+  writeSaved(storageKeyFor(game), data);
+}
+
+/** One switch: a line of text with a slider below it. The whole thing is
+    a single button, so the text is tappable too and the target is big
+    enough for a fingertip. role="switch" and aria-checked tell a screen
+    reader it is an on/off control; the CSS draws the slider's position
+    from aria-checked, so that one attribute is the only state there is.
+    onChange(isOn) is called with true (right) or false (left). */
+function makeSwitch(label, isOn, onChange) {
+  const button = document.createElement("button");
+  button.className = "setting";
+  button.setAttribute("role", "switch");
+  button.setAttribute("aria-checked", String(isOn));
+
+  const text = document.createElement("span");
+  text.className = "setting-label";
+  text.textContent = label;
+  const slider = document.createElement("span");
+  slider.className = "setting-slider";      // the knob is drawn by the CSS
+  button.append(text, slider);
+
+  button.addEventListener("click", () => {
+    const nowOn = button.getAttribute("aria-checked") !== "true";
+    button.setAttribute("aria-checked", String(nowOn));
+    onChange(nowOn);
+  });
+  return button;
+}
+
+/** The switches column: Sound first (every game has it, and it is one
+    switch for the whole app: off here is off in every game), then the
+    game's own switches. */
+function fillSwitches(game) {
+  const holder = document.getElementById("thisGameSettings");
+  holder.replaceChildren();
+  holder.appendChild(makeSwitch("Sound", soundIsOn(), saveSound));
+
+  const positions = currentSettings(game);
+  gameSwitches(game).forEach((entry, index) => {
+    const label = entry.label || "Option " + (index + 1);
+    const saveThisSwitch = (isOn) => saveSetting(game, index, isOn ? 1 : 0);
+    holder.appendChild(makeSwitch(label, positions[index] === 1, saveThisSwitch));
+  });
+
+  // Sound works at once; a game's own switches wait for a new game.
+  if (positions.length > 0) {
+    const hint = document.createElement("p");
+    hint.className = "setting-hint";
+    hint.textContent = "Game options apply to your next game.";
+    holder.appendChild(hint);
+  }
+}
+
+/* ------------------------------------------------------------------------
+   5. Switching games
    --------------------------------------------------------------------- */
 
 const gameFrame = document.getElementById("gameFrame");
@@ -150,6 +431,7 @@ const topTitle = document.getElementById("topTitle");
 /** Show a game's page in the game panel and put its name in the top panel.
     Changing the iframe's src throws the old game away completely. */
 function loadGame(game) {
+  currentGame = game;   // a score reported from now on belongs to this game
   gameFrame.src = "./games/" + game.folder_name + "/index.html?v=" + APP_VERSION;
   gameFrame.title = game.title;
   topTitle.textContent = game.short_title || game.title;
@@ -291,7 +573,7 @@ function makeGameButtons() {
 }
 
 /* ------------------------------------------------------------------------
-   5. Start up: read games.json, build the buttons, show the home game.
+   6. Start up: read games.json, build the buttons, show the home game.
 
    fetch() only works over http(s), not when index.html is opened straight
    from the disk (file://). Always test through start-local/ or a web

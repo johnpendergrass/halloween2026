@@ -1,0 +1,21 @@
+Halloween 2026 - project status (the glance; details in claude-john-docs/)
+
+2026 1001 pm  John + Claude: This Game tab shows High Scores (5 best, with date, Clear scores)
+              and switches (Sound + up to 3 per game, named in games.json). Stack-o'-Lantern
+              reports its score through games/game-helper.js. Switches are shown + remembered
+              only: no game can read them. The app never pauses a game (designer's job).
+              Requirements doc is v4. Committed + pushed.
+2026 1001 am  games/_TABLED GAMES: hollow-hill-cc, pie-maker, wrong-desktop, wrong-phone.
+              The game = Pumpkin Patch (home) + Stack-o'-Lantern (slot 1); game2..8 placeholders.
+2026 0930     Hollow Hill shelved. Stack-o'-Lantern in its own folder. Placeholder folders.
+2026 0929     games.json v2, icon picker, board of 2 x 4 cells, This Game tab. Two games written.
+2026 0927     first day: frame, three panels, iframe games, home + Pie Maker demos, rules v3.
+
+NOT YET
+ - NEXT: connect Sound + the switches (a way for games to read them; demo games use them)
+ - reword or remove the hint "Game options apply to your next game." (John deferred it)
+ - John to confirm the placeholder slots (gameN in cell N, game1 benched) - Claude's choice
+ - requirements doc: "your games.json entry" + icon spec; contribution workflow; root CLAUDE.md
+ - switch on GitHub Pages; test on the iPhone from the home screen
+
+DETAIL  claude-john-docs/Claude-ToBe-Continued-2026-1001-1206.MD, specifications.MD 6i

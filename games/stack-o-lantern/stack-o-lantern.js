@@ -97,7 +97,7 @@ const state = {
   pieces: [],          // falling bits: { element, x, y, vx, vy, angle, spin }
   camera: 0,           // how far up the world the view has scrolled
   streak: 0,           // perfect drops in a row
-  best: 0,             // best count this visit (rule 18: no saving yet)
+  best: 0,             // best count this visit (the app keeps the lasting list)
   lastTime: 0,         // timestamp of the previous animation frame (ms)
 };
 
@@ -368,6 +368,10 @@ function gameOver() {
                                      : "You stacked " + count + " pumpkins.";
   const line = COMPARISONS.filter((entry) => entry[0] <= count).pop();
   endCompare.textContent = line ? line[1] : "The pumpkin patch remains undefeated.";
+
+  // Tell the app, which keeps this game's five best counts and shows them
+  // in the This Game tab (games/game-helper.js). A count of 0 is ignored.
+  Halloween.reportScore(count);
 
   // Let the miss play out before the end screen covers it.
   setTimeout(() => { endScreen.hidden = false; }, END_DELAY_MS);

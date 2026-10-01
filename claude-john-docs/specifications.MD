@@ -1,6 +1,6 @@
 # Halloween 2026 — Specifications (design decisions)
 
-Last updated: 2026-10-01 09:45 (fourth day: the `_TABLED GAMES` folder; Pie Maker and the two wrong test games tabled; game1..game8 all placeholders)
+Last updated: 2026-10-01 12:06 (fourth day, second stretch: high scores and switches in the This Game tab, score reporting, the no-pause rule, requirements doc v4; see 6i)
 
 This file records WHAT the app looks like and WHY. Technical "how" lives in
 `specifications-technical.MD`. Companion notes in this folder:
@@ -139,10 +139,10 @@ Stack-o'-Lantern as "the game". See 6h.) Consequences:
 
 Filled from the current game's games.json entry every time a game loads:
 icon (same spec/check, in a small orange tile), title, "designer, date",
-description, a **How to play** heading + text, "Credits: …", then an
-italic "High scores and settings for this game will appear here later."
-Blank fields hide together with their headings. Interim design until
-scoring and settings exist.
+description, a **How to play** heading + text, "Credits: …".
+Blank fields hide together with their headings. Since 2026-10-01 the
+icon/title block is centred with a thin rule under it, and between it and
+the description sit two columns: High Scores and the switches (see 6i).
 
 ## 3c. When games.json will not parse (John, 2026-09-29)
 
@@ -189,17 +189,21 @@ Every layer has its own colour AND a visible edge:
 the iPhone status bar is `black-translucent` so the purple shows behind the
 clock. John may "nix it" → back to `#07040a` and `black`.
 
-## 6. How games plug in (DECIDED: iframes; messaging still to design)
+## 6. How games plug in (DECIDED: iframes; scores and switches see 6i)
 
 - **Each game is its own mini website in an iframe** that fills
   the game panel. Reasons: total isolation (one friend's CSS/JS cannot break
   another's), simplest rule for friends ("make a page that works in a 9:14
   box"), each game testable alone. Halloween2025 proved it: its two iframe
   games dropped in with no changes.
-- Games talk to the app with small messages (`postMessage`): score, game over,
-  ready, their settings list → app; settings changed, pause/resume, sound
-  on/off → game. A helper file will hide the plumbing
-  (`Halloween.reportScore(120)` etc.).
+- **How games talk to the app (decided 2026-10-01, see 6i):** one helper
+  file, `games/game-helper.js`, which calls the app page directly (same
+  website, so no `postMessage` is needed). So far it has one call,
+  `Halloween.reportScore(number[, text])`. **The app never pauses a game**
+  and sends it no signal when the bottom panel opens: pausing is each
+  game's own job (John: keep "drop a game in and it runs"). The earlier
+  plan here (postMessage messages for score, game over, ready, settings,
+  pause/resume, sound) is superseded.
 - **Games cannot draw in the bottom panel.** They send data; the app draws
   scores and settings controls. Keeps every game's panel consistent.
 - The app owns: the frame, Home button, sound setting, high scores, loading.
@@ -237,10 +241,11 @@ clock. John may "nix it" → back to `#07040a` and `black`.
   naming). The rules live in **one** file,
   `games/README - game design requirements.md` (was five identical copies
   until the 2026-09-27 audit; copies drift, one file can't).
-- Messaging (score, pause, settings) is **deliberately postponed** until the
-  test games exist to try it on.
+- Messaging was deliberately postponed until test games existed; the first
+  part (scores, the switches, the no-pause decision) was settled on
+  2026-10-01, see 6i.
 
-## 6a. Game design requirements (for game authors) — v3
+## 6a. Game design requirements (for game authors) — v4 (v3 + "living with the app", see 6i)
 
 Full text: `games/README - game design requirements.md` (the only copy).
 Key decisions (John):
@@ -469,6 +474,55 @@ benched) are Claude's choice, to be confirmed.
   per entry in games.json.
 - There is no `game1`..`game8` to slot 1..8 rule. The folder name and the
   slot are independent (that is the point of `goes_in_slot`).
+
+## 6i. Scores, switches and the no-pause rule (John, 2026-10-01)
+
+**The principle (John): a designer drops a game in and it runs.** The app
+does little to a game; what it does not do is the game's own job.
+
+- **No pause from the app.** The player can open the bottom panel at any
+  time; it covers the lower 55% of the game; the game is not paused,
+  stopped or told, and cannot detect it. Pause, continue, start and
+  restart are each game's own responsibility. Considered and rejected the
+  same day: pause hooks in the helper, a helper-run game loop, an
+  app-drawn "tap anywhere to continue". Reason: they add complexity for
+  every designer. Stack-o'-Lantern has no pause.
+- **High scores**: always shown for every game in the This Game tab, left
+  column: "High Scores" + a small **Clear scores** button, then five
+  lines `1.  42  (10-01-2026)` (rank, score right-adjusted, date smaller
+  and dimmer), `---` where empty. The table is as wide as its content and
+  centred, so short scores leave an indent each side and a text score
+  widens it. A score is a number (ranks, higher is better) with optional
+  text shown in its place (`reportScore(42, "Master Chef")`). 0 or less
+  is not recorded. The app adds the date. Clear scores asks
+  "You sure?  Yes  No" first; it clears only the current game's list.
+- **Switches**, right column: **Sound** always first (one switch for the
+  whole app; decided: it is to work immediately), then up to three on/off switches
+  the designer declares in games.json (`settings`: label + default 0/1).
+  **A game switch applies to the next newly started game**, never
+  mid-game. Their purpose: a few simple options without building an
+  options screen. Anything that changes mid-game, or more than three, is
+  the game's own job. Now declared: Pumpkin Patch "Slow / Fast",
+  Stack-o'-Lantern "Easy / Hard".
+- **Not connected yet**: no game can read Sound or its switches (the
+  helper has only `reportScore`); the switches are shown and remembered.
+  The hint line "Game options apply to your next game." under a game's
+  switches is under discussion (John deferred it).
+- **Kept on the device**: scores and switch positions live in the
+  browser's `localStorage`, because a page on GitHub Pages can read
+  games.json but cannot write to it. No shared scoreboard, no player
+  names, and no structure for either (John).
+- This changes the older note "settings live in the game's own folder":
+  the three switches are in games.json; a game's own options screen, if
+  any, stays in its folder.
+- The title block of the tab (icon, name, byline) is centred with a thin
+  rule under it.
+- Written into the requirements doc as **version 4**: section 1.8, section
+  2.5, rules 18 to 22. **The docs describe what exists, not what is
+  planned** (John): they say the switches are shown and remembered and
+  that no game can read them. "Sound works immediately" and "a game
+  switch applies to the next game" are John's decisions for the next
+  step; they are not yet rules in the designers' docs.
 
 ## 6e. games.json v2: the first proposal (2026-09-29, superseded)
 

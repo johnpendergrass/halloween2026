@@ -10,7 +10,10 @@
       "credits": "originally from Halloween 2025",
       "date": "October 31, 2025",
       "description": "Spooky silhouettes rise from the pumpkin patch!  Not interactive - just watch and enjoy!",
-      "how_to_play": "Just sit back and watch the spooky silhouettes rise from the pumpkin patch!"
+      "how_to_play": "Just sit back and watch the spooky silhouettes rise from the pumpkin patch!",
+      "settings": [
+        { "label": "Slow / Fast", "default": 0 }
+      ]
     },
     {
       "folder_name": "stack-o-lantern",
@@ -22,7 +25,10 @@
       "credits": "Designed and written by Claude Code at John's invitation",
       "date": "September 29, 2026",
       "description": "Pumpkin slabs slide across the night sky. Tap to drop each one on the tower. Whatever hangs over the edge gets sliced off, so sloppy drops make the tower narrower until one misses. The moon is judging you.",
-      "how_to_play": "Tap anywhere to drop the sliding pumpkin onto the one below. Line the edges up: a perfect drop keeps the full width, and three perfects in a row grow it back. Stack as many as you can before a slab misses."
+      "how_to_play": "Tap anywhere to drop the sliding pumpkin onto the one below. Line the edges up: a perfect drop keeps the full width, and three perfects in a row grow it back. Stack as many as you can before a slab misses.",
+      "settings": [
+        { "label": "Easy / Hard", "default": 0 }
+      ]
     },
     {
       "folder_name": "game1",
@@ -34,7 +40,8 @@
       "credits": "",
       "date": "",
       "description": "Placeholder for a game not written yet.",
-      "how_to_play": ""
+      "how_to_play": "",
+      "settings": []
     },
     {
       "folder_name": "game2",
@@ -46,7 +53,8 @@
       "credits": "",
       "date": "",
       "description": "Placeholder for a game not written yet.",
-      "how_to_play": ""
+      "how_to_play": "",
+      "settings": []
     },
     {
       "folder_name": "game3",
@@ -58,7 +66,8 @@
       "credits": "",
       "date": "",
       "description": "Placeholder for a game not written yet.",
-      "how_to_play": ""
+      "how_to_play": "",
+      "settings": []
     },
     {
       "folder_name": "game4",
@@ -70,7 +79,8 @@
       "credits": "",
       "date": "",
       "description": "Placeholder for a game not written yet.",
-      "how_to_play": ""
+      "how_to_play": "",
+      "settings": []
     },
     {
       "folder_name": "game5",
@@ -82,7 +92,8 @@
       "credits": "",
       "date": "",
       "description": "Placeholder for a game not written yet.",
-      "how_to_play": ""
+      "how_to_play": "",
+      "settings": []
     },
     {
       "folder_name": "game6",
@@ -94,7 +105,8 @@
       "credits": "",
       "date": "",
       "description": "Placeholder for a game not written yet.",
-      "how_to_play": ""
+      "how_to_play": "",
+      "settings": []
     },
     {
       "folder_name": "game7",
@@ -106,7 +118,8 @@
       "credits": "",
       "date": "",
       "description": "Placeholder for a game not written yet.",
-      "how_to_play": ""
+      "how_to_play": "",
+      "settings": []
     },
     {
       "folder_name": "game8",
@@ -118,7 +131,8 @@
       "credits": "",
       "date": "",
       "description": "Placeholder for a game not written yet.",
-      "how_to_play": ""
+      "how_to_play": "",
+      "settings": []
     }
   ],
 
@@ -129,7 +143,8 @@
       "Add a game: put its files in games/<folder_name>/ (with an index.html inside) and add an entry above.",
       "Nothing in app/ ever changes. app.js reads this file; a game designer never edits app.js.",
       "What goes here: anything the player might want while BROWSING games, before tapping one.",
-      "Everything else (assets, settings, sizes) lives in the game's own folder; the app never reads it.",
+      "Also here: up to three simple on/off switches for your game (see settings below), which the app draws and remembers for you.",
+      "Everything else (assets, sizes, any options screen of your own) lives in the game's own folder; the app never reads it.",
       "If the same fact is in both places, this file wins: the app shows what is written here.",
       "JSON cannot hold comments, which is why this _about block exists. The app ignores it.",
       "It sits at the bottom so the data comes first."
@@ -144,11 +159,13 @@
       "credits": "Where art, sound or ideas came from. Free text, may be empty.",
       "date": "When the game was finished or last changed. Free text, for display only.",
       "description": "One or two sentences about the game, shown in the This Game tab.",
-      "how_to_play": "Short instructions, shown in the This Game tab. Keep it to a few sentences."
+      "how_to_play": "Short instructions, shown in the This Game tab. Keep it to a few sentences.",
+      "settings": "Optional: up to three on/off switches for your game, shown in the This Game tab below the Sound switch that every game gets. A list of { \"label\": \"Easy / Hard\", \"default\": 0 } entries. The switch's left position is 0 and its right position is 1, so a label written as \"Left / Right\" lines up with the switch. Keep a label to about 20 characters. default is where the switch starts (0 or 1); after that the app remembers each player's choice on their own device. [] or no settings field = no switches of your own. A fourth entry is ignored. AS THINGS STAND the switches are only shown and remembered: no game can read them, so they change nothing in a game. A setting your game really needs is your game's own job (its own options screen, say)."
     },
-    "coming_later": [
-      "When games can talk to the app: scoring (none / points / time), settings, sound, pausable.",
-      "Every field except folder_name is optional. A missing or empty field falls back to something sensible."
+    "good_to_know": [
+      "Every field except folder_name is optional. A missing or empty field falls back to something sensible.",
+      "High scores need nothing in this file: a game includes games/game-helper.js and calls Halloween.reportScore(42) at game over; the app keeps the five best per game on the player's device and shows them in the This Game tab. See the top of games/game-helper.js.",
+      "The app never pauses a game. The player can open the bottom panel at any time, it covers about the lower half of the game, and the game is not paused or told. A game that needs a pause builds its own. See 1.8 in games/README - game design requirements.md."
     ]
   }
 }

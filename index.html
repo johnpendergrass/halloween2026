@@ -31,7 +31,7 @@
 
     <!-- The ?v= tag forces phones to fetch fresh code after a publish.
      Change it (and APP_VERSION in app.js) whenever the code changes. -->
-    <link rel="stylesheet" href="./app/styles.css?v=2026-1001-tabled" />
+    <link rel="stylesheet" href="./app/styles.css?v=2026-1001-scores" />
   </head>
 
   <body>
@@ -85,7 +85,10 @@
 
             <!-- This Game tab: app.js fills every part from the current
              game's games.json entry (fillThisGameTab). Empty fields are
-             hidden, so a half-filled entry still reads cleanly. -->
+             hidden, so a half-filled entry still reads cleanly.
+             Under the icon and name sit two columns: the game's five
+             high scores on the left, and the switches on the right
+             (Sound first, then up to three of the game's own). -->
             <div class="drawer-body this-game" id="tab-game" hidden>
               <div class="this-game-head">
                 <img class="this-game-icon" id="thisGameIcon" alt="" draggable="false" hidden />
@@ -94,17 +97,33 @@
                   <div class="this-game-byline" id="thisGameByline"></div>
                 </div>
               </div>
+              <div class="this-game-panels">
+                <div>
+                  <!-- The column's top line. Tapping Clear scores swaps it
+                   for the question line below; Yes clears, No goes back. -->
+                  <div class="score-head" id="scoreHead">
+                    <h3 class="this-game-heading score-heading">High Scores</h3>
+                    <button class="small-button" id="clearScores">Clear scores</button>
+                  </div>
+                  <div class="score-head" id="clearQuestion" hidden>
+                    <span class="this-game-heading score-heading">You sure?</span>
+                    <button class="small-button" id="clearYes">Yes</button>
+                    <button class="small-button" id="clearNo">No</button>
+                  </div>
+                  <div class="score-list" id="thisGameScores"></div>
+                </div>
+                <div class="this-game-settings" id="thisGameSettings"></div>
+              </div>
               <p id="thisGameDescription"></p>
               <h3 class="this-game-heading" id="thisGameHowHeading">How to play</h3>
               <p id="thisGameHowToPlay"></p>
               <p class="this-game-credits" id="thisGameCredits"></p>
-              <p class="this-game-later">High scores and settings for this game will appear here later.</p>
             </div>
           </div>
         </section>
       </div>
     </div>
 
-    <script src="./app/app.js?v=2026-1001-tabled"></script>
+    <script src="./app/app.js?v=2026-1001-scores"></script>
   </body>
 </html>

@@ -1,6 +1,6 @@
 # Halloween 2026 — Technical Specifications
 
-Last updated: 2026-10-01 09:45 (fourth day: the `_TABLED GAMES` folder; Pie Maker and the two wrong test games tabled; game1..game8 all placeholders)
+Last updated: 2026-10-01 12:06 (fourth day, second stretch: high scores and switches in the This Game tab, `games/game-helper.js`, requirements doc v4; see 4j)
 
 ## 1. Stack and hosting
 
@@ -21,7 +21,8 @@ index.html                 the app: 9:16 frame, top panel, game panel with <ifra
 games.json                 THE LIST OF GAMES: "games" array (v2 entries, see 4a) then an "_about" block documenting every field
 manifest.json              Android/desktop full-screen ("standalone", portrait); icons: [] (TODO)
 app/styles.css             app CSS (frame, panels, drawer) - moved from the mockup
-app/app.js                 reads games.json at start-up; picker buttons, This Game tab, drawer, loadGame/startGame/goHome. Never edited by designers
+app/app.js                 reads games.json at start-up; picker buttons, This Game tab (text, high scores, switches), drawer, loadGame/startGame/goHome. Never edited by designers
+games/game-helper.js       THE HELPER a game includes to talk to the app: Halloween.reportScore() and nothing else (see 4j)
 app/default-icon.svg       the ghost shown on a button that has neither a usable icon nor a title
 games/pumpkin-patch/       the home game (was game0): index.html, pumpkin-patch.css/.js, assets/ (2025 art, patch.svg icon)
 games/stack-o-lantern/     STACK-O'-LANTERN (Claude's stacker, was game4): index.html, stack-o-lantern.css/.js, assets/stack.svg
@@ -35,7 +36,7 @@ games/README - game design requirements.md   THE RULES (one copy; each game READ
 games/*/README - <NAME>.md                   how each game was made + "Where this game breaks the requirements"
 start-local/start-halloween.bat   double-click launcher, port 8091 (confirmed by John 2026-09-30), prints LAN URL for iPhone
 start-local/no-cache-server.py    dev server: code no-store, anything under /assets/ no-cache
-claude-john-docs/          these notes
+claude-john-docs/          these notes; claudePlans/ holds plan-mode plans (the 2026-10-01 scores + switches plan)
 .gitignore                 anything in github-excluded/ never goes to GitHub
 ```
 
@@ -105,14 +106,16 @@ meta is required for the `env(safe-area-inset-*)` values.
 
 - **`games.json`** (root, beside index.html) = **the one place to add a
   game**. Shape: `{ "games": [ {entry}, ... ], "_about": { what_this_file_is:
-  [...], fields: { field: "explanation", ... }, coming_later: [...] } }`.
+  [...], fields: { field: "explanation", ... }, good_to_know: [...] } }`
+  (`good_to_know` was `coming_later` until 2026-10-01).
   `_about` is the file's own documentation (JSON has no comments) and is
   deliberately LAST; the app ignores it.
 - **Entry fields** (snake_case): `folder_name`, `goes_in_slot`, `title`,
   `short_title`, `icon`, `designer`, `credits`, `date`, `description`,
-  `how_to_play`. Only `folder_name` is required in principle; the app
+  `how_to_play`, `settings` (a list of `{ "label", "default": 0|1 }`, at
+  most three, see 4j). Only `folder_name` is required in principle; the app
   copes with blanks (text fallbacks, hidden lines).
-- **app.js section 5, `startUp()`** (async): `readGamesFile()` fetches
+- **app.js section 6, `startUp()`** (async): `readGamesFile()` fetches
   `./games.json?v=APP_VERSION` (same cache-busting as the scripts), checks
   `response.ok` and that `data.games` is an array. Then `homeGame` = the
   entry with `goes_in_slot === "home"`, `games = pickButtonGames(all)`:
@@ -140,14 +143,16 @@ meta is required for the `env(safe-area-inset-*)` values.
 - `loadGame()` sets `gameFrame.src = "./games/<folder_name>/index.html?v=" + APP_VERSION`.
   Changing `src` throws the old game away completely (no stop() needed).
 - `APP_VERSION` in app.js must match the `?v=` tags in index.html
-  (currently `2026-1001-tabled`; check app.js, this line has gone stale
+  (currently `2026-1001-scores`; check app.js, this line has gone stale
   before). **An edit to games.json also needs
   the bump** before a push, or phones keep the old list for up to 10
   minutes; the local server never caches it. The game pages' own `<link>`/`<script>`
   tags carry no `?v=`: on GitHub Pages (10-minute cache) a phone may run a
   new game HTML with the old CSS/JS for up to 10 minutes after a publish.
   Accepted; friends would forget to bump a tag inside their game.
-- No postMessage yet. Game pages must also run standalone.
+- No postMessage. A game talks to the app only through
+  `games/game-helper.js`, which calls the parent page directly (4j). Game
+  pages must also run standalone.
 - Inside a game page, `100vw × 100vh` = the game panel.
 
 ## 4b. Measured sizes (2026-09-27, chrome-devtools emulation, mobile+touch)
@@ -258,7 +263,9 @@ requirements doc are estimates (browser toolbars vary).
   `#thisGameIcon` (hidden until `load` passes `iconQualifies`). The
   skeleton with these ids is in index.html; `.this-game-*` styles in
   styles.css (`.this-game-icon` 14cqw orange tile; title
-  `clamp(16px, 5.4cqw, 28px)`; byline/credits/later at 0.7 opacity).
+  `clamp(16px, 5.4cqw, 28px)`; byline/credits at 0.7 opacity). Since
+  2026-10-01 it first calls `fillScores(game)` and `fillSwitches(game)`
+  (4j), and `.this-game-head` is centred with a 1px rule under it.
 
 ## 4e. The two wrong test games (wrong-desktop, wrong-phone; were game2, game3; tabled 2026-10-01)
 
@@ -425,6 +432,80 @@ icon in the top bar next to `short_title`; only if John asks.
   Stack-o'-Lantern: two `pointerdown` events on `.stage`, then count
   `.slab` (1 → 3).
 
+## 4j. High scores, switches and the helper (2026-10-01)
+
+- **Storage**: `localStorage`, JSON text, two kinds of key:
+  `halloween2026:app` = `{ "sound": true }` and
+  `halloween2026:<folder_name>` = `{ "scores": [...], "settings": [0, 1] }`.
+  `readSaved(key)` returns `{}` for a missing, unreadable or non-object
+  note; `writeSaved(key, data)` warns in the console if the browser
+  refuses. Per origin: the test port 8097, John's 8091, and (later) Pages
+  each have their own notes; an iPhone home-screen copy also has its own.
+- **Scores**: a saved score is `{ "value": 42, "date": "2026-10-01" }`
+  plus `"text"` when the game gave one. `reportScore(value, text)` (app.js
+  section 4) ignores a value that is not a finite number above 0
+  (`console.info`), stamps `todayAsText()` (local date, ISO order), pushes,
+  sorts by `value` descending (stable, so of two equal scores the earlier
+  stays above), keeps `SCORES_SHOWN` = 5, saves, calls `fillScores`.
+  `dateForList("2026-10-01")` gives `"(10-01-2026)"`. It applies to
+  `currentGame`, which `loadGame()` sets, so a game never says who it is.
+- **`fillScores(game)`** builds five `.score-row`s of three spans (rank,
+  `.score-value`, `.score-date`) inside `#thisGameScores.score-list`.
+  CSS: the list is ONE grid, `grid-template-columns: auto minmax(0, auto)
+  auto; justify-content: center; column-gap: 2.4cqw`, and each row is
+  `display: contents`, so the three columns line up from line to line,
+  the table is only as wide as its content, and it is centred. The score
+  is right-adjusted with an ellipsis; the date is 0.75em at 0.7 opacity,
+  `align-items: center`. Measured at 390 wide: column 192 px; numbers
+  leave about 28 px each side; "Master Chef" fits with 2 px to spare.
+- **Clear scores**: `.score-head#scoreHead` ("High Scores" + the
+  `.small-button#clearScores`) and `.score-head#clearQuestion` ("You
+  sure?" + `#clearYes`, `#clearNo`), one of them `hidden`.
+  `showClearQuestion(isAsking)` swaps them; `clearScores()` (the Yes
+  button) deletes `data.scores` only. `fillScores`, `showTab` and
+  `closeDrawer` all call `showClearQuestion(false)`. The button is
+  `disabled` when the list is empty. `.small-button::after { inset:
+  -3.4cqw -1cqw }` stretches the tap area to about 44 px while the pill
+  stays one line tall.
+- **Switches**: `fillSwitches(game)` fills `#thisGameSettings`: Sound
+  first (`soundIsOn()` = `sound !== false`; `saveSound`), then
+  `gameSwitches(game)` (the entry's `settings`, cut to
+  `MAX_GAME_SWITCHES` = 3 with a `console.warn`), then the hint
+  `p.setting-hint` when the game has switches of its own.
+  `currentSettings(game)` = the saved 0/1 where the player touched a
+  switch, else the default. `saveSetting(game, index, value)` writes only
+  that index; untouched places stay holes (`null` in the JSON), so they
+  keep following the games.json default.
+- **`makeSwitch(label, isOn, onChange)`**: one `<button class="setting"
+  role="switch" aria-checked>` holding `.setting-label` and
+  `.setting-slider` (knob = `::after`). `aria-checked` is the only state;
+  the CSS draws from it. Slider 13 x 6.5cqw, knob 5.3cqw, travel 6.5cqw.
+  The whole item is the tap target (`min-height: 44px`).
+- **Layout**: `.this-game-panels { display: grid; grid-template-columns:
+  minmax(0, 3fr) minmax(0, 2fr); gap: 4cqw }` (scores 3 shares, switches
+  2). `.this-game-head` centred, `padding-bottom`/`margin-bottom` 2.5cqw,
+  `border-bottom: 1px solid #ffffff33`. Measured at 390x844: Sound + three
+  game switches end 2 px above the bottom of the open drawer, so four
+  switches is the limit without scrolling.
+- **The helper, `games/game-helper.js`**: a classic script defining
+  `const Halloween = { findApp(), reportScore(value, text) }`.
+  `findApp()` returns `window.parent.halloweenApp` (set in app.js:
+  `window.halloweenApp = { reportScore }`), or null when the page is its
+  own parent or the access throws. Works because games and app share an
+  origin. Standalone: `reportScore` only logs a `console.info`. Games
+  include it as `../game-helper.js` before their own script; it carries no
+  `?v=` (same caching caveat as game files, 4a).
+- **Stack-o'-Lantern**: `Halloween.reportScore(count)` at the end of
+  `gameOver()`. Nothing else in the game changed; its switch does nothing.
+- **Test method**: on port 8097, `evaluate_script` taps the game's stage
+  inside the iframe (`new win.PointerEvent("pointerdown")`) at a steady
+  beat until `state.phase === "over"`, then reads the `.score-row`s in the
+  parent; `win.eval('Halloween.reportScore(42, "Master Chef")')` for text
+  and invalid values; reload for persistence. To check a four-switch fit
+  without editing files, the Stack entry's `settings` was replaced in
+  memory (`games.find(...)`) before opening the game. `localStorage` of
+  the test origin is cleared afterwards.
+
 ## 5. iPhone "app" mode
 
 - Tags: `apple-mobile-web-app-capable`, `mobile-web-app-capable`,
@@ -450,11 +531,17 @@ icon in the top bar next to `short_title`; only if John asks.
 
 ## 7. Future implementation notes
 
-- Registry moved to `games.json` on 2026-09-29 (see 4a, 4f). The deferred
-  fields `scoring`, `settings`, `sound`, `pausable` arrive with the message
-  contract.
-- Message contract via `postMessage` + a helper script games include; the
-  helper must no-op when the game runs standalone (no parent).
+- Registry moved to `games.json` on 2026-09-29 (see 4a, 4f).
+- **Next step (John, 2026-10-01): connect Sound and the switches.** Fill
+  in the sound and settings options, devise a way for plug-in games to
+  use them, and change the demo games to use the values. Claude's sketch
+  (not built, not agreed): `Halloween.getSettings()` returning the 0/1
+  list, read when a new game starts, and `Halloween.soundIsOn()`, asked
+  before each sound; on the app side two more functions on
+  `window.halloweenApp` (`currentSettings(game)` and `soundIsOn()`
+  already exist in app.js). Standalone: `[0, 0, 0]` and `true`.
+- Not planned: `postMessage`, pause signals, a helper-run game loop
+  (rejected 2026-10-01, see specifications.MD 6i).
 - Also planned: `CLAUDE.md` + `AGENTS.md` at repo root pointing contributors'
   AIs at the mini-game spec; a template game to copy; a checker script
   (lowercase names, relative paths, size limits, no external URLs).

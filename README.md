@@ -22,6 +22,7 @@ games.json          THE LIST OF GAMES: one entry per game (folder, slot, title, 
 manifest.json       makes it installable / full screen on Android and desktop
 app/                the app's CSS and JavaScript (reads games.json, builds the buttons)
 games/README - game design requirements.md   THE RULES for mini games (the only copy)
+games/game-helper.js  the one file a game includes to talk to the app (reporting a score)
 games/pumpkin-patch/  the home game: shown at start and when no other game is active
 games/stack-o-lantern/  a finished game that follows the rules (a one-tap stacker)
 games/game1..8/       eight placeholder folders to copy or take over: index.html, its own css/js, assets/, README
@@ -44,6 +45,20 @@ Plain HTML, CSS and JavaScript. No framework, no build step.
 3. Run `start-local/start-halloween.bat` and tap your game's button.
 
 Nothing in `app/` needs to change.
+
+Three things to know before you design (all in section 1.8 of the rules):
+
+- **The bottom panel does not pause your game.** The player can slide it
+  up at any time; it covers about the lower half of your game, and your
+  game is not paused or told. If your game needs a pause, build your own.
+- **High scores:** include `games/game-helper.js` and call
+  `Halloween.reportScore(42)` when a game ends. The app keeps the five
+  best and shows them in the panel's This Game tab.
+- **Sound and settings:** the This Game tab shows one Sound switch for all
+  games and up to three on/off switches of your own, named in
+  `games.json`. The app shows and remembers them, but no game can read
+  them, so they change nothing. Any sound control or setting your game
+  needs is your game's own job.
 
 ## Publishing a change
 

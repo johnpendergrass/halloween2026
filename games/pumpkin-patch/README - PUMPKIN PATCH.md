@@ -81,3 +81,7 @@ face inward. All 19 images are fetched at start-up so none pops in late.
 ## Talks to the app?
 
 No. The app just loads the page; 🏠 in the top panel leaves it.
+
+Its `games.json` entry declares one switch, "Slow / Fast", which the app
+shows in the This Game tab. It does nothing yet: a game cannot read its
+switches so far.
