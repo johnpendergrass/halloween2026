@@ -1,6 +1,6 @@
 # Halloween 2026 — Technical Specifications
 
-Last updated: 2026-10-01 12:06 (fourth day, second stretch: high scores and switches in the This Game tab, `games/game-helper.js`, requirements doc v4; see 4j)
+Last updated: 2026-10-01 12:39 (fourth day, third stretch: discussion only, the two sound options sketched in section 7; nothing built. Before that: high scores, switches and `games/game-helper.js`, see 4j)
 
 ## 1. Stack and hosting
 
@@ -540,6 +540,32 @@ icon in the top bar next to `short_title`; only if John asks.
   before each sound; on the app side two more functions on
   `window.halloweenApp` (`currentSettings(game)` and `soundIsOn()`
   already exist in app.js). Standalone: `[0, 0, 0]` and `true`.
+- **Sound, two options, not chosen (2026-10-01, see specifications.MD
+  6j). All names below are illustrative; nothing is built.**
+  - No browser API mutes an iframe from its parent. Same origin lets
+    either page call the other: game to app is
+    `window.parent.halloweenApp.x()` (as `reportScore` today); app to
+    game would be `gameFrame.contentWindow.Halloween.x()` (`Halloween`
+    is a `const` in a classic script, so check it is reachable from the
+    parent, or have the helper also set `window.Halloween`).
+  - **A, the game asks**: add `soundIsOn` to `window.halloweenApp`;
+    helper `Halloween.soundIsOn()` (standalone: `true`). For sound
+    already playing the game needs to be told: e.g.
+    `Halloween.onSoundChange(fn)`, the helper keeps `fn`, the app calls
+    into the helper from `saveSound()`.
+  - **B, the helper plays**: `Halloween.playSound(file)` /
+    `Halloween.playMusic(file)`; the helper keeps every `Audio` it made
+    in a list; the app, in the Sound switch's handler, calls e.g.
+    `Halloween.setSound(isOn)` in the current game's page, which sets
+    `.muted` on each (mute, not pause, so music carries on and is
+    audible again on ON). On load the helper asks the app for the
+    current position. Paths in `playSound` are relative to the game's
+    page. A game loaded later starts with the saved position.
+  - Rejected: the app muting `audio`/`video` elements it finds in
+    `contentDocument`; misses `new Audio()` not in the page and Web
+    Audio.
+  - Unknown, test on the iPhone: whether a tap on the switch in the app
+    page unlocks audio in the game's page.
 - Not planned: `postMessage`, pause signals, a helper-run game loop
   (rejected 2026-10-01, see specifications.MD 6i).
 - Also planned: `CLAUDE.md` + `AGENTS.md` at repo root pointing contributors'

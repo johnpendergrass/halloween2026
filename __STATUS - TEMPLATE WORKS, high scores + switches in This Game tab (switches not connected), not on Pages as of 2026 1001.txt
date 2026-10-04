@@ -1,21 +1,21 @@
 Halloween 2026 - project status (the glance; details in claude-john-docs/)
 
-2026 1001 pm  John + Claude: This Game tab shows High Scores (5 best, with date, Clear scores)
-              and switches (Sound + up to 3 per game, named in games.json). Stack-o'-Lantern
-              reports its score through games/game-helper.js. Switches are shown + remembered
-              only: no game can read them. The app never pauses a game (designer's job).
-              Requirements doc is v4. Committed + pushed.
-2026 1001 am  games/_TABLED GAMES: hollow-hill-cc, pie-maker, wrong-desktop, wrong-phone.
-              The game = Pumpkin Patch (home) + Stack-o'-Lantern (slot 1); game2..8 placeholders.
-2026 0930     Hollow Hill shelved. Stack-o'-Lantern in its own folder. Placeholder folders.
-2026 0929     games.json v2, icon picker, board of 2 x 4 cells, This Game tab. Two games written.
-2026 0927     first day: frame, three panels, iframe games, home + Pie Maker demos, rules v3.
+2026 1001 pm2 John + Claude: discussion only, no code. How the Sound switch could reach a
+              game: option A (game asks) or B (helper plays the sounds). NOT chosen.
+              Docs updated, NOT committed yet.
+2026 1001 pm  This Game tab shows High Scores (5 best, date, Clear scores) and switches
+              (Sound + up to 3 per game). Stack-o'-Lantern reports its score through
+              games/game-helper.js. Switches shown + remembered only. App never pauses a
+              game. Requirements doc v4. Committed + pushed (536f8ba).
+2026 1001 am  _TABLED GAMES made; the game = Pumpkin Patch + Stack-o'-Lantern + placeholders.
+2026 0927-30  frame, panels, iframe games, games.json v2, board of 2 x 4 cells, rules v3.
 
 NOT YET
- - NEXT: connect Sound + the switches (a way for games to read them; demo games use them)
+ - FIRST: John chooses sound option A or B (specifications.MD 6j)
+ - then: connect Sound + the switches; demo games use them (none makes sound yet)
+ - commit + push this update's doc changes
  - reword or remove the hint "Game options apply to your next game." (John deferred it)
- - John to confirm the placeholder slots (gameN in cell N, game1 benched) - Claude's choice
- - requirements doc: "your games.json entry" + icon spec; contribution workflow; root CLAUDE.md
+ - John to confirm the placeholder slots; requirements doc games.json entry + icon spec
  - switch on GitHub Pages; test on the iPhone from the home screen
 
-DETAIL  claude-john-docs/Claude-ToBe-Continued-2026-1001-1206.MD, specifications.MD 6i
+DETAIL  claude-john-docs/Claude-ToBe-Continued-2026-1001-1239.MD, specifications.MD 6j

@@ -1,6 +1,6 @@
 # Halloween 2026 — Specifications (design decisions)
 
-Last updated: 2026-10-01 12:06 (fourth day, second stretch: high scores and switches in the This Game tab, score reporting, the no-pause rule, requirements doc v4; see 6i)
+Last updated: 2026-10-01 12:39 (fourth day, third stretch: discussion only, how the Sound switch could reach a game; two options, not chosen; see 6j. Before that: high scores and switches, see 6i)
 
 This file records WHAT the app looks like and WHY. Technical "how" lives in
 `specifications-technical.MD`. Companion notes in this folder:
@@ -523,6 +523,64 @@ does little to a game; what it does not do is the game's own job.
   that no game can read them. "Sound works immediately" and "a game
   switch applies to the next game" are John's decisions for the next
   step; they are not yet rules in the designers' docs.
+
+## 6j. OPEN QUESTION: how the Sound switch reaches a game (discussed 2026-10-01, NOT decided)
+
+**First thing to settle in the next session.** Nothing here is built, and
+none of it is in the designers' docs.
+
+A name (John): the main app is called **Halloween 2026**; the games it
+shows are the iframe games.
+
+What John wants: Sound ON in Halloween 2026 lets the game play sounds;
+Sound OFF stops the game's sound **immediately**, also sound that is
+already playing (music).
+
+The fact that shapes the answer: **Halloween 2026 cannot force a game to
+be silent.** Browsers have no "mute this iframe" switch. Sound on/off
+works only if the game cooperates, and the helper file
+(`games/game-helper.js`) is where that cooperation lives. Communication
+itself is not the problem: the two pages come from the same website, so
+either one can call a function in the other (that is how `reportScore`
+works today, game to app; the other direction is equally possible).
+
+- **Option A: the game asks (the designer does the work).** The game
+  plays its own sounds. Before each one it asks `Halloween.soundIsOn()`
+  and plays only on a yes.
+  - Good for short effects (a pop, a thud).
+  - Does not stop a sound already playing. For that the game must also
+    be told when the switch flips: it hands the helper a function to run
+    at that moment and writes the code that stops its own music. Extra
+    code in every game that has music.
+- **Option B: the helper plays the sounds.** The game never plays a sound
+  itself; it calls something like `Halloween.playSound("pop.mp3")` or
+  `Halloween.playMusic("tune.mp3")`. The helper keeps a list of what it
+  started. When the player flips Sound, Halloween 2026 calls a function
+  of the helper inside the game's page, and the helper mutes or un-mutes
+  everything in its list at once.
+  - Immediate on and off with no designer code; the game's own code is
+    not involved and does not have to "watch" anything (it is a function
+    call at the moment of the flip, not a variable somebody checks).
+  - Looping music becomes audible again on ON.
+  - The catch: it is a rule, not a lock. A designer who plays sound
+    around the helper is not silenced. The requirements doc would have to
+    say "all sound goes through the helper".
+- **Both**: B, plus A's `soundIsOn()` for a designer who needs to know.
+- **Rejected by Claude**: Halloween 2026 reaching into the game's page to
+  mute what it finds. It catches only some kinds of sound.
+
+Claude's recommendation: **B** (it fits "a designer drops a game in and
+it runs"). **John has not chosen.** His last question was whether the
+game must "pay attention" for an immediate OFF; answer: not in B, yes in
+A.
+
+To test when built: an iPhone plays no sound before the player's first
+tap. Unknown whether a tap on the Sound switch (in Halloween 2026's
+page) counts for the game's page, or the first tap must be inside the
+game.
+
+The game switches (Slow / Fast, Easy / Hard) were not discussed this
+stretch; 6i still holds (they apply to the next newly started game).
 
 ## 6e. games.json v2: the first proposal (2026-09-29, superseded)
 
