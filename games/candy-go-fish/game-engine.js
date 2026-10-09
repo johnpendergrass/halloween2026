@@ -16,9 +16,10 @@
   function checkFinish(state) {
     const allSets = state.sets.human.length + state.sets.wendy.length === state.typeCount;
     const emptyHand = !state.hands.human.length || !state.hands.wendy.length;
-    if (allSets || emptyHand) {
+    const emptyPile = !state.pile.length;
+    if (allSets || emptyHand || emptyPile) {
       state.finished = true;
-      state.reason = allSets ? 'allSets' : 'emptyHand';
+      state.reason = emptyPile ? 'emptyPile' : allSets ? 'allSets' : 'emptyHand';
       const difference = state.sets.human.length - state.sets.wendy.length;
       state.winner = difference > 0 ? 'human' : difference < 0 ? 'wendy' : 'tie';
     }
@@ -60,6 +61,7 @@
       if (state.pile.length) state.pending = { actor, type };
       else state.turn = other;
     }
+    checkFinish(state);
     state.history.push(...events);
     return events;
   }

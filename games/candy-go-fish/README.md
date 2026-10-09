@@ -2,7 +2,7 @@
 
 Open `demo.html` for a centered 9:14 preview, or `index.html` for the game itself. Both work directly from disk or through the repository's local server. The demo is registered in the shell's slot 8 (bottom right), with a witch-hat fish icon. The old Game 8 placeholder remains listed without a menu slot.
 
-Ten candy types, three copies each, five candies initially dealt per player, random starting player. Request only a held candy, receive one copy per successful request, and request again after success. Every fishing draw ends the turn. Collect triples automatically. The round ends when either active hand becomes empty or all sets are complete; most completed sets wins, including a possible tie. No refill.
+Ten candy types, three copies each, five candies initially dealt per player, random starting player. Request only a held candy, receive one copy per successful request, and request again after success. Every fishing draw ends the turn. Collect triples automatically. The round ends when the Candy Dish empties, either active hand becomes empty, or all sets are complete; resolve the last draw and its possible set before judging the result. Most completed sets wins, including a possible tie. No refill. A compact central result banner leaves both boards visible and offers New Game.
 
 Wendy's strategy sees only her own hand and public requests/transfers/set completion. Fishing draws stay unidentified to the other player. Her unknown goal slots do not reveal candy identities or counts.
 

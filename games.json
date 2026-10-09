@@ -144,7 +144,7 @@
       "credits": "Gameplay and candy artwork supplied by John; demo and fish icon by Codex.",
       "date": "October 9, 2026",
       "description": "A friendly candy-table showdown with Wendy. Collect three of a kind to claim a set!",
-      "how_to_play": "Select a candy you hold, then tap Got any? A match gives you one candy and another request. Otherwise, tap the pile to fish; drawing always ends your turn. Tell Wendy to Go fish when you have none of her request. Most sets wins when either hand empties or all sets are collected.",
+      "how_to_play": "Select a candy you hold, then tap Got any? A match gives you one candy and another request. Otherwise, tap the Candy Dish to fish; drawing always ends your turn. Tell Wendy to Go fish when you have none of her request. Most sets wins when the Candy Dish empties, either hand empties, or all sets are collected. The last draw can still complete a set.",
       "settings": []
     }
   ],

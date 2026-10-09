@@ -13,7 +13,7 @@ const config = require('../assets/json/game-config.json');
       await page.locator('#humanSlots .slot').last().waitFor();
       await page.locator('#dialogAction').click();
       const layout = await page.evaluate(() => {
-        const targets = [...document.querySelectorAll('#humanSlots .slot, #askButton, #fishButton, #centerCircle, .game-bar button')];
+        const targets = [...document.querySelectorAll('#humanSlots .slot, #askButton, #fishButton, #centerCircle, .game-bar button')].filter(target => !target.hidden);
         return { overflow: document.body.scrollHeight > innerHeight || document.body.scrollWidth > innerWidth,
           bad: targets.filter(target => { const rect = target.getBoundingClientRect(); return rect.width < innerWidth * 0.13 - 0.5 || rect.height < innerWidth * 0.13 - 0.5 || rect.bottom > innerHeight || rect.top < 0; }).map(target => target.id),
           images: [...document.images].every(image => image.complete && image.naturalWidth > 0) };
@@ -26,14 +26,17 @@ const config = require('../assets/json/game-config.json');
     }
     // Accelerate presentation only, preserving the actual move logic.
     const fast = structuredClone(config); fast.appearance.travelMs = 40; fast.appearance.thinkingMs = 40;
+    fast.players.human.name = 'Casper'; fast.players.wendy.name = 'Hazel';
     await page.route('**/game-config.json', route => route.fulfill({ json: fast }));
     await page.addInitScript(() => { const original = window.setTimeout; window.setTimeout = (fn, ms, ...args) => original(fn, Math.min(ms, 2), ...args); });
     await page.goto('http://127.0.0.1:8098/games/candy-go-fish/index.html');
     await page.locator('#humanSlots .slot').last().waitFor();
+    assert.equal(await page.locator('.player-portrait .portrait-name').textContent(), 'CASPER');
+    assert.equal(await page.locator('.wendy-portrait .portrait-name').textContent(), 'HAZEL');
     await page.locator('#dialogAction').click();
     let actions = 0;
     while (actions++ < 250) {
-      if (await page.locator('#overlay').isVisible()) break;
+      if (await page.locator('#gameOver').isVisible()) break;
       if (await page.locator('#fishButton').isEnabled()) await page.locator('#fishButton').click();
       else if (await page.locator('#centerCircle').isEnabled()) await page.locator('#centerCircle').click();
       else if (await page.locator('#humanSlots button:enabled').count()) {
@@ -42,10 +45,23 @@ const config = require('../assets/json/game-config.json');
         await page.locator('#askButton').click();
       } else await page.waitForTimeout(100);
     }
-    assert(await page.locator('#overlay').isVisible(), 'UI game did not finish');
-    assert.match(await page.locator('#dialogTitle').textContent(), /win|tie/);
+    assert(await page.locator('#gameOver').isVisible(), 'UI game did not finish');
+    assert.equal(await page.locator('#overlay').isVisible(), false, 'Finish should leave the board uncovered');
+    assert.match(await page.locator('#gameOverTitle').textContent(), /win|tie/);
+    assert.match(await page.locator('#gameOverReason').textContent(), /Hazel|Casper|Both players|All ten|Candy Dish/);
+    assert.match(await page.locator('#gameOverScore').textContent(), /^Casper had \d+ candy sets?; Hazel had \d+\.$/);
+    assert.equal(await page.locator('#gameOverRemaining').isVisible(), /ran out/.test(await page.locator('#gameOverReason').textContent()) && !(await page.locator('#gameOverReason').textContent()).includes('Candy Dish'));
+    const clearHands = await page.evaluate(() => {
+      const banner = document.getElementById('gameOver').getBoundingClientRect();
+      const top = document.getElementById('wendySlots').getBoundingClientRect();
+      const bottom = document.getElementById('humanSlots').getBoundingClientRect();
+      return banner.top >= top.bottom && banner.bottom <= bottom.top;
+    });
+    assert(clearHands, 'End banner overlaps a hand');
+    assert.equal(await page.locator('#humanSlots').isVisible(), true);
+    assert.equal(await page.locator('#wendySlots').isVisible(), true);
     await page.screenshot({ path: path.join(__dirname, 'demo-finish.png') });
-    await page.locator('#dialogAction').click();
+    await page.locator('#gameOverNew').click();
     assert.equal(await page.locator('#overlay').isVisible(), false);
     await page.goto('file:///' + path.resolve(__dirname, '../index.html').replaceAll('\\', '/'));
     await page.locator('#humanSlots .slot').last().waitFor();

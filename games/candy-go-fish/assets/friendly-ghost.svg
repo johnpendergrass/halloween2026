@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Friendly ghost portrait">
+  <circle cx="128" cy="128" r="128" fill="#a9c9b6"/>
+  <path d="M53 223V108a75 75 0 0 1 150 0v115l-25-17-25 20-25-20-25 20-25-20Z" fill="#fff6df" stroke="#668e7c" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M55 133 21 158q-12 16 9 21l28-11m140-35 37 25q12 16-9 21l-28-11" fill="#fff6df" stroke="#668e7c" stroke-width="6" stroke-linecap="round"/>
+  <ellipse cx="102" cy="117" rx="9" ry="13" fill="#314b42"/><ellipse cx="154" cy="117" rx="9" ry="13" fill="#314b42"/>
+  <circle cx="105" cy="113" r="3" fill="#fff"/><circle cx="157" cy="113" r="3" fill="#fff"/>
+  <ellipse cx="88" cy="139" rx="12" ry="7" fill="#e8b4a5"/><ellipse cx="168" cy="139" rx="12" ry="7" fill="#e8b4a5"/>
+  <path d="M112 146q16 18 32 0" fill="none" stroke="#314b42" stroke-width="5" stroke-linecap="round"/>
+  <path d="m39 45 4 11 11 4-11 4-4 11-4-11-11-4 11-4Z" fill="#fff0ba"/>
+</svg>

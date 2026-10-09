@@ -4,10 +4,36 @@ window.CandyConfig = {
     "copiesPerType": 3,
     "initialHandSize": 5
   },
+  "players": {
+    "human": {
+      "name": "Player",
+      "portrait": "friendly-ghost.svg"
+    },
+    "wendy": {
+      "name": "Wendy",
+      "portrait": "friendly-witch.svg"
+    }
+  },
   "appearance": {
-    "emptyCandyTransparency": 82,
     "travelMs": 650,
-    "thinkingMs": 1000
+    "thinkingMs": 1000,
+    "giftPulseMs": 480,
+    "giftTravelMs": 1400,
+    "giftEasing": "cubic-bezier(0.55, 0, 0.85, 0.55)"
+  },
+  "candyDisplay": {
+    "emptyTransparency": 82,
+    "imageScale": 150,
+    "rotationDegrees": 0,
+    "fitWidthPercent": 91,
+    "fitHeightPercent": 75,
+    "stackOffsetVw": 0.6,
+    "stackRotationDegrees": -9,
+    "giftWidthVw": 22,
+    "giftHeightVw": 17,
+    "giftArcVw": 22,
+    "giftPulseScale": 1.14,
+    "giftDissolveStart": 0.82
   },
   "layout": {
     "columns": 5,
@@ -28,17 +54,29 @@ window.CandyConfig = {
     {
       "id": "hundredGrand",
       "name": "100 Grand",
-      "image": "100Grand.png"
+      "image": "100Grand.png",
+      "display": {
+        "imageScale": 225,
+        "rotationDegrees": -15
+      }
     },
     {
       "id": "threeMusketeers",
       "name": "3 Musketeers",
-      "image": "3Musketeers.png"
+      "image": "3Musketeers.png",
+      "display": {
+        "imageScale": 225,
+        "rotationDegrees": -30
+      }
     },
     {
       "id": "butterfinger",
       "name": "Butterfinger",
-      "image": "Butterfinger.png"
+      "image": "Butterfinger.png",
+      "display": {
+        "imageScale": 225,
+        "rotationDegrees": -30
+      }
     },
     {
       "id": "dots",
@@ -58,12 +96,20 @@ window.CandyConfig = {
     {
       "id": "milkyWay",
       "name": "Milky Way",
-      "image": "MilkyWay.png"
+      "image": "MilkyWay.png",
+      "display": {
+        "imageScale": 225,
+        "rotationDegrees": -30
+      }
     },
     {
       "id": "mounds",
       "name": "Mounds",
-      "image": "Mounds.png"
+      "image": "Mounds.png",
+      "display": {
+        "imageScale": 225,
+        "rotationDegrees": -30
+      }
     },
     {
       "id": "redVines",
@@ -73,7 +119,11 @@ window.CandyConfig = {
     {
       "id": "snickers",
       "name": "Snickers",
-      "image": "Snickers.png"
+      "image": "Snickers.png",
+      "display": {
+        "imageScale": 225,
+        "rotationDegrees": -30
+      }
     }
   ]
 };

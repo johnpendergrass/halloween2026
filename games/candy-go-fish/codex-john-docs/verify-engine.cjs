@@ -8,7 +8,7 @@ function fixture(human, opponent, pile = []) {
   return { hands: { human: cards(human), wendy: cards(opponent) }, pile: cards(pile),
     sets: { human: [], wendy: [] }, turn: 'human', pending: null, finished: false, copies: 3, typeCount: 10, history: [] };
 }
-let state = fixture(['a', 'b'], ['a', 'a', 'c']);
+let state = fixture(['a', 'b'], ['a', 'a', 'c'], ['d']);
 engine.request(state, 'human', 'a');
 assert.equal(engine.count(state.hands.human, 'a'), 2);
 assert.equal(engine.count(state.hands.wendy, 'a'), 1);
@@ -41,6 +41,14 @@ state = fixture(['a'], ['b', 'c']);
 state.turn = 'wendy'; state.pile = [{ id: 'x', type: 'b' }];
 engine.request(state, 'wendy', 'b'); engine.fish(state);
 assert(!state.history.some(event => event.kind === 'draw' && 'type' in event));
+state = fixture(['a', 'a', 'c'], ['b', 'b'], ['a']);
+engine.request(state, 'human', 'a');
+engine.fish(state);
+assert.equal(state.finished, true);
+assert.equal(state.reason, 'emptyPile');
+assert.equal(state.sets.human.length, 1, 'Final draw must complete its triple before game over');
+assert.equal(state.winner, 'human');
+assert.equal(state.hands.human.length, 1);
 const memory = wendy.createMemory();
 wendy.observe(memory, [{ kind: 'request', player: 'human', type: 'a' }]);
 assert(memory.known.has('a'));
