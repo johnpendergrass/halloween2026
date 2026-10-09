@@ -24,7 +24,6 @@
   let closeAction = startGame, displayedTurn = null;
   let giftWait = null;
   let playerRequestWait = null;
-  let opponentRequestPresented = false;
   function image(type) { return './assets/candybar-images/' + byId.get(type).image; }
   function candyImage(type, className = '') {
     const img = document.createElement('img'); img.src = image(type); img.alt = ''; img.draggable = false; img.className = className; return img;
@@ -81,12 +80,13 @@
         const canGive = giftWait && giftWait.token === generation && giftWait.type === type && !giftWait.released;
         const available = player === 'human' && quantity > 0 && (phase === 'choose' || canGive) && !overlayOpen;
         slot.replaceChildren(); slot.className = 'slot';
-        slot.classList.toggle('complete', complete); slot.classList.toggle('selected', player === 'human' && selected === type);
+        const highlighted = player === 'human' && ((selected === type && ['choose', 'requesting'].includes(phase)) || canGive);
+        slot.classList.toggle('complete', complete); slot.classList.toggle('selected', Boolean(highlighted));
         slot.classList.toggle('available', available);
         if (player === 'human') {
           slot.disabled = !available;
           slot.setAttribute('aria-label', byId.get(type).longName + (complete ? '; completed set' : '; you have ' + quantity + (canGive ? '; give one to ' + opponentName : '; select to ask')));
-          slot.setAttribute('aria-pressed', String(selected === type));
+          slot.setAttribute('aria-pressed', String(Boolean(highlighted)));
         } else slot.setAttribute('aria-label', complete ? byId.get(type).longName + '; completed set' : 'Uncompleted goal');
         if (player === 'human' || complete) {
           const art = document.createElement('span'); art.className = 'candy-art';
@@ -109,14 +109,9 @@
     el('fishButton').hidden = el('fishButton').disabled;
     el('centerCircle').disabled = phase !== 'humanFishWait' || overlayOpen;
     const center = el('centerCircle'); center.replaceChildren();
-    if ((phase === 'choose' && selected) || phase === 'requesting' || (phase === 'wendyRequest' && opponentRequestPresented)) {
-      if (selected) center.append(candyImage(selected));
-      center.setAttribute('aria-label', selected ? byId.get(selected).longName + ' requested' : 'Request area');
-    } else {
-      for (let index = 0; index < 4; index++) { const token = document.createElement('span'); token.className = 'pile-token'; center.append(token); }
-      const number = document.createElement('span'); number.className = 'pile-number'; number.textContent = state.pile.length; center.append(number);
-      center.setAttribute('aria-label', 'Candy Dish; draw a candy; ' + state.pile.length + ' remaining');
-    }
+    for (let index = 0; index < 4; index++) { const token = document.createElement('span'); token.className = 'pile-token'; center.append(token); }
+    const number = document.createElement('span'); number.className = 'pile-number'; number.textContent = state.pile.length; center.append(number);
+    center.setAttribute('aria-label', 'Candy Dish; draw a candy; ' + state.pile.length + ' remaining');
     // One message uses a free side of the dish; buttons supply obvious actions.
     if (phase === 'choose') el('message').textContent = selected ? '' : 'Choose a candy from your hand.';
     if (phase === 'thinking') el('message').textContent = '';
@@ -134,14 +129,20 @@
     }
     return token === generation;
   }
-  async function playVisual(animation, duration, token) {
+  async function playVisual(animation, duration, token, removeTarget = false) {
     let elapsed = 0;
-    while (elapsed < duration && token === generation) {
-      if (overlayOpen) animation.pause(); else animation.play();
+    while (elapsed < duration && token === generation && animation.playState !== 'finished') {
+      if (overlayOpen && animation.playState !== 'paused') animation.pause();
+      else if (!overlayOpen && animation.playState === 'paused') animation.play();
       await new Promise(resolve => setTimeout(resolve, 40));
       if (!overlayOpen) elapsed += 40;
     }
-    animation.cancel();
+    // Remove speech layers before releasing their animation effects. This
+    // also avoids a compositor restoring the layer at its original position.
+    if (removeTarget) {
+      const target = animation.effect.target;
+      target.style.visibility = 'hidden'; target.remove(); animation.cancel();
+    } else if (token === generation) animation.finish(); else animation.cancel();
     return token === generation;
   }
   async function emphasizeGift(source, token) {
@@ -176,10 +177,15 @@
     const source = el('askButton'), from = source.getBoundingClientRect();
     const to = document.querySelector('.wendy-portrait .portrait').getBoundingClientRect();
     const moving = document.createElement('div'); moving.className = 'speech-request flying-speech player-request-flight';
+    moving.style.opacity = '0';
     moving.setAttribute('aria-hidden', 'true');
     for (const child of source.children) moving.append(child.cloneNode(true));
     moving.style.left = from.left + 'px'; moving.style.top = from.top + 'px'; moving.style.width = from.width + 'px';
     document.body.append(moving);
+    // The question now belongs only to the flying copy; do not leave a
+    // populated stationary button for a redraw to expose during the handoff.
+    source.hidden = true; source.replaceChildren(); source.classList.remove('speech-request');
+    el('message').style.visibility = 'hidden'; el('message').replaceChildren();
     phase = 'requesting'; render();
     const dx = to.left + to.width / 2 - from.left - from.width / 2;
     const dy = to.top + to.height / 2 - from.top - from.height / 2;
@@ -190,12 +196,13 @@
       { transform: `translate(${dx * 0.8}px,${dy * 0.8}px) scale(0.55)`, opacity: 0.85, offset: 0.75 },
       { transform: `translate(${dx}px,${dy}px) scale(0.15)`, opacity: 0 }
     ];
-    const valid = await playVisual(moving.animate(frames, { duration, easing: 'ease-in-out', fill: 'forwards' }), duration, token);
+    const valid = await playVisual(moving.animate(frames, { duration, easing: 'ease-in-out', fill: 'both' }), duration, token, true);
     moving.remove();
     if (valid) await resolveRequest('human', type, token);
   }
   async function presentOpponentSpeech(text, token, holdMs, keepQuote = false, travelMs = config.appearance.requestSpeechMs, dissolve = false, requestType = null) {
     const message = el('message');
+    message.style.visibility = 'hidden';
     message.classList.add('speech-request');
     const speaker = document.createElement('span'); speaker.className = 'speech-speaker'; speaker.textContent = opponentName + ' says:';
     const quote = document.createElement('span'); quote.className = 'speech-quote'; quote.textContent = '“' + text + '”';
@@ -206,6 +213,7 @@
     const moving = message.cloneNode(true);
     moving.removeAttribute('id'); moving.removeAttribute('role'); moving.removeAttribute('aria-live'); moving.setAttribute('aria-hidden', 'true');
     moving.className = 'speech-request flying-speech';
+    moving.style.visibility = 'visible'; moving.style.opacity = '0';
     moving.style.left = target.left + 'px'; moving.style.top = target.top + 'px'; moving.style.width = target.width + 'px';
     document.body.append(moving); message.style.visibility = 'hidden';
     const dx = origin.left + origin.width / 2 - target.left - target.width / 2;
@@ -217,25 +225,29 @@
       { transform: `translate(${dx * 0.32}px,${dy * 0.32}px) scale(0.8)`, opacity: 0.8, offset: 0.65 },
       { transform: 'translate(0,0) scale(1)', opacity: 1 }
     ];
-    if (dissolve) {
-      frames[frames.length - 1].opacity = 0;
-      if (!reduced) frames.splice(frames.length - 1, 0, { transform: 'translate(0,0) scale(1)', opacity: 1, offset: 0.82 });
-    }
-    const animation = moving.animate(frames, { duration, easing: 'ease-in-out', fill: 'forwards' });
-    const valid = await playVisual(animation, duration, token);
+    const animation = moving.animate(frames, { duration, easing: 'ease-in-out', fill: 'both' });
+    const valid = await playVisual(animation, duration, token, true);
     moving.remove();
     if (!valid) return false;
     if (dissolve) {
-      message.replaceChildren(); message.style.visibility = ''; message.classList.remove('speech-request');
+      message.style.visibility = '';
+      if (!await waitActive(holdMs, token)) return false;
+      const fadeMs = reduced ? 100 : config.appearance.replyDissolveMs;
+      const fade = message.animate([{ opacity: 1 }, { opacity: 0 }], { duration: fadeMs, fill: 'both', easing: 'ease-out' });
+      if (!await playVisual(fade, fadeMs, token)) return false;
+      message.style.visibility = 'hidden'; message.replaceChildren(); message.classList.remove('speech-request');
+      fade.cancel(); message.style.visibility = '';
       return true;
     }
     message.style.visibility = '';
-    if (requestType) { opponentRequestPresented = true; render(); }
+    if (requestType) render();
     // Give the fully settled quote time to be read before automatic receipt.
     const waiting = phase === 'wendyRequest' && CandyEngine.count(state.hands.human, selected)
       ? { token, type: selected, released: false } : null;
+    const highlightDelay = waiting ? Math.min(config.appearance.requestHighlightDelayMs, holdMs) : 0;
+    if (highlightDelay && !await waitActive(highlightDelay, token)) return false;
     if (waiting) { giftWait = waiting; render(); }
-    const held = await waitActive(holdMs, token, () => Boolean(waiting?.released));
+    const held = await waitActive(holdMs - highlightDelay, token, () => Boolean(waiting?.released));
     if (giftWait === waiting) giftWait = null;
     if (!held) return false;
     if (waiting) render();
@@ -272,7 +284,6 @@
     candy.remove(); return valid;
   }
   function startGame() {
-    opponentRequestPresented = false;
     playerRequestWait = null;
     giftWait = null;
     generation++; state = CandyEngine.create(config); memory = WendyPlayer.createMemory(); reported = false; selected = null;
@@ -320,7 +331,6 @@
     el('message').classList.remove('speech-request');
     if (state.finished) { finishGame(); return; }
     displayedTurn = state.turn; selected = null;
-    opponentRequestPresented = false;
     if (state.turn === 'human') { phase = 'choose'; render(); return; }
     phase = 'thinking'; render();
     if (!await waitActive(config.appearance.thinkingMs, token)) return;
@@ -338,7 +348,7 @@
       if (!await emphasizeGift(el('human-' + type), token)) return;
     }
     if (actor === 'human' && CandyEngine.count(state.hands.wendy, type)) {
-      if (!await presentOpponentSpeech('Yes I do', token, 0, false, config.appearance.giftTravelMs, true)) return;
+      if (!await presentOpponentSpeech('Yes I do', token, config.appearance.requestHoldMs, false, config.appearance.requestSpeechMs, true)) return;
       if (!await emphasizeGift(el('wendyPile'), token)) return;
     }
     const events = CandyEngine.request(state, actor, type); WendyPlayer.observe(memory, events);

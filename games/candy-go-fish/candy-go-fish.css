@@ -69,19 +69,19 @@ h2 { font-size: max(14px,4.5vw); }
 .speech-quote { font-size: max(12px,3.6vw); font-weight: bold; }
 .speech-prompt, .speech-candy-name { display: block; line-height: 1.2; }
 .speech-candy-name { font-weight: bold; margin-top: 0.5vw; }
-.speech-candy-art { display: block; position: relative; height: 17.5vw; margin-top: 0.5vw; overflow: hidden; border-radius: 1.5vw; }
+.speech-candy-art { display: block; position: relative; height: 18vw; margin-top: 0.5vw; overflow: hidden; border-radius: 1.5vw; }
 .speech-candy { position: absolute; left: 50%; top: 50%; object-fit: contain; filter: drop-shadow(0 0.5vw 0.4vw #0003); }
-.speech-request:has(.speech-candy) { width: 30vw; padding: 1vw; line-height: 1.2; }
+.speech-request:has(.speech-candy) { width: 32vw; padding: 1vw; line-height: 1.2; }
 .speech-request:has(.speech-candy) .speech-speaker { margin-bottom: 0.5vw; }
 .flying-speech { position: fixed; z-index: 12; pointer-events: none; transform-origin: center; font-size: max(12px,3.6vw); line-height: 1.35; }
-.center-controls { display: grid; grid-template-columns: 27vw 24vw 27vw; justify-content: center; align-items: center; gap: 3vw; }
+.center-controls { display: grid; grid-template-columns: 32vw 23vw 25vw; justify-content: center; align-items: center; gap: 3vw; }
 #askButton { grid-column: 1; grid-row: 1; }
 #centerCircle { grid-column: 2; grid-row: 1; }
 #fishButton { grid-column: 3; grid-row: 1; }
 #askButton, #fishButton { min-height: 15vw; width: 27vw; border-radius: 3vw; background: #0f392e; color: #b9cdb5; font-size: max(14px,4.5vw); font-weight: bold; border: 0.3vw solid #c7ddb33b; }
 #askButton span, #fishButton span { display: block; font-size: max(12px,3.6vw); font-weight: normal; }
 #askButton:not(:disabled), #fishButton:not(:disabled) { background: #efd293; color: #293f31; box-shadow: 0 0.8vw 0 #122f25; }
-#askButton.speech-request { width: 30vw; padding: 1vw; text-align: left; font-size: max(12px,3.6vw); line-height: 1.2; border-radius: 3vw 3vw 3vw 0.5vw; }
+#askButton.speech-request { width: 32vw; padding: 1vw; text-align: left; font-size: max(12px,3.6vw); line-height: 1.2; border-radius: 3vw 3vw 3vw 0.5vw; }
 #askButton.speech-request:not(:disabled) { background: #f5e8c5; color: #254333; border: 0.3vw solid #f8dfa1; box-shadow: 0 1vw 3vw #061d2538; }
 #askButton .speech-speaker, #askButton .speech-candy-name { font-weight: bold; }
 #fishButton { min-height: 22vw; width: 23vw; justify-self: center; padding: 1vw 0.7vw; border-radius: 3vw; }

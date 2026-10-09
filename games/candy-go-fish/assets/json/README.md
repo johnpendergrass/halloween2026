@@ -1,30 +1,47 @@
-# Candy Go Fish data
+# Candy Go Fish configuration
 
-`game-config.json` is the editable source for this game's data. Older JSON/TXT files elsewhere in assets are not loaded.
+`game-config.json` is the authoritative editable source. Older JSON/TXT files elsewhere in assets are not loaded. HTTP play fetches it; direct file opening and fetch failure use the generated `config-data.js` companion.
 
-- `candies`: stable identifiers, `longName`, `shortName`, and PNG filenames in `../candybar-images/`. Compact speech/status messages use `shortName`; accessibility labels, image descriptions, and celebrations use `longName`.
+## Sections
 
-Short names are explicit editorial choices, at most 16 characters, and unique across the whole catalog. Do not automatically truncate a long name: keep meaningful brand/variant distinctions (for example `LS Gummies` versus a future `LS Hard Candy`). The stable `id` identifies a candy in gameplay, independently of either display name. Names may match when the full name is already brief.
+| Section | Responsibility |
+| --- | --- |
+| `rules` | Copies per type and initial hand size; base is 3/5 |
+| `players` | Names and portrait filenames for stable human/wendy roles |
+| `appearance` | Main presentation timings and candy-travel easing |
+| `candyDisplay` | Shared slot fitting, empty transparency, stacking, speech sizing and candy-movement art |
+| `layout` | Five columns and ordered type IDs; both boards share the order |
+| `candies` | Stable ID, long/short names, image filename and optional display overrides |
 
-Configuration regeneration validates required names, duplicate IDs, length, and short-name collisions after ignoring case, punctuation and spacing. Adding another variety with an existing short name requires editing the names to distinguish both varieties. Use the same validator on the full future catalog before selecting a subset for a round. Character count is a guardrail; review new names on the phone because character widths differ. Run `node games/candy-go-fish/codex-john-docs/validate-candy-names.cjs` to check the catalog and validation scenarios.
+The [animation survey](../../codex-john-docs/ANIMATION-SURVEY-2026-1009.md) lists every current timing, including literals/CSS still outside this JSON. The [implementation handoff](../../codex-john-docs/ANIMATION-IMPLEMENTATION-HANDOFF.md) proposes central presentation profiles; that new schema is not implemented.
 
-`appearance.playerRequestHoldMs` is the wait after selecting a candy before the player's question sends automatically (4000ms). Tapping the question sends it immediately. Changing selection restarts the wait; local dialogs pause it.
-- `rules`: base copies per type and initial deal size. No empty-hand refill; an empty hand ends the round.
-- `players`: configurable human/opponent names and portrait filenames. Internal `human`/`wendy` keys are stable role IDs; changing a display name changes portrait labels, turn labels, messages, Rules and game-over text without changing engine roles.
-- `appearance`: transfer/pulse timing, thinking delay, and gift acceleration easing. `requestSpeechMs` controls speech arrival (2500ms); `requestGiveHoldMs` holds a successful opponent request before automatic handover (4000ms); `requestHoldMs` holds an unsuccessful opponent request (900ms). The opponent's animated Nope response stays until the human draws.
-- `candyDisplay`: shared slot-art settings, including empty transparency (0 visible, 100 invisible), image scale, rotation, fitting dimensions, duplicate offset, and duplicate rotation. Each candy's optional `display` object overrides these defaults. Enlarged candy images remain centered and clip inside the slot; badges sit outside that clipping layer. Main images use the specified rotation; the rear duplicate adds the configured stack rotation.
-- `layout`: five columns and the ordered slot identifiers. Both players use the same order. Positions are derived from the responsive grid rather than hardcoded screen pixels. Future canvas coordinates or character-icon positions can be recorded here if needed.
+## Names and catalog expansion
 
-HTTP play loads the JSON directly. For direct `file://` play, `config-data.js` is a generated companion. After changing JSON, run from the repository root:
+Every candy requires `id`, `longName`, `shortName`, and `image`. Short names are curated, trimmed, nonempty, at most 16 characters and unique across the entire catalog ignoring case/spacing/punctuation. Do not auto-truncate. Keep variants distinguishable, such as current **Life Savers Gummies / LS Gummies** and a future separate **LS Hard Candy**. Existing brief names may use the same long/short value.
+
+Questions/compact status use short names; accessibility, image descriptions and celebrations use long names. IDs remain independent of names. Validate the full future catalog before selecting a round subset; the demo currently still uses ten fixed candies, without a broader catalog/round-selection feature.
+
+## Art settings
+
+Empty identities use 82% transparency; set `emptyTransparency` to 100 to hide them completely. Default `imageScale` is 150; six narrow bars use 225. 100 Grand rotates −15°, while 3 Musketeers, Butterfinger, Milky Way, Mounds and Snickers rotate −30°. Candy-specific `display` overrides shared settings. Art is centered/cropped inside the slot while badges remain visible. Two copies use offset art plus a count badge.
+
+`speechImageScale: 100` means 100% of actual grid artwork dimensions, with inherited candy rotation, inside a clipped quote-art frame. It is not a percentage of the original small speech image. The requested candy appears only in the bubble; the center remains the Candy Dish.
+
+Gift-named settings apply to all four transfer/draw routes. `giftWidthVw`, `giftHeightVw`, `giftArcVw`, `giftPulseScale`, and `giftDissolveStart` control prominent travel, curve, pulse and fade/shrink threshold. Private opponent draws use neutral wrappers. `appearance.travelMs` is unused legacy data; actual motion uses `giftTravelMs`.
+
+## Timing relationships
+
+Human questions wait `playerRequestHoldMs` (4000) before sending, or bubble tap sends immediately; reselection restarts it. Incoming speech uses `requestSpeechMs` (2500). Opponent matching slots highlight/enable after `requestHighlightDelayMs` (500), within the `requestGiveHoldMs` (4000) automatic gift wait. Matching-slot tap releases the gift early.
+
+Yes uses `requestSpeechMs` to arrive, `requestHoldMs` (900) to remain readable, and `replyDissolveMs` (300) to fade before source pulse/travel. An unsatisfied opponent question also uses `requestHoldMs` before Go Fish readiness. Nope remains until the human draws. Local dialogs pause JavaScript waits/motion; reduced motion retains reading waits.
+
+## Regeneration
+
+From repository root:
 
 ```powershell
+node games/candy-go-fish/codex-john-docs/validate-candy-names.cjs
 node games/candy-go-fish/codex-john-docs/sync-config.cjs
 ```
 
-Keep both files together. Do not edit the generated JavaScript separately.
-
-The six narrow bars use `imageScale: 225`, which is another 50% enlargement over the previous 150 setting. 100 Grand uses −15°; 3 Musketeers, Butterfinger, Milky Way, Mounds and Snickers use −30°. Other candies retain the 150 default. Set `candyDisplay.emptyTransparency` to 100 for invisible empty-slot artwork.
-
-`giftWidthVw`, `giftHeightVw`, `giftArcVw`, `giftPulseScale`, and `giftDissolveStart` now control **every** transfer/draw route. Sources pulse for 480ms, travel follows a sampled curve for 1400ms with slow-start acceleration, and the candy fades/shrinks into its destination during the final 18% of the path. The gift-named timing/easing fields are shared by all routes; `travelMs` is retained legacy data and no longer used. Hidden opponent draws use an enlarged neutral wrapper. Reduced motion uses a brief stationary fade instead.
-
-`candyDisplay.speechImageScale` controls request-bubble candy art relative to the actual grid artwork, currently 90%. It uses each candy's grid fitting, enlargement and rotation settings. Art is centered in a generous clipped frame beneath the question, with a soft shadow. This replaces the older scale relative to the original small speech image. When the human lacks the requested candy, the full request bubble remains until Go Fish is tapped, replacing the old plain wants/none message.
+Regeneration validates names/IDs and writes the companion. Keep both files together; do not edit generated JavaScript independently. The current validator does not validate all animation values; adding presentation-schema validation is part of the later handoff.

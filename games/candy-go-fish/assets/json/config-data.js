@@ -22,13 +22,15 @@ window.CandyConfig = {
     "giftEasing": "cubic-bezier(0.55, 0, 0.85, 0.55)",
     "requestSpeechMs": 2500,
     "requestHoldMs": 900,
+    "replyDissolveMs": 300,
     "requestGiveHoldMs": 4000,
+    "requestHighlightDelayMs": 500,
     "playerRequestHoldMs": 4000
   },
   "candyDisplay": {
     "emptyTransparency": 82,
     "imageScale": 150,
-    "speechImageScale": 90,
+    "speechImageScale": 100,
     "rotationDegrees": 0,
     "fitWidthPercent": 91,
     "fitHeightPercent": 75,
