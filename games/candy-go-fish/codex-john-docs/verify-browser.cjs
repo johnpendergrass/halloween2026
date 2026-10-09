@@ -35,9 +35,17 @@ const config = require('../assets/json/game-config.json');
     assert.equal(await page.locator('.wendy-portrait .portrait-name').textContent(), 'HAZEL');
     await page.locator('#dialogAction').click();
     let actions = 0;
+    let celebrations = 0;
     while (actions++ < 250) {
       if (await page.locator('#gameOver').isVisible()) break;
-      if (await page.locator('#fishButton').isEnabled()) await page.locator('#fishButton').click();
+      if (await page.locator('#overlay.celebrating').isVisible()) {
+        assert.match(await page.locator('#dialogTitle').textContent(), /won a set!/);
+        assert(await page.locator('.celebration-candy').evaluate(img => img.complete && img.naturalWidth > 0));
+        if (!celebrations) await page.screenshot({ path: path.join(__dirname, 'demo-celebration.png') });
+        if (celebrations++ % 2) await page.locator('#overlay').click({ position: { x: 2, y: 2 } });
+        else await page.locator('#dialogAction').click();
+      }
+      else if (await page.locator('#fishButton').isEnabled()) await page.locator('#fishButton').click();
       else if (await page.locator('#centerCircle').isEnabled()) await page.locator('#centerCircle').click();
       else if (await page.locator('#humanSlots button:enabled').count()) {
         const slots = page.locator('#humanSlots button:enabled');
@@ -46,6 +54,9 @@ const config = require('../assets/json/game-config.json');
       } else await page.waitForTimeout(100);
     }
     assert(await page.locator('#gameOver').isVisible(), 'UI game did not finish');
+    assert(celebrations > 0, 'No earned-set celebration observed');
+    assert.equal(await page.locator('#humanSetCount').textContent(), (await page.locator('#humanSlots .complete').count()) + ((await page.locator('#humanSlots .complete').count()) === 1 ? ' SET' : ' SETS'));
+    assert.equal(await page.locator('#wendySetCount').textContent(), (await page.locator('#wendySlots .complete').count()) + ((await page.locator('#wendySlots .complete').count()) === 1 ? ' SET' : ' SETS'));
     assert.equal(await page.locator('#overlay').isVisible(), false, 'Finish should leave the board uncovered');
     assert.match(await page.locator('#gameOverTitle').textContent(), /win|tie/);
     assert.match(await page.locator('#gameOverReason').textContent(), /Hazel|Casper|Both players|All ten|Candy Dish/);

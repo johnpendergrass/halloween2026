@@ -16,9 +16,26 @@ const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary
     await button.click();
     const frame = page.frameLocator('#gameFrame');
     await frame.locator('#dialogAction').click();
+    assert.equal(await page.locator('#gameNewButton, #gameRulesButton').count(), 0);
+    assert.equal(await frame.locator('.game-bar').isVisible(), true);
+    await frame.locator('#rulesButton').click();
+    assert.equal(await frame.locator('#dialogTitle').textContent(), 'How to play');
+    await frame.locator('#dialogAction').click();
+    await frame.locator('#newGame').click();
+    assert.equal(await frame.locator('#dialogTitle').textContent(), 'Deal again?');
+    await frame.locator('#dialogCancel').click();
     assert.equal(await frame.locator('#humanSlots .slot').count(), 10);
-    assert.equal(await page.locator('#topTitle').textContent(), 'Go Fish');
+    assert.equal(await page.locator('#topTitle').textContent(), 'Go Fish Candy Edition');
+    const aligned = await frame.locator('#table').evaluate(table => {
+      const opponent = table.querySelector('#wendySlots').getBoundingClientRect();
+      const center = table.querySelector('.center-area').getBoundingClientRect();
+      const human = table.querySelector('#humanSlots').getBoundingClientRect();
+      return opponent.bottom <= center.top && human.top >= center.bottom && human.bottom <= innerHeight;
+    });
+    assert(aligned, 'Embedded board regions overlap');
     await page.screenshot({ path: path.join(__dirname, 'shell-game.png') });
+    await page.locator('#homeButton').click();
+    assert.equal(await page.locator('#gameNewButton, #gameRulesButton').count(), 0);
     assert.deepEqual(errors, []);
     console.log('Shell icon, menu selection and embedded game passed at iPhone size.');
   } finally { await browser.close(); }

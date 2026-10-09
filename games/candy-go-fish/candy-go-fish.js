@@ -16,8 +16,6 @@
     const portrait = document.querySelector(selector + ' .portrait');
     portrait.src = './assets/' + config.players[player].portrait; portrait.alt = config.players[player].name;
   }
-  el('wendyTurn').textContent = opponentName.toUpperCase() + "'S TURN";
-  el('humanTurn').textContent = humanName.toUpperCase() + "'S TURN";
   el('wendySlots').setAttribute('aria-label', opponentName + "'s completed sets");
   el('askButton').querySelector('span').textContent = 'ASK ' + opponentName.toUpperCase();
   el('fishButton').querySelector('span').textContent = 'TELL ' + opponentName.toUpperCase();
@@ -57,10 +55,15 @@
     if (!state) return;
     el('gameOver').hidden = phase !== 'finished';
     el('gameOver').parentElement.classList.toggle('finished', phase === 'finished');
+    document.querySelector('.wendy-portrait').classList.toggle('portrait-active', displayedTurn === 'wendy' && !state.finished);
+    document.querySelector('.player-portrait').classList.toggle('portrait-active', displayedTurn === 'human' && !state.finished);
     for (const player of ['human', 'wendy']) {
       el(player + 'Area').classList.toggle('active', displayedTurn === player && !state.finished);
-      el(player + 'Count').textContent = player === 'wendy' ? state.hands[player].length : 'Holding ' + state.hands[player].length + ' candies';
-      if (player === 'wendy') el('wendyPile').setAttribute('aria-label', opponentName + ' holds ' + state.hands.wendy.length + ' candies');
+      const total = state.sets[player].length;
+      el(player + 'SetCount').textContent = total + (total === 1 ? ' SET' : ' SETS');
+      el(player + 'SetCount').setAttribute('aria-label', config.players[player].name + ' has ' + total + (total === 1 ? ' set' : ' sets'));
+      el(player + 'Count').textContent = state.hands[player].length;
+      el(player + 'Pile').setAttribute('aria-label', config.players[player].name + ' holds ' + state.hands[player].length + (state.hands[player].length === 1 ? ' candy' : ' candies'));
       for (const type of config.layout.slotOrder) {
         const slot = el(player + '-' + type), quantity = CandyEngine.count(state.hands[player], type);
         const complete = state.sets[player].some(set => set.type === type);
@@ -97,10 +100,12 @@
       const number = document.createElement('span'); number.className = 'pile-number'; number.textContent = state.pile.length; center.append(number);
       center.setAttribute('aria-label', 'Candy Dish; draw a candy; ' + state.pile.length + ' remaining');
     }
-    const instructions = { choose: selected ? 'Tap Got any? to ask for ' + byId.get(selected).name : 'Choose a candy from your hand',
-      humanFishWait: 'Tap the Candy Dish to go fish', wendyFishWait: 'You have none. Tap Go fish! to tell ' + opponentName, thinking: opponentName + ' is choosing a candy…',
-      requesting: 'Passing a candy…', wendyRequest: opponentName + ' asks: got any?', drawing: 'Drawing one candy…', finished: 'Game complete' };
-    el('instruction').textContent = instructions[phase] || '';
+    // One message uses a free side of the dish; buttons supply obvious actions.
+    if (phase === 'choose') el('message').textContent = selected ? '' : 'Choose a candy from your hand.';
+    if (phase === 'thinking') el('message').textContent = '';
+    if (phase === 'humanFishWait') el('message').textContent = 'No match. Tap the Candy Dish to draw.';
+    el('message').classList.toggle('on-right', !el('askButton').hidden);
+    el('message').hidden = phase === 'finished' || phase === 'thinking' || (phase === 'choose' && Boolean(selected));
   }
   async function waitActive(ms, token) {
     let elapsed = 0;
@@ -133,25 +138,23 @@
     source.classList.remove('giving');
     return valid;
   }
-  async function fly(type, source, destination, hidden, token, gift = false) {
+  async function fly(type, source, destination, hidden, token) {
     const from = source.getBoundingClientRect(), to = destination.getBoundingClientRect();
     const candy = hidden ? document.createElement('div') : candyImage(type);
     candy.className = hidden ? 'flying-token' : 'flying-candy'; document.body.append(candy);
-    if (gift) { candy.style.width = config.candyDisplay.giftWidthVw + 'vw'; candy.style.height = config.candyDisplay.giftHeightVw + 'vw'; }
+    candy.style.width = config.candyDisplay.giftWidthVw + 'vw';
+    candy.style.height = (hidden ? config.candyDisplay.giftWidthVw / 2 : config.candyDisplay.giftHeightVw) + 'vw';
     const box = candy.getBoundingClientRect();
     const x = from.left + from.width / 2 - box.width / 2, y = from.top + from.height / 2 - box.height / 2;
     const dx = to.left + to.width / 2 - box.width / 2 - x, dy = to.top + to.height / 2 - box.height / 2 - y;
     candy.style.left = x + 'px'; candy.style.top = y + 'px';
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const duration = reduced ? 80 : gift ? config.appearance.giftTravelMs : config.appearance.travelMs;
-    let frames = [{ transform: 'translate(0,0) rotate(-8deg)' },
-      { transform: `translate(${dx * 0.5}px,${dy * 0.5 - window.innerWidth * 0.07}px) rotate(6deg)`, offset: 0.5 },
-      { transform: `translate(${dx}px,${dy}px) rotate(0deg)` }];
-    if (gift) {
+    const duration = reduced ? 80 : config.appearance.giftTravelMs;
+    let frames;
       // Sample a quadratic curve; a single easing function accelerates along it.
       const bend = window.innerWidth * config.candyDisplay.giftArcVw / 100;
       const controlX = dx / 2 + (dx < 0 ? bend : -bend), controlY = dy / 2;
-      const rotation = byId.get(type).display?.rotationDegrees ?? config.candyDisplay.rotationDegrees;
+      const rotation = hidden ? 0 : byId.get(type).display?.rotationDegrees ?? config.candyDisplay.rotationDegrees;
       frames = Array.from({ length: 41 }, (_, index) => {
         const t = index / 40, remaining = 1 - t;
         const dissolve = Math.max(0, (t - config.candyDisplay.giftDissolveStart) / (1 - config.candyDisplay.giftDissolveStart));
@@ -159,9 +162,8 @@
         const curveY = 2 * remaining * t * controlY + t * t * dy;
         return { offset: t, transform: `translate(${curveX}px,${curveY}px) rotate(${rotation * remaining}deg) scale(${1 - dissolve * 0.45})`, opacity: 1 - dissolve };
       });
-    }
     if (reduced) frames = [{ opacity: 1 }, { opacity: 0 }];
-    const animation = candy.animate(frames, { duration, easing: gift ? config.appearance.giftEasing : 'ease-in-out', fill: 'forwards' });
+    const animation = candy.animate(frames, { duration, easing: config.appearance.giftEasing, fill: 'forwards' });
     const valid = await playVisual(animation, duration, token);
     candy.remove(); return valid;
   }
@@ -187,9 +189,23 @@
     el('gameOverScore').textContent = humanName + ' had ' + state.sets.human.length + (state.sets.human.length === 1 ? ' candy set; ' : ' candy sets; ') + opponentName + ' had ' + state.sets.wendy.length + '.';
   }
   function showDialog(title, body, action, callback) {
+    el('overlay').classList.remove('celebrating');
     el('table').inert = true; el('dialogCancel').hidden = true;
     overlayOpen = true; el('overlay').hidden = false; el('dialogTitle').textContent = title;
     el('dialogBody').innerHTML = body; el('dialogAction').textContent = action; closeAction = callback; render(); el('dialogAction').focus();
+  }
+  async function celebrateSet(event, token) {
+    if (token !== generation) return false;
+    const name = config.players[event.player].name, candy = byId.get(event.type);
+    await new Promise(resolve => {
+      showDialog(name + ' won a set!', '<img class="celebration-candy" src="' + escapeMarkup(image(event.type)) + '" alt="' + escapeMarkup(candy.name) + '" draggable="false">' +
+        '<p>Collected all ' + state.copies + ' <b>' + escapeMarkup(candy.name.toUpperCase()) + '</b> candies!</p>', 'Continue', () => {
+        el('overlay').classList.remove('celebrating'); overlayOpen = false; el('overlay').hidden = true; el('table').inert = false;
+        render(); resolve();
+      });
+      el('overlay').classList.add('celebrating');
+    });
+    return token === generation;
   }
   async function proceed(token) {
     if (token !== generation) return;
@@ -209,18 +225,20 @@
       el('message').textContent = 'You have ' + byId.get(type).name + ' — giving one to ' + opponentName + '.';
       if (!await emphasizeGift(el('human-' + type), token)) return;
     }
+    if (actor === 'human' && CandyEngine.count(state.hands.wendy, type)) {
+      if (!await emphasizeGift(el('wendyPile'), token)) return;
+    }
     const events = CandyEngine.request(state, actor, type); WendyPlayer.observe(memory, events);
     const transfer = events.find(event => event.kind === 'transfer');
     if (transfer) {
       el('message').textContent = actor === 'human' ? 'Yes! ' + opponentName + ' gives you one ' + byId.get(type).name + '.' : 'You give ' + opponentName + ' one ' + byId.get(type).name + '.';
       const source = actor === 'human' ? el('wendyPile') : el('human-' + type);
       const destination = actor === 'human' ? el('human-' + type) : el('wendyPile');
-      if (!await fly(type, source, destination, false, token, actor === 'wendy')) return;
+      if (!await fly(type, source, destination, false, token)) return;
       render();
       const completed = events.find(event => event.kind === 'set');
-      if (completed) el('message').textContent = (actor === 'human' ? humanName : opponentName) + ' collected ' + byId.get(type).name + '!';
-      if (!await waitActive(completed ? 1000 : 650, token)) return;
-      if (!state.finished) el('message').textContent = actor === 'human' ? 'Your turn continues. Ask again!' : opponentName + ' gets another request.';
+      if (completed) { if (!await celebrateSet(completed, token)) return; }
+      else if (!await waitActive(650, token)) return;
       proceed(token);
     } else if (state.pending) {
       phase = actor === 'human' ? 'humanFishWait' : 'wendyFishWait';
@@ -236,13 +254,14 @@
     const token = generation, actor = state.pending.actor;
     phase = 'drawing'; render();
     if (actor === 'wendy') { el('message').textContent = 'Go fish, ' + opponentName + '!'; if (!await waitActive(500, token)) return; }
+    if (!await emphasizeGift(el('centerCircle'), token)) return;
     const events = CandyEngine.fish(state), draw = events[0]; WendyPlayer.observe(memory, events);
     el('message').textContent = actor === 'human' ? 'You drew ' + byId.get(draw.type).name + '.' : opponentName + ' draws a candy.';
     if (!await fly(draw.type, el('centerCircle'), actor === 'human' ? el('human-' + draw.type) : el('wendyPile'), actor === 'wendy', token)) return;
     render();
     const completed = events.find(event => event.kind === 'set');
-    if (completed) el('message').textContent = (actor === 'human' ? humanName : opponentName) + ' collected ' + byId.get(completed.type).name + '!';
-    if (!await waitActive(1100, token)) return;
+    if (completed) { if (!await celebrateSet(completed, token)) return; }
+    else if (!await waitActive(1100, token)) return;
     proceed(token);
   }
   el('askButton').addEventListener('click', () => {
@@ -253,6 +272,9 @@
   el('fishButton').addEventListener('click', drawCandy);
   el('gameOverNew').addEventListener('click', startGame);
   el('dialogAction').addEventListener('click', () => closeAction());
+  el('overlay').addEventListener('click', event => {
+    if (event.target === el('overlay') && el('overlay').classList.contains('celebrating')) closeAction();
+  });
   el('rulesButton').addEventListener('click', () => showDialog('How to play',
     ('<p>Choose a candy you hold, then tap <b>Got any?</b></p><p>A match gives you <b>one candy</b> and another request. Three of a kind earns a set.</p><p>No match? Tap the Candy Dish to draw. <b>Fishing always ends your turn.</b> Tell Wendy to Go fish when you have none of her request.</p><p>The round ends when the Candy Dish empties, either hand empties, or all sets are complete. The last draw can still complete a set. Most sets wins. Wendy sees only her hand and public clues.</p>').replaceAll('Wendy', escapeMarkup(opponentName)), 'Back to the table', () => { overlayOpen = false; el('overlay').hidden = true; el('table').inert = false; render(); el('rulesButton').focus(); }));
   el('newGame').addEventListener('click', () => {

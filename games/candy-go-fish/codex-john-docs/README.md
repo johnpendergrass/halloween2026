@@ -4,7 +4,7 @@ Updated October 9, 2026
 
 This folder holds working documentation and supporting development material for the new game in `games/candy-go-fish`.
 
-**Start with [the playable demo update](DEMO-2026-1009.md), then [the October 9 handoff](HANDOFF-2026-1009.md).** The demo update records implementation and John's later empty-hand ending rule. The handoff records the broader interaction design, strategy, and scaffold integration considerations.
+**Start with [Current state and continuation](CURRENT-STATE-2026-1009.md).** It consolidates the implemented rules/UI, configurable names/artwork, endings, animations, strategy behavior and future ideas, scaffold integration, verification, and the local-only checkpoint. It supersedes outdated statements in the [historical demo notes](DEMO-2026-1009.md) and [initial October 9 handoff](HANDOFF-2026-1009.md).
 
 - [Premise](01-premise.md): purpose, scope, and the selected artwork.
 - [Proposed rules](02-rules.md): a complete starting ruleset, including endgame behavior.
