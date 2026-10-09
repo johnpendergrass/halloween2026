@@ -6,10 +6,11 @@ This is the starting document for future work in `games/candy-go-fish`. It descr
 
 ## Checkpoint and publishing
 
-- Current local code checkpoint: **`71250d3bc6188b6f76783d02076d08dcca185023`**, message **Candy Go Fish better, still working**.
+- Current local code checkpoint before the request-bubble experiment: **`3c925a8f89f5a3baa343c4cf76432ba4f2bc7865`**, message **Checkpoint Go Fish Candy Edition before request-flow changes**. Use this to return to the presentation before this experiment.
+- Earlier checkpoint: **`71250d3bc6188b6f76783d02076d08dcca185023`**, message **Candy Go Fish better, still working**.
 - Last pushed version: **`85d6360`**, message **Add Candy Go Fish demo in slot 8**. Tristan is reviewing that earlier version on GitHub Pages.
 - **John explicitly does not want the checkpoint or later work pushed until he instructs us to do so.** Do not treat his earlier push requests as continuing permission.
-- Subsequent strategy notes, documentation, and UI/animation revisions are not included in the code checkpoint. No strategy upgrade has been made.
+- The request-bubble experiment and its verification/documentation are uncommitted changes after the latest checkpoint. No strategy upgrade has been made.
 
 ## Working game rules
 
@@ -36,7 +37,35 @@ The default names/portraits are Player (friendly ghost) and Wendy (friendly witc
 
 The active half brightens gently, and a broad yellow halo highlights its portrait and overlapping name. Each name has a separate adjacent set total, without glow styling. The halo changes with the displayed turn and disappears when the game ends; it does not continually pulse. Input locks during resolution. Rules and the cancellable New Game confirmation pause local presentation; generation tokens discard work from abandoned rounds. Native controls support touch and keyboard, focus is visible, dialogs trap focus, and outcome text uses a live region.
 
+### Request-bubble experiment
+
+During the opponent's animated question, the center continues to show the Candy Dish. The requested candy appears in the center only after the question bubble arrives, before the response hold. A generation-safe presentation flag prevents Rules rendering from revealing it early.
+
+After selecting a candy, the human question now waits four seconds (`appearance.playerRequestHoldMs`) and sends automatically, or sends immediately when tapped. Changing selection restarts the countdown. Local dialogs pause it. Generation/selection checks prevent stale timers and double requests.
+
+Human requests now use the same cream speech box with three rounded corners and one sharper corner. Selecting a held type replaces the old Got any? control with a clickable **[Human name] asks: / Do you have any / [short candy name] / candy image** bubble. Tapping sends that bubble from its position beside the center toward the opponent portrait, shrinking and dissolving at arrival over `requestSpeechMs`. Only after arrival does the request resolve and the opponent reply or transfer candy. Input locks during travel; local dialogs pause it. Names, art scale and rotations are shared with the opponent request bubble.
+
+Latest Go Fish control wording: **You say:** above **NOPE! GO FISH!**. Its fish illustration is removed; the gold emphasis and compact button dimensions remain.
+
+Opponent requests now use separate block lines: **[Opponent name] asks:**, **Do you have any**, **[Candy name]**, then a centered candy image. Names and art come from the configured candy/player data. The Go Fish response control shows **Nope** above **GO FISH!**, retains the small fish illustration and gold emphasis, and uses a smaller 23vw-wide / 22vw-minimum-height shape.
+
+If the human lacks the requested candy, this request bubble and image remain while awaiting Nope / GO FISH!, including after Rules closes. The old “[Opponent] wants … You have none” message is removed. Request art is enlarged via JSON `candyDisplay.speechImageScale: 200`, with width constrained within the bubble; the request bubble is slightly wider to keep text/art clear of the hands.
+
+Latest art revision supersedes that 200% setting: `speechImageScale: 90` now means 90% of the grid artwork dimensions, including each candy's configured enlargement and rotation. A centered clipped art frame beneath the question and a soft shadow give the candy much more presence while keeping it inside the bubble.
+
+A cream quote box labeled with the configured opponent name says “Got any [candy]?” It expands and fades in from the opponent portrait while floating to the existing message position beside the dish/request image. Arrival takes 2.5 seconds. When the human has that candy, the settled quote holds for up to four seconds before automatic handover. Tapping the matching human slot during this hold starts the handover immediately; other slots remain disabled, and repeated taps cannot give extra candies. Requests the human cannot satisfy hold for 0.9 seconds. JSON appearance settings are `requestSpeechMs`, `requestGiveHoldMs`, and `requestHoldMs`. No candy changes hands during arrival. Local dialogs pause the animation; reduced motion uses a brief fade.
+
+When the human asks for a candy the opponent lacks, the same animated quote says “Nope. Tap the candy dish to Go Fish!” Drawing is enabled once the quote arrives. It stays until the human draws, including after opening/closing Rules, and replaces the previous plain fishing instruction. Other interactions keep their existing presentation.
+
+When the human asks for a candy the opponent has, “Yes I do” floats from the opponent portrait first, using `giftTravelMs`, and dissolves at arrival. After this reply finishes, the opponent pile pulses and the candy transfers to the human. No engine transfer or candy travel occurs during the reply. Local dialogs pause the animations.
+
+Real-time browser verification checks arrival, the unchanged hand during the hold, pausing via Rules, and phone placement. `demo-request-speech.png` shows the settled quote. John is reviewing this experiment before further changes.
+
 ## Candy artwork and configuration
+
+Each candy now has `longName` and `shortName` instead of a single `name`. Compact requests/status messages use the short name; celebrations, accessibility labels, and request-image descriptions use the long name. Current example: **Life Savers Gummies / LS Gummies**. Other current names are already brief, so both values match. IDs remain independent of naming.
+
+Short names are curated, at most 16 characters, and unique across the catalog ignoring case, spacing and punctuation. `validate-candy-names.cjs` enforces these requirements when `sync-config.cjs` runs and includes rejection checks. Keep variant distinctions and validate the entire future catalog, not just the ten selected types. Do not automatically truncate names. Review future names on a phone as well as checking their character count. The catalog currently still contains ten types; wider candy selection is future work.
 
 The Go Fish! response is styled as an event: a larger golden button with the witch-hat fish icon, bold GO FISH! text, and a brief entrance pop when it appears. It stays in the right-side action position, with the failed-request explanation to the left of the Candy Dish. Reduced-motion settings suppress the entrance motion. The button remains available only when the human needs to tell the opponent to fish.
 

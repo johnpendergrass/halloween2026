@@ -19,11 +19,16 @@ window.CandyConfig = {
     "thinkingMs": 1000,
     "giftPulseMs": 480,
     "giftTravelMs": 1400,
-    "giftEasing": "cubic-bezier(0.55, 0, 0.85, 0.55)"
+    "giftEasing": "cubic-bezier(0.55, 0, 0.85, 0.55)",
+    "requestSpeechMs": 2500,
+    "requestHoldMs": 900,
+    "requestGiveHoldMs": 4000,
+    "playerRequestHoldMs": 4000
   },
   "candyDisplay": {
     "emptyTransparency": 82,
     "imageScale": 150,
+    "speechImageScale": 90,
     "rotationDegrees": 0,
     "fitWidthPercent": 91,
     "fitHeightPercent": 75,
@@ -53,7 +58,8 @@ window.CandyConfig = {
   "candies": [
     {
       "id": "hundredGrand",
-      "name": "100 Grand",
+      "longName": "100 Grand",
+      "shortName": "100 Grand",
       "image": "100Grand.png",
       "display": {
         "imageScale": 225,
@@ -62,7 +68,8 @@ window.CandyConfig = {
     },
     {
       "id": "threeMusketeers",
-      "name": "3 Musketeers",
+      "longName": "3 Musketeers",
+      "shortName": "3 Musketeers",
       "image": "3Musketeers.png",
       "display": {
         "imageScale": 225,
@@ -71,7 +78,8 @@ window.CandyConfig = {
     },
     {
       "id": "butterfinger",
-      "name": "Butterfinger",
+      "longName": "Butterfinger",
+      "shortName": "Butterfinger",
       "image": "Butterfinger.png",
       "display": {
         "imageScale": 225,
@@ -80,22 +88,26 @@ window.CandyConfig = {
     },
     {
       "id": "dots",
-      "name": "Dots",
+      "longName": "Dots",
+      "shortName": "Dots",
       "image": "Dots.png"
     },
     {
       "id": "lifeSaversGummies",
-      "name": "Life Savers Gummies",
+      "longName": "Life Savers Gummies",
+      "shortName": "LS Gummies",
       "image": "LifeSaversGummies.png"
     },
     {
       "id": "mallomars",
-      "name": "Mallomars",
+      "longName": "Mallomars",
+      "shortName": "Mallomars",
       "image": "Mallomars.png"
     },
     {
       "id": "milkyWay",
-      "name": "Milky Way",
+      "longName": "Milky Way",
+      "shortName": "Milky Way",
       "image": "MilkyWay.png",
       "display": {
         "imageScale": 225,
@@ -104,7 +116,8 @@ window.CandyConfig = {
     },
     {
       "id": "mounds",
-      "name": "Mounds",
+      "longName": "Mounds",
+      "shortName": "Mounds",
       "image": "Mounds.png",
       "display": {
         "imageScale": 225,
@@ -113,12 +126,14 @@ window.CandyConfig = {
     },
     {
       "id": "redVines",
-      "name": "Red Vines",
+      "longName": "Red Vines",
+      "shortName": "Red Vines",
       "image": "RedVines.png"
     },
     {
       "id": "snickers",
-      "name": "Snickers",
+      "longName": "Snickers",
+      "shortName": "Snickers",
       "image": "Snickers.png",
       "display": {
         "imageScale": 225,

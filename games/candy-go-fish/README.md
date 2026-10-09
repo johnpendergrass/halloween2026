@@ -10,6 +10,8 @@ Data and configurable visual settings are in [assets/json](assets/json/README.md
 
 Rules and New Game dialogs suspend presentation. New Game offers cancellation. Reduced motion shortens candy travel. The game reports completed-set totals through `../game-helper.js`; the helper gracefully logs when outside the shell.
 
+Opponent requests float a quoted speech box from the portrait for 2.5 seconds, then hold for four seconds before automatic handover when the human has the candy (0.9 seconds otherwise). A failed human request receives the same animated “Nope. Tap the candy dish to Go Fish!” quote, which remains until drawing. Durations are configurable in JSON. `codex-john-docs/verify-speech.cjs` checks real-time arrival, hold, Rules pause, both interactions, and phone placement. The pre-experiment local Git checkpoint is `3c925a8`.
+
 ## Where this game breaks the requirements, and why
 
 See the authoritative [game requirements](../README%20-%20game%20design%20requirements.md). At John's request, the demo omits a dedicated Pause button despite rule 18 covering automatic movement. There are no timed decisions or penalties. Wendy can finish a bounded run of successful requests while the shell drawer is open, then waits for the human response or the human's turn. The shell provides no drawer notification. Record or formalize this exception before release. Local dialogs still suspend Wendy and animations.
