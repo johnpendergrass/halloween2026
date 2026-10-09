@@ -1,0 +1,79 @@
+// Generated from game-config.json by codex-john-docs/sync-config.cjs.
+window.CandyConfig = {
+  "rules": {
+    "copiesPerType": 3,
+    "initialHandSize": 5
+  },
+  "appearance": {
+    "emptyCandyTransparency": 82,
+    "travelMs": 650,
+    "thinkingMs": 1000
+  },
+  "layout": {
+    "columns": 5,
+    "slotOrder": [
+      "hundredGrand",
+      "threeMusketeers",
+      "butterfinger",
+      "dots",
+      "lifeSaversGummies",
+      "mallomars",
+      "milkyWay",
+      "mounds",
+      "redVines",
+      "snickers"
+    ]
+  },
+  "candies": [
+    {
+      "id": "hundredGrand",
+      "name": "100 Grand",
+      "image": "100Grand.png"
+    },
+    {
+      "id": "threeMusketeers",
+      "name": "3 Musketeers",
+      "image": "3Musketeers.png"
+    },
+    {
+      "id": "butterfinger",
+      "name": "Butterfinger",
+      "image": "Butterfinger.png"
+    },
+    {
+      "id": "dots",
+      "name": "Dots",
+      "image": "Dots.png"
+    },
+    {
+      "id": "lifeSaversGummies",
+      "name": "Life Savers Gummies",
+      "image": "LifeSaversGummies.png"
+    },
+    {
+      "id": "mallomars",
+      "name": "Mallomars",
+      "image": "Mallomars.png"
+    },
+    {
+      "id": "milkyWay",
+      "name": "Milky Way",
+      "image": "MilkyWay.png"
+    },
+    {
+      "id": "mounds",
+      "name": "Mounds",
+      "image": "Mounds.png"
+    },
+    {
+      "id": "redVines",
+      "name": "Red Vines",
+      "image": "RedVines.png"
+    },
+    {
+      "id": "snickers",
+      "name": "Snickers",
+      "image": "Snickers.png"
+    }
+  ]
+};

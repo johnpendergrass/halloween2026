@@ -123,7 +123,7 @@
     },
     {
       "folder_name": "game8",
-      "goes_in_slot": 8,
+      "goes_in_slot": "",
       "title": "Game 8",
       "short_title": "Game 8",
       "icon": "",
@@ -132,6 +132,19 @@
       "date": "",
       "description": "Placeholder for a game not written yet.",
       "how_to_play": "",
+      "settings": []
+    },
+    {
+      "folder_name": "candy-go-fish",
+      "goes_in_slot": 8,
+      "title": "Candy Go Fish",
+      "short_title": "Go Fish",
+      "icon": "assets/halloween-fish.svg",
+      "designer": "John and Codex",
+      "credits": "Gameplay and candy artwork supplied by John; demo and fish icon by Codex.",
+      "date": "October 9, 2026",
+      "description": "A friendly candy-table showdown with Wendy. Collect three of a kind to claim a set!",
+      "how_to_play": "Select a candy you hold, then tap Got any? A match gives you one candy and another request. Otherwise, tap the pile to fish; drawing always ends your turn. Tell Wendy to Go fish when you have none of her request. Most sets wins when either hand empties or all sets are collected.",
       "settings": []
     }
   ],

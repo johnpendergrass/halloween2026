@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Candy Go Fish</title>
+  <link rel="stylesheet" href="./candy-go-fish.css">
+</head>
+<body>
+  <main id="table">
+    <header class="game-bar"><button id="newGame">New game</button><div id="score">YOU 0 · WENDY 0</div><button id="rulesButton">Rules</button></header>
+    <section id="wendyArea" class="player-area">
+      <div class="player-heading"><div><span class="eyebrow">YOUR OPPONENT</span><h2>Wendy</h2></div><div id="wendyPile" class="hand-pile" aria-label="Wendy's hidden hand"><span class="wrapped">✦</span><span class="wrapped">✦</span><span class="wrapped">✦</span></div><div class="player-status"><strong id="wendyTurn" class="turn-label">WENDY'S TURN</strong><span id="wendyCount">Holding 5 candies</span></div></div>
+      <div id="wendySlots" class="slots" aria-label="Wendy's completed sets"></div>
+    </section>
+    <section class="center-area">
+      <div id="message" role="status" aria-live="polite">Collect three of a kind.</div>
+      <div class="center-controls"><button id="askButton">Got any?<span>ASK WENDY</span></button><button id="centerCircle" aria-label="Draw a candy" disabled></button><button id="fishButton">Go fish!<span>TELL WENDY</span></button></div>
+      <div id="instruction">Choose a candy from your hand</div>
+    </section>
+    <section id="humanArea" class="player-area">
+      <div id="humanSlots" class="slots" aria-label="Your candy hand"></div>
+      <div class="player-heading human-heading"><div><span class="eyebrow">YOUR HAND</span><h2>You</h2></div><div class="player-status"><strong id="humanTurn" class="turn-label">YOUR TURN</strong><span id="humanCount">Holding 5 candies</span></div></div>
+    </section>
+  </main>
+  <div id="overlay" class="overlay"><section class="dialog" aria-modal="true" role="dialog" aria-labelledby="dialogTitle"><span class="eyebrow">A LITTLE FRIENDLY COMPETITION</span><h1 id="dialogTitle">Candy<br>Go Fish</h1><div id="dialogBody"><p>Ask Wendy for candies. Collect three of a kind to claim a set.</p><p>Pick a candy you hold, then tap <b>Got any?</b> A match gives you one candy and another request. Go fish? Draw once, then switch turns.</p></div><button id="dialogAction" class="primary">Let's play</button><button id="dialogCancel" class="secondary" hidden>Keep playing</button></section></div>
+  <script src="../game-helper.js"></script>
+  <script src="./assets/json/config-data.js"></script>
+  <script src="./game-engine.js"></script>
+  <script src="./computer-player.js"></script>
+  <script src="./candy-go-fish.js"></script>
+</body>
+</html>
