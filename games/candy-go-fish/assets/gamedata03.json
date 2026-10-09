@@ -1,0 +1,1474 @@
+{
+  "schemaVersion": 2,
+  "status": "reviewed-catalog-and-profile-proposal",
+  "title": "Candy Swap — Game Data 03",
+  "identityField": "name",
+  "graphicPathBase": "game-directory",
+  "defaultGraphic": "./assets/candybars/default.png",
+  "defaultImageSize": {
+    "width": 500,
+    "height": 500
+  },
+  "rules": {
+    "maximumAttributesPerItem": 3,
+    "sweetnessIsAssumed": true,
+    "unlistedPreferencesAreNeutral": true,
+    "baseItemValue": 1,
+    "preferenceWeights": {
+      "favorite": 2,
+      "like": 1,
+      "dislike": -1,
+      "strongDislike": -2
+    },
+    "itemValue": "Start each item at +1, then add all matching preference adjustments. Unlisted attributes add zero.",
+    "satisfactionScale": {
+      "minimum": null,
+      "maximum": null,
+      "mapping": "raw-total"
+    },
+    "notes": "Base +1 plus matching preference adjustments; raw totals, no timer. Only displayed attributes score, with no implied parent matching. Sweetness assumed for candy. Low Sugar currently requires explicit sugar-free packaging. No current profile uses strong dislikes."
+  },
+  "attributes": [
+    {
+      "id": "chocolate",
+      "label": "Chocolate",
+      "description": "Chocolate or chocolatey coating is a defining taste.",
+      "itemCount": 26,
+      "preferenceUse": "broad"
+    },
+    {
+      "id": "fruity",
+      "label": "Fruity",
+      "description": "Fruit flavor; an assorted fruit package counts once, without individual flavor tags.",
+      "itemCount": 19,
+      "preferenceUse": "broad"
+    },
+    {
+      "id": "sour",
+      "label": "Sour",
+      "description": "Explicitly sour variety; tangy fruit candy does not automatically qualify.",
+      "itemCount": 2,
+      "preferenceUse": "specialty"
+    },
+    {
+      "id": "mint",
+      "label": "Mint",
+      "description": "Recognizable mint flavor; fruit products called mints do not qualify.",
+      "itemCount": 4,
+      "preferenceUse": "specialty"
+    },
+    {
+      "id": "chewy",
+      "label": "Chewy",
+      "description": "Soft or chewy non-gum candy; Candy Corn is a deliberate broad texture simplification.",
+      "itemCount": 14,
+      "preferenceUse": "broad"
+    },
+    {
+      "id": "hard",
+      "label": "Hard",
+      "description": "Sucking/lollipop-style hard candy, rather than a crisp candy meant to crumble.",
+      "itemCount": 8,
+      "preferenceUse": "broad"
+    },
+    {
+      "id": "crunchy",
+      "label": "Crunchy",
+      "description": "A defining crisp/crunchy texture: wafers, candy shells, crisped rice, nuts, or popcorn.",
+      "itemCount": 11,
+      "preferenceUse": "broad"
+    },
+    {
+      "id": "peanut",
+      "label": "Peanut",
+      "description": "Peanuts or peanut butter; Nestlé Nuts also uses this game tag by explicit user direction. Not a package ingredient claim.",
+      "itemCount": 9,
+      "preferenceUse": "broad"
+    },
+    {
+      "id": "caramel",
+      "label": "Caramel",
+      "description": "A recognizable caramel component; ordinary sugar is not caramel.",
+      "itemCount": 9,
+      "preferenceUse": "broad"
+    },
+    {
+      "id": "cookie",
+      "label": "Cookie",
+      "description": "Cookies or a cookie/biscuit center. Kit Kat wafer uses Crunchy instead.",
+      "itemCount": 5,
+      "preferenceUse": "specialty"
+    },
+    {
+      "id": "gum",
+      "label": "Gum",
+      "description": "Chewing or bubble gum. Omit Chewy to avoid redundant gum texture scoring.",
+      "itemCount": 6,
+      "preferenceUse": "broad"
+    },
+    {
+      "id": "toy",
+      "label": "Toy",
+      "description": "Game shorthand for non-food Halloween treats, including stationery.",
+      "itemCount": 3,
+      "preferenceUse": "specialty"
+    },
+    {
+      "id": "coconut",
+      "label": "Coconut",
+      "description": "Recognizable coconut filling; coconut oil alone does not qualify.",
+      "itemCount": 4,
+      "preferenceUse": "specialty"
+    },
+    {
+      "id": "rice",
+      "label": "Rice",
+      "description": "Crisped rice in chocolate candy, rather than rice flavor. No implied Crunchy score.",
+      "itemCount": 3,
+      "preferenceUse": "specialty"
+    },
+    {
+      "id": "lowSugar",
+      "label": "Low Sugar",
+      "description": "Explicitly sugar-free or zero-sugar varieties. Never infer from serving size or non-food status.",
+      "itemCount": 6,
+      "preferenceUse": "broad"
+    },
+    {
+      "id": "almond",
+      "label": "Almond",
+      "description": "Whole almond filling; a precise, currently rare nut trait.",
+      "itemCount": 1,
+      "preferenceUse": "specialty"
+    },
+    {
+      "id": "marshmallow",
+      "label": "Marshmallow",
+      "description": "Marshmallow candy or filling; omit redundant Chewy when this identifies the texture.",
+      "itemCount": 3,
+      "preferenceUse": "specialty"
+    },
+    {
+      "id": "cherry",
+      "label": "Cherry",
+      "description": "A specifically cherry-flavored game item. No implied Fruity score.",
+      "itemCount": 1,
+      "preferenceUse": "specialty"
+    },
+    {
+      "id": "milk",
+      "label": "Milk",
+      "description": "A distinct milk or malted-milk center, rather than ordinary milk chocolate.",
+      "itemCount": 1,
+      "preferenceUse": "specialty"
+    }
+  ],
+  "reservedAttributes": [],
+  "items": [
+    {
+      "name": "100Grand",
+      "displayName": "100 Grand",
+      "fileName": "100Grand.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "chocolate",
+        "caramel",
+        "rice"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/100Grand.png",
+      "enabled": true,
+      "notes": "Three-tag limit prioritizes Chocolate, Caramel, Rice. Also crunchy in reality; omitted traits never score implicitly."
+    },
+    {
+      "name": "3Musketeers",
+      "displayName": "3 Musketeers",
+      "fileName": "3Musketeers.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "chocolate"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/3Musketeers.png",
+      "enabled": true,
+      "notes": "Chocolate nougat; no Caramel. Nougat omitted rather than adding a narrow preference category.",
+      "sources": [
+        "https://www.3musketeers.com/our-products"
+      ]
+    },
+    {
+      "name": "Airheads",
+      "displayName": "Airheads",
+      "fileName": "Airheads.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "fruity",
+        "chewy"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/Airheads.png",
+      "enabled": true,
+      "notes": "Generic Airheads game item; Bites artwork is representative. No Sour tag for the regular item.",
+      "sources": [
+        "https://www.airheads.com/candy/"
+      ]
+    },
+    {
+      "name": "AlmondJoy",
+      "displayName": "Almond Joy",
+      "fileName": "AlmondJoy.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "chocolate",
+        "coconut",
+        "almond"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/AlmondJoy.png",
+      "enabled": true,
+      "notes": "Chocolate, Coconut, Almond. Almond is not Peanut.",
+      "sources": [
+        "https://www.hersheyland.com/almond-joy-mounds"
+      ]
+    },
+    {
+      "name": "BabyRuth",
+      "displayName": "Baby Ruth",
+      "fileName": "BabyRuth.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "chocolate",
+        "peanut",
+        "caramel"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/BabyRuth.png",
+      "enabled": true,
+      "sources": [
+        "https://www.ferrerofoodservice.com/us/en/brands/babyruth/babyruth-minis-bulk-30lb"
+      ]
+    },
+    {
+      "name": "Butterfinger",
+      "displayName": "Butterfinger",
+      "fileName": "Butterfinger.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "chocolate",
+        "peanut",
+        "crunchy"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/Butterfinger.png",
+      "enabled": true,
+      "sources": [
+        "https://www.butterfinger.com/"
+      ]
+    },
+    {
+      "name": "CandyCorn",
+      "displayName": "Candy Corn",
+      "fileName": "CandyCorn.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "chewy"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/CandyCorn.png",
+      "enabled": true,
+      "notes": "Soft candy grouped under Chewy for gameplay; not a claim that its texture equals gummy candy."
+    },
+    {
+      "name": "ChocolateChipCookie",
+      "displayName": "Chocolate-chip Cookie",
+      "fileName": "ChocolateChipCookie.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "cookie",
+        "chocolate"
+      ],
+      "kind": "cookie",
+      "graphic": "./assets/candybars/ChocolateChipCookie.png",
+      "enabled": true
+    },
+    {
+      "name": "GhostCookie",
+      "displayName": "Ghost Cookie",
+      "fileName": "GhostCookie.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "cookie"
+      ],
+      "kind": "cookie",
+      "graphic": "./assets/candybars/GhostCookie.png",
+      "enabled": true,
+      "notes": "Pictured ghost-pattern cookie. Decoration does not establish an additional flavor."
+    },
+    {
+      "name": "PumpkinCookie",
+      "displayName": "Pumpkin Cookie",
+      "fileName": "PumpkinCookie.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "cookie"
+      ],
+      "kind": "cookie",
+      "graphic": "./assets/candybars/PumpkinCookie.png",
+      "enabled": true,
+      "notes": "Pumpkin-shaped cookie; no pumpkin flavor or chocolate decoration assumed without a recipe."
+    },
+    {
+      "name": "Crayons",
+      "displayName": "Crayons",
+      "fileName": "Crayons.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "toy"
+      ],
+      "kind": "toy",
+      "graphic": "./assets/candybars/Crayons.png",
+      "enabled": true
+    },
+    {
+      "name": "Dots",
+      "displayName": "Dots",
+      "fileName": "Dots.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "fruity",
+        "chewy"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/Dots.png",
+      "enabled": true
+    },
+    {
+      "name": "Eraser",
+      "displayName": "Eraser",
+      "fileName": "Eraser.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "toy"
+      ],
+      "kind": "toy",
+      "graphic": "./assets/candybars/Eraser.png",
+      "enabled": true
+    },
+    {
+      "name": "DubbleBubble",
+      "displayName": "Dubble Bubble",
+      "fileName": "DubbleBubble.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "gum"
+      ],
+      "kind": "gum",
+      "graphic": "./assets/candybars/DubbleBubble.png",
+      "enabled": true
+    },
+    {
+      "name": "Doublemint",
+      "displayName": "Doublemint",
+      "fileName": "Doublemint.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "gum",
+        "mint"
+      ],
+      "kind": "gum",
+      "graphic": "./assets/candybars/Doublemint.png",
+      "enabled": true
+    },
+    {
+      "name": "HubbaBubba",
+      "displayName": "Hubba Bubba",
+      "fileName": "HubbaBubba.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "gum"
+      ],
+      "kind": "gum",
+      "graphic": "./assets/candybars/HubbaBubba.png",
+      "enabled": true,
+      "notes": "Generic bubble gum game item; pictured fruit flavor does not control its tags."
+    },
+    {
+      "name": "JuicyFruit",
+      "displayName": "Juicy Fruit",
+      "fileName": "JuicyFruit.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "gum",
+        "fruity"
+      ],
+      "kind": "gum",
+      "graphic": "./assets/candybars/JuicyFruit.png",
+      "enabled": true
+    },
+    {
+      "name": "Orbit",
+      "displayName": "Orbit",
+      "fileName": "Orbit.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "gum",
+        "mint",
+        "lowSugar"
+      ],
+      "kind": "gum",
+      "graphic": "./assets/candybars/Orbit.png",
+      "enabled": true,
+      "notes": "Generic mint-style, sugar-free Orbit game item; specific Bubblemint wording is not its program identity.",
+      "sources": [
+        "https://www.orbitgum.com/orbit-bubblemint-gum"
+      ]
+    },
+    {
+      "name": "Trident",
+      "displayName": "Trident Gum",
+      "fileName": "Trident.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "gum",
+        "lowSugar"
+      ],
+      "kind": "gum",
+      "graphic": "./assets/candybars/Trident.png",
+      "enabled": true,
+      "notes": "Generic Trident game item. Gum and Low Sugar; no watermelon or Mint tag inferred from representative artwork.",
+      "sources": [
+        "https://www.tridentgum.com/products/trident-watermelon-twist-14-pieces"
+      ]
+    },
+    {
+      "name": "HariboGoldbears",
+      "displayName": "Haribo Goldbears",
+      "fileName": "HariboGoldbears.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "fruity",
+        "chewy"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/HariboGoldbears.png",
+      "enabled": true
+    },
+    {
+      "name": "HersheysMilkChocolate",
+      "displayName": "Hershey's Milk Chocolate",
+      "fileName": "HersheysMilkChocolate.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "chocolate"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/HersheysMilkChocolate.png",
+      "enabled": true
+    },
+    {
+      "name": "JollyRancher",
+      "displayName": "Jolly Rancher",
+      "fileName": "JollyRancher.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "fruity",
+        "hard"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/JollyRancher.png",
+      "enabled": true
+    },
+    {
+      "name": "JuniorMints",
+      "displayName": "Junior Mints",
+      "fileName": "JuniorMints.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "chocolate",
+        "mint"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/JuniorMints.png",
+      "enabled": true,
+      "sources": [
+        "https://tootsie.com/product-brand/junior-mints/"
+      ]
+    },
+    {
+      "name": "KitKat",
+      "displayName": "Kit Kat",
+      "fileName": "KitKat.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "chocolate",
+        "crunchy"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/KitKat.png",
+      "enabled": true
+    },
+    {
+      "name": "Krackel",
+      "displayName": "Krackel",
+      "fileName": "Krackel.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "chocolate",
+        "rice",
+        "crunchy"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/Krackel.png",
+      "enabled": true,
+      "sources": [
+        "https://www.prnewswire.com/news-releases/the-hershey-company-announces-a-big-comeback-krackel-bar-is-back-the-classic-milk-chocolate-with-crisped-rice-bar-is-once-again-available-in-a-full-size-offering-259944271.html"
+      ]
+    },
+    {
+      "name": "LifeSaversGummies",
+      "displayName": "Life Savers Gummies",
+      "fileName": "LifeSaversGummies.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "fruity",
+        "chewy"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/LifeSaversGummies.png",
+      "enabled": true
+    },
+    {
+      "name": "LifeSavers",
+      "displayName": "Life Savers",
+      "fileName": "LifeSavers.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "fruity",
+        "hard"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/LifeSavers.png",
+      "enabled": true
+    },
+    {
+      "name": "MarsBar",
+      "displayName": "Mars Bar",
+      "fileName": "MarsBar.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "chocolate",
+        "caramel"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/MarsBar.png",
+      "enabled": true
+    },
+    {
+      "name": "MentosFruit",
+      "displayName": "Mentos Fruit",
+      "fileName": "MentosFruit.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "fruity",
+        "chewy"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/MentosFruit.png",
+      "enabled": true
+    },
+    {
+      "name": "MilkyWay",
+      "displayName": "Milky Way",
+      "fileName": "MilkyWay.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "chocolate",
+        "caramel"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/MilkyWay.png",
+      "enabled": true,
+      "notes": "Assumed US-style Milky Way with caramel, matching the pictured branding. Regional varieties can differ.",
+      "sources": [
+        "https://www.milkywaybar.com/"
+      ]
+    },
+    {
+      "name": "MAndMsPeanut",
+      "displayName": "Peanut M&M's",
+      "fileName": "MAndMsPeanut.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "chocolate",
+        "peanut",
+        "crunchy"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/MAndMsPeanut.png",
+      "enabled": true
+    },
+    {
+      "name": "MAndMsMilkChocolate",
+      "displayName": "Milk Chocolate M&M's",
+      "fileName": "MAndMsMilkChocolate.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "chocolate",
+        "crunchy"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/MAndMsMilkChocolate.png",
+      "enabled": true
+    },
+    {
+      "name": "Mounds",
+      "displayName": "Mounds",
+      "fileName": "Mounds.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "chocolate",
+        "coconut"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/Mounds.png",
+      "enabled": true,
+      "sources": [
+        "https://www.hersheyland.com/almond-joy-mounds"
+      ]
+    },
+    {
+      "name": "MrGoodbar",
+      "displayName": "Mr. Goodbar",
+      "fileName": "MrGoodbar.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "chocolate",
+        "peanut"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/MrGoodbar.png",
+      "enabled": true,
+      "sources": [
+        "https://www.hersheyland.com/products/hersheys-mr-goodbar-chocolate-with-peanuts-candy-bar-1-75-oz.html"
+      ]
+    },
+    {
+      "name": "Nerds",
+      "displayName": "Nerds",
+      "fileName": "Nerds.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "fruity",
+        "crunchy"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/Nerds.png",
+      "enabled": true,
+      "notes": "Fruity and Crunchy; reserve Sour for explicitly sour varieties."
+    },
+    {
+      "name": "NestleCrunch",
+      "displayName": "Nestlé Crunch",
+      "fileName": "NestleCrunch.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "chocolate",
+        "rice",
+        "crunchy"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/NestleCrunch.png",
+      "enabled": true,
+      "notes": "Legacy Nestlé wrapper retained; no change to the pictured product branding.",
+      "sources": [
+        "https://www.crunchbar.com/products/crunch-bar"
+      ]
+    },
+    {
+      "name": "NestleNuts",
+      "displayName": "Nestlé Nuts",
+      "fileName": "NestleNuts.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "chocolate",
+        "peanut",
+        "caramel"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/NestleNuts.png",
+      "enabled": true,
+      "notes": "John explicitly assigns Peanut for the game. Representative real-world product uses hazelnuts; game tags describe the intended game item, not the package recipe.",
+      "sources": [
+        "https://www.nestle.de/marken/alle-marken/nuts"
+      ]
+    },
+    {
+      "name": "PayDay",
+      "displayName": "PayDay",
+      "fileName": "PayDay.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "peanut",
+        "caramel"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/PayDay.png",
+      "enabled": true
+    },
+    {
+      "name": "PlantersPeanuts",
+      "displayName": "Planters Peanuts",
+      "fileName": "PlantersPeanuts.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "peanut",
+        "crunchy"
+      ],
+      "kind": "snack",
+      "graphic": "./assets/candybars/PlantersPeanuts.png",
+      "enabled": true
+    },
+    {
+      "name": "PlayDoh",
+      "displayName": "Play-Doh",
+      "fileName": "PlayDoh.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "toy"
+      ],
+      "kind": "toy",
+      "graphic": "./assets/candybars/PlayDoh.png",
+      "enabled": true
+    },
+    {
+      "name": "Popcorn",
+      "displayName": "Popcorn",
+      "fileName": "Popcorn.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "crunchy"
+      ],
+      "kind": "snack",
+      "graphic": "./assets/candybars/Popcorn.png",
+      "enabled": true,
+      "notes": "Plain popcorn assumed; image does not establish caramel coating or a low-sugar claim."
+    },
+    {
+      "name": "RedVines",
+      "displayName": "Red Vines Original Red",
+      "fileName": "RedVines.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "chewy"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/RedVines.png",
+      "enabled": true,
+      "notes": "Original Red variety. Do not infer cherry or black-licorice flavor from its red color or shape; Chewy alone is the conservative assignment.",
+      "sources": [
+        "https://redvines.com/faq/"
+      ]
+    },
+    {
+      "name": "ReesesPeanutButterCups",
+      "displayName": "Reese's Peanut Butter Cups",
+      "fileName": "ReesesPeanutButterCups.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "chocolate",
+        "peanut"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/ReesesPeanutButterCups.png",
+      "enabled": true
+    },
+    {
+      "name": "RingPop",
+      "displayName": "Ring Pop",
+      "fileName": "RingPop.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "fruity",
+        "hard"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/RingPop.png",
+      "enabled": true,
+      "notes": "Generic fruity hard candy item; pictured blue raspberry variety is representative."
+    },
+    {
+      "name": "SkittlesSour",
+      "displayName": "Skittles Sour",
+      "fileName": "SkittlesSour.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "fruity",
+        "sour",
+        "chewy"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/SkittlesSour.png",
+      "enabled": true
+    },
+    {
+      "name": "SkittlesOriginal",
+      "displayName": "Skittles Original",
+      "fileName": "SkittlesOriginal.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "fruity",
+        "chewy"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/SkittlesOriginal.png",
+      "enabled": true
+    },
+    {
+      "name": "Smarties",
+      "displayName": "Smarties",
+      "fileName": "Smarties.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "fruity",
+        "crunchy"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/Smarties.png",
+      "enabled": true,
+      "notes": "US tablet roll, not chocolate Smarties. Crunchy broadly represents its crumbly texture."
+    },
+    {
+      "name": "Snickers",
+      "displayName": "Snickers",
+      "fileName": "Snickers.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "chocolate",
+        "peanut",
+        "caramel"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/Snickers.png",
+      "enabled": true
+    },
+    {
+      "name": "SourPatchKids",
+      "displayName": "Sour Patch Kids",
+      "fileName": "SourPatchKids.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "fruity",
+        "sour",
+        "chewy"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/SourPatchKids.png",
+      "enabled": true
+    },
+    {
+      "name": "Starburst",
+      "displayName": "Starburst",
+      "fileName": "Starburst.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "fruity",
+        "chewy"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/Starburst.png",
+      "enabled": true
+    },
+    {
+      "name": "TicTacFruit",
+      "displayName": "Tic Tac Fruit",
+      "fileName": "TicTacFruit.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "fruity",
+        "hard"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/TicTacFruit.png",
+      "enabled": true
+    },
+    {
+      "name": "Twix",
+      "displayName": "Twix",
+      "fileName": "Twix.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "chocolate",
+        "cookie",
+        "caramel"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/Twix.png",
+      "enabled": true
+    },
+    {
+      "name": "Twizzlers",
+      "displayName": "Twizzlers",
+      "fileName": "Twizzlers.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "fruity",
+        "chewy"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/Twizzlers.png",
+      "enabled": true
+    },
+    {
+      "name": "JetPuffedToastedCoconutMarshmallows",
+      "displayName": "Jet-Puffed Toasted Coconut Marshmallows",
+      "fileName": "JetPuffedToastedCoconutMarshmallows.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "marshmallow",
+        "coconut"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/JetPuffedToastedCoconutMarshmallows.png",
+      "enabled": true,
+      "notes": "Source filename said Toasted Marshmallow; package identifies Toasted Coconut marshmallows. No chocolate coating on this pictured variety."
+    },
+    {
+      "name": "LifeSaversSugarFree",
+      "displayName": "Life Savers Sugar Free",
+      "fileName": "LifeSaversSugarFree.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "fruity",
+        "hard",
+        "lowSugar"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/LifeSaversSugarFree.png",
+      "enabled": true,
+      "sources": [
+        "https://www.life-savers.com/"
+      ]
+    },
+    {
+      "name": "LifeSaversMintSugarFree",
+      "displayName": "Life Savers Pep-O-Mint Sugar Free",
+      "fileName": "LifeSaversMintSugarFree.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "mint",
+        "hard",
+        "lowSugar"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/LifeSaversMintSugarFree.png",
+      "enabled": true,
+      "notes": "Pep-O-Mint variety shown. Mint, Hard, Low Sugar; no Fruity tag.",
+      "sources": [
+        "https://www.life-savers.com/"
+      ]
+    },
+    {
+      "name": "Mallomars",
+      "displayName": "Mallomars",
+      "fileName": "Mallomars.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "chocolate",
+        "marshmallow",
+        "cookie"
+      ],
+      "kind": "cookie",
+      "graphic": "./assets/candybars/Mallomars.png",
+      "enabled": true,
+      "sources": [
+        "https://www.snackworks.com/products/mallomars-pure-chocolate-cookies-82-oz/"
+      ]
+    },
+    {
+      "name": "Ohasis",
+      "displayName": "Oh!asis Coconut Patties",
+      "fileName": "Ohasis.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "chocolate",
+        "coconut"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/Ohasis.png",
+      "enabled": true,
+      "notes": "Generic coconut-patty game item. Limited-edition peppermint artwork is representative; no Mint tag assigned.",
+      "sources": [
+        "https://ohasis.com/"
+      ]
+    },
+    {
+      "name": "Peeps",
+      "displayName": "Peeps",
+      "fileName": "Peeps.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "marshmallow"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/Peeps.png",
+      "enabled": true,
+      "notes": "Generic marshmallow Peeps game item, consistent with representative-artwork policy. The pictured chocolate-covered variety does not add Chocolate to this generic item.",
+      "sources": [
+        "https://www.peepsbrand.com/products/classic-marshmallow-chicks/"
+      ]
+    },
+    {
+      "name": "TootsiePopsCherry",
+      "displayName": "Tootsie Pops Cherry",
+      "fileName": "TootsiePopsCherry.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "cherry",
+        "hard",
+        "chocolate"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/TootsiePopsCherry.png",
+      "enabled": true,
+      "notes": "Cherry outer hard candy with chocolatey Tootsie Roll center. Three-tag cap prioritizes Cherry, Hard, Chocolate; Fruity and Chewy do not score implicitly.",
+      "sources": [
+        "https://shop.tootsie.com/products/tootsie-pops-cherry-flavor"
+      ]
+    },
+    {
+      "name": "TootsieRoll",
+      "displayName": "Tootsie Roll",
+      "fileName": "TootsieRoll.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "chocolate",
+        "chewy"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/TootsieRoll.png",
+      "enabled": true,
+      "sources": [
+        "https://shop.tootsie.com/collections/best-sellers/products/tootsie-roll-bulk-30-lb-box"
+      ]
+    },
+    {
+      "name": "TwizzlersSugarFree",
+      "displayName": "Twizzlers Sugar Free",
+      "fileName": "TwizzlersSugarFree.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "fruity",
+        "chewy",
+        "lowSugar"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/TwizzlersSugarFree.png",
+      "enabled": true,
+      "sources": [
+        "https://www.hersheyland.com/brands/zero-sugar.html"
+      ]
+    },
+    {
+      "name": "WerthersSugarFree",
+      "displayName": "Werther's Original Sugar Free",
+      "fileName": "WerthersSugarFree.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "caramel",
+        "hard",
+        "lowSugar"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/WerthersSugarFree.png",
+      "enabled": true,
+      "sources": [
+        "https://www.werthers-original.us/en/products/product-overview"
+      ]
+    },
+    {
+      "name": "Whoppers",
+      "displayName": "Whoppers",
+      "fileName": "Whoppers.png",
+      "imageSize": {
+        "width": 500,
+        "height": 500
+      },
+      "attributes": [
+        "chocolate",
+        "crunchy",
+        "milk"
+      ],
+      "kind": "candy",
+      "graphic": "./assets/candybars/Whoppers.png",
+      "enabled": true,
+      "notes": "Chocolatey coating with crunchy malted-milk center. Milk represents the distinct malted-milk taste, not all milk-containing chocolate.",
+      "sources": [
+        "https://www.hersheyland.com/whoppers"
+      ]
+    }
+  ],
+  "characters": [
+    {
+      "id": "jing",
+      "name": "Jing",
+      "profileStatus": "proposed",
+      "preferences": [
+        {
+          "attribute": "sour",
+          "level": "favorite"
+        },
+        {
+          "attribute": "cookie",
+          "level": "like"
+        },
+        {
+          "attribute": "mint",
+          "level": "dislike"
+        }
+      ],
+      "notes": "Retained demo preferences for comparison; see candidateProfiles for the new broad-pool proposal."
+    },
+    {
+      "id": "yuze",
+      "name": "Yuze",
+      "profileStatus": "proposed",
+      "preferences": [
+        {
+          "attribute": "chewy",
+          "level": "favorite"
+        },
+        {
+          "attribute": "chocolate",
+          "level": "like"
+        },
+        {
+          "attribute": "gum",
+          "level": "dislike"
+        }
+      ],
+      "notes": "Retained demo preferences for comparison; see candidateProfiles for the new broad-pool proposal."
+    },
+    {
+      "id": "andries",
+      "name": "Andries",
+      "profileStatus": "proposed",
+      "preferences": [
+        {
+          "attribute": "hard",
+          "level": "favorite"
+        },
+        {
+          "attribute": "gum",
+          "level": "like"
+        },
+        {
+          "attribute": "peanut",
+          "level": "dislike"
+        }
+      ],
+      "notes": "Retained demo preferences for comparison; see candidateProfiles for the new broad-pool proposal."
+    },
+    {
+      "id": "noor",
+      "name": "Noor",
+      "profileStatus": "proposed",
+      "preferences": [
+        {
+          "attribute": "fruity",
+          "level": "favorite"
+        },
+        {
+          "attribute": "crunchy",
+          "level": "like"
+        },
+        {
+          "attribute": "sour",
+          "level": "dislike"
+        }
+      ],
+      "notes": "Retained demo preferences for comparison; see candidateProfiles for the new broad-pool proposal."
+    }
+  ],
+  "candidateProfiles": [
+    {
+      "id": "jing",
+      "name": "Jing",
+      "profileStatus": "proposal-not-active",
+      "preferences": [
+        {
+          "attribute": "chocolate",
+          "level": "favorite"
+        },
+        {
+          "attribute": "cookie",
+          "level": "like"
+        },
+        {
+          "attribute": "mint",
+          "level": "dislike"
+        }
+      ]
+    },
+    {
+      "id": "yuze",
+      "name": "Yuze",
+      "profileStatus": "proposal-not-active",
+      "preferences": [
+        {
+          "attribute": "chewy",
+          "level": "favorite"
+        },
+        {
+          "attribute": "caramel",
+          "level": "like"
+        },
+        {
+          "attribute": "gum",
+          "level": "dislike"
+        }
+      ]
+    },
+    {
+      "id": "andries",
+      "name": "Andries",
+      "profileStatus": "proposal-not-active",
+      "preferences": [
+        {
+          "attribute": "crunchy",
+          "level": "favorite"
+        },
+        {
+          "attribute": "gum",
+          "level": "like"
+        },
+        {
+          "attribute": "peanut",
+          "level": "dislike"
+        }
+      ]
+    },
+    {
+      "id": "noor",
+      "name": "Noor",
+      "profileStatus": "proposal-not-active",
+      "preferences": [
+        {
+          "attribute": "fruity",
+          "level": "favorite"
+        },
+        {
+          "attribute": "toy",
+          "level": "like"
+        },
+        {
+          "attribute": "sour",
+          "level": "dislike"
+        }
+      ]
+    }
+  ],
+  "attributeBasis": "game-design",
+  "artworkIsRepresentative": true,
+  "suggestedAdditions": [
+    {
+      "name": "Warheads",
+      "displayName": "Warheads Hard Candy",
+      "attributes": [
+        "fruity",
+        "sour",
+        "hard"
+      ],
+      "status": "needs-artwork",
+      "source": "https://warheads.com/warheads/"
+    }
+  ]
+}

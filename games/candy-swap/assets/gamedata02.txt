@@ -1,0 +1,105 @@
+CANDY SWAP - GAME DATA 02
+Proposal - 2026-10-07
+Companion data file: gamedata02.json
+
+SIMPLE GAME RULES
+-----------------
+Candy is assumed sweet; Sweet is not a scoring attribute.
+Fruity and Sour describe distinctive flavors, not an absence of sweetness.
+Use 1-3 defining attributes per item; never add filler attributes.
+Candy Bar is not a scoring attribute. Crispy is renamed Crunchy.
+Sugar Free may be descriptive metadata, but is not scored in this proposal.
+Every item starts with a base value of +1. Preference adjustments are added.
+Characters currently use Strong like +2, Like +1, Dislike -1.
+Strong dislike -2 is supported for later; no current profile uses it.
+Unlisted attributes add 0 adjustment; a neutral item is worth +1 overall.
+A character with no candy scores 0. A neutral six-item allotment scores 6.
+Show the result of a proposed trade so the human does not need to do arithmetic.
+For this untimed demo, show the raw sum, including negative values and totals above 10.
+The top bar shows the combined score of all four characters.
+
+CANDY ATTRIBUTES
+----------------
+Chocolate, Fruity, Sour, Minty, Chewy, Hard, Crunchy, Peanut, Caramel, Cookie, Gum, Toy
+
+CANDY / TREAT NAME                 ATTRIBUTES                       GRAPHIC
+------------------------------------------------------------------------------------------------------
+Airheads Original                 Fruity, Chewy                    candybars/default.png
+Candy Corn                        Chewy                            candybars/default.png
+  Note: Soft candy grouped into Chewy as a gameplay simplification.
+Chocolate-chip Cookie             Cookie, Chocolate                candybars/default.png
+Ghost Cookie                      Cookie                           candybars/default.png
+  Note: Generic ghost-shaped cookie; no additional flavor assumed.
+Pumpkin Cookie                    Cookie                           candybars/default.png
+  Note: Assumed pumpkin-shaped rather than pumpkin-flavored.
+Crayons                           Toy                              candybars/default.png
+Dots Original                     Fruity, Chewy                    candybars/default.png
+Eraser                            Toy                              candybars/default.png
+Dubble Bubble Original            Gum                              candybars/default.png
+Hubba Bubba Original              Gum                              candybars/default.png
+Trident Original                  Gum, Minty                       candybars/default.png
+  Note: Original mint variety; existing watermelon artwork would require a different identity and Fruity tag.
+Haribo Goldbears                  Fruity, Chewy                    candybars/default.png
+Hershey's Milk Chocolate          Chocolate                        candybars/default.png
+Kit Kat                           Chocolate, Crunchy               candybars/default.png
+Life Savers Gummies               Fruity, Chewy                    candybars/default.png
+Life Savers Five Flavors          Fruity, Hard                     candybars/default.png
+Mars Bar                          Chocolate, Caramel               candybars/default.png
+  Note: Classic UK-style chocolate, caramel, and nougat bar.
+Mentos Mint                       Minty, Chewy                     candybars/default.png
+Mentos Fruit                      Fruity, Chewy                    candybars/default.png
+Peanut M&M's                      Chocolate, Peanut, Crunchy       candybars/default.png
+Plain M&M's                       Chocolate, Crunchy               candybars/default.png
+Nerds Original                    Fruity, Crunchy                  candybars/default.png
+Nuts Candy Bar                    Peanut                           candybars/default.png
+  NOT IN RANDOM POOL: Confirm product/recipe before enabling; other attributes are not yet known.
+Planters Peanuts                  Peanut, Crunchy                  candybars/default.png
+Play-Doh                          Toy                              candybars/default.png
+Plain Popcorn                     Crunchy                          candybars/default.png
+Toy Spider                        Toy                              candybars/default.png
+  Note: Proposed cheerful replacement for Razor Knife from the original draft.
+Reese's Peanut Butter Cups        Chocolate, Peanut                candybars/default.png
+Ruler                             Toy                              candybars/default.png
+Skittles Sour                     Fruity, Sour, Chewy              candybars/default.png
+Skittles Original                 Fruity, Chewy                    candybars/default.png
+Smarties Tablet Rolls             Fruity, Crunchy                  candybars/default.png
+  Note: US tablet candy; Crunchy represents its crumbly texture. Not chocolate Smarties.
+Snickers                          Chocolate, Peanut, Caramel       candybars/default.png
+Sour Patch Kids                   Fruity, Sour, Chewy              candybars/default.png
+Starburst Original                Fruity, Chewy                    candybars/default.png
+Tic Tac Fruit Adventure           Fruity, Hard                     candybars/default.png
+Twix                              Chocolate, Cookie, Caramel       candybars/default.png
+Twizzlers Strawberry              Fruity, Chewy                    candybars/default.png
+
+CHARACTERS - THREE-LINE TRIAL PROFILES
+-------------------------------------
+NAME        STRONG LIKE +2       LIKE +1           DISLIKE -1
+------------------------------------------------------------------
+Jing        Sour              Cookie            Minty
+  Note: Sour and Cookie retained from John's draft. Minty is a proposed replacement dislike after removing Sweet; proposed profile now used in the demo.
+Yuze        Chewy             Chocolate         Gum
+  Note: Condensed draft to three lines; Gum dislike uses the simplified -1 weight rather than the old -3.
+Andries     Hard              Gum               Peanut
+  Note: Peanut dislike confirmed by John. Hard and Gum retained; Sour, Chewy, and Caramel omitted for this three-line trial.
+Noor        Fruity            Crunchy           Sour
+  Note: Condensed draft; Crispy renamed Crunchy. Sugar Free, Cookie, Hard Candy, and Gum omitted for the three-line trial.
+
+GRAPHIC PATHS
+-------------
+Every item currently uses assets/candybars/default.png, a transparent 256 x 256 icon.
+JSON graphic paths are relative to the game page, not to this text/JSON file.
+Replace an item graphic path when its own artwork is ready.
+
+PROPOSAL NOTES
+--------------
+These simplified character profiles supersede the longer draft only if adopted.
+Andries dislikes Peanut (-1); its old appearance under Likes was a mistake.
+The toy spider is a proposed replacement for Razor Knife.
+Nuts Candy Bar is retained but disabled until its product/recipe is identified.
+Candy Corn, Smarties, and Tic Tac texture tags are broad gameplay simplifications.
+Generic cookie and plain popcorn recipes are assumptions.
+Gum deliberately does not also carry Chewy: use its distinct Gum preference.
+Toy items are neutral for the four current trial profiles.
+The demo now loads gamedata02.json, deals six random items per character, and scores swaps.
+The comparison shows before/after totals and each candy value for each character.
+Research sources and reasoning: ../codex-john-docs/candy-attributes-research-2026-1007.md

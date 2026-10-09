@@ -1,0 +1,22 @@
+"""Update catalog generator for the eleven October 7 additions."""
+from pathlib import Path
+
+p = Path(__file__).with_name('build-gamedata03.py')
+s = p.read_text(encoding='utf-8')
+s = s.replace('assert len(items) == 53', 'assert len(items) == 64')
+s = s.replace("for i in items}) == 53", "for i in items}) == 64")
+s = s.replace("reservedAttributes=[dict(id='cherry',label='Cherry',reason='No pictured item is specifically a cherry variety; mixed fruit assortments stay Fruity.'),dict(id='milk',label='Milk',reason='Milk chocolate is already covered by Chocolate; no distinct milk-flavored item in this library.')],", 'reservedAttributes=[],')
+s = s.replace(" dict(name='Peeps',displayName='Peeps',attributes=['marshmallow'],status='needs-artwork',source='https://www.peepsbrand.com/products/classic-marshmallow-chicks/'),\n", '')
+s = s.replace(" dict(name='Mallomars',displayName='Mallomars',attributes=['chocolate','marshmallow','cookie'],status='needs-artwork',source='https://www.snackworks.com/products/mallomars-pure-chocolate-cookies-82-oz/'),\n", '')
+s = s.replace('COVERAGE (53 ITEMS)', 'COVERAGE (64 ITEMS)')
+s = s.replace('comb(53-k,6)/comb(53,6)', 'comb(len(items)-k,6)/comb(len(items),6)')
+s = s.replace('Marshmallow: shared attribute added; currently zero items. Add actual marshmallow candies.', 'Marshmallow: now represented by Peeps, Mallomars and Jet-Puffed Toasted Coconut Marshmallows.')
+s = s.replace('Cherry: reserve for deliberately chosen cherry game items, not random red wrappers.', 'Cherry: Tootsie Pops Cherry qualifies; no automatic Fruity matching.')
+s = s.replace('Milk: omit for now; Milk Chocolate already matches Chocolate.', 'Milk: Whoppers has a distinct malted-milk center; ordinary milk chocolate stays Chocolate.')
+s = s.replace('Low Sugar: Orbit and Trident qualify as sugar-free gums; no nutritional threshold invented.', 'Low Sugar: six explicitly sugar-free items, including gums, hard candies and twists.')
+s = s.replace('Sour has only two items; Coconut and Low Sugar also have two. These work better as', 'Sour has only two items; Cherry, Milk and Almond each have one. These work better as')
+s = s.replace('Hard and Mint are also scarce. Broad favorites help each character find useful trades.', 'Marshmallow and Coconut remain specialty traits. Broad favorites help each character find useful trades.')
+s = s.replace('Catalog covers the current 53 artwork files', 'Catalog covers the current 64 artwork files')
+s = s.replace("'Marshmallow has no current items. Peeps would add Marshmallow; Mallomars would add','Chocolate + Marshmallow + Cookie. Warheads hard candy would add Fruity + Sour + Hard.'", "'Marshmallow is now covered. Warheads hard candy would add Fruity + Sour + Hard.'")
+s = s.replace('These suggestedAdditions are not in the dealable catalog and need artwork.', 'The remaining suggested addition is not in the dealable catalog and needs artwork.')
+p.write_text(s, encoding='utf-8')

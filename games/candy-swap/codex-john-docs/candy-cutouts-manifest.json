@@ -1,0 +1,691 @@
+[
+  {
+    "name": "100Grand",
+    "graphic": "./assets/candybars/processed/100Grand.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\100Grand.jpg",
+    "sourceSHA256": "6fbd09561ce7c14bec82eec1760b084eaf8a24c90c06d1cbd97c133303e9ec19",
+    "visibleBounds": [
+      10,
+      126,
+      490,
+      373
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-a4e71588-b0b2-4b43-b992-b2151a74b084.png"
+  },
+  {
+    "name": "3Musketeers",
+    "graphic": "./assets/candybars/processed/3Musketeers.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\3Musketeers.jpg",
+    "sourceSHA256": "62351726f200285680c2ffe4e9c093d5f0103da5f87280ef3005a7a8e9f9cace",
+    "visibleBounds": [
+      10,
+      179,
+      490,
+      320
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-e97d3bcc-d5a2-4610-b945-333fdbf9cd62.png"
+  },
+  {
+    "name": "Airheads",
+    "graphic": "./assets/candybars/processed/Airheads.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\Airheads.jpg",
+    "sourceSHA256": "ab59b94777029c77c38ba0afac309707625842f81cb4e17430f06131951ab20e",
+    "visibleBounds": [
+      10,
+      147,
+      490,
+      352
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-97c012bf-9e56-4461-9cc9-fed554cfcc35.png"
+  },
+  {
+    "name": "AlmondJoy",
+    "graphic": "./assets/candybars/processed/AlmondJoy.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\AlmondJoy.jpg",
+    "sourceSHA256": "6e1d4b0ae9ef84c5f1cd1846566c12ec05f9eee916d4b7d23a207aeea522c5f7",
+    "visibleBounds": [
+      10,
+      148,
+      490,
+      352
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-3ee9ea9f-c705-4963-ad6b-b272cbaa3c97.png"
+  },
+  {
+    "name": "BabyRuth",
+    "graphic": "./assets/candybars/processed/BabyRuth.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\BabyRuth.jpg",
+    "sourceSHA256": "1038dc20b64828fc89d8d7c5e385ed2619bd19096b5c93699ef024bcc01fd6a4",
+    "visibleBounds": [
+      10,
+      193,
+      490,
+      306
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-0f85edbb-5c48-47af-81cc-f639205093db.png"
+  },
+  {
+    "name": "Butterfinger",
+    "graphic": "./assets/candybars/processed/Butterfinger.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\Butterfinger.jpg",
+    "sourceSHA256": "a96b66a754647ad9dc123e014039c21630858f117392824dbcbffda8dd1069c5",
+    "visibleBounds": [
+      10,
+      185,
+      490,
+      315
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-8124d9e8-804e-447e-ba41-7b3cd68a6f23.png"
+  },
+  {
+    "name": "CandyCorn",
+    "graphic": "./assets/candybars/processed/CandyCorn.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\CandyCorn.jpg",
+    "sourceSHA256": "c92b68fa8a5f514f656253af923f722ab9ff4d8e6550bba24c6aea3fa1276eee",
+    "visibleBounds": [
+      10,
+      105,
+      490,
+      395
+    ],
+    "toolOutput": "Approved initial sample"
+  },
+  {
+    "name": "ChocolateChipCookieHomemade",
+    "graphic": "./assets/candybars/processed/ChocolateChipCookieHomemade.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\ChocolateChipCookieHomemade.jpg",
+    "sourceSHA256": "0eede6aa255efe3957367c1c78707ba2c56849c00f9260ba078bcb12f0228f07",
+    "visibleBounds": [
+      10,
+      17,
+      490,
+      482
+    ],
+    "toolOutput": "Approved initial sample"
+  },
+  {
+    "name": "CookieGhost",
+    "graphic": "./assets/candybars/processed/CookieGhost.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\CookieGhost.jpg",
+    "sourceSHA256": "b9225ac92ff38b58fd4fd9984736b9edcfcfbcfaa561ebe42872c91b35516327",
+    "visibleBounds": [
+      10,
+      14,
+      490,
+      485
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-edfb0b68-f44b-4557-b65d-9bdd8baf057d.png"
+  },
+  {
+    "name": "CookiePumpkin",
+    "graphic": "./assets/candybars/processed/CookiePumpkin.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\CookiePumpkin.jpg",
+    "sourceSHA256": "63bc1d2c0c7b7470ba22f9f1979288de1c93a0b536ec87a222efeca0394582e3",
+    "visibleBounds": [
+      10,
+      10,
+      490,
+      490
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-dafd8ad8-d606-4fe7-adee-0d3248c2a555.png"
+  },
+  {
+    "name": "Crayons",
+    "graphic": "./assets/candybars/processed/Crayons.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\Crayons.jpg",
+    "sourceSHA256": "6838235fe9b76bcd507b6342f9eb174f315a3905775df979597b182577997cb7",
+    "visibleBounds": [
+      124,
+      10,
+      375,
+      490
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-37f7ae8b-dd95-4bfb-bdc2-fbaef407e3ec.png"
+  },
+  {
+    "name": "Dots",
+    "graphic": "./assets/candybars/processed/Dots.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\Dots.jpg",
+    "sourceSHA256": "e37128b462d54f161a5fd04c37e95642913e42a276e2a9291fc68632bfabc137",
+    "visibleBounds": [
+      10,
+      98,
+      490,
+      400
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-69101cb7-225e-4c0d-aa8b-94d91ac08a91.png"
+  },
+  {
+    "name": "Eraser",
+    "graphic": "./assets/candybars/processed/Eraser.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\Eraser.jpg",
+    "sourceSHA256": "880832e84c6ec64e0908130cfc976f82894a7a7dccb8baecb6bef9ca081dcc2c",
+    "visibleBounds": [
+      10,
+      113,
+      490,
+      386
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-5c5bfc80-5e06-42a9-89b7-e96e9c6f6a30.png"
+  },
+  {
+    "name": "GumDoubleBubble",
+    "graphic": "./assets/candybars/processed/GumDoubleBubble.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\GumDoubleBubble.jpg",
+    "sourceSHA256": "21d23cd486dc4298e56c518111cb41217d641bd1ac1f0e75941294a7aee7e832",
+    "visibleBounds": [
+      10,
+      131,
+      490,
+      369
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-2d1bc341-f8fb-43c8-a28c-2c95e36d3b19.png"
+  },
+  {
+    "name": "GumDoubleMint",
+    "graphic": "./assets/candybars/processed/GumDoubleMint.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\GumDoubleMint.jpg",
+    "sourceSHA256": "ddfa3b0294b915b640bad8d4c9a6c6c4a88448ed20e99ab1d63d0ba1b3772587",
+    "visibleBounds": [
+      10,
+      32,
+      490,
+      467
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-1b34f2ef-1c2b-4389-acdb-ff4eeb37a591.png"
+  },
+  {
+    "name": "GumHubbaBubbaSugar",
+    "graphic": "./assets/candybars/processed/GumHubbaBubbaSugar.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\GumHubbaBubbaSugar.jpg",
+    "sourceSHA256": "0e71343cafab0de0fc2717105ba9197c5c6dab257d428e1a8482d549fc483ddd",
+    "visibleBounds": [
+      10,
+      120,
+      490,
+      379
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-b5312599-ef54-400a-bbf0-b09e6059bca1.png"
+  },
+  {
+    "name": "GumJuicyFruit",
+    "graphic": "./assets/candybars/processed/GumJuicyFruit.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\GumJuicyFruit.jpg",
+    "sourceSHA256": "bbb2d84280aaee960743ad71b0be52b8394f0bdcb9f881466158d64d18ce778d",
+    "visibleBounds": [
+      10,
+      185,
+      490,
+      315
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-ee4f85a8-4414-4d72-b1e5-978256d8c786.png"
+  },
+  {
+    "name": "GumOrbitSugarfree",
+    "graphic": "./assets/candybars/processed/GumOrbitSugarfree.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\GumOrbitSugarfree.jpg",
+    "sourceSHA256": "d6c1ac9338e69f861d49a5c1595f75224aa0ba63a9bc4195dcefdbd1faefdbc3",
+    "visibleBounds": [
+      10,
+      169,
+      490,
+      330
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-cc2dc307-1b86-4a95-a476-55ebf555bd38.png"
+  },
+  {
+    "name": "GumTridentWatermelon",
+    "graphic": "./assets/candybars/processed/GumTridentWatermelon.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\GumTridentWatermelon.jpg",
+    "sourceSHA256": "6c664431e238734cff68fb36521516959c79da62b1edeb4825fa90d430eb7f93",
+    "visibleBounds": [
+      10,
+      153,
+      490,
+      347
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-abfbfbbb-3894-4c20-876f-36f711cd870d.png"
+  },
+  {
+    "name": "HariboGummies",
+    "graphic": "./assets/candybars/processed/HariboGummies.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\HariboGummies.jpg",
+    "sourceSHA256": "3d61900f756a1b5ce898ecaae02d2a2446f448260a862e4318f8cd2f33579224",
+    "visibleBounds": [
+      74,
+      10,
+      425,
+      490
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-05c028e4-a3c5-4666-bf46-5121be656ca9.png"
+  },
+  {
+    "name": "Hersheys",
+    "graphic": "./assets/candybars/processed/Hersheys.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\Hersheys.jpg",
+    "sourceSHA256": "0c42f2fbeaf0e6a2bd74df2f9a97d3e60e8f3a3ea67f08eebd012eb9a558efd7",
+    "visibleBounds": [
+      10,
+      160,
+      490,
+      339
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-5fa1ecb7-482f-424e-ab30-72c2ecfe563a.png"
+  },
+  {
+    "name": "JollyRancher",
+    "graphic": "./assets/candybars/processed/JollyRancher.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\JollyRancher.jpg",
+    "sourceSHA256": "1bb8cf7ebc8f59c7eaca93e23c80030ad87daf784bd602cfa53bb84ccaa1f5c7",
+    "visibleBounds": [
+      10,
+      55,
+      490,
+      444
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-61e500e4-57f4-44cd-accb-7a3d343dcf1e.png"
+  },
+  {
+    "name": "JuniorMints",
+    "graphic": "./assets/candybars/processed/JuniorMints.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\JuniorMints.jpg",
+    "sourceSHA256": "cdce6e6d1540cfb1f71b5cc0974fda7ebc8b80bf7b7a29398ed18c1be2f9b3d6",
+    "visibleBounds": [
+      10,
+      78,
+      490,
+      422
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-9115b65f-93c9-466c-88a8-247f34022278.png"
+  },
+  {
+    "name": "KitKat",
+    "graphic": "./assets/candybars/processed/KitKat.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\KitKat.jpg",
+    "sourceSHA256": "02eaca54fdfd4dae8d3fa49dc7f6beae3b8026da3f9cf36ffad8a65567ccdfa8",
+    "visibleBounds": [
+      10,
+      117,
+      490,
+      383
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-3c13d9a3-ab1d-4556-baa7-f96af1a01b46.png"
+  },
+  {
+    "name": "Krackle",
+    "graphic": "./assets/candybars/processed/Krackle.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\Krackle.jpg",
+    "sourceSHA256": "aef04d1ae3c2ef06d7a49ee661a97b02ed849d73580a310e35d4d00ccda7635a",
+    "visibleBounds": [
+      10,
+      165,
+      490,
+      335
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-a489b1d5-31c8-482f-9470-b27ccda341ba.png"
+  },
+  {
+    "name": "LifeSaverGummiesSweet",
+    "graphic": "./assets/candybars/processed/LifeSaverGummiesSweet.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\LifeSaverGummiesSweet.jpg",
+    "sourceSHA256": "1de649725909fe244d45abcdd014b81ae33989a257aa4fac817f29857ad00bd7",
+    "visibleBounds": [
+      10,
+      111,
+      490,
+      388
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-0f271868-383f-477f-812e-d7daeb263d14.png"
+  },
+  {
+    "name": "LifeSavers",
+    "graphic": "./assets/candybars/processed/LifeSavers.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\LifeSavers.jpg",
+    "sourceSHA256": "dcd37f4d1784566d8f6d794ad38e837e21697e80bf32a89465b2378435eb140a",
+    "visibleBounds": [
+      10,
+      172,
+      490,
+      328
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-b5742072-39f2-477b-880e-b20b06e47043.png"
+  },
+  {
+    "name": "MarsBar",
+    "graphic": "./assets/candybars/processed/MarsBar.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\MarsBar.jpg",
+    "sourceSHA256": "acdd23058e7a1133d5c450bce1f148603783138c94b786541f32eb9013959a22",
+    "visibleBounds": [
+      10,
+      191,
+      490,
+      309
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-d23724b6-3fc1-42df-a004-3d13603c1e26.png"
+  },
+  {
+    "name": "MentosFruit",
+    "graphic": "./assets/candybars/processed/MentosFruit.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\MentosFruit.jpg",
+    "sourceSHA256": "2482c00bd6985d1e2e31c4565e3103fed9d7313509047f54acf0d75e6c947146",
+    "visibleBounds": [
+      10,
+      214,
+      490,
+      285
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-cb42e060-44d1-4db7-a523-7283b880ffed.png"
+  },
+  {
+    "name": "MilkyWay",
+    "graphic": "./assets/candybars/processed/MilkyWay.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\MilkyWay.jpg",
+    "sourceSHA256": "9f0e99e7f3979e20151418eb9d2db6e8089c2c1eb05f860643b4c1d7743b25ad",
+    "visibleBounds": [
+      10,
+      175,
+      490,
+      324
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-f4386162-f124-4718-aec4-31ce11d7b6ce.png"
+  },
+  {
+    "name": "MMPeanut",
+    "graphic": "./assets/candybars/processed/MMPeanut.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\MMPeanut.jpg",
+    "sourceSHA256": "0c3ebb9814a6df14ca3caf4ae65d40d8282561f19e46e92cb6eb953c04ffabac",
+    "visibleBounds": [
+      10,
+      129,
+      490,
+      370
+    ],
+    "toolOutput": "Approved initial sample"
+  },
+  {
+    "name": "MMPlain",
+    "graphic": "./assets/candybars/processed/MMPlain.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\MMPlain.jpg",
+    "sourceSHA256": "6e64a9da6bb34ec8619efe819d12e9472ebc360370e57c55a43cb3e9ce5af387",
+    "visibleBounds": [
+      10,
+      78,
+      490,
+      422
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-43dbbd42-296e-4633-bebc-59ad5cf8d9af.png"
+  },
+  {
+    "name": "Mounds",
+    "graphic": "./assets/candybars/processed/Mounds.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\Mounds.jpg",
+    "sourceSHA256": "36f36c62485ae73658046de48b1c53492914bf13dfeeed824eb447ccd1d3c70f",
+    "visibleBounds": [
+      10,
+      188,
+      490,
+      311
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-378873a2-41de-4735-aa27-42a7fce902ac.png"
+  },
+  {
+    "name": "MrGoodbar",
+    "graphic": "./assets/candybars/processed/MrGoodbar.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\MrGoodbar.jpg",
+    "sourceSHA256": "3a4046afe0637bedaf7a91cc6e28cd89ab7ce5cdab7da086d3656af1c793750a",
+    "visibleBounds": [
+      10,
+      166,
+      490,
+      333
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-cdab0e76-d9bb-4340-b93e-33e3037cac76.png"
+  },
+  {
+    "name": "Nerds",
+    "graphic": "./assets/candybars/processed/Nerds.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\Nerds.jpg",
+    "sourceSHA256": "ad91f57145b505c186abc43d5fb56d98b67307651067294200c1979a5a1655ec",
+    "visibleBounds": [
+      10,
+      107,
+      490,
+      392
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-c365ffac-49b1-4dda-bc40-db9b2106315f.png"
+  },
+  {
+    "name": "NestlesCrunch",
+    "graphic": "./assets/candybars/processed/NestlesCrunch.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\NestlesCrunch.jpg",
+    "sourceSHA256": "0d5f5fd2da3854cb6fa164864d1ff305128750d18d8d59dfd6a1b08f5dfdae79",
+    "visibleBounds": [
+      10,
+      157,
+      490,
+      342
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-781be119-a3db-4428-a881-ea30acb0806d.png"
+  },
+  {
+    "name": "NutsCandybar",
+    "graphic": "./assets/candybars/processed/NutsCandybar.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\NutsCandybar.jpg",
+    "sourceSHA256": "a807705b9b6d4d912af1df709ff3a3798524426da3406bdf8c18e1621354d5cf",
+    "visibleBounds": [
+      10,
+      151,
+      490,
+      349
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-0ee69a57-7c59-4888-af0b-fe1537afe5e3.png"
+  },
+  {
+    "name": "Payday",
+    "graphic": "./assets/candybars/processed/Payday.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\Payday.jpg",
+    "sourceSHA256": "cc1f363c42825a9c40434026f84efefa429154477b56508fe23fb35b56871124",
+    "visibleBounds": [
+      10,
+      176,
+      490,
+      323
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-3fc9fddc-3ded-4c3e-97e2-5017aa7e48b1.png"
+  },
+  {
+    "name": "PeanutsPlanters",
+    "graphic": "./assets/candybars/processed/PeanutsPlanters.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\PeanutsPlanters.jpg",
+    "sourceSHA256": "6a49029ef9bfebd48d1bdcd1bf433d77e47cbc1ac1bdc4e111c41887f86cfb24",
+    "visibleBounds": [
+      145,
+      10,
+      355,
+      490
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-bdac6555-3aef-4f67-bf8a-8afed3c44a0d.png"
+  },
+  {
+    "name": "PlayDoh",
+    "graphic": "./assets/candybars/processed/PlayDoh.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\PlayDoh.jpg",
+    "sourceSHA256": "34dd813880393e763f68e5b720811e8ee661a8fbda574975627838d6ad930e45",
+    "visibleBounds": [
+      59,
+      10,
+      441,
+      490
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-e0db5e82-eb28-4074-a6b7-bbba1117c9fa.png"
+  },
+  {
+    "name": "Popcorn",
+    "graphic": "./assets/candybars/processed/Popcorn.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\Popcorn.jpg",
+    "sourceSHA256": "0f378e8d259902a51e10390e2aab5b411c30f1a115d0b1c0ce4e70c1658c6f62",
+    "visibleBounds": [
+      75,
+      10,
+      425,
+      490
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-86633ba6-cec2-4437-abc1-d1b17e205447.png"
+  },
+  {
+    "name": "RedVines",
+    "graphic": "./assets/candybars/processed/RedVines.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\RedVines.jpg",
+    "sourceSHA256": "683101f354ec7444ee043475d156706ead80fbc2a12547fca69d5b5d1ba35f8c",
+    "visibleBounds": [
+      10,
+      131,
+      490,
+      368
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-28f1bc6d-b424-4c48-8f82-33f21af13571.png"
+  },
+  {
+    "name": "Reeses",
+    "graphic": "./assets/candybars/processed/Reeses.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\Reeses.jpg",
+    "sourceSHA256": "427830d4350486109f36d37019e3b46810398584a0d091985c62e9dc4fafd0a0",
+    "visibleBounds": [
+      10,
+      149,
+      490,
+      350
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-92b3f6db-6319-4e93-a76b-5aefe73e3fb5.png"
+  },
+  {
+    "name": "RingPop",
+    "graphic": "./assets/candybars/processed/RingPop.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\RingPop.jpg",
+    "sourceSHA256": "4867cf211925969e82e0359ac6c10bee3dee80dfb931cd34f3970793a18b701e",
+    "visibleBounds": [
+      10,
+      72,
+      490,
+      428
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-8bf2265f-962f-4d3e-ad89-696af64bf68e.png"
+  },
+  {
+    "name": "SkittlesSour",
+    "graphic": "./assets/candybars/processed/SkittlesSour.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\SkittlesSour.jpg",
+    "sourceSHA256": "6a5ce8884153f0bb9540ef07904235aa9f00d6f6f31cac7fe0ceb8ac62b4c4cc",
+    "visibleBounds": [
+      10,
+      139,
+      490,
+      361
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-d69af4ba-f06a-412a-8fae-47d118345a6d.png"
+  },
+  {
+    "name": "SkittlesSweet",
+    "graphic": "./assets/candybars/processed/SkittlesSweet.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\SkittlesSweet.jpg",
+    "sourceSHA256": "c1bbef080be95eadbfa899804f8f3657829ca81f5b39ca0a4ff4c00b8c11cfa1",
+    "visibleBounds": [
+      10,
+      141,
+      490,
+      359
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-6717e51c-1809-40ee-870e-29e84bbe5240.png"
+  },
+  {
+    "name": "Smarties",
+    "graphic": "./assets/candybars/processed/Smarties.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\Smarties.jpg",
+    "sourceSHA256": "93275e7a30c3a610a7d444c1393c1dc39eace896a6411dcdc790ab47489c4701",
+    "visibleBounds": [
+      10,
+      149,
+      490,
+      350
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-2086284c-4ea2-4732-b3ff-c34b21544d30.png"
+  },
+  {
+    "name": "Snickers",
+    "graphic": "./assets/candybars/processed/Snickers.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\Snickers.jpg",
+    "sourceSHA256": "b7916fcb4802d10cc658fbb997ddae72b25d379949d22f905e81dbcd862329bd",
+    "visibleBounds": [
+      10,
+      179,
+      490,
+      320
+    ],
+    "toolOutput": "Approved initial sample"
+  },
+  {
+    "name": "SourPatch",
+    "graphic": "./assets/candybars/processed/SourPatch.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\SourPatch.jpg",
+    "sourceSHA256": "553a13188f13d85af8bef1daa3ff1d57859f01042a687d37156003962528edc6",
+    "visibleBounds": [
+      10,
+      74,
+      490,
+      426
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-e779b8ce-60f1-4bca-aeaf-243426303c9a.png"
+  },
+  {
+    "name": "Starburst",
+    "graphic": "./assets/candybars/processed/Starburst.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\Starburst.jpg",
+    "sourceSHA256": "e38748430bd7dda25f8eed8893c3d63e05d49373b524f9b80f991d45bd913eec",
+    "visibleBounds": [
+      10,
+      135,
+      490,
+      364
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-be40db40-f810-4445-ab8c-67e925ef233d.png"
+  },
+  {
+    "name": "TicTacFruit",
+    "graphic": "./assets/candybars/processed/TicTacFruit.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\TicTacFruit.jpg",
+    "sourceSHA256": "7f8838b7d6f20d50905ea39be9d17ff58fe1dd41f08eabc070f47cd60bacef5e",
+    "visibleBounds": [
+      101,
+      10,
+      398,
+      490
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-3df04e23-ee0a-4579-97b2-0a5e346ce772.png"
+  },
+  {
+    "name": "Twix",
+    "graphic": "./assets/candybars/processed/Twix.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\Twix.jpg",
+    "sourceSHA256": "a44426bb1495dc613efd561da83e35d271fa64ff16a10bae2005dd9a74619a8d",
+    "visibleBounds": [
+      10,
+      155,
+      490,
+      345
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-b37e213e-2655-4920-b954-62dde9399462.png"
+  },
+  {
+    "name": "Twizzlers",
+    "graphic": "./assets/candybars/processed/Twizzlers.png",
+    "source": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\Twizzlers.jpg",
+    "sourceSHA256": "378899c4680383816b7acb471f58e5a48142faa1f49e20dacb42fabbd7f70e9c",
+    "visibleBounds": [
+      10,
+      91,
+      490,
+      408
+    ],
+    "toolOutput": "C:/Users/johnp/.codex/generated_images/01a11769-3707-79e1-b1db-68a3c26d4593/exec-84db774c-ceb1-4a5b-8445-e327c70ef05d.png"
+  }
+]

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Candy Swap demo</title>
+  <link rel="stylesheet" href="./candy-swap.css">
+</head>
+<body>
+  <main id="board" aria-label="Four-character candy swapping demo">
+    <svg class="dividers" viewBox="0 0 1296 2016" preserveAspectRatio="none" aria-hidden="true"><path d="M0 0L1296 2016M1296 0L0 2016"/></svg>
+    <section class="kid one" aria-label="Player One"><span class="face" aria-hidden="true">🎃</span><strong class="satisfaction" aria-label="Satisfaction"></strong></section>
+    <section class="preferences one" aria-label="One's preferences"><span>Choc++</span><span>Chewy+</span><span>Sour−−</span></section>
+    <section class="kid two" aria-label="Player Two"><span class="face" aria-hidden="true">👻</span><strong class="satisfaction" aria-label="Satisfaction"></strong></section>
+    <section class="preferences two" aria-label="Two's preferences"><span>Sweet++</span><span>Fruity+</span><span>Nuts−−</span></section>
+    <section class="kid three" aria-label="Player Three"><span class="face" aria-hidden="true">🧛</span><strong class="satisfaction" aria-label="Satisfaction"></strong></section>
+    <section class="preferences three" aria-label="Three's preferences"><span>Sour++</span><span>Fruity+</span><span>Choc−−</span></section>
+    <section class="kid four" aria-label="Player Four"><span class="face" aria-hidden="true">🧙</span><strong class="satisfaction" aria-label="Satisfaction"></strong></section>
+    <section class="preferences four" aria-label="Four's preferences"><span>Nuts++</span><span>Choc+</span><span>Sweet−−</span></section>
+    <div id="candies"></div>
+    <div id="candyInfo"></div>
+    <section id="comparePrompt" class="compare-prompt" aria-label="Compare selected candies" hidden>
+      <strong>Propose this trade?</strong>
+      <div class="choice-buttons"><button id="compareYes">Propose Trade</button><button id="compareNo">Clear</button></div>
+    </section>
+    <div id="comparisonOverlay" class="comparison-overlay" hidden>
+      <section id="comparisonPanel" class="comparison-panel" role="dialog" aria-modal="true" aria-label="Trade result"></section>
+    </div>
+    <p id="gameStatus" class="game-status" role="status" hidden></p>
+  </main>
+  <script src="./candy-swap.js"></script>
+</body>
+</html>
+

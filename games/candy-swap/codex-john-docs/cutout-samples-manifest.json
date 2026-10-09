@@ -1,0 +1,62 @@
+[
+  {
+    "name": "Snickers",
+    "toolOutput": "C:\\Users\\johnp\\.codex\\generated_images\\01a11769-3707-79e1-b1db-68a3c26d4593\\exec-1da4f649-9f79-4164-8296-a9bec73eb7cc.png",
+    "crop": [
+      100,
+      334,
+      1411,
+      718
+    ],
+    "subjectSize": [
+      480,
+      141
+    ],
+    "output": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\Snickers.png"
+  },
+  {
+    "name": "MMPeanut",
+    "toolOutput": "C:\\Users\\johnp\\.codex\\generated_images\\01a11769-3707-79e1-b1db-68a3c26d4593\\exec-23280f4a-841f-4b45-949e-fcb213e72048.png",
+    "crop": [
+      128,
+      178,
+      1489,
+      861
+    ],
+    "subjectSize": [
+      480,
+      241
+    ],
+    "output": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\MMPeanut.png"
+  },
+  {
+    "name": "CandyCorn",
+    "toolOutput": "C:\\Users\\johnp\\.codex\\generated_images\\01a11769-3707-79e1-b1db-68a3c26d4593\\exec-e336ab76-efed-4c0b-ae8a-6272f3b1c318.png",
+    "crop": [
+      82,
+      294,
+      1174,
+      954
+    ],
+    "subjectSize": [
+      480,
+      290
+    ],
+    "output": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\CandyCorn.png"
+  },
+  {
+    "name": "ChocolateChipCookieHomemade",
+    "toolOutput": "C:\\Users\\johnp\\.codex\\generated_images\\01a11769-3707-79e1-b1db-68a3c26d4593\\exec-e1dd0847-4ba7-45a6-8646-18835a24119c.png",
+    "crop": [
+      130,
+      111,
+      1171,
+      1119
+    ],
+    "subjectSize": [
+      480,
+      465
+    ],
+    "output": "D:\\dev\\Projects\\halloween2026\\games\\candy-swap\\assets\\candybars\\ChocolateChipCookieHomemade.png"
+  }
+]

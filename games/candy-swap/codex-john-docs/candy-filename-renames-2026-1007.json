@@ -1,0 +1,142 @@
+[
+  {
+    "from": "Airheads.png",
+    "to": "AirheadsBites.png"
+  },
+  {
+    "from": "ChocolateChipCookieHomemade.png",
+    "to": "ChocolateChipCookie.png"
+  },
+  {
+    "from": "CookieGhost.png",
+    "to": "GhostCookie.png"
+  },
+  {
+    "from": "CookiePumpkin.png",
+    "to": "PumpkinCookie.png"
+  },
+  {
+    "from": "GumDoubleBubble.png",
+    "to": "DubbleBubble.png"
+  },
+  {
+    "from": "GumDoubleMint.png",
+    "to": "Doublemint.png"
+  },
+  {
+    "from": "GumHubbaBubbaSugar.png",
+    "to": "HubbaBubbaFruit.png"
+  },
+  {
+    "from": "GumJuicyFruit.png",
+    "to": "JuicyFruit.png"
+  },
+  {
+    "from": "GumOrbitSugarfree.png",
+    "to": "OrbitBubblemint.png"
+  },
+  {
+    "from": "GumTridentWatermelon.png",
+    "to": "TridentWatermelon.png"
+  },
+  {
+    "from": "HariboGummies.png",
+    "to": "HariboGoldbears.png"
+  },
+  {
+    "from": "Hersheys.png",
+    "to": "HersheysMilkChocolate.png"
+  },
+  {
+    "from": "Krackle.png",
+    "to": "Krackel.png"
+  },
+  {
+    "from": "LifeSaverGummiesSweet.png",
+    "to": "LifeSaversGummies.png"
+  },
+  {
+    "from": "MMPeanut.png",
+    "to": "MAndMsPeanut.png"
+  },
+  {
+    "from": "MMPlain.png",
+    "to": "MAndMsMilkChocolate.png"
+  },
+  {
+    "from": "NestlesCrunch.png",
+    "to": "NestleCrunch.png"
+  },
+  {
+    "from": "NutsCandybar.png",
+    "to": "NestleNuts.png"
+  },
+  {
+    "from": "Payday.png",
+    "to": "PayDay.png"
+  },
+  {
+    "from": "PeanutsPlanters.png",
+    "to": "PlantersPeanuts.png"
+  },
+  {
+    "from": "Reeses.png",
+    "to": "ReesesPeanutButterCups.png"
+  },
+  {
+    "from": "RingPop.png",
+    "to": "RingPopBlueRaspberry.png"
+  },
+  {
+    "from": "SkittlesSweet.png",
+    "to": "SkittlesOriginal.png"
+  },
+  {
+    "from": "SourPatch.png",
+    "to": "SourPatchKids.png"
+  },
+  {
+    "from": "Starburst.png",
+    "to": "StarburstOriginal.png"
+  },
+  {
+    "from": "TicTacFruit.png",
+    "to": "TicTacFruitAdventure.png"
+  },
+  {
+    "from": "Twizzlers.png",
+    "to": "TwizzlersStrawberry.png"
+  },
+  {
+    "from": "AirheadsBites.png",
+    "to": "Airheads.png"
+  },
+  {
+    "from": "HubbaBubbaFruit.png",
+    "to": "HubbaBubba.png"
+  },
+  {
+    "from": "OrbitBubblemint.png",
+    "to": "Orbit.png"
+  },
+  {
+    "from": "TridentWatermelon.png",
+    "to": "Trident.png"
+  },
+  {
+    "from": "RingPopBlueRaspberry.png",
+    "to": "RingPop.png"
+  },
+  {
+    "from": "StarburstOriginal.png",
+    "to": "Starburst.png"
+  },
+  {
+    "from": "TicTacFruitAdventure.png",
+    "to": "TicTacFruit.png"
+  },
+  {
+    "from": "TwizzlersStrawberry.png",
+    "to": "Twizzlers.png"
+  }
+]

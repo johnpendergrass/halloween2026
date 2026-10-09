@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Candy cutout samples</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: max(16px, env(safe-area-inset-top)) 12px max(16px, env(safe-area-inset-bottom)); background: #2e1a44; color: #fff; font: 16px/1.4 Arial, sans-serif; }
+    main { max-width: 600px; margin: auto; container-type: inline-size; }
+    h1 { margin: 0; font-size: 24px; }
+    .sample h2 { overflow-wrap: anywhere; }
+    p { margin: 8px 0 14px; }
+    .controls { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; margin-bottom: 16px; }
+    .rotation-control { flex: 1 1 100%; display: flex; gap: 12px; align-items: center; }
+    input[type=range] { flex: 1; min-height: 44px; }
+    .check { min-height: 44px; display: flex; align-items: center; gap: 8px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .sample { background: #fff1d6; border-radius: 12px; padding: 10px; text-align: center; color: #34213e; overflow: hidden; }
+    h2 { font-size: 16px; margin: 0 0 8px; }
+    .icon-stage { min-height: 27cqw; display: grid; place-items: center; background: #f5e6ef; border-radius: 8px; }
+    .target { width: 13cqw; height: 13cqw; position: relative; }
+    .target::after { content: ''; position: absolute; inset: 0; outline: 2px dashed #34213e; pointer-events: none; }
+    .target button { width: 100%; height: 100%; border: 0; background: transparent; padding: 0; cursor: pointer; touch-action: manipulation; }
+    .target button[aria-pressed=true] { background: #e8741c66; outline: 3px solid #e8741c; border-radius: 6px; }
+    .target img { display: block; width: 100%; height: 100%; object-fit: contain; transform: rotate(var(--angle, 0deg)) scale(var(--scale, 1)); pointer-events: none; }
+    .big-stage { margin-top: 10px; width: 100%; aspect-ratio: 1; display: grid; place-items: center; background-color: #fff; background-image: conic-gradient(#ddd 25%, #fff 0 50%, #ddd 0 75%, #fff 0); background-size: 16px 16px; border-radius: 8px; }
+    .big-stage img { width: 95%; height: 95%; object-fit: contain; }
+    .dark .big-stage { background: #34213e; }
+    .dark .icon-stage { background: #34213e; }
+    .dark .target::after { outline-color: #e8d4fb; }
+    .caption { display: block; margin: 6px 0; font-size: 13px; }
+    a { color: #ffce71; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Candy cutout samples</h1>
+    <p>Tap the small images to test the upright touch boxes. Large images show edge quality.</p>
+    <div class="controls">
+      <label class="rotation-control">Rotation <input id="rotation" type="range" min="-30" max="30" value="0"><output id="angle">0°</output></label>
+      <label class="check"><input id="fit" type="checkbox"> Keep rotated image inside box</label>
+      <label class="check"><input id="dark" type="checkbox"> Dark background</label>
+    </div>
+    <div class="grid">
+      <article class="sample"><h2>Snickers</h2><div class="icon-stage"><div class="target"><button aria-label="Select Snickers" aria-pressed="false"><img src="./assets/candybars/Snickers.png" alt=""></button></div></div><span class="caption">168 × 168 canvas-pixel touch box</span><div class="big-stage"><img src="./assets/candybars/Snickers.png" alt="Snickers cutout"></div></article>
+      <article class="sample"><h2>Peanut M&amp;M's</h2><div class="icon-stage"><div class="target"><button aria-label="Select Peanut M&amp;M's" aria-pressed="false"><img src="./assets/candybars/MAndMsPeanut.png" alt=""></button></div></div><span class="caption">168 × 168 canvas-pixel touch box</span><div class="big-stage"><img src="./assets/candybars/MAndMsPeanut.png" alt="Peanut M&amp;M's cutout"></div></article>
+      <article class="sample"><h2>Candy Corn</h2><div class="icon-stage"><div class="target"><button aria-label="Select Candy Corn" aria-pressed="false"><img src="./assets/candybars/CandyCorn.png" alt=""></button></div></div><span class="caption">168 × 168 canvas-pixel touch box</span><div class="big-stage"><img src="./assets/candybars/CandyCorn.png" alt="Candy Corn cutout"></div></article>
+      <article class="sample"><h2>Chocolate-chip Cookie</h2><div class="icon-stage"><div class="target"><button aria-label="Select cookie" aria-pressed="false"><img src="./assets/candybars/ChocolateChipCookie.png" alt=""></button></div></div><span class="caption">168 × 168 canvas-pixel touch box</span><div class="big-stage"><img src="./assets/candybars/ChocolateChipCookie.png" alt="Chocolate-chip cookie cutout"></div></article>
+    </div>
+    <p><a href="./touch-preview.html">Back to swap demo</a></p>
+  </main>
+  <script>
+    const rotation = document.getElementById('rotation');
+    const fit = document.getElementById('fit');
+    function update() {
+      const angle = Number(rotation.value);
+      const radians = angle * Math.PI / 180;
+      const scale = fit.checked ? 1 / (Math.abs(Math.cos(radians)) + Math.abs(Math.sin(radians))) : 1;
+      document.documentElement.style.setProperty('--angle', angle + 'deg');
+      document.documentElement.style.setProperty('--scale', scale);
+      document.getElementById('angle').textContent = angle + '°';
+    }
+    rotation.addEventListener('input', update);
+    fit.addEventListener('change', update);
+    document.getElementById('dark').addEventListener('change', event => document.body.classList.toggle('dark', event.target.checked));
+    document.querySelectorAll('.target button').forEach(button => {
+      const toggle = () => button.setAttribute('aria-pressed', button.getAttribute('aria-pressed') !== 'true');
+      button.addEventListener('pointerdown', event => { if (event.isPrimary && event.button === 0) { event.preventDefault(); toggle(); } });
+      button.addEventListener('click', event => { if (event.detail === 0) toggle(); });
+    });
+  </script>
+</body>
+</html>

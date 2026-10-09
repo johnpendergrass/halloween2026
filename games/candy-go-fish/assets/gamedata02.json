@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "status": "proposal",
+  "title": "Candy Swap — Game Data 02",
+  "graphicPathBase": "game-directory",
+  "defaultGraphic": "./assets/candybars/default.png",
+  "rules": {
+    "maximumAttributesPerItem": 3,
+    "sweetnessIsAssumed": true,
+    "unlistedPreferencesAreNeutral": true,
+    "baseItemValue": 1,
+    "preferenceWeights": { "favorite": 2, "like": 1, "dislike": -1, "strongDislike": -2 },
+    "itemValue": "Start each item at +1, then add all matching preference adjustments. Unlisted attributes add zero.",
+    "satisfactionScale": { "minimum": null, "maximum": null, "mapping": "raw-total" },
+    "notes": "An empty allotment scores 0. Show raw allotment totals without clamping or /10; total score is the sum of all four characters. Strong dislikes are supported but no current profile uses them. Sweet, Candy Bar, and Sugar Free are not scoring attributes."
+  },
+  "attributes": [
+    { "id": "chocolate", "label": "Chocolate" },
+    { "id": "fruity", "label": "Fruity" },
+    { "id": "sour", "label": "Sour" },
+    { "id": "minty", "label": "Minty" },
+    { "id": "chewy", "label": "Chewy" },
+    { "id": "hard", "label": "Hard" },
+    { "id": "crunchy", "label": "Crunchy" },
+    { "id": "peanut", "label": "Peanut" },
+    { "id": "caramel", "label": "Caramel" },
+    { "id": "cookie", "label": "Cookie" },
+    { "id": "gum", "label": "Gum" },
+    { "id": "toy", "label": "Toy" }
+  ],
+  "items": [
+    { "id": "airheads", "name": "Airheads Original", "kind": "candy", "attributes": ["fruity", "chewy"], "graphic": "./assets/candybars/default.png", "enabled": true },
+    { "id": "candy-corn", "name": "Candy Corn", "kind": "candy", "attributes": ["chewy"], "graphic": "./assets/candybars/default.png", "enabled": true, "notes": "Soft candy grouped into Chewy as a gameplay simplification." },
+    { "id": "cookie-chocolate-chip", "name": "Chocolate-chip Cookie", "kind": "cookie", "attributes": ["cookie", "chocolate"], "graphic": "./assets/candybars/default.png", "enabled": true },
+    { "id": "cookie-ghost", "name": "Ghost Cookie", "kind": "cookie", "attributes": ["cookie"], "graphic": "./assets/candybars/default.png", "enabled": true, "notes": "Generic ghost-shaped cookie; no additional flavor assumed." },
+    { "id": "cookie-pumpkin", "name": "Pumpkin Cookie", "kind": "cookie", "attributes": ["cookie"], "graphic": "./assets/candybars/default.png", "enabled": true, "notes": "Assumed pumpkin-shaped rather than pumpkin-flavored." },
+    { "id": "crayons", "name": "Crayons", "kind": "toy", "attributes": ["toy"], "graphic": "./assets/candybars/default.png", "enabled": true },
+    { "id": "dots", "name": "Dots Original", "kind": "candy", "attributes": ["fruity", "chewy"], "graphic": "./assets/candybars/default.png", "enabled": true },
+    { "id": "eraser", "name": "Eraser", "kind": "toy", "attributes": ["toy"], "graphic": "./assets/candybars/default.png", "enabled": true },
+    { "id": "gum-dubble-bubble", "name": "Dubble Bubble Original", "kind": "gum", "attributes": ["gum"], "graphic": "./assets/candybars/default.png", "enabled": true },
+    { "id": "gum-hubba-bubba", "name": "Hubba Bubba Original", "kind": "gum", "attributes": ["gum"], "graphic": "./assets/candybars/default.png", "enabled": true },
+    { "id": "gum-trident", "name": "Trident Original", "kind": "gum", "attributes": ["gum", "minty"], "graphic": "./assets/candybars/default.png", "enabled": true, "sugarFree": true, "notes": "Original mint variety; existing watermelon artwork would require a different identity and Fruity tag." },
+    { "id": "haribo-goldbears", "name": "Haribo Goldbears", "kind": "candy", "attributes": ["fruity", "chewy"], "graphic": "./assets/candybars/default.png", "enabled": true },
+    { "id": "hersheys", "name": "Hershey's Milk Chocolate", "kind": "candy", "attributes": ["chocolate"], "graphic": "./assets/candybars/default.png", "enabled": true },
+    { "id": "kit-kat", "name": "Kit Kat", "kind": "candy", "attributes": ["chocolate", "crunchy"], "graphic": "./assets/candybars/default.png", "enabled": true },
+    { "id": "life-savers-gummies", "name": "Life Savers Gummies", "kind": "candy", "attributes": ["fruity", "chewy"], "graphic": "./assets/candybars/default.png", "enabled": true },
+    { "id": "life-savers", "name": "Life Savers Five Flavors", "kind": "candy", "attributes": ["fruity", "hard"], "graphic": "./assets/candybars/default.png", "enabled": true },
+    { "id": "mars-bar", "name": "Mars Bar", "kind": "candy", "attributes": ["chocolate", "caramel"], "graphic": "./assets/candybars/default.png", "enabled": true, "notes": "Classic UK-style chocolate, caramel, and nougat bar." },
+    { "id": "mentos-mint", "name": "Mentos Mint", "kind": "candy", "attributes": ["minty", "chewy"], "graphic": "./assets/candybars/default.png", "enabled": true },
+    { "id": "mentos-fruit", "name": "Mentos Fruit", "kind": "candy", "attributes": ["fruity", "chewy"], "graphic": "./assets/candybars/default.png", "enabled": true },
+    { "id": "mms-peanut", "name": "Peanut M&M's", "kind": "candy", "attributes": ["chocolate", "peanut", "crunchy"], "graphic": "./assets/candybars/default.png", "enabled": true },
+    { "id": "mms-plain", "name": "Plain M&M's", "kind": "candy", "attributes": ["chocolate", "crunchy"], "graphic": "./assets/candybars/default.png", "enabled": true },
+    { "id": "nerds", "name": "Nerds Original", "kind": "candy", "attributes": ["fruity", "crunchy"], "graphic": "./assets/candybars/default.png", "enabled": true },
+    { "id": "nuts-candy-bar", "name": "Nuts Candy Bar", "kind": "candy", "attributes": ["peanut"], "graphic": "./assets/candybars/default.png", "enabled": false, "notes": "Confirm product/recipe before enabling; other attributes are not yet known." },
+    { "id": "planters-peanuts", "name": "Planters Peanuts", "kind": "snack", "attributes": ["peanut", "crunchy"], "graphic": "./assets/candybars/default.png", "enabled": true },
+    { "id": "play-doh", "name": "Play-Doh", "kind": "toy", "attributes": ["toy"], "graphic": "./assets/candybars/default.png", "enabled": true },
+    { "id": "popcorn", "name": "Plain Popcorn", "kind": "snack", "attributes": ["crunchy"], "graphic": "./assets/candybars/default.png", "enabled": true },
+    { "id": "toy-spider", "name": "Toy Spider", "kind": "toy", "attributes": ["toy"], "graphic": "./assets/candybars/default.png", "enabled": true, "notes": "Proposed cheerful replacement for Razor Knife from the original draft." },
+    { "id": "reeses", "name": "Reese's Peanut Butter Cups", "kind": "candy", "attributes": ["chocolate", "peanut"], "graphic": "./assets/candybars/default.png", "enabled": true },
+    { "id": "ruler", "name": "Ruler", "kind": "toy", "attributes": ["toy"], "graphic": "./assets/candybars/default.png", "enabled": true },
+    { "id": "skittles-sour", "name": "Skittles Sour", "kind": "candy", "attributes": ["fruity", "sour", "chewy"], "graphic": "./assets/candybars/default.png", "enabled": true },
+    { "id": "skittles-original", "name": "Skittles Original", "kind": "candy", "attributes": ["fruity", "chewy"], "graphic": "./assets/candybars/default.png", "enabled": true },
+    { "id": "smarties", "name": "Smarties Tablet Rolls", "kind": "candy", "attributes": ["fruity", "crunchy"], "graphic": "./assets/candybars/default.png", "enabled": true, "notes": "US tablet candy; Crunchy represents its crumbly texture. Not chocolate Smarties." },
+    { "id": "snickers", "name": "Snickers", "kind": "candy", "attributes": ["chocolate", "peanut", "caramel"], "graphic": "./assets/candybars/default.png", "enabled": true },
+    { "id": "sour-patch-kids", "name": "Sour Patch Kids", "kind": "candy", "attributes": ["fruity", "sour", "chewy"], "graphic": "./assets/candybars/default.png", "enabled": true },
+    { "id": "starburst", "name": "Starburst Original", "kind": "candy", "attributes": ["fruity", "chewy"], "graphic": "./assets/candybars/default.png", "enabled": true },
+    { "id": "tic-tac-fruit", "name": "Tic Tac Fruit Adventure", "kind": "candy", "attributes": ["fruity", "hard"], "graphic": "./assets/candybars/default.png", "enabled": true },
+    { "id": "twix", "name": "Twix", "kind": "candy", "attributes": ["chocolate", "cookie", "caramel"], "graphic": "./assets/candybars/default.png", "enabled": true },
+    { "id": "twizzlers", "name": "Twizzlers Strawberry", "kind": "candy", "attributes": ["fruity", "chewy"], "graphic": "./assets/candybars/default.png", "enabled": true }
+  ],
+  "characters": [
+    { "id": "jing", "name": "Jing", "profileStatus": "proposed", "preferences": [
+      { "attribute": "sour", "level": "favorite" },
+      { "attribute": "cookie", "level": "like" },
+      { "attribute": "minty", "level": "dislike" }
+    ], "notes": "Sour and Cookie retained from John's draft. Minty is a proposed replacement dislike after removing Sweet; needs review." },
+    { "id": "yuze", "name": "Yuze", "profileStatus": "proposed", "preferences": [
+      { "attribute": "chewy", "level": "favorite" },
+      { "attribute": "chocolate", "level": "like" },
+      { "attribute": "gum", "level": "dislike" }
+    ], "notes": "Condensed draft to three lines; Gum dislike uses the simplified -1 weight rather than the old -3." },
+    { "id": "andries", "name": "Andries", "profileStatus": "proposed", "preferences": [
+      { "attribute": "hard", "level": "favorite" },
+      { "attribute": "gum", "level": "like" },
+      { "attribute": "peanut", "level": "dislike" }
+    ], "notes": "Peanut dislike confirmed by John. Hard and Gum retained; Sour, Chewy, and Caramel omitted for this three-line trial." },
+    { "id": "noor", "name": "Noor", "profileStatus": "proposed", "preferences": [
+      { "attribute": "fruity", "level": "favorite" },
+      { "attribute": "crunchy", "level": "like" },
+      { "attribute": "sour", "level": "dislike" }
+    ], "notes": "Condensed draft; Crispy renamed Crunchy. Sugar Free, Cookie, Hard Candy, and Gum omitted for the three-line trial." }
+  ]
+}

@@ -1,0 +1,185 @@
+CANDY SWAP — GAME DATA 03
+Reviewed artwork catalog and preference proposal — 2026-10-07
+Companion: gamedata03.json
+
+IDENTITY
+name is a unique, stable program key; displayName is UI text; fileName is the actual filename.
+Names use PascalCase, with numeric brand names retained as string keys (100Grand, 3Musketeers).
+Image dimensions are measured pixels, not CSS size. Default graphic is a fallback, not a candy.
+
+MATCHING AND SIMPLICITY
+One to three visible scoring traits per item; do not fill a quota.
+Candy is assumed sweet. Fruity and Sour can still be sweet.
+Use identical attribute IDs for candy and character preferences.
+Only explicit tags match; Rice does not automatically match Crunchy.
+Gum does not also get Chewy; Peanut includes peanut butter but not other nuts.
+Traits are gameplay descriptions, not exhaustive ingredient or dietary records.
+
+SHARED ATTRIBUTES / COVERAGE (64 ITEMS)
+chocolate    Chocolate    26 items; 96% chance in a uniform six-item deal.
+  Chocolate or chocolatey coating is a defining taste.
+fruity       Fruity       19 items; 89% chance in a uniform six-item deal.
+  Fruit flavor; an assorted fruit package counts once, without individual flavor tags.
+sour         Sour          2 items; 18% chance in a uniform six-item deal.
+  Explicitly sour variety; tangy fruit candy does not automatically qualify.
+mint         Mint          4 items; 33% chance in a uniform six-item deal.
+  Recognizable mint flavor; fruit products called mints do not qualify.
+chewy        Chewy        14 items; 79% chance in a uniform six-item deal.
+  Soft or chewy non-gum candy; Candy Corn is a deliberate broad texture simplification.
+hard         Hard          8 items; 57% chance in a uniform six-item deal.
+  Sucking/lollipop-style hard candy, rather than a crisp candy meant to crumble.
+crunchy      Crunchy      11 items; 69% chance in a uniform six-item deal.
+  A defining crisp/crunchy texture: wafers, candy shells, crisped rice, nuts, or popcorn.
+peanut       Peanut        9 items; 61% chance in a uniform six-item deal.
+  Peanuts or peanut butter; Nestlé Nuts also uses this game tag by explicit user direction. Not a package ingredient claim.
+caramel      Caramel       9 items; 61% chance in a uniform six-item deal.
+  A recognizable caramel component; ordinary sugar is not caramel.
+cookie       Cookie        5 items; 40% chance in a uniform six-item deal.
+  Cookies or a cookie/biscuit center. Kit Kat wafer uses Crunchy instead.
+gum          Gum           6 items; 46% chance in a uniform six-item deal.
+  Chewing or bubble gum. Omit Chewy to avoid redundant gum texture scoring.
+toy          Toy           3 items; 26% chance in a uniform six-item deal.
+  Game shorthand for non-food Halloween treats, including stationery.
+coconut      Coconut       4 items; 33% chance in a uniform six-item deal.
+  Recognizable coconut filling; coconut oil alone does not qualify.
+rice         Rice          3 items; 26% chance in a uniform six-item deal.
+  Crisped rice in chocolate candy, rather than rice flavor. No implied Crunchy score.
+lowSugar     Low Sugar     6 items; 46% chance in a uniform six-item deal.
+  Explicitly sugar-free or zero-sugar varieties. Never infer from serving size or non-food status.
+almond       Almond        1 items; 9% chance in a uniform six-item deal.
+  Whole almond filling; a precise, currently rare nut trait.
+marshmallow  Marshmallow   3 items; 26% chance in a uniform six-item deal.
+  Marshmallow candy or filling; omit redundant Chewy when this identifies the texture.
+cherry       Cherry        1 items; 9% chance in a uniform six-item deal.
+  A specifically cherry-flavored game item. No implied Fruity score.
+milk         Milk          1 items; 9% chance in a uniform six-item deal.
+  A distinct milk or malted-milk center, rather than ordinary milk chocolate.
+
+REPRESENTATIVE ARTWORK
+John clarified that pictures need not match the exact intended variety.
+Tags describe the game item, not every ingredient or flavor printed on its picture.
+Trident is generic Gum; NestleNuts uses Peanut by explicit user direction.
+
+PLANNED / RESERVED
+Marshmallow: now represented by Peeps, Mallomars and Jet-Puffed Toasted Coconut Marshmallows.
+Cherry: Tootsie Pops Cherry qualifies; no automatic Fruity matching.
+Milk: Whoppers has a distinct malted-milk center; ordinary milk chocolate stays Chocolate.
+Low Sugar: six explicitly sugar-free items, including gums, hard candies and twists.
+Rice: crisped rice, not a distinct rice flavor; retain as a specialty preference.
+Almond: appears once; avoid as an initial favorite.
+
+FULL ARTWORK CATALOG
+100Grand | 100 Grand | 100Grand.png | 500x500 | Chocolate, Caramel, Rice
+  Note: Three-tag limit prioritizes Chocolate, Caramel, Rice. Also crunchy in reality; omitted traits never score implicitly.
+3Musketeers | 3 Musketeers | 3Musketeers.png | 500x500 | Chocolate
+  Note: Chocolate nougat; no Caramel. Nougat omitted rather than adding a narrow preference category.
+Airheads | Airheads | Airheads.png | 500x500 | Fruity, Chewy
+  Note: Generic Airheads game item; Bites artwork is representative. No Sour tag for the regular item.
+AlmondJoy | Almond Joy | AlmondJoy.png | 500x500 | Chocolate, Coconut, Almond
+  Note: Chocolate, Coconut, Almond. Almond is not Peanut.
+BabyRuth | Baby Ruth | BabyRuth.png | 500x500 | Chocolate, Peanut, Caramel
+Butterfinger | Butterfinger | Butterfinger.png | 500x500 | Chocolate, Peanut, Crunchy
+CandyCorn | Candy Corn | CandyCorn.png | 500x500 | Chewy
+  Note: Soft candy grouped under Chewy for gameplay; not a claim that its texture equals gummy candy.
+ChocolateChipCookie | Chocolate-chip Cookie | ChocolateChipCookie.png | 500x500 | Cookie, Chocolate
+GhostCookie | Ghost Cookie | GhostCookie.png | 500x500 | Cookie
+  Note: Pictured ghost-pattern cookie. Decoration does not establish an additional flavor.
+PumpkinCookie | Pumpkin Cookie | PumpkinCookie.png | 500x500 | Cookie
+  Note: Pumpkin-shaped cookie; no pumpkin flavor or chocolate decoration assumed without a recipe.
+Crayons | Crayons | Crayons.png | 500x500 | Toy
+Dots | Dots | Dots.png | 500x500 | Fruity, Chewy
+Eraser | Eraser | Eraser.png | 500x500 | Toy
+DubbleBubble | Dubble Bubble | DubbleBubble.png | 500x500 | Gum
+Doublemint | Doublemint | Doublemint.png | 500x500 | Gum, Mint
+HubbaBubba | Hubba Bubba | HubbaBubba.png | 500x500 | Gum
+  Note: Generic bubble gum game item; pictured fruit flavor does not control its tags.
+JuicyFruit | Juicy Fruit | JuicyFruit.png | 500x500 | Gum, Fruity
+Orbit | Orbit | Orbit.png | 500x500 | Gum, Mint, Low Sugar
+  Note: Generic mint-style, sugar-free Orbit game item; specific Bubblemint wording is not its program identity.
+Trident | Trident Gum | Trident.png | 500x500 | Gum, Low Sugar
+  Note: Generic Trident game item. Gum and Low Sugar; no watermelon or Mint tag inferred from representative artwork.
+HariboGoldbears | Haribo Goldbears | HariboGoldbears.png | 500x500 | Fruity, Chewy
+HersheysMilkChocolate | Hershey's Milk Chocolate | HersheysMilkChocolate.png | 500x500 | Chocolate
+JollyRancher | Jolly Rancher | JollyRancher.png | 500x500 | Fruity, Hard
+JuniorMints | Junior Mints | JuniorMints.png | 500x500 | Chocolate, Mint
+KitKat | Kit Kat | KitKat.png | 500x500 | Chocolate, Crunchy
+Krackel | Krackel | Krackel.png | 500x500 | Chocolate, Rice, Crunchy
+LifeSaversGummies | Life Savers Gummies | LifeSaversGummies.png | 500x500 | Fruity, Chewy
+LifeSavers | Life Savers | LifeSavers.png | 500x500 | Fruity, Hard
+MarsBar | Mars Bar | MarsBar.png | 500x500 | Chocolate, Caramel
+MentosFruit | Mentos Fruit | MentosFruit.png | 500x500 | Fruity, Chewy
+MilkyWay | Milky Way | MilkyWay.png | 500x500 | Chocolate, Caramel
+  Note: Assumed US-style Milky Way with caramel, matching the pictured branding. Regional varieties can differ.
+MAndMsPeanut | Peanut M&M's | MAndMsPeanut.png | 500x500 | Chocolate, Peanut, Crunchy
+MAndMsMilkChocolate | Milk Chocolate M&M's | MAndMsMilkChocolate.png | 500x500 | Chocolate, Crunchy
+Mounds | Mounds | Mounds.png | 500x500 | Chocolate, Coconut
+MrGoodbar | Mr. Goodbar | MrGoodbar.png | 500x500 | Chocolate, Peanut
+Nerds | Nerds | Nerds.png | 500x500 | Fruity, Crunchy
+  Note: Fruity and Crunchy; reserve Sour for explicitly sour varieties.
+NestleCrunch | Nestlé Crunch | NestleCrunch.png | 500x500 | Chocolate, Rice, Crunchy
+  Note: Legacy Nestlé wrapper retained; no change to the pictured product branding.
+NestleNuts | Nestlé Nuts | NestleNuts.png | 500x500 | Chocolate, Peanut, Caramel
+  Note: John explicitly assigns Peanut for the game. Representative real-world product uses hazelnuts; game tags describe the intended game item, not the package recipe.
+PayDay | PayDay | PayDay.png | 500x500 | Peanut, Caramel
+PlantersPeanuts | Planters Peanuts | PlantersPeanuts.png | 500x500 | Peanut, Crunchy
+PlayDoh | Play-Doh | PlayDoh.png | 500x500 | Toy
+Popcorn | Popcorn | Popcorn.png | 500x500 | Crunchy
+  Note: Plain popcorn assumed; image does not establish caramel coating or a low-sugar claim.
+RedVines | Red Vines Original Red | RedVines.png | 500x500 | Chewy
+  Note: Original Red variety. Do not infer cherry or black-licorice flavor from its red color or shape; Chewy alone is the conservative assignment.
+ReesesPeanutButterCups | Reese's Peanut Butter Cups | ReesesPeanutButterCups.png | 500x500 | Chocolate, Peanut
+RingPop | Ring Pop | RingPop.png | 500x500 | Fruity, Hard
+  Note: Generic fruity hard candy item; pictured blue raspberry variety is representative.
+SkittlesSour | Skittles Sour | SkittlesSour.png | 500x500 | Fruity, Sour, Chewy
+SkittlesOriginal | Skittles Original | SkittlesOriginal.png | 500x500 | Fruity, Chewy
+Smarties | Smarties | Smarties.png | 500x500 | Fruity, Crunchy
+  Note: US tablet roll, not chocolate Smarties. Crunchy broadly represents its crumbly texture.
+Snickers | Snickers | Snickers.png | 500x500 | Chocolate, Peanut, Caramel
+SourPatchKids | Sour Patch Kids | SourPatchKids.png | 500x500 | Fruity, Sour, Chewy
+Starburst | Starburst | Starburst.png | 500x500 | Fruity, Chewy
+TicTacFruit | Tic Tac Fruit | TicTacFruit.png | 500x500 | Fruity, Hard
+Twix | Twix | Twix.png | 500x500 | Chocolate, Cookie, Caramel
+Twizzlers | Twizzlers | Twizzlers.png | 500x500 | Fruity, Chewy
+JetPuffedToastedCoconutMarshmallows | Jet-Puffed Toasted Coconut Marshmallows | JetPuffedToastedCoconutMarshmallows.png | 500x500 | Marshmallow, Coconut
+  Note: Source filename said Toasted Marshmallow; package identifies Toasted Coconut marshmallows. No chocolate coating on this pictured variety.
+LifeSaversSugarFree | Life Savers Sugar Free | LifeSaversSugarFree.png | 500x500 | Fruity, Hard, Low Sugar
+LifeSaversMintSugarFree | Life Savers Pep-O-Mint Sugar Free | LifeSaversMintSugarFree.png | 500x500 | Mint, Hard, Low Sugar
+  Note: Pep-O-Mint variety shown. Mint, Hard, Low Sugar; no Fruity tag.
+Mallomars | Mallomars | Mallomars.png | 500x500 | Chocolate, Marshmallow, Cookie
+Ohasis | Oh!asis Coconut Patties | Ohasis.png | 500x500 | Chocolate, Coconut
+  Note: Generic coconut-patty game item. Limited-edition peppermint artwork is representative; no Mint tag assigned.
+Peeps | Peeps | Peeps.png | 500x500 | Marshmallow
+  Note: Generic marshmallow Peeps game item, consistent with representative-artwork policy. The pictured chocolate-covered variety does not add Chocolate to this generic item.
+TootsiePopsCherry | Tootsie Pops Cherry | TootsiePopsCherry.png | 500x500 | Cherry, Hard, Chocolate
+  Note: Cherry outer hard candy with chocolatey Tootsie Roll center. Three-tag cap prioritizes Cherry, Hard, Chocolate; Fruity and Chewy do not score implicitly.
+TootsieRoll | Tootsie Roll | TootsieRoll.png | 500x500 | Chocolate, Chewy
+TwizzlersSugarFree | Twizzlers Sugar Free | TwizzlersSugarFree.png | 500x500 | Fruity, Chewy, Low Sugar
+WerthersSugarFree | Werther's Original Sugar Free | WerthersSugarFree.png | 500x500 | Caramel, Hard, Low Sugar
+Whoppers | Whoppers | Whoppers.png | 500x500 | Chocolate, Crunchy, Milk
+  Note: Chocolatey coating with crunchy malted-milk center. Milk represents the distinct malted-milk taste, not all milk-containing chocolate.
+
+PLAYER PREFERENCE DIRECTION
+Keep three lines: favorite +2, like +1, dislike -1; base +1 per item.
+Strong dislike -2 remains supported for later; none assigned.
+The existing profiles are retained in characters, not silently replaced.
+candidateProfiles proposes broader favorites for the full artwork pool:
+Jing: favorite Chocolate; like Cookie; dislike Mint.
+Yuze: favorite Chewy; like Caramel; dislike Gum.
+Andries: favorite Crunchy; like Gum; dislike Peanut.
+Noor: favorite Fruity; like Toy; dislike Sour.
+Andries still dislikes Peanut, as confirmed.
+Sour has only two items; Cherry, Milk and Almond each have one. These work better as
+secondary preferences or in deliberately balanced deals than as random-pool favorites.
+Marshmallow and Coconut remain specialty traits. Broad favorites help each character find useful trades.
+Noor liking Toy creates an interested recipient for all three non-food treats.
+
+STATUS
+Catalog covers the current 64 artwork files, with corrected identities and paths.
+Items without artwork from the old draft (Mentos Mint, Ruler, Toy Spider) are not in this catalog.
+The live demo reads gamedata03.json with retained character profiles; candidateProfiles are proposals.
+Research, naming decisions and coverage: ../codex-john-docs/gamedata03-handoff-2026-1007.md
+
+GAPS / POSSIBLE NEW ITEMS
+Marshmallow is now covered. Warheads hard candy would add Fruity + Sour + Hard.
+The remaining suggested addition is not in the dealable catalog and needs artwork.
+Prefer new tag combinations and support for rare traits over more equivalent chocolate bars.

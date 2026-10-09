@@ -1,0 +1,79 @@
+CANDY ATTRIBUTES
+----------------
+
+Possible Candy Attributes:
+
+Chocolate
+Hard Candy
+Candy Bar
+Chewy
+Cookie
+Toys
+Sweet
+Sour
+Minty
+Fruity
+Peanut
+Crispy
+Caramel
+Gum
+Sugar Free
+
+
+
+CANDY NAME		ATTRIBUTES						FILE NAME
+-----------------------------------------------------------------------------------------
+Airheads		Fruity, Sour
+Candy Corn		Chewy, Sweet, Chewy
+Cookie Choc Chip	Cookie, Sweet, Chocolate
+Cookie Ghost		Cookie, Sweet
+Cookie Pumpkin		Cookie, Sweet
+Crayons			Toy
+Dots			Fruity, Sweet, Chewy
+Eraser			Toy
+Double Bubble Gum	Gum
+Hubba Bubba Gum		Gum
+Trident Gum		Gum, Sugar Free
+Haribo Gummies		Fruity, Sweet, Chewy
+Hersheys Candy Bar	Chocolate, Candy Bar, Sweet
+KitKat			Chocolate, Candy Bar, Sweet, Crispy
+Life Saver Gummies	Chewy, Sweet
+Life Savers		Hard, Sweet
+Mars Bar		Chocolate, Candy Bar, Sweet
+Mentos			Minty, Hard
+Mentos Fruit		Fruity, Hard
+M&M Peanuts		Chocolate, Peanut
+M&M Plain		Chocolate
+Nerds			Fruity, Hard
+Nuts Candy Bar		Peanuts
+Planters Peanuts	Peanuts
+Play Doh		Toy
+Popcorn			Crispy
+Razor Knife		Toy
+Reeses			Chocolate, Peanuts
+Ruler			Toy
+Skittles Sour		Fruity, Sour
+Skittles Sweet		Fruity, Sweet
+Smarties		Fruity, Sour
+Snickers		Chocolate, Peanuts, Caramel
+Sour Patch Kids		Sour, Fruity
+Starburst		Sour, Fruity
+Tic Tac Fruit		Minty, Fruity
+Twix			Crispy, Chocolate, Caramel
+Twizzlers		Chewy, Fruity
+
+		
+
+PLAYERS
+-------
+
+NAME			STRONG LIKES +3		LIKES +1		DISLIKES -1	 	STRONG DISLIKES -3
+------------------------------------------------------------------------------------------------------------------
+
+Jing			Sour, Sugar Free	Crispy, Cookie		Sweet			---		
+Yuze			Fruity, Chewy		Chocolate, Candy Bar	Hard Candy, Minty 	Gum
+Andries			Hard Candy, Sour	Gum		Peanut, Chewy	 	Caramel
+Noor			Sugar Free, Fruity	Crispy, Cookie		Sour, Hard Candy 	Gum
+
+
+
