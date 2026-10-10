@@ -25,6 +25,7 @@ const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary
     await page.waitForFunction(() => document.querySelector('#message.speech-request')?.style.visibility !== 'hidden' && !document.querySelector('.flying-speech'));
     assert.equal(await page.locator('#humanCount').textContent(), before, 'Request must not resolve before the settled quote hold');
     assert.equal(await page.locator('#centerCircle > img').count(), 0, 'Requested candy is shown only in the quote bubble');
+    assert.equal(await page.locator('#message').evaluate(node => node.classList.contains('on-right')), false, 'Wendy question settles on the left');
     const settledAt = Date.now();
     await page.waitForTimeout(300);
     assert.equal(await page.locator('#human-hundredGrand').evaluate(node => node.classList.contains('selected') || node.classList.contains('available')), false, 'Highlight waits after the bubble settles');
@@ -53,8 +54,13 @@ const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary
     assert.equal(await page.locator('#human-threeMusketeers').isEnabled(), false, 'Other candies cannot satisfy the request');
     const tappedAt = Date.now();
     await page.locator('#human-hundredGrand').click();
+    await page.locator('.flying-speech').waitFor();
+    assert.match(await page.locator('.flying-speech').textContent(), /Player said:.*Yes I do/);
+    assert.equal(await page.locator('.flying-candy').count(), 0, 'Player Yes reply precedes the candy transfer');
+    await page.waitForFunction(() => !document.querySelector('.flying-speech'));
+    assert(await page.locator('#message').evaluate(node => node.classList.contains('on-right')), 'Player Yes settles on the right');
     await page.locator('#human-hundredGrand.giving').waitFor();
-    assert(Date.now() - tappedAt < 1500, 'Requested candy starts leaving promptly after a tap');
+    assert(Date.now() - tappedAt < 6500, 'Tap starts the reply immediately, followed by the standard reading hold and transfer');
     assert.equal(await page.locator('#human-hundredGrand').isEnabled(), false, 'The request cannot be given twice');
     const responsePage = await browser.newPage({ viewport: { width: 338, height: 526 } });
     await responsePage.addInitScript(() => { Math.random = () => 0.1; });
@@ -68,6 +74,8 @@ const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary
     await responsePage.locator('#human-' + missingType).click();
     assert.match(await responsePage.locator('#askButton').textContent(), /Player asks:Do you have any/);
     assert.equal(await responsePage.locator('#askButton .speech-candy').count(), 1);
+    assert(await responsePage.evaluate(() => document.querySelector('#askButton').getBoundingClientRect().left > document.querySelector('#centerCircle').getBoundingClientRect().right), 'Player asks on the right');
+    assert(await responsePage.evaluate(() => {const r=document.querySelector('#centerCircle').getBoundingClientRect();return Math.abs(r.left+r.width/2-innerWidth/2)<1;}), 'Candy Dish is centered');
     assert.equal(await responsePage.locator('#centerCircle > img').count(), 0, 'Player selection leaves the center as the Candy Dish');
     assert.equal(await responsePage.locator('#centerCircle .pile-token').count(), 4);
     await responsePage.screenshot({ path: path.join(__dirname, 'demo-player-question.png') });
@@ -83,18 +91,18 @@ const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary
     await responsePage.locator('#dialogAction').click();
     await responsePage.locator('.player-request-flight').waitFor({ state: 'detached' });
     await responsePage.locator('.flying-speech:not(.player-request-flight)').waitFor();
-    assert.match(await responsePage.locator('.flying-speech:not(.player-request-flight)').textContent(), /Nope\. Tap the candy dish to Go Fish!/);
+    assert.match(await responsePage.locator('.flying-speech:not(.player-request-flight)').textContent(), /Wendy said:.*NO, GO FISH!/);
     assert.equal(await responsePage.locator('#centerCircle').isEnabled(), false, 'Draw waits for the response to arrive');
     await responsePage.waitForFunction(() => !document.querySelector('#centerCircle').disabled);
     await responsePage.locator('#rulesButton').click();
     await responsePage.locator('#dialogAction').click();
-    assert.match(await responsePage.locator('#message').textContent(), /Nope\. Tap the candy dish to Go Fish!/);
+    assert.match(await responsePage.locator('#fishButton').textContent(), /Wendy said:.*NO, GO FISH!/);
     await responsePage.screenshot({ path: path.join(__dirname, 'demo-nope-speech.png') });
-    const responseFits = await responsePage.locator('#message').evaluate(node => {
+    const responseFits = await responsePage.locator('#fishButton').evaluate(node => {
       const rect = node.getBoundingClientRect(), center = node.closest('.center-area').getBoundingClientRect();
       return rect.top >= center.top && rect.bottom <= center.bottom;
     });
-    assert(responseFits, 'Nope quote fits the center panel');
+    assert(responseFits, 'Go Fish reply fits the center panel');
     await responsePage.locator('#centerCircle').click();
     assert.equal(await responsePage.locator('#message').evaluate(node => node.classList.contains('speech-request')), false);
     await responsePage.reload();
@@ -115,6 +123,7 @@ const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary
     assert.equal(await responsePage.locator('#humanCount').textContent(), beforeYes, 'No candy is transferred during the reply');
     await responsePage.locator('.flying-speech').waitFor({ state: 'detached' });
     assert.match(await responsePage.locator('#message').textContent(), /Yes I do/, 'Yes reply remains readable after arrival');
+    assert.equal(await responsePage.locator('#message').evaluate(node => node.classList.contains('on-right')), false, 'Wendy Yes stays on the left');
     await responsePage.waitForTimeout(300);
     assert.match(await responsePage.locator('#message').textContent(), /Yes I do/);
     assert.equal(await responsePage.locator('.flying-candy').count(), 0, 'Candy still waits during the reading pause');
@@ -160,7 +169,7 @@ const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary
     assert(longFits, 'Long candy request with its image fits the center panel');
     await page.screenshot({ path: path.join(__dirname, 'demo-request-candy.png') });
     await page.locator('#fishButton').waitFor({ state: 'visible' });
-    assert.match(await page.locator('#fishButton').textContent(), /You say:NOPE! GO FISH!/);
+    assert.match(await page.locator('#fishButton').textContent(), /Player said:NO, GO FISH!/);
     assert.equal(await page.locator('#fishButton img').count(), 0);
     await page.locator('#rulesButton').click();
     await page.locator('#dialogAction').click();

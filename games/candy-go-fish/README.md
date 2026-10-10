@@ -4,7 +4,7 @@ Playable demo for the Halloween 2026 shell, registered in slot 8. Open `demo.htm
 
 **Start with [current state and continuation](codex-john-docs/CURRENT-STATE-2026-1009.md).** It links current rules/gameplay, UI, architecture/data, strategy, integration/testing, the complete animation survey and the implementation handoff. Historical docs preserve earlier decisions and are not current specifications.
 
-Ten types, three copies per type, five initially dealt per player. Request a held type; a success transfers one candy and keeps the turn. Every fishing draw ends the turn. No refill. Empty dish, empty active hand or all sets ends the game after collecting any final set. Most sets wins; ties are possible.
+Ten types, three copies per type, five initially dealt per player. Request a held type; a success transfers one candy and keeps the turn. The current runtime ends every fishing turn. The newly specified **Good Fish rule** (implementation pending) instead keeps the turn when the draw completes a set; otherwise fishing ends the turn. Completing a set by any means or successfully requesting a candy keeps the turn, subject to game-ending conditions. No refill. Empty dish, empty active hand or all sets ends the game after collecting any final set. Most sets wins; ties are possible.
 
 Question bubbles carry the requested candy image; the middle stays the Candy Dish. Human questions send after four seconds or a bubble tap. Opponent questions settle before matching human slots highlight. Yes replies arrive, pause and fade before candy transfer. All transfer/draw routes have source emphasis and curved travel; opponent draws stay private. Celebrations wait for dismissal. The result banner leaves both hands visible.
 
@@ -31,3 +31,5 @@ The shell owns Home/title/menu/drawer; New Game and Rules stay in the game. Use 
 Animation standardization is surveyed and handed off, not implemented. Its next developer should start with [the implementation handoff](codex-john-docs/ANIMATION-IMPLEMENTATION-HANDOFF.md), preserve current behavior and use the survey as the migration inventory.
 
 John authorized the local **Document Candy Go Fish and hand off animation standardization** checkpoint. **Do not push** until he explicitly asks. Earlier rollback commits are recorded in current state; `5c49271` predates the latest flash/timing fixes.
+
+Current visual trial: the demo is temporarily configured for four candies per set, with 40 candies total and 30 in the Candy Dish after dealing. Three held copies display as three stacked images. The intended base game remains ten types with sets of three; change copiesPerType back to 3 and regenerate the companion to restore it. Other turn/end rules are unchanged.

@@ -1,5 +1,7 @@
 # Architecture and data
 
+**End-of-day update:** [End-of-first-day handoff](END-OF-FIRST-DAY-2026-1009.md) takes precedence for current runtime and TODOs. This earlier inventory includes assumptions superseded by the quote speed toggle, retained questions, compact boxes and four-copy preview. Resurvey those paths before implementing its refactor plan.
+
 Current code, October 9, 2026. Plain HTML/CSS/JavaScript; no build framework or installed project dependency is required for the game.
 
 ## Files and dependency order
@@ -26,7 +28,7 @@ HTML loads `../game-helper.js`, config companion, engine, strategy, then UI. HTT
 
 `request(state, actor, type)` validates turn, no pending draw, unfinished state and held type. It emits `request`, then either one `transfer` and optional `set`, or `miss` with pending `{ actor, type }`. It checks ending and appends public events. Success leaves the turn unchanged.
 
-`fish(state)` requires a pending unfinished draw, shifts one card, clears pending, switches turn unconditionally, collects possible set, checks ending and returns draw/set events. Returned draw type is available to presentation; stored public draw history omits identity for both roles. `count` and `heldTypes` support legality/display/strategy inputs.
+`fish(state)` requires a pending unfinished draw, shifts one card, clears pending, switches turn unconditionally, collects possible set, checks ending and returns draw/set events. Returned draw type is available to presentation; stored public draw history omits identity for both roles. `count` and `heldTypes` support legality/display/strategy inputs. This is the current implementation, not the newly specified Good Fish behavior: that pending change must collect sets before selecting the next turn, retaining the actor on set completion while preserving game-ending priority. See Rules and gameplay for the implementation checks.
 
 Sets retain their physical cards; conservation is testable across hands/dish/sets. State mutation happens once per accepted action. Animation cleanup must never cause another engine request/draw. Strategy sees only its hand's type-only copy and public clues.
 
@@ -41,8 +43,8 @@ The UI owns `state`, `memory`, `phase`, `selected`, `generation`, `overlayOpen`,
 | `requesting` | Human question traveling or human request resolving |
 | `thinking` | Opponent delay before choosing |
 | `wendyRequest` | Opponent question arriving/holding or transfer resolving |
-| `fishResponse` | Opponent Nope arrival after a human miss |
-| `humanFishWait` | Human may draw from dish |
+| `fishResponse` | Go Fish reply arrival for either speaker |
+| `humanFishWait` | Human may draw from opponent reply or dish; human question retained |
 | `wendyFishWait` | Human may send opponent fishing |
 | `drawing` | Draw pulse/travel/celebration/result hold |
 | `finished` | Central result banner |

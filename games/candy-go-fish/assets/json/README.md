@@ -45,3 +45,7 @@ node games/candy-go-fish/codex-john-docs/sync-config.cjs
 ```
 
 Regeneration validates names/IDs and writes the companion. Keep both files together; do not edit generated JavaScript independently. The current validator does not validate all animation values; adding presentation-schema validation is part of the later handoff.
+
+Dots, Life Savers Gummies, Mallomars and Red Vines now also use a −30° rotation through per-candy JSON overrides, shared by grid, quote and transfer artwork. Their existing image scales remain unchanged. 100 Grand retains −15°.
+
+Current visual trial: the demo is temporarily configured for four candies per set, with 40 candies total and 30 in the Candy Dish after dealing. Three held copies display as three stacked images. The intended base game remains ten types with sets of three; change copiesPerType back to 3 and regenerate the companion to restore it. Other turn/end rules are unchanged.

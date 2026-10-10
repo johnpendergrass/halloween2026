@@ -4,15 +4,16 @@ Updated October 9, 2026
 
 This folder holds working documentation and supporting development material for the new game in `games/candy-go-fish`.
 
-**Start with [Current state and continuation](CURRENT-STATE-2026-1009.md).** It identifies the local baseline and links the comprehensive current documentation below. This set overrides historical notes.
+**Start with [End-of-first-day handoff](END-OF-FIRST-DAY-2026-1009.md), then [Current state and checkpoints](CURRENT-STATE-2026-1009.md).** It identifies the local baseline and links the comprehensive current documentation below. This set overrides historical notes.
 
 - [Rules and gameplay](RULES-AND-GAMEPLAY.md)
-- [UI and presentation](UI-AND-PRESENTATION.md)
+- [UI and presentation](UI-AND-PRESENTATION.md): current appearance and design TODOs, including candy departure, celebrations, top controls and portrait selectors.
 - [Architecture and data](ARCHITECTURE-AND-DATA.md)
 - [Opponent strategies](OPPONENT-STRATEGIES.md)
 - [Integration and verification](INTEGRATION-AND-VERIFICATION.md)
 - [Animation implementation handoff](ANIMATION-IMPLEMENTATION-HANDOFF.md)
 - [Baseline verification record](VERIFICATION-2026-1009.md)
+- [End-of-day verification record](END-OF-DAY-VERIFICATION-2026-1009.md)
 
 - [Animation and timing survey](ANIMATION-SURVEY-2026-1009.md): complete motion/wait inventory, event sequences, coordination risks, and proposed central setup before refactoring.
 

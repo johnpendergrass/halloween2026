@@ -1,5 +1,7 @@
 # Integration, preview, verification and publishing
 
+**End-of-day update:** [End-of-first-day handoff](END-OF-FIRST-DAY-2026-1009.md) takes precedence for current runtime and TODOs. This earlier inventory includes assumptions superseded by the quote speed toggle, retained questions, compact boxes and four-copy preview. Resurvey those paths before implementing its refactor plan.
+
 Current state, October 9, 2026.
 
 ## Repository and shell
@@ -8,7 +10,7 @@ Workspace: `D:\dev\Projects\halloween2026`; game: `games/candy-go-fish`; branch 
 
 Read and follow the shared [Game Design Requirements](../../README%20-%20game%20design%20requirements.md). Do not duplicate that specification into the game. Game panel is 9:14 on the 1296×2016 art canvas, with no scrolling; shell overall is 9:16. Minimum target is 13vw in both dimensions; normal text floors and width-based sizing remain binding. Refer to the specification for the full constraints.
 
-Registry is root `games.json`: game is **Go Fish Candy Edition**, full `title` and `short_title`, slot 8 at bottom right, local `assets/halloween-fish.svg` icon. The old Game 8 placeholder has no slot. The shell purple banner uses `short_title`; changing only a game-local title does not change it. Local title row still says Go Fish.
+Registry is root `games.json`: game is **Go Fish Candy Edition**, full `title` and `short_title`, slot 8 at bottom right, local `assets/halloween-fish.svg` icon. The old Game 8 placeholder has no slot. The shell purple banner uses `short_title`; changing only a game-local title does not change it. The local title is currently replaced by the temporary Quotes: Slow / Fast toggle.
 
 Only the existing `../game-helper.js` score API is used: `Halloween.reportScore(humanSetCount, 'human–opponent')`, once at result. Human completed sets are the ranked numeric score. The shell keeps the best five per game/device and ignores zero-or-less scores. Standalone play logs harmlessly instead of storing a score. The game must not directly use parent messaging, parent access or localStorage.
 
@@ -43,7 +45,7 @@ node games/candy-go-fish/codex-john-docs/verify-speech-redraw.cjs
 | Script | Coverage |
 | --- | --- |
 | `validate-candy-names.cjs` | Current catalog and rejected normalized duplicate, missing name and overlong short name |
-| `verify-engine.cjs` | One-copy transfer, turn rules, legality, early ending, final-draw set, privacy/memory/conservation and 1,000 simulated games |
+| `verify-engine.cjs` | One-copy transfer, turn rules, legality, early ending, final-draw set, privacy/memory/conservation and 1,000 simulated games each for three/four copies |
 | `verify-browser.cjs` | Phone/desktop fit, target size, dialogs, alternate names, full UI round, both celebration dismissal methods, result hands, replay and file opening |
 | `verify-speech.cjs` | Real-time arrival/holds, delayed highlight, manual/automatic actions, reselection reset, source/destination timing, Rules pause, question art/rotation/fit, Yes reading/fade before transfer |
 | `verify-speech-redraw.cjs` | Legal Red Vines Yes/Nope scenarios, frame visibility, hidden/removed old layers, delayed timer replay checks and incoming opponent question |

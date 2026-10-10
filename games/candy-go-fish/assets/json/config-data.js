@@ -1,7 +1,7 @@
 // Generated from game-config.json by codex-john-docs/sync-config.cjs.
 window.CandyConfig = {
   "rules": {
-    "copiesPerType": 3,
+    "copiesPerType": 4,
     "initialHandSize": 5
   },
   "players": {
@@ -92,19 +92,28 @@ window.CandyConfig = {
       "id": "dots",
       "longName": "Dots",
       "shortName": "Dots",
-      "image": "Dots.png"
+      "image": "Dots.png",
+      "display": {
+        "rotationDegrees": -30
+      }
     },
     {
       "id": "lifeSaversGummies",
       "longName": "Life Savers Gummies",
       "shortName": "LS Gummies",
-      "image": "LifeSaversGummies.png"
+      "image": "LifeSaversGummies.png",
+      "display": {
+        "rotationDegrees": -30
+      }
     },
     {
       "id": "mallomars",
       "longName": "Mallomars",
       "shortName": "Mallomars",
-      "image": "Mallomars.png"
+      "image": "Mallomars.png",
+      "display": {
+        "rotationDegrees": -30
+      }
     },
     {
       "id": "milkyWay",
@@ -130,7 +139,10 @@ window.CandyConfig = {
       "id": "redVines",
       "longName": "Red Vines",
       "shortName": "Red Vines",
-      "image": "RedVines.png"
+      "image": "RedVines.png",
+      "display": {
+        "rotationDegrees": -30
+      }
     },
     {
       "id": "snickers",

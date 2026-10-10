@@ -58,24 +58,24 @@ wendy.observe(memory, [{ kind: 'draw', player: 'human' }]);
 assert.equal(memory.absent.size, 0);
 function invariant(state) {
   const cards = [...state.pile, ...state.hands.human, ...state.hands.wendy, ...state.sets.human.flatMap(set => set.cards), ...state.sets.wendy.flatMap(set => set.cards)];
-  assert.equal(cards.length, 30); assert.equal(new Set(cards.map(card => card.id)).size, 30);
+  assert.equal(cards.length, state.typeCount * state.copies); assert.equal(new Set(cards.map(card => card.id)).size, state.typeCount * state.copies);
   const types = [...state.sets.human, ...state.sets.wendy].map(set => set.type);
   assert.equal(new Set(types).size, types.length);
-  for (const player of ['human', 'wendy']) for (const type of engine.heldTypes(state.hands[player])) assert(engine.count(state.hands[player], type) < 3);
+  for (const player of ['human', 'wendy']) for (const type of engine.heldTypes(state.hands[player])) assert(engine.count(state.hands[player], type) < state.copies);
 }
 let randomSeed = 1349;
 function random() { randomSeed = (randomSeed * 1664525 + 1013904223) >>> 0; return randomSeed / 4294967296; }
 let maximumMoves = 0;
-for (let game = 0; game < 1000; game++) {
-  state = engine.create(config, random); const memories = { human: wendy.createMemory(), wendy: wendy.createMemory() };
+for (const copiesPerType of [3, 4]) for (let game = 0; game < 1000; game++) {
+  state = engine.create({ ...config, rules: { ...config.rules, copiesPerType } }, random); const memories = { human: wendy.createMemory(), wendy: wendy.createMemory() };
   let moves = 0; invariant(state);
   while (!state.finished && moves++ < 500) {
     const actor = state.turn;
-    const type = wendy.choose(state.hands[actor].map(card => ({ type: card.type })), memories[actor], random);
+    const type = wendy.choose(state.hands[actor].map(card => ({ type: card.type })), memories[actor], random, state.copies);
     const events = engine.request(state, actor, type); wendy.observe(memories.wendy, events);
     if (state.pending) wendy.observe(memories.wendy, engine.fish(state));
     invariant(state);
   }
   assert(state.finished, 'Game failed to terminate'); maximumMoves = Math.max(maximumMoves, moves);
 }
-console.log('Rules, memory, privacy, conservation and 1,000 games passed; maximum ' + maximumMoves + ' requests.');
+console.log('Rules, memory, privacy, conservation and 1,000 games each with three/four copies passed; maximum ' + maximumMoves + ' requests.');

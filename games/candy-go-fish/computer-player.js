@@ -21,11 +21,11 @@
       if (event.kind === 'set') { memory.known.delete(event.type); memory.absent.delete(event.type); }
     }
   }
-  function choose(hand, memory, random = Math.random) {
+  function choose(hand, memory, random = Math.random, copiesPerType = 3) {
     const quantities = new Map();
     for (const card of hand) quantities.set(card.type, (quantities.get(card.type) || 0) + 1);
     const choices = [...quantities].map(([type, quantity]) => ({ type,
-      weight: (memory.known.has(type) ? 8 : memory.absent.has(type) ? 0.3 : 2) * (quantity === 2 ? 1.8 : 1) }));
+      weight: (memory.known.has(type) ? 8 : memory.absent.has(type) ? 0.3 : 2) * (quantity === copiesPerType - 1 ? 1.8 : 1) }));
     let pick = random() * choices.reduce((sum, choice) => sum + choice.weight, 0);
     for (const choice of choices) { pick -= choice.weight; if (pick < 0) return choice.type; }
     return choices.at(-1)?.type;

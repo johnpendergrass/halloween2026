@@ -53,7 +53,7 @@ async function redVinesDeal(page, opponentHasCandy) {
         if (outgoingSeen && (outgoing || reply)) {
           window.handoffFrames++;
           const button = document.querySelector('#askButton'), message = document.querySelector('#message');
-          if (!button.hidden && button.childElementCount) window.handoffFlashes.push('Original question reappeared');
+          if (!button.hidden && button.childElementCount && (outgoing || !reply?.classList.contains('go-fish-reply'))) window.handoffFlashes.push('Original question reappeared');
           if (reply && !message.hidden && getComputedStyle(message).visibility === 'visible' && message.classList.contains('speech-request')) window.handoffFlashes.push('Stationary reply shown before arrival');
         }
         requestAnimationFrame(sample);

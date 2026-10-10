@@ -1,5 +1,7 @@
 # Animation standardization — implementation handoff
 
+**End-of-day update:** [End-of-first-day handoff](END-OF-FIRST-DAY-2026-1009.md) takes precedence for current runtime and TODOs. This earlier inventory includes assumptions superseded by the quote speed toggle, retained questions, compact boxes and four-copy preview. Resurvey those paths before implementing its refactor plan.
+
 Prepared October 9, 2026 for the next developer/AI. John requested a thorough survey before implementation, then this handoff and comprehensive game docs with a local commit. **The centralization has not been implemented.** Do not infer permission to push or change gameplay from this document.
 
 ## Objective and starting point
@@ -17,7 +19,7 @@ The baseline is the local commit titled **Document Candy Go Fish and hand off an
 - Yes arrives for 2500ms, holds 900ms, fades 300ms, then source pulse and candy transfer. No overlapping candy transfer during the reply.
 - Nope/question remains while awaiting the human's relevant draw/Go Fish action.
 - Every candy route uses the same source pulse and travel treatment; opponent draw remains a neutral private wrapper.
-- Successful request transfers one candy and retains turn. Any fishing draw ends turn. Final possible set resolves before game result.
+- Successful request transfers one candy and retains turn. The baseline engine ends every fishing turn; the subsequently specified **Good Fish rule** is pending separate implementation (see Rules and gameplay). Under that rule, set completion by any means retains the turn, while fishing without a set ends it. Final possible set resolves before game result, and ending conditions take priority. Animation work must preserve whichever verified rules implementation is present rather than silently change it.
 - Set celebration waits for human dismissal; no automatic disappearance. Result banner leaves both hands visible.
 - Native effects resume only from paused state. Never call `play()` on a completed animation; timer lag must not restart anything.
 - Hide/remove temporary speech before cancelling its effect. Original outgoing question is emptied once cloned. Stationary incoming content stays hidden until arrival. Permanent fade content is cleared/hidden before effect cancellation.
