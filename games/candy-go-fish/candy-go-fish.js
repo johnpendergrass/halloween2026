@@ -18,26 +18,21 @@
   }
   el('wendySlots').setAttribute('aria-label', opponentName + "'s completed sets");
   el('askButton').querySelector('span').textContent = 'ASK ' + opponentName.toUpperCase();
-  el('fishButton').setAttribute('aria-label', humanName + ' said: NO, GO FISH!');
+  el('fishButton').setAttribute('aria-label', humanName + ' says: NO, GO FISH!');
   el('dialogBody').querySelector('p').textContent = 'Ask ' + opponentName + ' for candies. Collect ' + config.rules.copiesPerType + ' of a kind to claim a set.';
   let state, memory, phase = 'intro', selected = null, generation = 0, overlayOpen = true, reported = false;
   let closeAction = startGame, displayedTurn = null;
-  let giftWait = null;
+  let yesWait = null;
+  let requestedGift = null;
   let playerRequestWait = null;
   let messageSpeaker = 'human';
-  // Quote-only shortcut; candy pulse/travel and gameplay rules are unchanged.
-  let fastQuotes = false;
-  const quickQuotes = { fadeMs: 250, holdMs: 1000 };
+  // Quotes fade in place; candy transport keeps its independent motion.
+  const quoteTiming = { fadeMs: config.appearance.quoteFadeMs, holdMs: config.appearance.quoteHoldMs };
   let retainedPlayerRequest = null;
   let retainedOpponentRequest = null;
-  let fastManualGift = null;
-  el('quoteSpeed').addEventListener('click', () => {
-    fastQuotes = !fastQuotes;
-    el('quoteSpeed').setAttribute('aria-pressed', String(fastQuotes));
-    el('quoteSpeed').querySelector('b').textContent = fastQuotes ? 'Fast' : 'Slow';
-  });
   function setMessageSpeaker(player) {
     messageSpeaker = player;
+    el('message').dataset.speaker = player;
     el('message').classList.toggle('on-right', player === 'human');
   }
   function image(type) { return './assets/candybar-images/' + byId.get(type).image; }
@@ -65,10 +60,18 @@
       }
     }
   }
+  function giftShortcutUsed(token) {
+    return requestedGift?.token === token && requestedGift.released;
+  }
   function selectCandy(type) {
-    if (giftWait && giftWait.token === generation && giftWait.type === type && !giftWait.released && !overlayOpen) {
-      if (fastQuotes) fastManualGift = { token: generation, type };
-      giftWait.released = true; render(); return;
+    if (!overlayOpen && requestedGift?.token === generation && !requestedGift.released && requestedGift.type === type) {
+      requestedGift.released = true;
+      if (yesWait) yesWait.released = true;
+      render();
+      el('message').replaceChildren(); el('message').style.visibility = 'hidden';
+      el('heldOpponentQuestion')?.remove();
+      document.querySelectorAll('.stationary-speech').forEach(layer => { layer.style.visibility = 'hidden'; });
+      return;
     }
     if (phase !== 'choose' || overlayOpen || !CandyEngine.count(state.hands.human, type)) return;
     selected = type; render();
@@ -77,6 +80,30 @@
     waitActive(config.appearance.playerRequestHoldMs, waiting.token, () => playerRequestWait !== waiting, true).then(valid => {
       if (valid && playerRequestWait === waiting) sendPlayerRequest(waiting.type, waiting.token);
     });
+  }
+  function middleAcknowledgementReady() {
+    return !overlayOpen && (['humanFishWait', 'wendyFishWait'].includes(phase) ||
+      (yesWait?.token === generation && !yesWait.released));
+  }
+  function updateMiddleControls() {
+    const ready = Boolean(middleAcknowledgementReady());
+    el('centerCircle').disabled = !ready;
+    if (el('heldOpponentQuestion')) el('heldOpponentQuestion').disabled = !ready;
+    if (retainedPlayerRequest) el('askButton').disabled = !ready;
+    el('message').classList.toggle('acknowledge', ready);
+    // The Yes reply already supplies native keyboard button semantics.
+    const messageButton = ready && !el('yesReply');
+    el('message').setAttribute('role', messageButton ? 'button' : 'status');
+    el('message').tabIndex = messageButton ? 0 : -1;
+    el('centerCircle').setAttribute('aria-label', 'Candy Dish; ' + (ready ? 'acknowledge and continue; ' : '') + (state?.pile.length ?? 0) + ' remaining');
+  }
+  function acknowledgeMiddle() {
+    if (!middleAcknowledgementReady()) return;
+    if (yesWait?.token === generation && !yesWait.released) {
+      yesWait.released = true;
+      el('yesReply').disabled = true;
+      updateMiddleControls();
+    } else drawCandy();
   }
   function render() {
     if (!state) return;
@@ -96,10 +123,10 @@
       for (const type of config.layout.slotOrder) {
         const slot = el(player + '-' + type), quantity = CandyEngine.count(state.hands[player], type);
         const complete = state.sets[player].some(set => set.type === type);
-        const canGive = giftWait && giftWait.token === generation && giftWait.type === type && !giftWait.released;
+        const canGive = requestedGift?.token === generation && !requestedGift.released && requestedGift.type === type;
         const available = player === 'human' && quantity > 0 && (phase === 'choose' || canGive) && !overlayOpen;
         slot.replaceChildren(); slot.className = 'slot';
-        const highlighted = player === 'human' && ((selected === type && ['choose', 'requesting'].includes(phase)) || canGive);
+        const highlighted = player === 'human' && ((selected === type && phase === 'choose') || canGive);
         slot.classList.toggle('complete', complete); slot.classList.toggle('selected', Boolean(highlighted));
         slot.classList.toggle('available', available);
         if (player === 'human') {
@@ -125,7 +152,7 @@
     el('fishButton').dataset.speaker = fishPlayer;
     const fishSpeaker = config.players[fishPlayer].name;
     fillGoFishReply(el('fishButton'), fishSpeaker);
-    el('fishButton').setAttribute('aria-label', fishSpeaker + ' said: NO, GO FISH!' + (phase === 'humanFishWait' ? ' Draw a candy' : ' Tell ' + opponentName + ' to draw'));
+    el('fishButton').setAttribute('aria-label', fishSpeaker + ' says: NO, GO FISH!' + (phase === 'humanFishWait' ? ' Draw a candy' : ' Tell ' + opponentName + ' to draw'));
     const keepPlayerQuestion = retainedPlayerRequest && ['requesting', 'fishResponse', 'humanFishWait'].includes(phase);
     el('askButton').hidden = el('askButton').disabled && !keepPlayerQuestion;
     if ((phase === 'choose' && selected) || keepPlayerQuestion) {
@@ -134,11 +161,11 @@
       el('askButton').setAttribute('aria-label', 'Ask ' + opponentName + ': Do you have any ' + byId.get(selected).longName + '?');
     }
     el('fishButton').hidden = el('fishButton').disabled;
-    el('centerCircle').disabled = phase !== 'humanFishWait' || overlayOpen;
+    el('centerCircle').disabled = !['humanFishWait', 'wendyFishWait'].includes(phase) || overlayOpen;
     const center = el('centerCircle'); center.replaceChildren();
     for (let index = 0; index < 4; index++) { const token = document.createElement('span'); token.className = 'pile-token'; center.append(token); }
     const number = document.createElement('span'); number.className = 'pile-number'; number.textContent = state.pile.length; center.append(number);
-    center.setAttribute('aria-label', 'Candy Dish; draw a candy; ' + state.pile.length + ' remaining');
+    center.setAttribute('aria-label', 'Candy Dish; ' + (phase === 'wendyFishWait' ? 'let ' + opponentName + ' draw a candy' : 'draw a candy') + '; ' + state.pile.length + ' remaining');
     // Keep the opponent question until the human actually answers Go Fish.
     if (retainedOpponentRequest && ['fishResponse', 'wendyFishWait'].includes(phase)) {
       setMessageSpeaker('wendy');
@@ -153,10 +180,11 @@
     if (phase === 'choose') messageSpeaker = 'human';
     el('message').classList.toggle('on-right', messageSpeaker === 'human');
     el('message').hidden = phase === 'finished' || phase === 'thinking' || (phase === 'choose' && Boolean(selected));
+    updateMiddleControls();
   }
   async function waitActive(ms, token, interrupted = () => false, quoteWait = false) {
     let elapsed = 0;
-    while (elapsed < (quoteWait && fastQuotes ? Math.min(ms, quickQuotes.holdMs) : ms) || overlayOpen) {
+    while (elapsed < (quoteWait ? Math.min(ms, quoteTiming.holdMs) : ms) || overlayOpen) {
       if (token !== generation) return false;
       if (!overlayOpen && interrupted()) return true;
       await new Promise(resolve => setTimeout(resolve, 40));
@@ -164,10 +192,10 @@
     }
     return token === generation;
   }
-  async function playVisual(animation, duration, token, removeTarget = false, quoteMotion = false, startedFast = false) {
+  async function playVisual(animation, duration, token, removeTarget = false, interrupted = () => false) {
     let elapsed = 0;
     while (elapsed < duration && token === generation && animation.playState !== 'finished') {
-      if (quoteMotion && fastQuotes && !startedFast && !overlayOpen) { animation.finish(); break; }
+      if (!overlayOpen && interrupted()) break;
       if (overlayOpen && animation.playState !== 'paused') animation.pause();
       else if (!overlayOpen && animation.playState === 'paused') animation.play();
       await new Promise(resolve => setTimeout(resolve, 40));
@@ -181,20 +209,8 @@
     } else if (token === generation) animation.finish(); else animation.cancel();
     return token === generation;
   }
-  async function emphasizeGift(source, token) {
-    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const duration = reduced ? 120 : config.appearance.giftPulseMs;
-    source.classList.add('giving');
-    const pulse = source.animate(reduced ? [{ opacity: 1 }, { opacity: 1 }] : [
-      { transform: 'scale(1)' }, { transform: `scale(${config.candyDisplay.giftPulseScale})`, offset: 0.32 },
-      { transform: 'scale(1)', offset: 0.65 }, { transform: 'scale(1.06)', offset: 0.82 }, { transform: 'scale(1)' }
-    ], { duration, easing: 'ease-in-out' });
-    const valid = await playVisual(pulse, duration, token);
-    source.classList.remove('giving');
-    return valid;
-  }
   function fillGoFishReply(container, speakerName) {
-    const label = document.createElement('span'); label.textContent = speakerName + ' said:';
+    const label = document.createElement('span'); label.textContent = speakerName + ' says:';
     const action = document.createElement('strong'); action.textContent = 'NO, GO FISH!';
     container.replaceChildren(label, action);
   }
@@ -215,39 +231,12 @@
   async function sendPlayerRequest(type, token) {
     if (token !== generation || phase !== 'choose' || selected !== type || overlayOpen) return;
     playerRequestWait = null;
-    if (fastQuotes) {
-      retainedPlayerRequest = type; phase = 'requesting';
-      el('message').style.visibility = 'hidden'; el('message').replaceChildren();
-      render(); await resolveRequest('human', type, token); return;
-    }
-    const source = el('askButton'), from = source.getBoundingClientRect();
-    const to = document.querySelector('.wendy-portrait .portrait').getBoundingClientRect();
-    const moving = document.createElement('div'); moving.className = 'speech-request flying-speech player-request-flight on-right';
-    moving.style.opacity = '0';
-    moving.setAttribute('aria-hidden', 'true');
-    for (const child of source.children) moving.append(child.cloneNode(true));
-    moving.style.left = from.left + 'px'; moving.style.top = from.top + 'px'; moving.style.width = from.width + 'px';
-    document.body.append(moving);
-    // The question now belongs only to the flying copy; do not leave a
-    // populated stationary button for a redraw to expose during the handoff.
-    source.hidden = true; source.replaceChildren(); source.classList.remove('speech-request');
+    retainedPlayerRequest = type; phase = 'requesting';
     el('message').style.visibility = 'hidden'; el('message').replaceChildren();
-    phase = 'requesting'; render();
-    const dx = to.left + to.width / 2 - from.left - from.width / 2;
-    const dy = to.top + to.height / 2 - from.top - from.height / 2;
-    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const startedFast = fastQuotes;
-    const duration = startedFast ? quickQuotes.fadeMs : reduced ? 100 : config.appearance.requestSpeechMs;
-    const frames = startedFast || reduced ? [{ opacity: 1 }, { opacity: 0 }] : [
-      { transform: 'translate(0,0) scale(1)', opacity: 1 },
-      { transform: `translate(${dx * 0.8}px,${dy * 0.8}px) scale(0.55)`, opacity: 0.85, offset: 0.75 },
-      { transform: `translate(${dx}px,${dy}px) scale(0.15)`, opacity: 0 }
-    ];
-    const valid = await playVisual(moving.animate(frames, { duration, easing: 'ease-in-out', fill: 'both' }), duration, token, true, true, startedFast);
-    moving.remove();
-    if (valid) await resolveRequest('human', type, token);
+    render(); await resolveRequest('human', type, token);
   }
-  async function presentSpeech(text, token, holdMs, keepQuote = false, travelMs = config.appearance.requestSpeechMs, dissolve = false, requestType = null, fishReply = false, speakerPlayer = 'wendy') {
+  async function presentSpeech(text, token, holdMs, keepQuote = false, dissolve = false, requestType = null, fishReply = false, speakerPlayer = 'wendy') {
+    if (giftShortcutUsed(token)) return true;
     const message = fishReply ? el('fishButton') : el('message');
     const name = config.players[speakerPlayer].name;
     if (!fishReply) setMessageSpeaker(speakerPlayer);
@@ -255,59 +244,43 @@
     if (fishReply) { message.hidden = false; message.disabled = true; }
     message.style.visibility = 'hidden';
     if (!fishReply) message.classList.add('speech-request');
-    const speaker = document.createElement('span'); speaker.className = 'speech-speaker'; speaker.textContent = name + ' said:';
+    message.classList.toggle('yes-answer', !fishReply && text === 'Yes I do');
+    const speaker = document.createElement('span'); speaker.className = 'speech-speaker'; speaker.textContent = name + ' says:';
     const quote = document.createElement('span'); quote.className = 'speech-quote'; quote.textContent = '“' + text + '”';
     if (fishReply) {
       fillGoFishReply(message, name);
     } else message.replaceChildren(speaker, quote);
     if (requestType) fillRequestBubble(message, name, requestType);
     const target = message.getBoundingClientRect();
-    const origin = document.querySelector((speakerPlayer === 'human' ? '.player-portrait' : '.wendy-portrait') + ' .portrait').getBoundingClientRect();
     const moving = message.cloneNode(true);
     moving.removeAttribute('id'); moving.removeAttribute('role'); moving.removeAttribute('aria-live'); moving.setAttribute('aria-hidden', 'true');
-    moving.className = (fishReply ? 'go-fish-reply flying-speech' : 'speech-request flying-speech') + (speakerPlayer === 'human' ? ' on-right' : '');
+    moving.className = (fishReply ? 'go-fish-reply stationary-speech' : 'speech-request stationary-speech') + (speakerPlayer === 'human' ? ' on-right' : '') + (message.classList.contains('yes-answer') ? ' yes-answer' : '');
     moving.style.visibility = 'visible'; moving.style.opacity = '0';
     moving.style.left = target.left + 'px'; moving.style.top = target.top + 'px'; moving.style.width = target.width + 'px';
     document.body.append(moving); message.style.visibility = 'hidden';
-    const dx = origin.left + origin.width / 2 - target.left - target.width / 2;
-    const dy = origin.top + origin.height / 2 - target.top - target.height / 2;
-    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const startedFast = fastQuotes;
-    const duration = startedFast ? quickQuotes.fadeMs : reduced ? 100 : travelMs;
-    const frames = startedFast || reduced ? [{ opacity: 0 }, { opacity: 1 }] : [
-      { transform: `translate(${dx}px,${dy}px) scale(0.15)`, opacity: 0 },
-      { transform: `translate(${dx * 0.32}px,${dy * 0.32}px) scale(0.8)`, opacity: 0.8, offset: 0.65 },
-      { transform: 'translate(0,0) scale(1)', opacity: 1 }
-    ];
-    const animation = moving.animate(frames, { duration, easing: 'ease-in-out', fill: 'both' });
-    const valid = await playVisual(animation, duration, token, true, true, startedFast);
+    const duration = quoteTiming.fadeMs;
+    const animation = moving.animate([{ opacity: 0 }, { opacity: 1 }], { duration, easing: 'ease-in-out', fill: 'both' });
+    const valid = await playVisual(animation, duration, token, true, () => giftShortcutUsed(token));
     moving.remove();
     if (!valid) return false;
+    if (giftShortcutUsed(token)) return true;
     if (dissolve) {
       message.style.visibility = '';
       if (!await waitActive(holdMs, token, () => false, true)) return false;
-      const fadeMs = fastQuotes ? quickQuotes.fadeMs : reduced ? 100 : config.appearance.replyDissolveMs;
+      const fadeMs = quoteTiming.fadeMs;
       const fade = message.animate([{ opacity: 1 }, { opacity: 0 }], { duration: fadeMs, fill: 'both', easing: 'ease-out' });
-      if (!await playVisual(fade, fadeMs, token, false, true, fastQuotes)) return false;
-      message.style.visibility = 'hidden'; message.replaceChildren(); message.classList.remove('speech-request');
+      if (!await playVisual(fade, fadeMs, token)) return false;
+      message.style.visibility = 'hidden'; message.replaceChildren(); message.classList.remove('speech-request', 'yes-answer');
       fade.cancel(); message.style.visibility = '';
       return true;
     }
     message.style.visibility = '';
     if (fishReply) return true;
     if (requestType) render();
-    // Give the fully settled quote time to be read before automatic receipt.
-    const waiting = phase === 'wendyRequest' && CandyEngine.count(state.hands.human, selected)
-      ? { token, type: selected, released: false } : null;
-    const effectiveHold = fastQuotes ? (requestType ? quickQuotes.holdMs : Math.min(holdMs, quickQuotes.holdMs)) : holdMs;
-    const highlightDelay = waiting ? Math.min(config.appearance.requestHighlightDelayMs, effectiveHold) : 0;
-    if (highlightDelay && !await waitActive(highlightDelay, token, () => false, true)) return false;
-    if (waiting) { giftWait = waiting; render(); }
-    const held = await waitActive(effectiveHold - highlightDelay, token, () => Boolean(waiting?.released), true);
-    if (giftWait === waiting) giftWait = null;
-    if (!held) return false;
-    if (waiting) render();
-    if (!keepQuote) message.classList.remove('speech-request');
+    // Answers appear automatically, but receipt always waits for acknowledgement.
+    const effectiveHold = requestType ? quoteTiming.holdMs : Math.min(holdMs, quoteTiming.holdMs);
+    if (!await waitActive(effectiveHold, token, () => giftShortcutUsed(token), true)) return false;
+    if (!keepQuote) message.classList.remove('speech-request', 'yes-answer');
     return true;
   }
   async function fly(type, source, destination, hidden, token) {
@@ -344,11 +317,11 @@
     playerRequestWait = null;
     retainedPlayerRequest = null;
     retainedOpponentRequest = null;
-    fastManualGift = null;
-    giftWait = null;
+    yesWait = null;
+    requestedGift = null;
     generation++; state = CandyEngine.create(config); memory = WendyPlayer.createMemory(); reported = false; selected = null;
     overlayOpen = false; el('overlay').hidden = true; el('table').inert = false;
-    el('message').style.visibility = ''; el('message').classList.remove('speech-request');
+    el('message').style.visibility = ''; el('message').classList.remove('speech-request', 'yes-answer');
     el('message').textContent = state.turn === 'human' ? humanName + ' starts this round.' : opponentName + ' starts this round.';
     proceed(generation);
   }
@@ -388,7 +361,7 @@
   }
   async function proceed(token) {
     if (token !== generation) return;
-    el('message').classList.remove('speech-request');
+    el('message').classList.remove('speech-request', 'yes-answer');
     if (state.finished) { finishGame(); return; }
     displayedTurn = state.turn; selected = null;
     if (state.turn === 'human') { phase = 'choose'; render(); return; }
@@ -396,54 +369,53 @@
     if (!await waitActive(config.appearance.thinkingMs, token)) return;
     selected = WendyPlayer.choose(state.hands.wendy.map(card => ({ type: card.type })), memory, Math.random, state.copies);
     setMessageSpeaker('wendy');
+    requestedGift = CandyEngine.count(state.hands.human, selected) ? { token, type: selected, released: false } : null;
     phase = 'wendyRequest'; el('message').textContent = opponentName + ' asks for ' + byId.get(selected).shortName + '.'; render();
     const holdMs = CandyEngine.count(state.hands.human, selected) ? config.appearance.requestGiveHoldMs : config.appearance.requestHoldMs;
     const keepRequest = !CandyEngine.count(state.hands.human, selected);
-    if (!await presentSpeech('', token, holdMs, keepRequest, config.appearance.requestSpeechMs, false, selected)) return;
+    if (!await presentSpeech('', token, holdMs, keepRequest, false, selected)) return;
     await resolveRequest('wendy', selected, token);
   }
   async function resolveRequest(actor, type, token) {
-    const immediateGift = actor === 'wendy' && fastManualGift?.token === token && fastManualGift.type === type;
-    fastManualGift = null;
     let heldQuestion = null;
     phase = actor === 'human' ? 'requesting' : 'wendyRequest'; render();
-    if (actor === 'wendy' && CandyEngine.count(state.hands.human, type)) {
-      // Keep the question on the opponent's side while the human answers.
-      const question = document.createElement('div');
-      question.id = 'heldOpponentQuestion'; question.className = 'speech-request';
-      fillRequestBubble(question, opponentName, type);
-      el('message').parentElement.append(question);
-      if (immediateGift) {
-        heldQuestion = question;
-        setMessageSpeaker('human');
-        const speaker = document.createElement('span'); speaker.className = 'speech-speaker'; speaker.textContent = humanName + ' said:';
-        const reply = document.createElement('span'); reply.className = 'speech-quote'; reply.textContent = '“Yes I do”';
-        el('message').replaceChildren(speaker, reply); el('message').classList.add('speech-request');
-        el('message').style.visibility = '';
-      } else {
-      let answered;
-      try {
-        answered = await presentSpeech('Yes I do', token, config.appearance.requestHoldMs, false, config.appearance.requestSpeechMs, true, null, false, 'human');
-      } finally { question.remove(); }
-      if (!answered) return;
-      if (!await emphasizeGift(el('human-' + type), token)) return;
+    const giver = actor === 'human' ? 'wendy' : 'human';
+    if (CandyEngine.count(state.hands[giver], type) && !giftShortcutUsed(token)) {
+      if (actor === 'wendy') {
+        heldQuestion = document.createElement('button');
+        heldQuestion.type = 'button';
+        heldQuestion.dataset.speaker = 'wendy';
+        heldQuestion.id = 'heldOpponentQuestion'; heldQuestion.className = 'speech-request';
+        fillRequestBubble(heldQuestion, opponentName, type);
+        heldQuestion.addEventListener('click', acknowledgeMiddle);
+        heldQuestion.disabled = true;
+        el('message').parentElement.append(heldQuestion);
       }
+      if (!await presentSpeech('Yes I do', token, 0, true, false, null, false, giver)) return;
+      const waiting = { token, released: giftShortcutUsed(token) };
+      yesWait = waiting;
+      const reply = document.createElement('button');
+      reply.id = 'yesReply'; reply.type = 'button';
+      reply.setAttribute('aria-label', config.players[giver].name + ' says: Yes I do. Acknowledge the transfer');
+      reply.append(...el('message').childNodes); el('message').append(reply);
+      render();
+      const acknowledgeMs = config.appearance.yesAutoTransferMs;
+      if (!await waitActive(acknowledgeMs, token, () => waiting.released)) return;
+      yesWait = null;
     }
-    if (actor === 'human' && CandyEngine.count(state.hands.wendy, type)) {
-      retainedPlayerRequest = null; render();
-      if (!await presentSpeech('Yes I do', token, config.appearance.requestHoldMs, false, config.appearance.requestSpeechMs, true)) return;
-      if (!await emphasizeGift(el('wendyPile'), token)) return;
-    }
+    requestedGift = null;
     const events = CandyEngine.request(state, actor, type); WendyPlayer.observe(memory, events);
     const transfer = events.find(event => event.kind === 'transfer');
     if (transfer) {
       setMessageSpeaker(actor === 'human' ? 'wendy' : 'human');
-      if (!immediateGift) el('message').textContent = actor === 'human' ? 'Yes! ' + opponentName + ' gives you one ' + byId.get(type).shortName + '.' : 'You give ' + opponentName + ' one ' + byId.get(type).shortName + '.';
       const source = actor === 'human' ? el('wendyPile') : el('human-' + type);
       const destination = actor === 'human' ? el('human-' + type) : el('wendyPile');
-      if (!await fly(type, source, destination, false, token)) return;
+      const flight = fly(type, source, destination, false, token);
+      retainedPlayerRequest = null;
+      el('askButton').hidden = true;
       heldQuestion?.remove();
-      if (immediateGift) { el('message').classList.remove('speech-request'); el('message').replaceChildren(); }
+      el('message').replaceChildren(); el('message').classList.remove('speech-request', 'yes-answer'); el('message').style.visibility = '';
+      if (!await flight) return;
       render();
       const completed = events.find(event => event.kind === 'set');
       if (completed) { if (!await celebrateSet(completed, token)) return; }
@@ -453,13 +425,13 @@
       if (actor === 'human') {
         retainedPlayerRequest = type;
         phase = 'fishResponse'; render();
-        if (!await presentSpeech('', token, 0, true, config.appearance.requestSpeechMs, false, null, true)) return;
+        if (!await presentSpeech('', token, 0, true, false, null, true)) return;
         phase = 'humanFishWait'; render();
         return;
       }
       retainedOpponentRequest = type;
       phase = 'fishResponse'; render();
-      if (!await presentSpeech('', token, 0, true, config.appearance.requestSpeechMs, false, null, true, 'human')) return;
+      if (!await presentSpeech('', token, 0, true, false, null, true, 'human')) return;
       phase = 'wendyFishWait'; render();
     } else {
       el('message').textContent = 'No match, and the pile is empty. Turn passes.'; render();
@@ -471,11 +443,10 @@
     const token = generation, actor = state.pending.actor;
     retainedPlayerRequest = null;
     retainedOpponentRequest = null;
-    el('message').classList.remove('speech-request');
+    el('message').classList.remove('speech-request', 'yes-answer');
     phase = 'drawing'; render();
     setMessageSpeaker(actor);
     if (actor === 'wendy') { el('message').textContent = 'Go fish, ' + opponentName + '!'; if (!await waitActive(500, token)) return; }
-    if (!await emphasizeGift(el('centerCircle'), token)) return;
     const events = CandyEngine.fish(state), draw = events[0]; WendyPlayer.observe(memory, events);
     el('message').textContent = actor === 'human' ? 'You drew ' + byId.get(draw.type).shortName + '.' : opponentName + ' draws a candy.';
     if (!await fly(draw.type, el('centerCircle'), actor === 'human' ? el('human-' + draw.type) : el('wendyPile'), actor === 'wendy', token)) return;
@@ -486,18 +457,25 @@
     proceed(token);
   }
   el('askButton').addEventListener('click', () => {
+    if (middleAcknowledgementReady()) { acknowledgeMiddle(); return; }
     if (phase !== 'choose' || !selected || overlayOpen) return;
     sendPlayerRequest(selected, generation);
   });
-  el('centerCircle').addEventListener('click', drawCandy);
-  el('fishButton').addEventListener('click', drawCandy);
+  el('centerCircle').addEventListener('click', acknowledgeMiddle);
+  el('fishButton').addEventListener('click', acknowledgeMiddle);
+  el('message').addEventListener('click', acknowledgeMiddle);
+  el('message').addEventListener('keydown', event => {
+    if (event.target === el('message') && ['Enter', ' '].includes(event.key) && middleAcknowledgementReady()) {
+      event.preventDefault(); acknowledgeMiddle();
+    }
+  });
   el('gameOverNew').addEventListener('click', startGame);
   el('dialogAction').addEventListener('click', () => closeAction());
   el('overlay').addEventListener('click', event => {
     if (event.target === el('overlay') && el('overlay').classList.contains('celebrating')) closeAction();
   });
   el('rulesButton').addEventListener('click', () => showDialog('How to play',
-    ('<p>Choose a candy you hold, then tap <b>Got any?</b></p><p>A match gives you <b>one candy</b> and another request. ' + state.copies + ' of a kind earns a set.</p><p>No match? Tap the opponent\'s <b>NO, GO FISH!</b> reply to draw. <b>Fishing always ends your turn.</b> Tell Wendy to Go fish when you have none of her request.</p><p>The round ends when the Candy Dish empties, either hand empties, or all sets are complete. The last draw can still complete a set. Most sets wins. Wendy sees only her hand and public clues.</p>').replaceAll('Wendy', escapeMarkup(opponentName)), 'Back to the table', () => { overlayOpen = false; el('overlay').hidden = true; el('table').inert = false; render(); el('rulesButton').focus(); }));
+    ('<p>Choose a candy you hold. Your question sends automatically, or tap it to send sooner.</p><p>Answers appear automatically. Yes waits four seconds, or tap either box or the <b>Candy Dish</b> sooner. No waits for your tap.</p><p>Yes transfers <b>one candy</b>; the requester keeps the turn. No draws one candy and ends the turn. When Wendy asks, tapping your matching candy gives it immediately. ' + state.copies + ' matching candies earn a set.</p><p>Empty dish, empty hand or all sets ends the round. Most sets wins. Wendy sees only her hand and public clues.</p>').replaceAll('Wendy', escapeMarkup(opponentName)), 'Back to the table', () => { overlayOpen = false; el('overlay').hidden = true; el('table').inert = false; render(); el('rulesButton').focus(); }));
   el('newGame').addEventListener('click', () => {
     showDialog('Deal again?', '<p>This will end the current round and deal a fresh hand.</p>', 'Start a new round', startGame);
     el('dialogCancel').hidden = false;

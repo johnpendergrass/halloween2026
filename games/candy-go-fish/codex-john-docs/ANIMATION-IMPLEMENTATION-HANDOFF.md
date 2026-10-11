@@ -1,5 +1,8 @@
 # Animation standardization — implementation handoff
 
+**October 11 update:** [Current continuation](CONTINUATION-2026-1011.md) supersedes the quote-mode/timing descriptions below. Slow mode and the speed toggle have been deleted; quotes fade in place using the former Fast behavior. Candy flights remain.
+
+
 **End-of-day update:** [End-of-first-day handoff](END-OF-FIRST-DAY-2026-1009.md) takes precedence for current runtime and TODOs. This earlier inventory includes assumptions superseded by the quote speed toggle, retained questions, compact boxes and four-copy preview. Resurvey those paths before implementing its refactor plan.
 
 Prepared October 9, 2026 for the next developer/AI. John requested a thorough survey before implementation, then this handoff and comprehensive game docs with a local commit. **The centralization has not been implemented.** Do not infer permission to push or change gameplay from this document.

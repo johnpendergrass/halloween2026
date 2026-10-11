@@ -52,8 +52,6 @@ h2 { font-size: max(14px,4.5vw); }
 .slot.unknown::after { content: '·'; color: #c8ddbb50; font-size: 8vw; }
 .slot.available { border-color: #eff4cf8c; background: #fffad019; }
 .slot.selected { border-color: #ffe08a; box-shadow: 0 0 0 0.5vw #ffe08a55; background: #ffe08a26; }
-.slot.giving { border-color: #ffe49a; background: #ffe29c42; box-shadow: 0 0 0 0.5vw #ffe29c66, 0 0 4vw #ffe29c99; z-index: 3; }
-.hand-pile.giving, #centerCircle.giving { filter: drop-shadow(0 0 2vw #ffe29c); }
 .badge { position: absolute; right: -0.6vw; top: -0.8vw; min-width: 5vw; height: 5vw; border-radius: 50%; background: #fff1cb; color: #243d31; display: grid; place-items: center; font-size: max(12px,3.6vw); font-weight: bold; border: 0.3vw solid #31543c; z-index: 2; }
 .slot.complete { background: #91c57729; border-color: #b8df85; }
 .slot.complete .badge { background: #b4e68c; color: #1c4c32; }
@@ -69,7 +67,7 @@ h2 { font-size: max(14px,4.5vw); }
 #message.on-right { grid-column: 3; }
 #heldOpponentQuestion { grid-column: 1; grid-row: 1; font-size: max(12px,3.6vw); text-align: left; line-height: 1.2; }
 .speech-request { padding: 2vw; border: 0.3vw solid #f8dfa1; border-radius: 3vw 3vw 3vw 0.5vw; background: #f5e8c5; color: #254333; box-shadow: 0 1vw 3vw #061d2538; }
-.speech-speaker { display: block; font-size: max(12px,3.6vw); font-weight: bold; color: #526d4a; margin-bottom: 1vw; }
+.speech-speaker { display: block; font-size: max(12px,3.6vw); font-weight: normal; color: inherit; margin-bottom: 1vw; }
 .speech-quote { font-size: max(12px,3.6vw); font-weight: bold; }
 .speech-prompt, .speech-candy-name { display: block; line-height: 1.2; }
 .speech-candy-name { font-weight: bold; margin-top: 0.5vw; }
@@ -78,8 +76,8 @@ h2 { font-size: max(14px,4.5vw); }
 .speech-request:has(.speech-candy) { position: relative; isolation: isolate; width: 30vw; padding: 1vw 1vw 11vw; line-height: 1.2; }
 .speech-request:has(.speech-candy) > :not(.speech-candy-art) { position: relative; z-index: 1; text-shadow: 0 0 0.4vw #f5e8c5; }
 .speech-request:has(.speech-candy) .speech-speaker { margin-bottom: 0.5vw; }
-.flying-speech { position: fixed; z-index: 12; pointer-events: none; transform-origin: center; font-size: max(12px,3.6vw); line-height: 1.35; }
-.flying-speech:has(.speech-candy) { position: fixed; }
+.stationary-speech { position: fixed; z-index: 12; pointer-events: none; transform-origin: center; font-size: max(12px,3.6vw); line-height: 1.35; }
+.stationary-speech:has(.speech-candy) { position: fixed; }
 .center-controls { display: grid; grid-template-columns: 30vw 23vw 30vw; justify-content: center; align-items: center; gap: 2vw; }
 #askButton { grid-column: 3; grid-row: 1; }
 #centerCircle { grid-column: 2; grid-row: 1; }
@@ -90,14 +88,15 @@ h2 { font-size: max(14px,4.5vw); }
 #askButton.speech-request { width: 30vw; padding: 1vw; text-align: left; font-size: max(12px,3.6vw); line-height: 1.2; border-radius: 3vw 3vw 3vw 0.5vw; }
 #askButton.speech-request { background: #f5e8c5; color: #254333; border: 0.3vw solid #f8dfa1; box-shadow: 0 1vw 3vw #061d2538; }
 #askButton.speech-request:has(.speech-candy) { padding-bottom: 11vw; }
-#askButton .speech-speaker, #askButton .speech-candy-name { font-weight: bold; }
+#askButton .speech-speaker { font-weight: normal; color: inherit; }
+#askButton .speech-candy-name { font-weight: bold; }
 #fishButton { min-height: 22vw; width: 23vw; justify-self: center; padding: 1vw 0.7vw; border-radius: 3vw; }
-#fishButton:not(:disabled) { background: #f6c65c; border: 0.5vw solid #ffe9a8; box-shadow: 0 1vw 0 #a86a28, 0 0 4vw #ffcd6244; }
+#fishButton:not(:disabled) { background: #efa39a; border: 0.5vw solid #ffd1c6; box-shadow: 0 1vw 0 #a0544c, 0 0 4vw #efa39a44; }
 #fishButton span { margin-bottom: 0.8vw; }
 #fishButton strong { display: block; font-size: max(14px,5vw); line-height: 1.2; }
 #fishButton:not([hidden]) { animation: go-fish-arrival 450ms ease-out; }
 #fishButton:active { translate: 0 0.6vw; }
-#fishButton, .go-fish-reply { min-height: 22vw; padding: 1vw 0.7vw; border-radius: 3vw; background: #f6c65c; color: #293f31; border: 0.5vw solid #ffe9a8; box-shadow: 0 1vw 0 #a86a28, 0 0 4vw #ffcd6244; text-align: center; font-weight: bold; line-height: 1.35; }
+#fishButton, .go-fish-reply { min-height: 22vw; padding: 1vw 0.7vw; border-radius: 3vw; background: #efa39a; color: #293f31; border: 0.5vw solid #ffd1c6; box-shadow: 0 1vw 0 #a0544c, 0 0 4vw #efa39a44; text-align: center; font-weight: bold; line-height: 1.35; }
 #fishButton span, .go-fish-reply span { display: block; font-size: max(12px,3.6vw); font-weight: normal; margin-bottom: 0.8vw; }
 #fishButton strong, .go-fish-reply strong { display: block; font-size: max(14px,5vw); line-height: 1.2; }
 #fishButton.reply-arrived { animation: none; }
@@ -128,3 +127,40 @@ h1 { font-size: max(24px,9vw); line-height: 1.15; margin: 3vw 0 4vw; }
 .celebration-candy { display: block; width: 60vw; height: 35vw; margin: 2vw auto; object-fit: contain; filter: drop-shadow(0 1vw 1vw #765a3933); }
 .celebrating .eyebrow { color: #775926; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 1ms !important; transition-duration: 1ms !important; } }
+
+#yesReply { display: block; width: 100%; min-height: 13vw; background: transparent; color: inherit; text-align: inherit; font: inherit; }
+#message:has(#yesReply:not(:disabled)) { cursor: pointer; box-shadow: 0 0.8vw 0 #122f25; }
+
+#message.acknowledge { cursor: pointer; min-height: 13vw; }
+
+.speech-request.yes-answer { background: #cdebb7; color: #000; text-shadow: 0 0.1vw 0.2vw #ffffff80; }
+.yes-answer .speech-speaker { color: inherit; }
+
+/* Curved speech tails: speaker direction is independent of reply color. */
+.speech-request, .go-fish-reply, #fishButton {
+  --bubble-fill: #f5e8c5; --bubble-edge: #f8dfa1; --tail-left: 60%;
+  overflow: visible; border-radius: 3vw;
+}
+.speech-request.yes-answer { --bubble-fill: #cdebb7; }
+.go-fish-reply, #fishButton { --bubble-fill: #efa39a; --bubble-edge: #ffd1c6; }
+#askButton.speech-request, .speech-request.on-right { border-radius: 3vw; }
+.speech-request:not(.stationary-speech), .go-fish-reply:not(.stationary-speech), #fishButton { position: relative; }
+.speech-request::before, .speech-request::after,
+.go-fish-reply::before, .go-fish-reply::after, #fishButton::before, #fishButton::after {
+  content: ''; position: absolute; pointer-events: none; left: var(--tail-left);
+  width: 8vw; height: 4.5vw; top: -4.4vw; background: var(--bubble-edge);
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Cpath%20d%3D%27M0%20100%20C28%2088%2050%2062%2071%2020%20Q83%202%2094%205%20Q99%208%2094%2013%20C72%2039%2069%2077%20100%20100%20Z%27%2F%3E%3C%2Fsvg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Cpath%20d%3D%27M0%20100%20C28%2088%2050%2062%2071%2020%20Q83%202%2094%205%20Q99%208%2094%2013%20C72%2039%2069%2077%20100%20100%20Z%27%2F%3E%3C%2Fsvg%3E");
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+}
+.speech-request::after, .go-fish-reply::after, #fishButton::after {
+  left: calc(var(--tail-left) + 0.4vw); width: 7.2vw; height: 4.1vw;
+  top: -3.8vw; background: var(--bubble-fill);
+}
+.speech-request[data-speaker="human"], .go-fish-reply[data-speaker="human"], #fishButton[data-speaker="human"] { --tail-left: 10%; }
+.speech-request[data-speaker="human"]::before, .speech-request[data-speaker="human"]::after,
+.go-fish-reply[data-speaker="human"]::before, .go-fish-reply[data-speaker="human"]::after,
+#fishButton[data-speaker="human"]::before, #fishButton[data-speaker="human"]::after {
+  top: auto; bottom: -4.4vw; transform: rotate(180deg);
+}
+.speech-request[data-speaker="human"]::after, .go-fish-reply[data-speaker="human"]::after, #fishButton[data-speaker="human"]::after { bottom: -3.8vw; }

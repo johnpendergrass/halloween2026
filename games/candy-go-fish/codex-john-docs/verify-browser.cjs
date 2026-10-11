@@ -26,7 +26,7 @@ const config = require('../assets/json/game-config.json');
     }
     // Accelerate presentation only, preserving the actual move logic.
     const fast = structuredClone(config); fast.appearance.travelMs = 40; fast.appearance.thinkingMs = 40;
-    fast.appearance.requestSpeechMs = 80; fast.appearance.requestHoldMs = 40; fast.appearance.requestGiveHoldMs = 40;
+    fast.appearance.quoteFadeMs = 80; fast.appearance.quoteHoldMs = 40; fast.appearance.requestHoldMs = 40; fast.appearance.requestGiveHoldMs = 40;
     fast.appearance.playerRequestHoldMs = 60000; // Automated manual-click round; real-time auto-send is checked separately.
     fast.players.human.name = 'Casper'; fast.players.wendy.name = 'Hazel';
     await page.route('**/game-config.json', route => route.fulfill({ json: fast }));
@@ -47,12 +47,13 @@ const config = require('../assets/json/game-config.json');
         if (celebrations++ % 2) await page.locator('#overlay').click({ position: { x: 2, y: 2 } });
         else await page.locator('#dialogAction').click();
       }
+      else if (await page.locator('#yesReply:enabled').count()) await page.locator('#yesReply').click();
       else if (await page.locator('#fishButton').isEnabled()) await page.locator('#fishButton').click();
       else if (await page.locator('#centerCircle').isEnabled()) await page.locator('#centerCircle').click();
       else if (await page.locator('.player-portrait.portrait-active').count() && await page.locator('#humanSlots button:enabled').count()) {
         const slots = page.locator('#humanSlots button:enabled');
         await slots.nth(Math.floor(Math.random() * await slots.count())).click();
-        await page.locator('#askButton').click();
+        await page.locator('#askButton').evaluate(button => { if (!button.disabled) button.click(); });
       } else await page.waitForTimeout(100);
     }
     assert(await page.locator('#gameOver').isVisible(), 'UI game did not finish');

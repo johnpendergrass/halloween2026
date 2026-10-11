@@ -1,5 +1,8 @@
 # Rules and gameplay
 
+**October 11 update:** [Current continuation](CONTINUATION-2026-1011.md) supersedes the quote-mode/timing descriptions below. Slow mode and the speed toggle have been deleted; quotes fade in place using the former Fast behavior. Candy flights remain.
+
+
 Base game rules, updated October 9, 2026. The Good Fish rule below is approved as a specification; its runtime implementation is pending. Display names are configurable; `human` and `wendy` are role keys, not fixed names.
 
 ## Deck, turns and scoring

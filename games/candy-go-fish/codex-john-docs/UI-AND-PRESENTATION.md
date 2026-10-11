@@ -1,5 +1,8 @@
 # UI and presentation
 
+**October 11 update:** [Current continuation](CONTINUATION-2026-1011.md) supersedes the quote-mode/timing descriptions below. Slow mode and the speed toggle have been deleted; quotes fade in place using the former Fast behavior. Candy flights remain.
+
+
 Current implementation, October 9, 2026. Exact inventory and lifecycle findings are in [the animation survey](ANIMATION-SURVEY-2026-1009.md).
 
 ## Board and ownership

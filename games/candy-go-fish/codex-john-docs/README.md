@@ -1,5 +1,8 @@
 # Candy Go Fish — working documents
 
+**October 11 update:** [Current continuation](CONTINUATION-2026-1011.md) supersedes the quote-mode/timing descriptions below. Slow mode and the speed toggle have been deleted; quotes fade in place using the former Fast behavior. Candy flights remain.
+
+
 Updated October 9, 2026
 
 This folder holds working documentation and supporting development material for the new game in `games/candy-go-fish`.

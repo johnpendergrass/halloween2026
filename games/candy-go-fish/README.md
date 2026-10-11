@@ -2,11 +2,11 @@
 
 Playable demo for the Halloween 2026 shell, registered in slot 8. Open `demo.html` for a centered 9:14 preview or `index.html` for standalone play. HTTP and direct file opening are supported.
 
-**Start with [current state and continuation](codex-john-docs/CURRENT-STATE-2026-1009.md).** It links current rules/gameplay, UI, architecture/data, strategy, integration/testing, the complete animation survey and the implementation handoff. Historical docs preserve earlier decisions and are not current specifications.
+**Start with [October 11 continuation](codex-john-docs/CONTINUATION-2026-1011.md).** It links current rules/gameplay, UI, architecture/data, strategy, integration/testing, the complete animation survey and the implementation handoff. Historical docs preserve earlier decisions and are not current specifications.
 
 Ten types, three copies per type, five initially dealt per player. Request a held type; a success transfers one candy and keeps the turn. The current runtime ends every fishing turn. The newly specified **Good Fish rule** (implementation pending) instead keeps the turn when the draw completes a set; otherwise fishing ends the turn. Completing a set by any means or successfully requesting a candy keeps the turn, subject to game-ending conditions. No refill. Empty dish, empty active hand or all sets ends the game after collecting any final set. Most sets wins; ties are possible.
 
-Question bubbles carry the requested candy image; the middle stays the Candy Dish. Human questions send after four seconds or a bubble tap. Opponent questions settle before matching human slots highlight. Yes replies arrive, pause and fade before candy transfer. All transfer/draw routes have source emphasis and curved travel; opponent draws stay private. Celebrations wait for dismissal. The result banner leaves both hands visible.
+Question bubbles carry the requested candy image; the middle stays the Candy Dish. Human questions send after one second or a bubble tap. Opponent questions settle before matching human slots highlight. Quotes fade in place without floating from portraits. Automatic Yes replies pause and fade before candy transfer. All transfer/draw routes have source emphasis and curved travel; opponent draws stay private. Celebrations wait for dismissal. The result banner leaves both hands visible.
 
 Data and artwork settings are in [assets/json](assets/json/README.md). Original candy PNGs are unchanged. The strategy receives only its own hand and public clues. There is no implemented difficulty selector, 11/4 variant, expanded catalog selector or position editor.
 

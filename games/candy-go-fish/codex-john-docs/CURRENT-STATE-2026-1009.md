@@ -1,5 +1,8 @@
 # Go Fish Candy Edition — current continuation entry
 
+**October 11 update:** [Current continuation](CONTINUATION-2026-1011.md) supersedes the quote-mode/timing descriptions below. Slow mode and the speed toggle have been deleted; quotes fade in place using the former Fast behavior. Candy flights remain.
+
+
 Updated October 9, 2026, end of first day.
 
 **Read [End-of-first-day handoff](END-OF-FIRST-DAY-2026-1009.md) first.** It is the authoritative description of the current runtime, design decisions, TODOs, integration work and tests, and supersedes older conflicting snapshots.

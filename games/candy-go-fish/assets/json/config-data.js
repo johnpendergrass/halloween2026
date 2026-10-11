@@ -1,7 +1,7 @@
 // Generated from game-config.json by codex-john-docs/sync-config.cjs.
 window.CandyConfig = {
   "rules": {
-    "copiesPerType": 4,
+    "copiesPerType": 3,
     "initialHandSize": 5
   },
   "players": {
@@ -17,15 +17,15 @@ window.CandyConfig = {
   "appearance": {
     "travelMs": 650,
     "thinkingMs": 1000,
-    "giftPulseMs": 480,
     "giftTravelMs": 1400,
     "giftEasing": "cubic-bezier(0.55, 0, 0.85, 0.55)",
-    "requestSpeechMs": 2500,
+    "quoteFadeMs": 250,
+    "quoteHoldMs": 1000,
+    "yesAutoTransferMs": 4000,
     "requestHoldMs": 900,
-    "replyDissolveMs": 300,
-    "requestGiveHoldMs": 4000,
+    "requestGiveHoldMs": 1000,
     "requestHighlightDelayMs": 500,
-    "playerRequestHoldMs": 4000
+    "playerRequestHoldMs": 1000
   },
   "candyDisplay": {
     "emptyTransparency": 82,
@@ -39,7 +39,6 @@ window.CandyConfig = {
     "giftWidthVw": 22,
     "giftHeightVw": 17,
     "giftArcVw": 22,
-    "giftPulseScale": 1.14,
     "giftDissolveStart": 0.82
   },
   "layout": {

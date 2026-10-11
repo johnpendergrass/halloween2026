@@ -1,0 +1,1 @@
+Pre-tail local styling checkpoint. These files preserve the current cream question, light green/black Yes, and gold NO boxes, plus runtime before tail speaker metadata. Restore CSS to remove the tail experiment; the additional speaker metadata is harmless. Do not restore all JavaScript after later gameplay changes. No push performed.

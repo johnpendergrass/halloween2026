@@ -3,7 +3,7 @@ const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary
 (async () => {
  const browser = await chromium.launch({headless:true, executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe'});
  try {
-  for (const trigger of ['#fishButton', '#centerCircle']) {
+  for (const trigger of ['#fishButton', '#centerCircle', 'question']) {
    const page = await browser.newPage({viewport:{width:338,height:526}});
    const errors=[]; page.on('pageerror', e=>errors.push(e.message));
    await page.goto('http://127.0.0.1:8098/games/candy-go-fish/index.html');
@@ -25,9 +25,9 @@ const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary
    await page.locator('.go-fish-reply').waitFor();
    assert(await page.locator('#fishButton').isDisabled());
    assert(await page.locator('#centerCircle').isDisabled());
-   assert.match(await page.locator('.go-fish-reply').textContent(), /Wendy said:.*NO, GO FISH!/);
+   assert.match(await page.locator('.go-fish-reply').textContent(), /Wendy says:.*NO, GO FISH!/);
    await page.waitForFunction(()=>!document.querySelector('#fishButton').disabled);
-   assert.match(await page.locator('#fishButton').textContent(), /Wendy said:.*NO, GO FISH!/);
+   assert.match(await page.locator('#fishButton').textContent(), /Wendy says:.*NO, GO FISH!/);
    assert.equal((await page.locator('#message').textContent()).trim(),'');
    assert.equal(await page.locator('#centerCircle').isEnabled(),true);
    assert(await page.evaluate(() => document.querySelector('#fishButton').getBoundingClientRect().right < document.querySelector('#centerCircle').getBoundingClientRect().left), 'Opponent reply appears left of the Candy Dish');
@@ -37,18 +37,37 @@ const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary
      ...[...box.children].flatMap(child=>{const s=getComputedStyle(child);return [s.fontSize,s.fontWeight,s.lineHeight,s.marginBottom];})];
    };
    const opponentStyle = await page.evaluate(boxStyle);
-   await page.locator(trigger).click();
+   assert.equal(await page.locator('#fishButton').evaluate(box=>getComputedStyle(box).backgroundColor),'rgb(239, 163, 154)');
+   assert(await page.locator('#fishButton').evaluate(box=>parseFloat(getComputedStyle(box,'::before').top)<0),'Wendy tail points upward');
+   if(trigger==='#fishButton')await page.screenshot({path:require('node:path').join(__dirname,'humanMiss-coral-tails.png')});
+   await page.locator(trigger === 'question' ? '#askButton' : trigger).click();
    await page.evaluate(() => { document.querySelector('#fishButton').click(); document.querySelector('#centerCircle').click(); });
    await page.waitForFunction(()=>window.testState.pile.length===2);
    assert.equal(await page.evaluate(()=>testState.hands.human.length),4);
    assert.equal(await page.evaluate(()=>testState.turn),'wendy');
-   await page.waitForFunction(()=>!document.querySelector('#fishButton').disabled && document.querySelector('#fishButton').textContent.includes('Player said:'));
-   assert.match(await page.locator('#fishButton').textContent(), /Player said:.*NO, GO FISH!/);
+   await page.waitForFunction(()=>!document.querySelector('#fishButton').disabled && document.querySelector('#fishButton').textContent.includes('Player says:'));
+   assert.match(await page.locator('#fishButton').textContent(), /Player says:.*NO, GO FISH!/);
    assert.deepEqual(await page.evaluate(boxStyle),opponentStyle,'Both speakers use identical box and text formatting');
    assert(await page.evaluate(()=>document.querySelector('#fishButton').getBoundingClientRect().left > document.querySelector('#centerCircle').getBoundingClientRect().right),'Player reply remains on the right');
+   assert(await page.locator('#fishButton').evaluate(box=>parseFloat(getComputedStyle(box,'::before').bottom)<0),'Player tail points downward');
+   if(trigger==='#fishButton')await page.screenshot({path:require('node:path').join(__dirname,'wendyMiss-coral-tails.png')});
+   assert(await page.locator('#centerCircle').isEnabled(),'Dish also starts Wendy fishing');
+   assert.match(await page.locator('#centerCircle').getAttribute('aria-label'),/acknowledge and continue/);
+   assert.match(await page.locator('#message').textContent(),/Wendy asks:/,'Question stays until either draw action');
+   await page.locator('#rulesButton').click();
+   assert(await page.locator('#centerCircle').isDisabled(),'Dish is locked during Rules');
+   await page.locator('#dialogAction').click();
+   assert.match(await page.locator('#message').textContent(),/Wendy asks:/,'Question survives Rules');
+   const before=await page.evaluate(()=>testState.hands.wendy.length);
+   await page.locator(trigger === 'question' ? '#message' : trigger).click();
+   await page.evaluate(()=>{document.querySelector('#fishButton').click();document.querySelector('#centerCircle').click();});
+   await page.waitForFunction(()=>window.testState.pile.length===1);
+   assert.equal(await page.evaluate(()=>testState.hands.wendy.length),before+1,'Wendy receives exactly one candy');
+   assert(!(await page.locator('#message').textContent()).includes('asks:'),'Question clears after initiating draw');
+   assert(await page.locator('#fishButton').isHidden(),'Go Fish reply clears after initiating draw');
    assert.deepEqual(errors,[]);
    await page.close();
   }
-  console.log('PASS: Go Fish reply arrives locked, button/dish each draw once, turn passes.');
+  console.log('PASS: Go Fish reply arrives locked, button/dish each draw once for either player; retained question and Rules locks.');
  } finally { await browser.close(); }
 })().catch(e=>{console.error(e);process.exitCode=1;});

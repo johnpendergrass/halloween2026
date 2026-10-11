@@ -8,14 +8,14 @@
 </head>
 <body>
   <main id="table">
-    <header class="game-bar"><button id="newGame"><span>New game</span></button><button id="quoteSpeed" type="button" aria-pressed="false" aria-label="Fast quotes"><span>Quotes: <b>Slow</b></span></button><button id="rulesButton"><span>Rules</span></button></header>
+    <header class="game-bar"><button id="newGame"><span>New game</span></button><button id="rulesButton"><span>Rules</span></button></header>
     <section id="wendyArea" class="player-area">
       <div class="player-heading"><span id="wendySetCount" class="portrait-score"><span>SETS WON</span><strong>0</strong></span><div class="wendy-portrait"><img class="portrait" src="./assets/friendly-witch.svg" alt="Wendy, a friendly witch" draggable="false"><strong class="portrait-name">WENDY</strong></div><div id="wendyPile" class="hand-pile" aria-label="Wendy's hidden hand"><span class="wrapped">✦</span><span class="wrapped">✦</span><span class="wrapped">✦</span><span id="wendyCount" class="badge hand-count">5</span></div></div>
       <div id="wendySlots" class="slots" aria-label="Wendy's completed sets"></div>
     </section>
     <section class="center-area">
       <div id="gameOver" class="game-over" hidden role="status" aria-live="polite"><strong id="gameOverTitle"></strong><p id="gameOverReason"></p><p id="gameOverRemaining" hidden></p><p id="gameOverScore"></p><button id="gameOverNew"><span>New game</span></button></div>
-      <div class="center-controls"><div id="message" role="status" aria-live="polite">Choose a candy from your hand.</div><button id="askButton">Got any?<span>ASK WENDY</span></button><button id="centerCircle" aria-label="Draw a candy" disabled></button><button id="fishButton"><span>Player said:</span><strong>NO, GO FISH!</strong></button></div>
+      <div class="center-controls"><div id="message" role="status" aria-live="polite">Choose a candy from your hand.</div><button id="askButton" data-speaker="human">Got any?<span>ASK WENDY</span></button><button id="centerCircle" aria-label="Draw a candy" disabled></button><button id="fishButton"><span>Player says:</span><strong>NO, GO FISH!</strong></button></div>
     </section>
     <section id="humanArea" class="player-area">
       <div id="humanSlots" class="slots" aria-label="Your candy hand"></div>

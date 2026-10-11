@@ -27,13 +27,14 @@ Empty identities use 82% transparency; set `emptyTransparency` to 100 to hide th
 
 `speechImageScale: 100` means 100% of actual grid artwork dimensions, with inherited candy rotation, inside a clipped quote-art frame. It is not a percentage of the original small speech image. The requested candy appears only in the bubble; the center remains the Candy Dish.
 
-Gift-named settings apply to all four transfer/draw routes. `giftWidthVw`, `giftHeightVw`, `giftArcVw`, `giftPulseScale`, and `giftDissolveStart` control prominent travel, curve, pulse and fade/shrink threshold. Private opponent draws use neutral wrappers. `appearance.travelMs` is unused legacy data; actual motion uses `giftTravelMs`.
+Gift-named settings apply to all four transfer/draw routes. `giftWidthVw`, `giftHeightVw`, `giftArcVw`, `giftDissolveStart` control prominent travel, curve and fade/shrink threshold. Private opponent draws use neutral wrappers. `appearance.travelMs` is unused legacy data; actual motion uses `giftTravelMs`.
 
 ## Timing relationships
 
-Human questions wait `playerRequestHoldMs` (4000) before sending, or bubble tap sends immediately; reselection restarts it. Incoming speech uses `requestSpeechMs` (2500). Opponent matching slots highlight/enable after `requestHighlightDelayMs` (500), within the `requestGiveHoldMs` (4000) automatic gift wait. Matching-slot tap releases the gift early.
+Quotes have one stationary presentation, with no speed toggle or portrait flight. `quoteFadeMs` (250) controls incoming/exit fades; `quoteHoldMs` (1000) controls the question reading beat. Human auto-send uses `playerRequestHoldMs` (1000), capped by `quoteHoldMs`; tapping sends sooner and reselection restarts the wait. Opponent questions use the one-second beat for both outcomes. Matching slots enable after `requestHighlightDelayMs` (500).
 
-Yes uses `requestSpeechMs` to arrive, `requestHoldMs` (900) to remain readable, and `replyDissolveMs` (300) to fade before source pulse/travel. An unsatisfied opponent question also uses `requestHoldMs` before Go Fish readiness. Nope remains until the human draws. Local dialogs pause JavaScript waits/motion; reduced motion retains reading waits.
+Both players' Yes answers appear automatically, then keep the question and answer visible until a middle acknowledgement. There is no automatic gift, matching-slot shortcut or reply timeout. Either middle text box or the Candy Dish starts the pending transfer/draw; Candy flies directly without a source bounce; flight duration remains unchanged. Local dialogs lock acknowledgements and pause presentation.
+
 
 ## Regeneration
 
@@ -49,3 +50,7 @@ Regeneration validates names/IDs and writes the companion. Keep both files toget
 Dots, Life Savers Gummies, Mallomars and Red Vines now also use a −30° rotation through per-candy JSON overrides, shared by grid, quote and transfer artwork. Their existing image scales remain unchanged. 100 Grand retains −15°.
 
 Current visual trial: the demo is temporarily configured for four candies per set, with 40 candies total and 30 in the Candy Dish after dealing. Three held copies display as three stacked images. The intended base game remains ten types with sets of three; change copiesPerType back to 3 and regenerate the companion to restore it. Other turn/end rules are unchanged.
+
+Human request / Wendy Yes exception: `playerYesAutoTransferMs` (4000) starts from the settled answer. Both text boxes stay until the countdown ends or a middle click shortcuts it. Dialogs pause the countdown.
+
+Current defaults: either Yes reply auto-transfers after `yesAutoTransferMs` (4000 active ms), with early middle clicks and the Wendy-request grid shortcut. No replies require a middle click. This replaces the earlier human-only countdown and indefinite Yes wait.
