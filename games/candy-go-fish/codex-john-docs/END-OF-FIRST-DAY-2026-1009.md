@@ -1,5 +1,7 @@
 # Go Fish Candy Edition — end-of-first-day handoff
 
+**Historical October 9 material:** the current [October 11 handoff](CONTINUATION-2026-1011.md) supersedes conflicting runtime, presentation, backlog and publishing descriptions below.
+
 Updated October 9, 2026. This is the authoritative end-of-day summary for the game as it runs now, the remaining design work, and integration steps. It supersedes conflicting earlier current-state descriptions and animation-survey assumptions. Historical documents remain useful records, not instructions to restore an old interface.
 
 ## Checkpoint and scope

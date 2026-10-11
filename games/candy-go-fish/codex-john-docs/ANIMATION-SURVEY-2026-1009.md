@@ -1,5 +1,7 @@
 # Go Fish Candy Edition — animation and timing survey
 
+**Historical October 9 material:** the current [October 11 handoff](CONTINUATION-2026-1011.md) supersedes conflicting runtime, presentation, backlog and publishing descriptions below.
+
 **End-of-day update:** [End-of-first-day handoff](END-OF-FIRST-DAY-2026-1009.md) takes precedence for current runtime and TODOs. This earlier inventory includes assumptions superseded by the quote speed toggle, retained questions, compact boxes and four-copy preview. Resurvey those paths before implementing its refactor plan.
 
 Surveyed October 9, 2026. This is an inventory and proposed design, not an implementation change. Preserve the current presentation while centralizing its controls in a later pass.

@@ -1,5 +1,7 @@
 # Animation standardization — implementation handoff
 
+**Historical October 9 material:** the current [October 11 handoff](CONTINUATION-2026-1011.md) supersedes conflicting runtime, presentation, backlog and publishing descriptions below.
+
 **October 11 update:** [Current continuation](CONTINUATION-2026-1011.md) supersedes the quote-mode/timing descriptions below. Slow mode and the speed toggle have been deleted; quotes fade in place using the former Fast behavior. Candy flights remain.
 
 

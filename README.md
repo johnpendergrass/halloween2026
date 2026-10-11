@@ -2,7 +2,9 @@
 
 A collection of Halloween mini games for phone, tablet and PC browser.
 
-**Status: template (September 2026).** The three-panel frame (top bar, game
+**Current work (October 11, 2026):** Go Fish Candy Edition is playable in slot 8. See [project continuation](codex-john-docs/Codex-ToBe-Continued-2026-1011.md) and its [appearance/sound TODOs](games/candy-go-fish/codex-john-docs/NEXT-TODOS.md).
+
+**Original shell template (September 2026):** The three-panel frame (top bar, game
 panel, sliding bottom panel) is the app. The games in it are demos and
 placeholders for others to copy: a pumpkin-patch home screen,
 Stack-o'-Lantern and eight empty placeholders. **The rules for writing a mini game

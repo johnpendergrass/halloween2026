@@ -1,65 +1,34 @@
 # Integration, preview, verification and publishing
 
-**October 11 update:** [Current continuation](CONTINUATION-2026-1011.md) supersedes the quote-mode/timing descriptions below. Slow mode and the speed toggle have been deleted; quotes fade in place using the former Fast behavior. Candy flights remain.
+Updated October 11, 2026. [Current handoff](CONTINUATION-2026-1011.md) is authoritative.
 
+Plain HTML/CSS/JS, no build. Slot 8 registers Go Fish Candy Edition and the friendly fish SVG. Shell is 9:16, game 9:14. Follow games/README - game design requirements.md, including width-relative sizing, font/touch targets and standalone support.
 
-**End-of-day update:** [End-of-first-day handoff](END-OF-FIRST-DAY-2026-1009.md) takes precedence for current runtime and TODOs. This earlier inventory includes assumptions superseded by the quote speed toggle, retained questions, compact boxes and four-copy preview. Resurvey those paths before implementing its refactor plan.
+Use only ../game-helper.js score reporting. No game parent messaging/storage or settings/audio API. John prefers no dedicated Pause button: local dialogs pause, shell drawer does not. Sound is a future coordinated design task. Do not recreate the removed shell game toolbar.
 
-Current state, October 9, 2026.
+## Preview
 
-## Repository and shell
+From repository root: python start-local/no-cache-server.py --port 8098 --bind 127.0.0.1. Reuse an existing server. URLs: http://127.0.0.1:8098/games/candy-go-fish/demo.html and root shell/slot 8. Direct file opening uses generated config-data.js. After JSON edits run node games/candy-go-fish/codex-john-docs/sync-config.cjs.
 
-Workspace: `D:\dev\Projects\halloween2026`; game: `games/candy-go-fish`; branch at handoff: `main`. Remote is `https://github.com/johnpendergrass/halloween2026.git`. John explicitly wants local commits and **no push yet**, while Tristan reviews an earlier version on GitHub Pages.
+## Checks
 
-Read and follow the shared [Game Design Requirements](../../README%20-%20game%20design%20requirements.md). Do not duplicate that specification into the game. Game panel is 9:14 on the 1296×2016 art canvas, with no scrolling; shell overall is 9:16. Minimum target is 13vw in both dimensions; normal text floors and width-based sizing remain binding. Refer to the specification for the full constraints.
-
-Registry is root `games.json`: game is **Go Fish Candy Edition**, full `title` and `short_title`, slot 8 at bottom right, local `assets/halloween-fish.svg` icon. The old Game 8 placeholder has no slot. The shell purple banner uses `short_title`; changing only a game-local title does not change it. The local title is currently replaced by the temporary Quotes: Slow / Fast toggle.
-
-Only the existing `../game-helper.js` score API is used: `Halloween.reportScore(humanSetCount, 'human–opponent')`, once at result. Human completed sets are the ranked numeric score. The shell keeps the best five per game/device and ignores zero-or-less scores. Standalone play logs harmlessly instead of storing a score. The game must not directly use parent messaging, parent access or localStorage.
-
-The temporary shared toolbar/helper extension was explicitly removed. New Game and Rules remain game-owned. Do not recreate it. The helper has no settings-read/audio API; shell switch rendering/storage alone cannot make proposed variations work. Such changes need separately authorized coordinated integration.
-
-## Pause exception and drawer
-
-The drawer can cover the lower 55% of the board and does not pause or notify the iframe. At John's direction this game has no dedicated Pause button despite the shared rule addressing automatic movement. Local Rules/New Game dialogs pause JavaScript presentation. There are no time penalties; opponent successful requests may advance automatically while the drawer is open, and an already selected human question can auto-send. Formalize the exception with the owner before release if necessary. Do not infer a new shell pause API.
-
-## Local preview
-
-From repository root in PowerShell:
-
-```powershell
-python start-local/no-cache-server.py --port 8098 --bind 127.0.0.1
-```
-
-Use `http://127.0.0.1:8098/games/candy-go-fish/demo.html` for a centered game frame, the game's `index.html` for direct play, or root `index.html` for shell/slot 8. Direct file opening also works through the generated config companion. A prior server may already occupy 8098; reuse it or inspect before starting a duplicate. Loopback cannot be reached by an iPhone; use the existing LAN preview setup or a later explicitly authorized GitHub Pages push for device access.
-
-## Verification scripts
-
-Run Node commands from repository root. Browser scripts use the local server above and currently hardcode the bundled Playwright import under `C:/Users/johnp/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright` and Chrome at `C:/Program Files/Google/Chrome/Application/chrome.exe`. On another machine, locate equivalent dependencies and update the test harness paths; the game itself does not depend on them.
-
-```powershell
-node games/candy-go-fish/codex-john-docs/validate-candy-names.cjs
-node games/candy-go-fish/codex-john-docs/verify-engine.cjs
-node games/candy-go-fish/codex-john-docs/verify-browser.cjs
-node games/candy-go-fish/codex-john-docs/verify-speech.cjs
-node games/candy-go-fish/codex-john-docs/verify-speech-redraw.cjs
-```
+Run node games/candy-go-fish/codex-john-docs/<script> from repository root.
 
 | Script | Coverage |
 | --- | --- |
-| `validate-candy-names.cjs` | Current catalog and rejected normalized duplicate, missing name and overlong short name |
-| `verify-engine.cjs` | One-copy transfer, turn rules, legality, early ending, final-draw set, privacy/memory/conservation and 1,000 simulated games each for three/four copies |
-| `verify-browser.cjs` | Phone/desktop fit, target size, dialogs, alternate names, full UI round, both celebration dismissal methods, result hands, replay and file opening |
-| `verify-speech.cjs` | Real-time arrival/holds, delayed highlight, manual/automatic actions, reselection reset, source/destination timing, Rules pause, question art/rotation/fit, Yes reading/fade before transfer |
-| `verify-speech-redraw.cjs` | Legal Red Vines Yes/Nope scenarios, frame visibility, hidden/removed old layers, delayed timer replay checks and incoming opponent question |
-| `verify-shell.cjs` | Existing registry/icon/menu/iframe integration check; run when registry or shell changes |
+| validate-candy-names.cjs | Catalog naming/normalization constraints |
+| verify-engine.cjs | Rules, privacy, conservation, final sets and 1,000 games each with triples/quadruples |
+| verify-quotes.cjs | Both actors' Yes/No, auto-countdowns, middle shortcuts, grid shortcut at three stages, retained text, dialog pause, styles, flight scale/timing |
+| verify-go-fish-reply.cjs | Each middle draw target, single draw, retained question, coral/tail direction, breathing onset/peak, dialog stopping and reduced motion |
+| verify-browser.cjs | 338x526/547x850 layout/targets, dialogs, alternate names, full round, sets/results, replay and file opening |
+| verify-shell.cjs | Registry/icon/menu, embedded layout and game-owned controls |
+| verify-speech.cjs | Alias for current quote checks |
+| verify-speech-redraw.cjs | Quote checks with delayed fade timers and completed-animation replay detection |
 
-The full-round harness currently speeds up `setTimeout`, while real-time speech uses real clocks and the redraw test deliberately delays timers. The centralization handoff requires migrating fast-test acceleration before replacing tick-count waits. Do not mistake fast-round tests for visual pacing verification.
+Browser scripts use local Chrome and bundled Playwright paths hardcoded in the harness; they are not runtime dependencies. Breathing targets intentionally never become stationary: tests use pointer clicks at their centers, rather than Playwright stable-box waits. Full-round acceleration still uses the existing timer shortcut; runtime waits count nominal active ticks and are not a general elapsed-time scheduler.
 
-Screenshots beside the scripts are development artifacts, not game assets. Some result/celebration shots use alternate Casper/Hazel names intentionally. Tests refresh screenshots; review them for layout, but obtain real iPhone Safari feedback for compositor issues and subjective pacing. No test establishes optimal strategy or enjoyment.
+Screenshots are development artifacts. Tests use Chrome, not actual iPhone Safari. Timing/strategy enjoyment and iPhone compositor behavior still need device review.
 
-## Git and publishing procedure
+## Publishing
 
-Inspect status and scope first. This handoff commit includes the current game changes, tests, updated screenshots and docs since `5c49271`; it is the pre-animation-refactor baseline. Do not include unrelated repository changes. A commit's own hash is recorded in the chat after creation rather than embedded in itself. Older hashes and commit title are in the continuation entry point.
-
-Do not push now. When John later authorizes publishing, inspect the repository's current cache convention and update all required version references together: root `index.html` stylesheet/script cache values plus the app's game-loading cache value. Their last known stamp is `2026-1009-candy-go-fish`. Avoid changing shell behavior. Verify registration/preview and then perform the authorized push; GitHub Pages is already configured.
+Current user requested commit/push with message "Overall gameplay ok, need to work on appearances". Update APP_VERSION in app/app.js and both root index.html ?v= stamps together. Verify shell and game, commit intended files, push main and verify remote/local commit equality. This authorizes the present checkpoint only; obtain a new request for future pushes.

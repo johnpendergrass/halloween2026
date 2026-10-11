@@ -91,6 +91,7 @@
     if (el('heldOpponentQuestion')) el('heldOpponentQuestion').disabled = !ready;
     if (retainedPlayerRequest) el('askButton').disabled = !ready;
     el('message').classList.toggle('acknowledge', ready);
+    el('message').classList.toggle('waiting-breath', ready && Boolean(yesWait?.token === generation && !yesWait.released));
     // The Yes reply already supplies native keyboard button semantics.
     const messageButton = ready && !el('yesReply');
     el('message').setAttribute('role', messageButton ? 'button' : 'status');
@@ -147,6 +148,7 @@
     }
     el('askButton').disabled = phase !== 'choose' || !selected || overlayOpen;
     el('fishButton').disabled = !['humanFishWait', 'wendyFishWait'].includes(phase) || overlayOpen;
+    el('fishButton').classList.toggle('waiting-breath', ['humanFishWait', 'wendyFishWait'].includes(phase) && !overlayOpen);
     el('fishButton').classList.toggle('reply-arrived', ['humanFishWait', 'wendyFishWait', 'fishResponse'].includes(phase));
     const fishPlayer = phase === 'humanFishWait' || (phase === 'fishResponse' && state.pending?.actor === 'human') ? 'wendy' : 'human';
     el('fishButton').dataset.speaker = fishPlayer;
@@ -270,7 +272,7 @@
       const fadeMs = quoteTiming.fadeMs;
       const fade = message.animate([{ opacity: 1 }, { opacity: 0 }], { duration: fadeMs, fill: 'both', easing: 'ease-out' });
       if (!await playVisual(fade, fadeMs, token)) return false;
-      message.style.visibility = 'hidden'; message.replaceChildren(); message.classList.remove('speech-request', 'yes-answer');
+      message.style.visibility = 'hidden'; message.replaceChildren(); message.classList.remove('speech-request', 'yes-answer', 'waiting-breath');
       fade.cancel(); message.style.visibility = '';
       return true;
     }
@@ -280,7 +282,7 @@
     // Answers appear automatically, but receipt always waits for acknowledgement.
     const effectiveHold = requestType ? quoteTiming.holdMs : Math.min(holdMs, quoteTiming.holdMs);
     if (!await waitActive(effectiveHold, token, () => giftShortcutUsed(token), true)) return false;
-    if (!keepQuote) message.classList.remove('speech-request', 'yes-answer');
+    if (!keepQuote) message.classList.remove('speech-request', 'yes-answer', 'waiting-breath');
     return true;
   }
   async function fly(type, source, destination, hidden, token) {
@@ -305,7 +307,8 @@
         const dissolve = Math.max(0, (t - config.candyDisplay.giftDissolveStart) / (1 - config.candyDisplay.giftDissolveStart));
         const curveX = 2 * remaining * t * controlX + t * t * dx;
         const curveY = 2 * remaining * t * controlY + t * t * dy;
-        return { offset: t, transform: `translate(${curveX}px,${curveY}px) rotate(${rotation * remaining}deg) scale(${1 - dissolve * 0.45})`, opacity: 1 - dissolve };
+        const scale = 1 + (config.candyDisplay.giftMidScale - 1) * Math.sin(Math.PI * t);
+        return { offset: t, transform: `translate(${curveX}px,${curveY}px) rotate(${rotation * remaining}deg) scale(${scale})`, opacity: 1 - dissolve };
       });
     if (reduced) frames = [{ opacity: 1 }, { opacity: 0 }];
     const animation = candy.animate(frames, { duration, easing: config.appearance.giftEasing, fill: 'forwards' });
@@ -321,7 +324,7 @@
     requestedGift = null;
     generation++; state = CandyEngine.create(config); memory = WendyPlayer.createMemory(); reported = false; selected = null;
     overlayOpen = false; el('overlay').hidden = true; el('table').inert = false;
-    el('message').style.visibility = ''; el('message').classList.remove('speech-request', 'yes-answer');
+    el('message').style.visibility = ''; el('message').classList.remove('speech-request', 'yes-answer', 'waiting-breath');
     el('message').textContent = state.turn === 'human' ? humanName + ' starts this round.' : opponentName + ' starts this round.';
     proceed(generation);
   }
@@ -361,7 +364,7 @@
   }
   async function proceed(token) {
     if (token !== generation) return;
-    el('message').classList.remove('speech-request', 'yes-answer');
+    el('message').classList.remove('speech-request', 'yes-answer', 'waiting-breath');
     if (state.finished) { finishGame(); return; }
     displayedTurn = state.turn; selected = null;
     if (state.turn === 'human') { phase = 'choose'; render(); return; }
@@ -402,6 +405,7 @@
       const acknowledgeMs = config.appearance.yesAutoTransferMs;
       if (!await waitActive(acknowledgeMs, token, () => waiting.released)) return;
       yesWait = null;
+      updateMiddleControls();
     }
     requestedGift = null;
     const events = CandyEngine.request(state, actor, type); WendyPlayer.observe(memory, events);
@@ -414,7 +418,7 @@
       retainedPlayerRequest = null;
       el('askButton').hidden = true;
       heldQuestion?.remove();
-      el('message').replaceChildren(); el('message').classList.remove('speech-request', 'yes-answer'); el('message').style.visibility = '';
+      el('message').replaceChildren(); el('message').classList.remove('speech-request', 'yes-answer', 'waiting-breath'); el('message').style.visibility = '';
       if (!await flight) return;
       render();
       const completed = events.find(event => event.kind === 'set');
@@ -443,7 +447,7 @@
     const token = generation, actor = state.pending.actor;
     retainedPlayerRequest = null;
     retainedOpponentRequest = null;
-    el('message').classList.remove('speech-request', 'yes-answer');
+    el('message').classList.remove('speech-request', 'yes-answer', 'waiting-breath');
     phase = 'drawing'; render();
     setMessageSpeaker(actor);
     if (actor === 'wendy') { el('message').textContent = 'Go fish, ' + opponentName + '!'; if (!await waitActive(500, token)) return; }
@@ -475,7 +479,7 @@
     if (event.target === el('overlay') && el('overlay').classList.contains('celebrating')) closeAction();
   });
   el('rulesButton').addEventListener('click', () => showDialog('How to play',
-    ('<p>Choose a candy you hold. Your question sends automatically, or tap it to send sooner.</p><p>Answers appear automatically. Yes waits four seconds, or tap either box or the <b>Candy Dish</b> sooner. No waits for your tap.</p><p>Yes transfers <b>one candy</b>; the requester keeps the turn. No draws one candy and ends the turn. When Wendy asks, tapping your matching candy gives it immediately. ' + state.copies + ' matching candies earn a set.</p><p>Empty dish, empty hand or all sets ends the round. Most sets wins. Wendy sees only her hand and public clues.</p>').replaceAll('Wendy', escapeMarkup(opponentName)), 'Back to the table', () => { overlayOpen = false; el('overlay').hidden = true; el('table').inert = false; render(); el('rulesButton').focus(); }));
+    ('<p>Choose a candy you hold. Your question sends after a second, or tap it to send sooner.</p><p>Yes transfers one candy after four seconds. Tap either text box or the dish to act sooner. No waits for your tap.</p><p>When Wendy asks, tapping your matching candy gives it immediately. ' + state.copies + ' matching candies earn a set.</p><p>Fishing ends the turn. Empty dish, empty hand or all sets ends the round. Most sets wins.</p>').replaceAll('Wendy', escapeMarkup(opponentName)), 'Back to the table', () => { overlayOpen = false; el('overlay').hidden = true; el('table').inert = false; render(); el('rulesButton').focus(); }));
   el('newGame').addEventListener('click', () => {
     showDialog('Deal again?', '<p>This will end the current round and deal a fresh hand.</p>', 'Start a new round', startGame);
     el('dialogCancel').hidden = false;

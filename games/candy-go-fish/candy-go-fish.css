@@ -164,3 +164,15 @@ h1 { font-size: max(24px,9vw); line-height: 1.15; margin: 3vw 0 4vw; }
   top: auto; bottom: -4.4vw; transform: rotate(180deg);
 }
 .speech-request[data-speaker="human"]::after, .go-fish-reply[data-speaker="human"]::after, #fishButton[data-speaker="human"]::after { bottom: -3.8vw; }
+
+/* Settled answers breathe while waiting for acknowledgement or auto-transfer. */
+#fishButton.waiting-breath, #message.yes-answer.waiting-breath { animation: reply-breathe-intro 1000ms ease-in-out 500ms both, no-reply-breathe 1000ms ease-in-out 1500ms infinite; transform-origin: center; }
+@keyframes reply-breathe-intro {
+  from { transform: scale(1); }
+  to { transform: scale(1.04); }
+}
+@keyframes no-reply-breathe {
+  0%, 100% { transform: scale(1.04); }
+  50% { transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) { #fishButton.waiting-breath, #message.yes-answer.waiting-breath { animation: none !important; } }

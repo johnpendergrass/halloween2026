@@ -1,68 +1,71 @@
-# Candy Go Fish — October 11 continuation
+# Candy Go Fish — current handoff, October 11, 2026
 
-**Latest defaults:** either YES reply keeps both text boxes for four active seconds, then clears them and transfers automatically. Either middle text box or the Candy Dish can shortcut the wait. The matching-candy shortcut during Wendy requests also remains. Both NO replies wait indefinitely for a middle click before drawing. Local dialogs pause YES countdowns. The shared setting is `appearance.yesAutoTransferMs: 4000`, replacing `playerYesAutoTransferMs`. Earlier one-sided countdown/indefinite YES descriptions are superseded.
+This is the authoritative current-state entry point. It supersedes October 9 notes and intermediate October 11 interaction descriptions. Overall gameplay is now acceptable; the next work is appearance and sound, in the order in NEXT-TODOS.md.
 
-**Current set size:** restored to three candies per set. Ten types give 30 candies total, five dealt to each player and 20 initially in the dish before initial sets collect. Four-copy descriptions below are historical.
+## Implemented gameplay
 
-**Latest interaction exception:** when the human requests a candy and Wendy answers Yes, the settled question and answer stay for four active seconds, then clear as candy flight starts automatically. Clicking either middle text box or the dish starts it sooner. The configurable duration is `appearance.playerYesAutoTransferMs: 4000`; local dialogs pause the countdown. Wendy-request Yes and both NO paths retain their existing acknowledgement behavior.
+Ten candy types, three copies each: 30 total, five initially dealt per player, 20 initially in the Candy Dish before initially dealt sets collect. First player is random. Request only a currently held type. Success transfers exactly one candy and retains the requester's turn. Three matching candies collect automatically as one set.
 
-**Grid highlight:** human selection highlight now clears when the question is sent. It does not remain during Wendy replies or incoming candy flight. Wendy requested-candy highlights remain because those slots are gift shortcuts.
+Current engine still ends every fishing turn. Good Fish (a set-completing draw retains the turn) was previously approved as a proposal, but is NOT implemented. Do not silently change rules during appearance work.
 
-**Speaker labels:** all asks:/says: labels use normal weight and inherit their box text color. Candy names and answer emphasis keep their existing weight.
+No hand refill. End on empty dish, empty active hand, or all ten sets collected, with that reason priority. Collect the possible final set before results; earned sets celebrate before continuing, including a final earned set. Most sets wins; ties are possible. Opponent hand identities/private draws stay hidden; AI receives only its hand and public clues.
 
-**Tail refinement:** base widened from 6vw to 8vw with a stronger sideways sweep and rounded tip. The human tail mirrors the Wendy curve. Placement keeps the wider base within the box.
+## Current interaction defaults
 
-**Tail refinement:** triangular tips replaced by smoothly curved SVG masks with rounded tips. Wendy points up; human points down. Colors, size, placement and interaction behavior remain unchanged.
+Human selects a held candy. The selection highlights until the question is sent, then the highlight clears. The question auto-sends after one second; tapping it sends sooner, and reselection resets the wait.
 
-**NO color experiment:** NO, GO FISH! now uses muted coral `#efa39a` instead of gold, with a pale coral border and matching tail. Pre-tail/gold styling remains in the rollback folder.
+Questions/replies appear in place in the middle, with 250ms fades and a one-second question reading beat. Slow mode, the Fast/Slow toggle, and portrait-to-panel quote flights are deleted.
 
-**Styling experiment:** rounded speech bubbles now have upward tails for Wendy and downward tails for the human, consistently for question/Yes/NO. Colors remain cream/light green/gold. Pre-tail CSS and runtime are preserved in `style-checkpoint-before-tails-2026-1011/` for rollback.
+| Answer | Both actors |
+| --- | --- |
+| YES | Question and answer remain for four active seconds after the answer settles, then clear as the candy transfers automatically. Clicking either middle text box or the Candy Dish starts the transfer sooner. |
+| NO, GO FISH! | Question and answer remain indefinitely until the player clicks either middle text box or the Candy Dish. That starts one draw for the requester. |
 
-**Reply styling:** both Yes replies now use the existing speech box geometry with light green `#cdebb7` background, black text, and a subtle white text shadow. The style applies during the stationary fade and while settled. Questions retain cream styling; gold NO, GO FISH! boxes are unchanged.
+Wendy-request shortcut: if the human holds the requested candy, its slot is enabled immediately during question arrival/reading and the Yes reply/countdown. Tapping that candy immediately hides the texts, interrupts outstanding speech/waits, and gives exactly one candy. Other hand slots are disabled. Repeated taps cannot duplicate an action. Middle acknowledgement targets enable once the answer settles. Rules/New Game dialogs lock interaction and pause waits/native motion; a new deal invalidates old actions.
 
-**Latest interaction exception:** during Wendy's request for a held candy, that matching human slot is enabled immediately and remains available through question arrival, reading and automatic Yes reply. Tapping it acknowledges the gift immediately, clears both text boxes, interrupts pending speech/reading, and starts the normal candy flight without a bounce. Other hand slots remain disabled. Middle acknowledgement targets remain available once the answer settles. Dialogs lock the shortcut; new round invalidates it; repeated taps cannot give twice.
+## Current appearance and motion
 
-**Latest motion change:** source bounce/pulse and glow have been removed from every candy transfer/draw route, including their helper, CSS and configuration. Candy now departs directly after acknowledgement (the existing Wendy fishing announcement remains), with the same curved flight and destination fade/shrink. This supersedes pulse references below.
+Opponent speech settles left, human speech right. Questions are cream (#f5e8c5); Yes replies light green (#cdebb7) with black text and a subtle light shadow; No replies muted coral (#efa39a). All asks:/says: speaker labels have normal weight and inherit the main text color.
 
-## Default interaction rule — latest decision
+All speech boxes have rounded corners and softly curved, wide-base tails: up for Wendy, down for the human. CSS uses local inline SVG masks, with no external asset dependency. Tail base is 8vw and height 4.5vw.
 
-Either player asks; the game automatically displays the truthful Yes I do / NO, GO FISH! answer. Both question and answer remain visible indefinitely. No candy is given or drawn until the human clicks one of the three middle elements: opponent text, Candy Dish, or player text. That acknowledgement starts the pending action exactly once. Both Yes directions now use the same acknowledgement wait; the previous automatic human gift and matching-slot shortcut were removed. Candy movement remains unchanged. Middle controls lock during answer arrival, after acknowledgement, and while dialogs are open. New round invalidates pending waits. Individual interaction refinements are future work.
+Both answer boxes gently breathe at 4% peak scale: hold natural size for 500ms, ease to the peak over 1000ms, then repeat a one-second peak-to-natural-to-peak cycle. Questions and dish do not breathe. Breathing stops on acknowledgement, auto-transfer, shortcut, dialog or new round, and is disabled for reduced motion.
 
-This section supersedes intermediate interaction descriptions below, especially automatic/manual gifts and reading timeouts.
+Candy transfers/draws depart without a source bounce, pulse or glow. Curved accelerating travel remains 1400ms with rotation toward upright and an end fade starting at 82% of the route. Scale smoothly goes 100% -> 150% at route midpoint -> 100% at the destination; previous terminal shrink is removed. Opponent private draws use an unidentified wrapper. Reduced motion uses an 80ms stationary fade. The existing short Wendy-fishing announcement remains.
 
-The published rollback checkpoint is `5a33e38`, **This is last version that still has FAST vs SLOW modes**, pushed to GitHub main at John's request before this change.
+The green table uses two rows of five goals/slots per player, static wrapper piles and counts, portrait/name and SETS WON totals. Human slots show absent identities faintly and held quantities; opponent active identities remain private. Active portrait/half glows. The central Candy Dish always remains unidentified. Current top controls are New Game and Rules.
 
-## Current presentation
+## Current popups and pending design
 
-Slow mode is deleted completely, including its toggle, state, portrait-origin geometry, outgoing question flight, and retired timing settings. The former Fast behavior is now the only quote presentation: stationary 250ms fades in the middle panel, opponent left / human right, with a one-second question reading beat. Human selection auto-sends after one second or a question tap; reselection resets that wait. Matching human slots enable 500ms after the opponent question settles. Automatic Yes replies hold 900ms and fade 250ms before candy movement. Manually tapping a matching slot starts the Yes reply and candy travel immediately, retaining the opponent question until flight finishes. Failed questions remain until draw/Go Fish action.
+Earned-set popup has configured player name, candy image, collected-three wording and user-controlled Continue/outside-tap dismissal. Initial dealt sets skip this popup. Game-over banner leaves hands visible, names the result/reason/totals and offers New Game. These are functional but are the first appearance tasks to improve.
 
-Candy flights retain their curved route, 1400ms duration, easing and destination fade/shrink. Automatic source pulses remain 480ms; manual gifts skip the pulse as before. Reduced-motion candy effects and dialog pause behavior remain. Top row now has only New Game and Rules. No replacement title or setting was introduced.
+Read NEXT-TODOS.md for the user's next priorities. Older opponent/variant/animation/Good Fish proposals remain separate backlog, not authorization to implement them during appearance work.
 
-Editable quote timings are in `assets/json/game-config.json`: `quoteFadeMs`, `quoteHoldMs`, `playerRequestHoldMs`, `requestHighlightDelayMs`, and `requestHoldMs`. The generated companion was synchronized. `requestSpeechMs` and `replyDissolveMs` are removed.
+## Files and configuration
 
-## Verification
+- index.html / demo.html: game markup and standalone preview.
+- candy-go-fish.js: presentation, input locks, acknowledgement/timer orchestration, grid shortcut and dialogs.
+- candy-go-fish.css: layout, speech colors/tails and breathing.
+- game-engine.js: pure rules and state; computer-player.js: public-information weighted strategy.
+- assets/json/game-config.json: authoritative rules, profiles, catalog, display settings and runtime timings.
+- assets/json/config-data.js: generated fallback for file opening/fetch failure.
 
-`verify-quotes.cjs` replaces `verify-fast-quotes.cjs`; it covers both speakers' success/miss replies, automatic/manual gifts, retained questions through dialogs, stationary keyframes, and separate candy timing. `verify-speech.cjs` runs that current suite. `verify-speech-redraw.cjs` runs it with delayed timers and completed-animation replay detection; the former Slow flight expectations are retired. `verify-browser.cjs` covers phone/desktop targets/layout, alternate identities, a full round, celebrations, results, replay and direct file opening. Engine and naming checks remain available.
+After JSON edits run node games/candy-go-fish/codex-john-docs/sync-config.cjs; never edit the generated companion independently. Current important fields: copiesPerType 3, quoteFadeMs 250, quoteHoldMs/playerRequestHoldMs 1000, yesAutoTransferMs 4000, giftTravelMs 1400, giftMidScale 1.5. Some older appearance fields remain unused; do not assume every configured field controls current runtime. Breathing/tail constants are CSS. Full presentation centralization is not implemented.
 
-Validation passed: JavaScript syntax, naming validation, engine scenarios and 1,000 simulations each for three/four copies, real-time stationary quote scenarios, delayed-timer quote scenarios, and phone/desktop full-round/replay/file-opening checks. The refreshed 338px screenshot was visually reviewed. These checks use local Chrome, not iPhone Safari.
+## Shell, preview and publishing
 
-## Human request answered Yes — interaction tuning
+Plain HTML/CSS/JS, no build. The shell is 9:16; game panel 9:14. Follow the single shared games/README - game design requirements.md. Keep game-owned controls inside the game. Slot 8 title is Go Fish Candy Edition; icon is assets/halloween-fish.svg.
 
-Player question remains alongside Wendy says: Yes I do. The settled Yes reply is a native clickable button (`yesReply`), usable by touch or keyboard. There is no automatic transfer or reading timeout: both messages remain until the human clicks the Yes reply. The click is accepted once, then the existing source pulse runs and both messages clear when candy flight starts. Rules/New Game dialogs suspend interaction; starting a new round invalidates the old waiter. NO/dish-draw flow and Wendy-request flow are unchanged. Reply labels use says: throughout. The temporary `playerYesHoldMs` setting was removed.
+Only the existing ../game-helper.js score API is used: Halloween.reportScore(humanSetCount, 'human-opponent') once at finish, with a numeric ranking and displayed totals. The actual separator is an en dash. No direct parent messaging/storage. Shell settings/audio APIs are not implemented. There is no dedicated Pause button at John's direction; local dialogs pause, but the shell drawer does not notify/pause the iframe.
 
+Run python start-local/no-cache-server.py --port 8098 --bind 127.0.0.1, reusing an existing server. Preview /games/candy-go-fish/demo.html or root shell/slot 8. File opening uses the companion. Loopback is PC-only; actual iPhone Safari still needs device review.
 
-## Wendy request answered No — interaction tuning
+Publishing request for this checkpoint: commit/push to main with title "Overall gameplay ok, need to work on appearances". Resolve its hash in Git history or the chat after creation. Update APP_VERSION and both root ?v= stamps together before publishing. This authorization does not authorize later pushes.
 
-Both Wendy question and Player says: NO, GO FISH! remain until the human clicks either the reply or the Candy Dish. Both triggers use the same locked draw handler, drawing exactly one private candy for Wendy. Dish accessibility text identifies Wendy as the recipient, and Rules disables both actions.
+## Rollback and verification
 
-## Shared middle acknowledgement
+- 5a33e38: last Fast/Slow version, previously pushed.
+- 83c418b: local checkpoint immediately before breathing, preserving earlier October 11 changes.
+- style-checkpoint-before-tails-2026-1011/: pre-tail/gold styles and runtime; restore CSS for a visual rollback, not old JS over newer behavior.
 
-Whenever a transfer/draw is ready for acknowledgement, either visible middle text box or the Candy Dish triggers the same action. This covers human Yes receipt, both Go Fish outcomes, and the ready-to-give window after Wendy requests a held candy. Matching-slot taps and existing opponent automatic timing remain supported. One guarded `acknowledgeMiddle` handler releases Yes/gift waits or starts the pending draw; controls lock immediately when acknowledged, during speech arrival/transfer, and in local dialogs. Candy identity selection still takes place in the human hand; an unsent human question can still be clicked to send it early.
-
-The text/status area gains keyboard button semantics when it is an acknowledgement target; Wendy's Yes reply retains its native button. Retained human questions are enabled as acknowledgements, rather than duplicate requests. Rules explain the common middle targets.
-
-## Remaining work
-
-The October 9 end-of-first-day handoff remains authoritative for all other behavior and backlog. Four-copy preview remains selected. Good Fish is still unimplemented. Full animation centralization, source-pulse experiment, celebration tuning and selectable identities/variants remain separate work. Earlier Slow/Fast documentation and screenshots are historical.
-
-This change has not been pushed; the earlier checkpoint push does not authorize publishing subsequent work.
+See VERIFICATION-2026-1011.md for validation and INTEGRATION-AND-VERIFICATION.md for commands. Screenshots are development artifacts; neither Chrome tests nor fixtures establish actual iPhone Safari pacing/compositor behavior.

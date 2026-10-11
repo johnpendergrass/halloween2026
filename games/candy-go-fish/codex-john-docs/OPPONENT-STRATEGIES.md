@@ -1,5 +1,7 @@
 # Opponent strategies — implemented behavior and future ideas
 
+**Historical October 9 material:** the current [October 11 handoff](CONTINUATION-2026-1011.md) supersedes conflicting runtime, presentation, backlog and publishing descriptions below.
+
 Updated October 9, 2026. Preserve the distinction between implemented behavior and proposed difficulty levels. The animation refactor must not change the strategy.
 
 ## Opponent strategies

@@ -47,8 +47,8 @@ const config = require('../assets/json/game-config.json');
         if (celebrations++ % 2) await page.locator('#overlay').click({ position: { x: 2, y: 2 } });
         else await page.locator('#dialogAction').click();
       }
-      else if (await page.locator('#yesReply:enabled').count()) await page.locator('#yesReply').click();
-      else if (await page.locator('#fishButton').isEnabled()) await page.locator('#fishButton').click();
+      else if (await page.locator('#yesReply:enabled').count()) { const box=await page.locator('#yesReply').boundingBox(); await page.mouse.click(box.x+box.width/2,box.y+box.height/2); }
+      else if (await page.locator('#fishButton').isEnabled()) { const box=await page.locator('#fishButton').boundingBox(); await page.mouse.click(box.x+box.width/2,box.y+box.height/2); }
       else if (await page.locator('#centerCircle').isEnabled()) await page.locator('#centerCircle').click();
       else if (await page.locator('.player-portrait.portrait-active').count() && await page.locator('#humanSlots button:enabled').count()) {
         const slots = page.locator('#humanSlots button:enabled');

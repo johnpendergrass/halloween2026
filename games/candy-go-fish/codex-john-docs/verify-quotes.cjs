@@ -42,7 +42,7 @@ const {chromium}=require('C:/Users/johnp/.cache/codex-runtimes/codex-primary-run
     await page.locator('#rulesButton').click();await page.locator('#dialogAction').click();
     assert.match(await page.locator('#message').textContent(),/Wendy asks:/,'Question survives dialog redraw');
    }
-   await page.locator('#fishButton').click();
+   const replyBox=await page.locator('#fishButton').boundingBox();await page.mouse.click(replyBox.x+replyBox.width/2,replyBox.y+replyBox.height/2);
    if(scenario==='wendyMiss')assert(!(await page.locator('#message').textContent()).includes('asks:'),'Question clears only after answering');
    if(scenario==='humanMiss')assert(await page.locator('#askButton').isHidden(),'Question clears when choosing to fish');
   }
@@ -64,6 +64,7 @@ const {chromium}=require('C:/Users/johnp/.cache/codex-runtimes/codex-primary-run
    assert.equal(await page.locator('.flying-candy').count(),0,'Candy waits for player confirmation');
    await page.waitForTimeout(1000);
    assert.equal(await page.locator('.flying-candy').count(),0,'No automatic transfer before four-second deadline');
+   assert.equal(await page.locator('#message').evaluate(box=>getComputedStyle(box).animationName),'reply-breathe-intro, no-reply-breathe','Yes reply breathes during its wait');
    assert.deepEqual(await page.locator('#message').evaluate(box=>{const style=getComputedStyle(box);return [style.backgroundColor,style.color];}),['rgb(205, 235, 183)','rgb(0, 0, 0)'],'Both Yes speakers use light green and black');
    if(!ackTrigger)await page.screenshot({path:require('node:path').join(__dirname,scenario+'-green-reply.png')});
    if(ackTrigger!=='auto')await page.locator(ackTrigger || '#yesReply').evaluate(button=>{button.click();button.click();});
@@ -83,6 +84,7 @@ const {chromium}=require('C:/Users/johnp/.cache/codex-runtimes/codex-primary-run
    assert(await page.locator('#heldOpponentQuestion').isVisible());
    assert.match(await page.locator('#message').textContent(),/Yes I do/);
    assert.equal(await page.locator('#humanSlots .available').count(),1,'Only the requested candy is a gift shortcut');
+   assert.equal(await page.locator('#message').evaluate(box=>getComputedStyle(box).animationName),'reply-breathe-intro, no-reply-breathe','Yes reply breathes during its wait');
    assert.deepEqual(await page.locator('#message').evaluate(box=>{const style=getComputedStyle(box);return [style.backgroundColor,style.color];}),['rgb(205, 235, 183)','rgb(0, 0, 0)'],'Both Yes speakers use light green and black');
    if(!ackTrigger)await page.screenshot({path:require('node:path').join(__dirname,scenario+'-green-reply.png')});
    if(ackTrigger!=='auto')await page.locator(ackTrigger || '#yesReply').evaluate(button=>{button.click();button.click();});
@@ -111,6 +113,7 @@ const {chromium}=require('C:/Users/johnp/.cache/codex-runtimes/codex-primary-run
    assert(await page.locator('#askButton').isHidden(),'Question clears at candy departure');
    assert.equal(await page.locator('.flying-candy').count(),1,'Repeated confirmation starts only one transfer');
    assert.equal(await page.locator('#message').textContent(),'','Yes reply clears during flight');
+   assert(!(await page.locator('#message').getAttribute('class')).includes('waiting-breath'),'Yes breathing stops on departure');
   }
   if(scenario==='wendyYes')assert.equal(await page.locator('#heldOpponentQuestion').count(),0,'Question clears after the Yes answer finishes');
   const visuals=await page.evaluate(()=>window.visuals),quotes=visuals.filter(v=>v.classes.includes('speech'));
@@ -118,6 +121,13 @@ const {chromium}=require('C:/Users/johnp/.cache/codex-runtimes/codex-primary-run
   assert(quotes.every(v=>v.frames.every(f=>!f.transform)),'Quotes fade in place without floating or scaling');
   assert(!visuals.some(v=>v.duration===480 || v.duration===120),'No source bounce before candy departure');
   assert(visuals.some(v=>v.duration===(process.env.QUOTE_REDUCED_MOTION?80:1400)),'Candy travel timing stays unchanged');
+  if(!process.env.QUOTE_REDUCED_MOTION) {
+   const travel=visuals.find(v=>v.classes==='flying-candy'||v.classes==='flying-token');
+   const scale=frame=>Number(frame.transform.match(/scale\(([^)]+)\)/)[1]);
+   assert.equal(scale(travel.frames[0]),1,'Candy starts at 100%');
+   assert.equal(scale(travel.frames[20]),1.5,'Candy reaches 150% halfway');
+   assert.equal(scale(travel.frames.at(-1)),1,'Candy finishes at 100%');
+  }
   assert.equal(await page.locator('.flying-candy,.flying-token').evaluate(node=>node.getAnimations()[0].effect.getTiming().duration),process.env.QUOTE_REDUCED_MOTION?80:1400,'Candy travel retains its independent duration');
   if(process.env.QUOTE_TIMER_LAG)assert.deepEqual(await page.evaluate(()=>window.finishedQuoteReplays),[]);
   assert.deepEqual(errors,[]);await page.close();

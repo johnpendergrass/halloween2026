@@ -1,5 +1,7 @@
 # Architecture and data
 
+**Historical October 9 material:** the current [October 11 handoff](CONTINUATION-2026-1011.md) supersedes conflicting runtime, presentation, backlog and publishing descriptions below.
+
 **End-of-day update:** [End-of-first-day handoff](END-OF-FIRST-DAY-2026-1009.md) takes precedence for current runtime and TODOs. This earlier inventory includes assumptions superseded by the quote speed toggle, retained questions, compact boxes and four-copy preview. Resurvey those paths before implementing its refactor plan.
 
 Current code, October 9, 2026. Plain HTML/CSS/JavaScript; no build framework or installed project dependency is required for the game.

@@ -39,6 +39,7 @@ window.CandyConfig = {
     "giftWidthVw": 22,
     "giftHeightVw": 17,
     "giftArcVw": 22,
+    "giftMidScale": 1.5,
     "giftDissolveStart": 0.82
   },
   "layout": {
