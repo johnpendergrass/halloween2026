@@ -15,7 +15,7 @@ const {chromium}=require('C:/Users/johnp/.cache/codex-runtimes/codex-primary-run
   await page.goto('http://127.0.0.1:8098/games/candy-go-fish/index.html');await page.locator('#humanSlots .slot').last().waitFor();
   assert.equal(await page.locator('#quoteSpeed').count(),0);
   await page.evaluate(scenario=>{const create=CandyEngine.create;CandyEngine.create=config=>{const s=create(config),t=config.layout.slotOrder;s.hands.human=[{type:t[0]},{type:t[1]}];s.hands.wendy=[{type:(scenario.includes('Yes')||scenario==='wendySlot')?t[0]:t[2]},{type:t[3]}];s.sets={human:[],wendy:[]};s.pile=[{type:t[4]},{type:t[5]},{type:t[6]}];s.turn=scenario.startsWith('wendy')?'wendy':'human';s.finished=false;s.pending=null;[s.pile,s.hands.human,s.hands.wendy].forEach((cards,owner)=>cards.forEach((card,index)=>card.id=owner+'-'+index));window.testState=s;return s;};WendyPlayer.choose=hand=>hand[0].type;window.visuals=[];const animate=Element.prototype.animate;Element.prototype.animate=function(frames,options){window.visuals.push({classes:this.className,duration:options.duration,frames});return animate.call(this,frames,options);};},scenario);
-  await page.locator('#dialogAction').click();const started=Date.now();
+  await require('./start-round.cjs')(page,scenario.startsWith('wendy')?'wendy':'human');const started=Date.now();
   if(scenario.startsWith('human'))await page.locator('#humanSlots .available').first().click();
   if(scenario==='wendyMiss'||scenario==='wendyYes') {
    await page.waitForFunction(()=>document.querySelector('#message').style.visibility!=='hidden' && document.querySelector('#message').textContent.includes('asks:') && !document.querySelector('.stationary-speech'));

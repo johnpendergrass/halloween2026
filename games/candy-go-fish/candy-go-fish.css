@@ -77,6 +77,15 @@ h2 { font-size: max(14px,4.5vw); }
   pointer-events: none;
 }
 #message.choose-instruction::before, #message.choose-instruction::after { content: none; }
+.opening-board .slot .candy-art, .opening-board .slot .badge,
+.opening-board .hand-count, .opening-board .pile-number { visibility: hidden; }
+.opening-board #message.opening-action { pointer-events: auto; cursor: pointer; }
+.opening-board .center-area { position: relative; z-index: 5; }
+.opening-board .center-controls { position: relative; display: block; height: 34vw; }
+.opening-board #centerCircle { position: absolute; left: 50%; top: 50%; width: 52.5vw; height: 52.5vw; transform: translate(-50%, -50%); }
+.opening-board #message { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 72vw; min-height: 19.5vw; padding: 3vw 4.5vw; font-size: max(18px,5.4vw); border-radius: 4.5vw; }
+.opening-board.starter-chosen #message { width: 90vw; min-height: 16.5vw; padding: 1.5vw 4.5vw; transform: translate(-50%, calc(-50% + 35.5vw)); }
+.opening-board.starter-chosen.starter-up #message { transform: translate(-50%, calc(-50% - 35.5vw)); }
 #heldOpponentQuestion { grid-column: 1; grid-row: 1; font-size: max(12px,3.6vw); text-align: left; line-height: 1.2; }
 .speech-request { padding: 2vw; border: 0.3vw solid #f8dfa1; border-radius: 3vw 3vw 3vw 0.5vw; background: #f5e8c5; color: #254333; box-shadow: 0 1vw 3vw #061d2538; }
 .speech-speaker { display: block; font-size: max(12px,3.6vw); font-weight: normal; color: inherit; margin-bottom: 1vw; }

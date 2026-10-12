@@ -3,7 +3,7 @@
   // The generated companion keeps direct file:// opening functional.
   let config = window.CandyConfig;
   if (location.protocol !== 'file:') {
-    try { const response = await fetch('./assets/json/game-config.json?v=2026-1012-candy-cache'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
+    try { const response = await fetch('./assets/json/game-config.json?v=2026-1012-candy-start'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
     catch (error) { console.warn('Using bundled candy configuration.', error); }
   }
   const piles = CandyPiles();
@@ -31,6 +31,8 @@
   const quoteTiming = { fadeMs: config.appearance.quoteFadeMs, holdMs: config.appearance.quoteHoldMs };
   let retainedPlayerRequest = null;
   let retainedOpponentRequest = null;
+  let startingPlayer = null;
+  const openingPhase = () => ['pickStarter', 'spinningStarter', 'starterReady'].includes(phase);
   function setMessageSpeaker(player) {
     messageSpeaker = player;
     el('message').dataset.speaker = player;
@@ -100,6 +102,8 @@
     el('centerCircle').setAttribute('aria-label', 'Candy Dish; ' + (ready ? 'acknowledge and continue; ' : '') + (state?.pile.length ?? 0) + ' remaining');
   }
   function acknowledgeMiddle() {
+    if (!overlayOpen && phase === 'pickStarter') { spinStarter(); return; }
+    if (!overlayOpen && phase === 'starterReady') { dealGame(); return; }
     if (!middleAcknowledgementReady()) return;
     if (yesWait?.token === generation && !yesWait.released) {
       yesWait.released = true;
@@ -109,6 +113,10 @@
   }
   function render() {
     if (!state) return;
+    const opening = openingPhase();
+    el('table').classList.toggle('opening-board', opening);
+    el('table').classList.toggle('starter-chosen', phase === 'starterReady');
+    el('table').classList.toggle('starter-up', startingPlayer === 'wendy');
     el('gameOver').hidden = phase !== 'finished';
     el('gameOver').parentElement.classList.toggle('finished', phase === 'finished');
     document.querySelector('.wendy-portrait').classList.toggle('portrait-active', displayedTurn === 'wendy' && !state.finished);
@@ -144,7 +152,9 @@
           if (player === 'human' && quantity > 2) art.prepend(candyImage(type, 'third'));
           slot.append(art);
           slot.classList.toggle('empty', !quantity && !complete);
-          const badge = document.createElement('span'); badge.className = 'badge'; badge.textContent = complete ? '✓' : quantity; slot.append(badge);
+          if (complete || quantity > 0) {
+            const badge = document.createElement('span'); badge.className = 'badge'; badge.textContent = complete ? '✓' : quantity; slot.append(badge);
+          }
         } else slot.classList.add('unknown');
       }
     }
@@ -166,10 +176,14 @@
     }
     el('fishButton').hidden = el('fishButton').disabled;
     el('centerCircle').disabled = !['humanFishWait', 'wendyFishWait'].includes(phase) || overlayOpen;
-    const center = el('centerCircle'); center.replaceChildren();
+    const center = el('centerCircle');
+    if (!opening || !center.querySelector('img')) {
+    center.replaceChildren();
     const dish = document.createElement('img'); dish.src = './assets/candy-dish/ghost-plate-v2-300.png';
     dish.alt = ''; dish.draggable = false; center.append(dish);
     const number = document.createElement('span'); number.className = 'pile-number'; number.textContent = state.pile.length; center.append(number);
+    }
+    if (!opening) center.querySelector('img').style.transform = '';
     center.setAttribute('aria-label', 'Candy Dish; ' + (phase === 'wendyFishWait' ? 'let ' + opponentName + ' draw a candy' : 'draw a candy') + '; ' + state.pile.length + ' remaining');
     piles.render(state);
     // Keep the opponent question until the human actually answers Go Fish.
@@ -188,6 +202,18 @@
     el('message').classList.toggle('on-right', messageSpeaker === 'human');
     el('message').hidden = phase === 'finished' || phase === 'thinking' || (phase === 'choose' && Boolean(selected));
     updateMiddleControls();
+    if (opening) {
+      const ready = phase !== 'spinningStarter' && !overlayOpen;
+      center.disabled = !ready;
+      el('message').classList.remove('speech-request', 'yes-answer', 'waiting-breath', 'on-right');
+      el('message').classList.add('choose-instruction');
+      el('message').classList.toggle('opening-action', ready);
+      el('message').hidden = phase === 'spinningStarter';
+      el('message').style.visibility = '';
+      el('message').textContent = phase === 'starterReady' ? config.players[startingPlayer].name + ' goes first - click to start' : 'Click to choose a starting player';
+      el('message').setAttribute('role', 'button'); el('message').tabIndex = ready ? 0 : -1;
+      center.setAttribute('aria-label', phase === 'starterReady' ? 'Start the game' : 'Spin to choose a starting player');
+    } else el('message').classList.remove('opening-action');
   }
   async function waitActive(ms, token, interrupted = () => false, quoteWait = false) {
     let elapsed = 0;
@@ -330,10 +356,40 @@
     retainedOpponentRequest = null;
     yesWait = null;
     requestedGift = null;
-    generation++; piles.reset(); state = CandyEngine.create(config); memory = WendyPlayer.createMemory(); reported = false; selected = null;
+    generation++; piles.reset(); startingPlayer = null;
+    state = { pile: [], hands: { human: [], wendy: [] }, sets: { human: [], wendy: [] }, copies: config.rules.copiesPerType, finished: false };
+    phase = 'pickStarter'; displayedTurn = null; reported = false; selected = null;
     overlayOpen = false; el('overlay').hidden = true; el('table').inert = false;
     el('message').style.visibility = ''; el('message').classList.remove('speech-request', 'yes-answer', 'waiting-breath');
-    el('message').textContent = state.turn === 'human' ? humanName + ' starts this round.' : opponentName + ' starts this round.';
+    el('centerCircle').replaceChildren();
+    document.querySelectorAll('.stationary-speech, .flying-candy, .flying-token').forEach(node => node.remove());
+    render();
+  }
+  async function spinStarter() {
+    if (phase !== 'pickStarter' || overlayOpen) return;
+    startingPlayer = Math.random() < .5 ? 'human' : 'wendy';
+    phase = 'spinningStarter'; render();
+    const token = generation, dish = el('centerCircle').querySelector('img');
+    const target = 360 * 7 + (startingPlayer === 'human' ? 180 : 0);
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const duration = reduced ? 80 : 3700;
+    const animation = dish.animate(reduced ? [{ opacity: .7 }, { opacity: 1 }] : [
+      { transform: 'rotate(0deg)', offset: 0, easing: 'cubic-bezier(.65,0,1,1)' },
+      { transform: 'rotate(180deg)', offset: .2, easing: 'linear' },
+      { transform: 'rotate(' + (target - 640) + 'deg)', offset: .58, easing: 'cubic-bezier(0,0,.2,1)' },
+      { transform: 'rotate(' + (target + 18) + 'deg)', offset: .86, easing: 'ease-in-out' },
+      { transform: 'rotate(' + (target - 9) + 'deg)', offset: .92, easing: 'ease-in-out' },
+      { transform: 'rotate(' + (target + 4) + 'deg)', offset: .97, easing: 'ease-out' },
+      { transform: 'rotate(' + target + 'deg)', offset: 1 }
+    ], { duration, fill: 'forwards' });
+    if (!await playVisual(animation, duration, token)) return;
+    dish.style.transform = 'rotate(' + (startingPlayer === 'human' ? 180 : 0) + 'deg)'; animation.cancel();
+    phase = 'starterReady'; render();
+  }
+  function dealGame() {
+    if (phase !== 'starterReady' || overlayOpen) return;
+    state = CandyEngine.create(config); state.turn = startingPlayer;
+    memory = WendyPlayer.createMemory();
     proceed(generation);
   }
   function finishGame() {
@@ -483,7 +539,7 @@
   el('fishButton').addEventListener('click', acknowledgeMiddle);
   el('message').addEventListener('click', acknowledgeMiddle);
   el('message').addEventListener('keydown', event => {
-    if (event.target === el('message') && ['Enter', ' '].includes(event.key) && middleAcknowledgementReady()) {
+    if (event.target === el('message') && ['Enter', ' '].includes(event.key) && (middleAcknowledgementReady() || openingPhase())) {
       event.preventDefault(); acknowledgeMiddle();
     }
   });
@@ -507,7 +563,6 @@
     const index = buttons.indexOf(document.activeElement);
     event.preventDefault(); buttons[(index + (event.shiftKey ? -1 : 1) + buttons.length) % buttons.length].focus();
   });
-  el('table').inert = true;
   buildSlots();
-  el('dialogAction').focus();
+  startGame();
 })();

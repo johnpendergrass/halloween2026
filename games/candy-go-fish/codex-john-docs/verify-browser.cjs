@@ -2,6 +2,7 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const config = require('../assets/json/game-config.json');
+const startRound = require('./start-round.cjs');
 (async () => {
   const browser = await chromium.launch({ headless: true, executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe' });
   try {
@@ -11,7 +12,7 @@ const config = require('../assets/json/game-config.json');
       await page.setViewportSize({ width, height });
       await page.goto('http://127.0.0.1:8098/games/candy-go-fish/index.html');
       await page.locator('#humanSlots .slot').last().waitFor();
-      await page.locator('#dialogAction').click();
+      await startRound(page);
       const layout = await page.evaluate(() => {
         const targets = [...document.querySelectorAll('#humanSlots .slot, #askButton, #fishButton, #centerCircle, .game-bar button')].filter(target => !target.hidden);
         return { overflow: document.body.scrollHeight > innerHeight || document.body.scrollWidth > innerWidth,
@@ -35,7 +36,7 @@ const config = require('../assets/json/game-config.json');
     await page.locator('#humanSlots .slot').last().waitFor();
     assert.equal(await page.locator('.player-portrait .portrait-name').textContent(), 'CASPER');
     assert.equal(await page.locator('.wendy-portrait .portrait-name').textContent(), 'HAZEL');
-    await page.locator('#dialogAction').click();
+    await startRound(page);
     let actions = 0;
     let celebrations = 0;
     while (actions++ < 750) {
@@ -81,7 +82,7 @@ const config = require('../assets/json/game-config.json');
     assert.equal(await page.locator('#overlay').isVisible(), false);
     await page.goto('file:///' + path.resolve(__dirname, '../index.html').replaceAll('\\', '/'));
     await page.locator('#humanSlots .slot').last().waitFor();
-    await page.locator('#dialogAction').click();
+    await startRound(page);
     assert.equal(await page.locator('#humanSlots .slot').count(), 10);
     assert.deepEqual(errors, []);
     console.log('Phone/desktop layout, target sizes, rules, full UI round, replay and file:// passed.');

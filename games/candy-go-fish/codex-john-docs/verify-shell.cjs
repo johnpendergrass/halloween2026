@@ -1,5 +1,6 @@
 const assert = require('node:assert/strict');
 const path = require('node:path');
+const startRound = require('./start-round.cjs');
 const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 (async () => {
   const browser = await chromium.launch({ headless: true, executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe' });
@@ -15,7 +16,7 @@ const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary
     await page.screenshot({ path: path.join(__dirname, 'shell-menu.png') });
     await button.click();
     const frame = page.frameLocator('#gameFrame');
-    await frame.locator('#dialogAction').click();
+    await startRound(frame);
     assert.equal(await page.locator('#gameNewButton, #gameRulesButton').count(), 0);
     assert.equal(await frame.locator('.game-bar').isVisible(), true);
     await frame.locator('#rulesButton').click();

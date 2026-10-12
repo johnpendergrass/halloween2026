@@ -1,6 +1,7 @@
 const assert = require('node:assert/strict');
 const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const config = require('../assets/json/game-config.json');
+const startRound = require('./start-round.cjs');
 (async () => {
  const browser = await chromium.launch({headless:true, executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe'});
  try {
@@ -22,7 +23,7 @@ const config = require('../assets/json/game-config.json');
     Element.prototype.animate=function(frames,options){if(this.classList.contains('flying-candy'))window.flights.push({frames,src:this.getAttribute('src')});return animate.call(this,frames,options);};
     return CandyConfig.candies[match?0:4].image;
    },{actor,match});
-   await page.locator('#dialogAction').click();
+   await startRound(page, actor);
    if(actor==='human')await page.locator('#humanSlots .slot.available').first().click();
    await page.waitForFunction(match=>match?!!document.querySelector('#yesReply')&&!document.querySelector('#yesReply').disabled:!document.querySelector('#fishButton').disabled,match);
    const before=await page.evaluate(()=>({dish:fixture.pile.length,wendy:fixture.hands.wendy.length}));

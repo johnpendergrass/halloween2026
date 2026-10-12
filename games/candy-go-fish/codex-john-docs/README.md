@@ -5,6 +5,7 @@ Updated October 12, 2026.
 Start with [current handoff](CONTINUATION-2026-1011.md), then [next TODOs](NEXT-TODOS.md). Those describe the implemented three-candy game and the user's next appearance/sound priorities.
 
 - [Rules and gameplay](RULES-AND-GAMEPLAY.md)
+- [Empty-board starter sequence](START-SEQUENCE-2026-1012.md)
 - [UI and presentation](UI-AND-PRESENTATION.md)
 - [Candy pile preview and tuning](PILE-PREVIEW-2026-1011.md)
 - [Configuration](../assets/json/README.md)
