@@ -1,4 +1,4 @@
-# Generic candy pile study — October 11, 2026
+# Generic candy pile study â€” October 11, 2026
 
 Open ../pile-preview.html, or http://127.0.0.1:8098/games/candy-go-fish/pile-preview.html using the local server. This separate appearance tool compares locked board snapshots with main/Wendy counts 5/5, 15/15 and 30/20. Middle board can switch to the current 20/5 deal. Production pile layers are hidden to avoid double rendering.
 

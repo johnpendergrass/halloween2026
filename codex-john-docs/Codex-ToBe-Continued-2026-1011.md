@@ -1,4 +1,4 @@
-# Project continuation — October 11, 2026
+# Project continuation â€” October 11, 2026
 
 Main work is Go Fish Candy Edition in games/candy-go-fish, registered slot 8. Start with its codex-john-docs/CONTINUATION-2026-1011.md and NEXT-TODOS.md. Current gameplay remains triples, stationary speech bubbles, four-second Yes auto-transfers, click-required No draws, middle/grid shortcuts, curved-tail colored boxes and answer breathing.
 

@@ -1,4 +1,4 @@
-# Verification — October 11, 2026 appearance/pile checkpoint
+# Verification â€” October 11, 2026 appearance/pile checkpoint
 
 Publishing title: Update candy artwork, persistent piles and transfer visuals. Previous gameplay publish: 1d7a777, Overall gameplay ok, need to work on appearances. Cache stamp: 2026-1011-candy-piles in APP_VERSION and both root resource references.
 

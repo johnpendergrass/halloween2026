@@ -10,7 +10,7 @@ Both YES answers retain question/reply for four seconds, then transfer automatic
 
 Quotes fade in place; cream question, light-green Yes, coral No. Curved tails indicate speaker. Answers gently breathe while waiting. Candy travels on a curve without source bounce, scaling 100%-150%-100% with an end fade.
 
-Current artwork uses the green/blue gradient, ghost main plate, green/red Wendy tray/dishes and brown/yellow player dishes. Persistent generic piles track actual card IDs; player footer shows Total candies. Main wrappers overflow the rim slightly; survivors keep their positions when cards move or collect into sets. Requests in either direction and player draws fly actual candy images; only Wendy’s private draw flies a generic wrapper, resizing to her tray.
+Current artwork uses the green/blue gradient, ghost main plate, green/red Wendy tray/dishes and brown/yellow player dishes. Persistent generic piles track actual card IDs; player footer shows Total candies. Main wrappers overflow the rim slightly; survivors keep their positions when cards move or collect into sets. Requests in either direction and player draws fly actual candy images; only Wendyâ€™s private draw flies a generic wrapper, resizing to her tray.
 
 Open pile-preview.html for size/rotation/spread/color tuning. Current priorities: improve earned-set/game-over popups, refine pile appearance, generic instructions, top New Game/Rules controls, then sound. See [verification/integration](codex-john-docs/INTEGRATION-AND-VERIFICATION.md) and [configuration](assets/json/README.md).
 
