@@ -116,12 +116,12 @@
     for (const player of ['human', 'wendy']) {
       el(player + 'Area').classList.toggle('active', displayedTurn === player && !state.finished);
       const total = state.sets[player].length;
-      const scoreLabel = document.createElement('span'); scoreLabel.textContent = 'SETS WON';
+      const scoreLabel = document.createElement('span'); scoreLabel.textContent = 'CANDY SETS';
       const scoreNumber = document.createElement('strong'); scoreNumber.textContent = total;
       el(player + 'SetCount').replaceChildren(scoreLabel, scoreNumber);
       el(player + 'SetCount').setAttribute('aria-label', config.players[player].name + ' has ' + total + (total === 1 ? ' set' : ' sets'));
       if (el(player + 'Count')) el(player + 'Count').textContent = state.hands[player].length;
-      if (player === 'human') el('humanTotalCandies').setAttribute('aria-label', humanName + ' holds ' + state.hands.human.length + (state.hands.human.length === 1 ? ' candy' : ' candies'));
+      if (player === 'human') el('humanPile').setAttribute('aria-label', humanName + ' holds ' + state.hands.human.length + (state.hands.human.length === 1 ? ' candy' : ' candies'));
       el(player + 'Pile')?.setAttribute('aria-label', config.players[player].name + ' holds ' + state.hands[player].length + (state.hands[player].length === 1 ? ' candy' : ' candies'));
       for (const type of config.layout.slotOrder) {
         const slot = el(player + '-' + type), quantity = CandyEngine.count(state.hands[player], type);
@@ -181,6 +181,7 @@
     }
     // One message uses a free side of the dish; buttons supply obvious actions.
     if (phase === 'choose') el('message').textContent = selected ? '' : 'Choose a candy from your hand.';
+    el('message').classList.toggle('choose-instruction', phase === 'choose' && !selected);
     if (phase === 'thinking') el('message').textContent = '';
     if (phase === 'humanFishWait') el('message').replaceChildren();
     if (phase === 'choose') messageSpeaker = 'human';
@@ -460,11 +461,10 @@
     el('message').classList.remove('speech-request', 'yes-answer', 'waiting-breath');
     phase = 'drawing'; render();
     setMessageSpeaker(actor);
-    if (actor === 'wendy') { el('message').textContent = 'Go fish, ' + opponentName + '!'; if (!await waitActive(500, token)) return; }
     const drawingCard = state.pile[0];
     const pileFlight = piles.begin(drawingCard, el('centerCircle'));
     const events = CandyEngine.fish(state), draw = events[0]; WendyPlayer.observe(memory, events);
-    el('message').textContent = actor === 'human' ? 'You drew ' + byId.get(draw.type).shortName + '.' : opponentName + ' draws a candy.';
+    el('message').textContent = actor === 'human' ? 'You drew ' + byId.get(draw.type).shortName + '.' : '';
     piles.render(state);
     const destination = actor === 'human' ? el('human-' + draw.type) : el('wendyPile');
     if (!await fly(draw.type, pileFlight.source, piles.destination(drawingCard, destination), actor === 'wendy', token, actor === 'wendy' ? pileFlight.candy : null)) return;

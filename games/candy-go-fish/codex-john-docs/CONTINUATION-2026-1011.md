@@ -1,15 +1,19 @@
-# Candy Go Fish — current handoff, October 11, 2026
+# Candy Go Fish — current handoff, updated October 12, 2026
 
 This is the authoritative current-state entry point. Overall gameplay is acceptable; appearance work is ongoing. Historical design notes and checkpoint copies record alternatives and must not override this handoff.
 
+October 12 UI update supersedes the footer descriptions below: both score labels now read CANDY SETS. The player's right-side brown/yellow black-cat candy dish is restored, replacing Total candies text. Its live hand-count badge is horizontally centered and lowered to 75% of the dish height to leave the cat's face visible. It is a count display; the player's candies remain in the grid. The restored layout was verified at 338x526 and 547x850: artwork loads, both labels update and the page does not overflow.
+
 ## Current board and artwork
+
+October 12 instruction update: "Choose a candy from your hand" appears in a wide cream rounded box centered over the main dish, matching question-box colors/border/shadow without a tail. It disappears immediately on candy selection. Removed the separate "Go fish, Wendy!" announcement and "Wendy draws a candy" status; her private wrapper flight remains. Player draw status remains. Verified popup dimensions, centering, absent tail and selection dismissal at phone/desktop sizes.
 
 - Background: John's `assets/backgrounds/greenBlueGradient.png`, filling the panel. Original green gradient remains underneath and in the background checkpoint. The generated pumpkin scene was rejected and remains unused.
 - Main Candy Dish: `ghost-plate-v2-300.png`, 21vw square, with count badge above the pile. Version 1 is retained as a fallback.
 - Wendy: green/red witch tray, 20vw by 11vw, with live count badge. Green/red grid dishes are muted until a set is earned; completed sets show the bright dish, named candy and green check.
-- Player: brown/yellow grid dishes with named candy and count badges. Zero-count dishes/badges are dimmed without further dimming the candy artwork. Selected/giveable slots have a small yellow rim glow. The separate cat tray is removed; its footer position now shows Total candies and the live active-hand count, matching SETS WON styling.
+- Player: brown/yellow grid dishes with named candy and count badges. Zero-count dishes/badges are dimmed without further dimming the candy artwork. Selected/giveable slots have a small yellow rim glow. The brown/yellow cat tray is restored on the right; its count badge is centered horizontally at 75% height, below the face. Both score labels read CANDY SETS. Completed-set badges/checkmarks are 125% of normal badge size.
 - Life Savers is the short display name; the full catalog name remains Life Savers Gummies.
-- Original, green/red and brown/yellow witch/cat trays remain as artwork options. Plain sage grid dishes and older board files remain available as fallbacks. Do not silently re-enable the player tray.
+- Original, green/red and brown/yellow witch/cat trays remain as artwork options. Plain sage grid dishes and older board files remain available as fallbacks. The restored player tray displays only the count; do not add a generic player pile.
 
 ## Persistent candy piles and transfers
 
@@ -35,7 +39,7 @@ Successful requests between players fly the actual named candy image in both dir
 
 ## Implemented gameplay
 
-Ten candy types, three copies each: 30 total, five initially dealt per player, 20 initially in the Candy Dish before initially dealt sets collect. First player is random. Request only a currently held type. Success transfers exactly one candy and retains the requester's turn. Three matching candies collect automatically as one set.
+Ten candy types, three copies each: 30 total, five initially dealt per player, 20 initially in the Candy Dish. The initial deal cannot complete a set for either player: both start with five candies and zero collected sets. Set-completing cards are skipped during dealing and remain in the dish. First player is random. Request only a currently held type. Success transfers exactly one candy and retains the requester's turn. Three matching candies collect automatically as one set.
 
 Current engine still ends every fishing turn. Good Fish (a set-completing draw retains the turn) was previously approved as a proposal, but is NOT implemented. Do not silently change rules during appearance work.
 
@@ -62,13 +66,13 @@ All speech boxes have rounded corners and softly curved, wide-base tails: up for
 
 Both answer boxes gently breathe at 4% peak scale: hold natural size for 500ms, ease to the peak over 1000ms, then repeat a one-second peak-to-natural-to-peak cycle. Questions and dish do not breathe. Breathing stops on acknowledgement, auto-transfer, shortcut, dialog or new round, and is disabled for reduced motion.
 
-Candy transfers/draws depart without a source bounce, pulse or glow. Curved accelerating travel remains 1400ms with rotation toward upright and an end fade starting at 82% of the route. Scale smoothly goes 100% -> 150% at route midpoint -> 100% at the destination; previous terminal shrink is removed. Opponent private draws use an unidentified wrapper. Reduced motion uses an 80ms stationary fade. The existing short Wendy-fishing announcement remains.
+Candy transfers/draws depart without a source bounce, pulse or glow. Curved accelerating travel remains 1400ms with rotation toward upright and an end fade starting at 82% of the route. Scale smoothly goes 100% -> 150% at route midpoint -> 100% at the destination; previous terminal shrink is removed. Opponent private draws use an unidentified wrapper. Reduced motion uses an 80ms stationary fade. The separate Wendy-fishing and Wendy-draw status messages are removed.
 
-The gradient board uses two rows of five dishes per player, persistent central/Wendy candy piles, portraits/names and SETS WON totals. Human slots show absent identities faintly and held quantities; opponent active identities remain private. Active portrait/half glows. The central Candy Dish always remains unidentified. Current top controls are New Game and Rules.
+The gradient board uses two rows of five dishes per player, persistent central/Wendy candy piles, portraits/names and CANDY SETS totals. Human slots show absent identities faintly and held quantities; opponent active identities remain private. Active portrait/half glows. The central Candy Dish always remains unidentified. Top controls are ceramic pumpkins with carved candlelit labels: NEW GAME v2 left and RULES v3 right, with matching letter height. Accessible labels remain in visually hidden spans. Side highlights are inset 1vw vertically and 0.5vw horizontally.
 
 ## Current popups and pending design
 
-Earned-set popup has configured player name, candy image, collected-three wording and user-controlled Continue/outside-tap dismissal. Initial dealt sets skip this popup. Game-over banner leaves hands visible, names the result/reason/totals and offers New Game. These are functional but are the first appearance tasks to improve.
+Earned-set popup has configured player name, candy image, collected-three wording and user-controlled Continue/outside-tap dismissal. Initial deals cannot complete a set. Game-over banner leaves hands visible, names the result/reason/totals and offers New Game. These are functional but are the first appearance tasks to improve.
 
 Read NEXT-TODOS.md for the user's next priorities. Older opponent/variant/animation/Good Fish proposals remain separate backlog, not authorization to implement them during appearance work.
 
@@ -93,7 +97,7 @@ Only the existing ../game-helper.js score API is used: Halloween.reportScore(hum
 
 Run python start-local/no-cache-server.py --port 8098 --bind 127.0.0.1, reusing an existing server. Preview /games/candy-go-fish/demo.html or root shell/slot 8. File opening uses the companion. Loopback is PC-only; actual iPhone Safari still needs device review.
 
-Current publishing request: update documentation, verify, commit and push the current appearance/pile work to main. Commit title: "Update candy artwork, persistent piles and transfer visuals". Previous published gameplay checkpoint: 1d7a777 ("Overall gameplay ok, need to work on appearances"). Update APP_VERSION and both root ?v= stamps together before publishing. This authorization does not authorize later pushes.
+October 12 publishing request: refresh docs, verify, commit and push current UI and initial-deal changes to main. October 11 appearance/piles commit was 1df4eac; encoding fix 7f20652 restored Pages deployment. Previous published gameplay checkpoint: 1d7a777 ("Overall gameplay ok, need to work on appearances"). Update APP_VERSION and both root ?v= stamps together before publishing. This authorization does not authorize later pushes.
 
 ## Rollback and verification
 

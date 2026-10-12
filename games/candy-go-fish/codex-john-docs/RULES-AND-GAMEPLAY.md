@@ -2,7 +2,7 @@
 
 Updated October 11, 2026. [Current handoff](CONTINUATION-2026-1011.md) takes precedence.
 
-Ten types, three copies each, five candies initially per player; first actor is random. Request a held type; success moves one candy and keeps the turn. Three matching candies are automatically removed as a set. Initial sets skip the later earned-set popup.
+Ten types, three copies each, five candies initially per player; first actor is random. Request a held type; success moves one candy and keeps the turn. Three matching candies are automatically removed as a set. The initial deal cannot complete a set: both players start with five candies and zero collected sets. A card that would complete a set stays in the dish while the next eligible card is dealt.
 
 Fishing draws one candy and currently always ends the turn. Good Fish (drawn set retains the turn) is an approved earlier proposal, not implemented. No refill. End on empty dish, all sets, or empty active hand, in that reason priority. Collect a possible final-draw set before ending. Earned final sets celebrate before game-over results. Most sets wins; ties are possible.
 

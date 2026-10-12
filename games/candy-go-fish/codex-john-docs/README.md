@@ -1,6 +1,6 @@
 # Candy Go Fish — documentation index
 
-Updated October 11, 2026.
+Updated October 12, 2026.
 
 Start with [current handoff](CONTINUATION-2026-1011.md), then [next TODOs](NEXT-TODOS.md). Those describe the implemented three-candy game and the user's next appearance/sound priorities.
 

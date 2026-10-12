@@ -1,6 +1,6 @@
 # Integration, preview, verification and publishing
 
-Updated October 11, 2026. [Current handoff](CONTINUATION-2026-1011.md) is authoritative.
+Updated October 12, 2026. [Current handoff](CONTINUATION-2026-1011.md) is authoritative.
 
 Plain HTML/CSS/JS, no build. Slot 8 registers Go Fish Candy Edition and the friendly fish SVG. Shell is 9:16, game 9:14. Follow games/README - game design requirements.md, including width-relative sizing, font/touch targets and standalone support.
 
@@ -32,4 +32,6 @@ Screenshots are development artifacts. Tests use Chrome, not actual iPhone Safar
 
 ## Publishing
 
-Current user requested refreshed docs, verification and commit/push of the appearance/pile work. Commit message: "Update candy artwork, persistent piles and transfer visuals". Publishing cache stamp: 2026-1011-candy-piles. Update APP_VERSION in app/app.js and both root index.html ?v= stamps together. Verify shell and game, commit intended files, push main and verify remote/local commit equality. This authorizes the present checkpoint only; obtain a new request for future pushes.
+Save documentation as UTF-8. Before publishing, strictly decode all tracked `.md`/`.MD` files as UTF-8 to catch invalid byte sequences, including Windows-1252 smart quotes and dashes. On October 12 these caused the Pages Jekyll build to fail; encoding-only fix 7f20652 restored deployment. Verify the actual Pages Actions workflow succeeds and check the live version/content; a stale Pages "building" label does not establish that a build is still running.
+
+October 12 user requested refreshed docs, verification and commit/push of current UI and initial-deal changes. Publishing cache stamp: 2026-1012-candy-ui. October 11 appearance/piles commit: 1df4eac. Update APP_VERSION in app/app.js and both root index.html ?v= stamps together. Verify shell and game, commit intended files, push main and verify remote/local commit equality. This authorizes the present checkpoint only; obtain a new request for future pushes.

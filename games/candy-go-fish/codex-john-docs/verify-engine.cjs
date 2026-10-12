@@ -66,8 +66,24 @@ function invariant(state) {
 let randomSeed = 1349;
 function random() { randomSeed = (randomSeed * 1664525 + 1013904223) >>> 0; return randomSeed / 4294967296; }
 let maximumMoves = 0;
+// Force the old alternating deal to give both actors a triple.
+const openingTypes = [config.candies[0].id, config.candies[1].id];
+const forcedDeck = Array.from({ length: 3 }, (_, copy) => openingTypes.map(type => ({ id: type + '-' + copy, type }))).flat()
+  .concat(config.candies.slice(2).flatMap(candy => Array.from({ length: 3 }, (_, copy) => ({ id: candy.id + '-' + copy, type: candy.id }))));
+state = engine.create(config, random, forcedDeck);
+invariant(state);
+for (const player of ['human', 'wendy']) {
+  assert.equal(state.hands[player].length, 5);
+  assert.equal(state.sets[player].length, 0, 'Initial deal must never collect a set');
+}
+assert.equal(state.pile.length, 20);
+assert.equal(forcedDeck.length, 30, 'Dealing must not mutate the supplied deck');
 for (const copiesPerType of [3, 4]) for (let game = 0; game < 1000; game++) {
   state = engine.create({ ...config, rules: { ...config.rules, copiesPerType } }, random); const memories = { human: wendy.createMemory(), wendy: wendy.createMemory() };
+  for (const player of ['human', 'wendy']) {
+    assert.equal(state.hands[player].length, config.rules.initialHandSize);
+    assert.equal(state.sets[player].length, 0, 'Initial deal must never collect a set');
+  }
   let moves = 0; invariant(state);
   while (!state.finished && moves++ < 500) {
     const actor = state.turn;

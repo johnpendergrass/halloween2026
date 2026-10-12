@@ -8,9 +8,9 @@
 </head>
 <body>
   <main id="table">
-    <header class="game-bar"><button id="newGame"><span>New game</span></button><button id="rulesButton"><span>Rules</span></button></header>
+    <header class="game-bar"><button id="newGame"><span>NEW GAME</span></button><button id="rulesButton"><span>RULES</span></button></header>
     <section id="wendyArea" class="player-area">
-      <div class="player-heading"><span id="wendySetCount" class="portrait-score"><span>SETS WON</span><strong>0</strong></span><div class="wendy-portrait"><img class="portrait" src="./assets/friendly-witch.svg" alt="Wendy, a friendly witch" draggable="false"><strong class="portrait-name">WENDY</strong></div><div id="wendyPile" class="hand-pile" aria-label="Wendy's hidden hand"><img class="player-dish" src="./assets/candy-dish/witch-tray-green-red-v1-260x143.png" alt="" draggable="false"><span id="wendyCount" class="badge hand-count">5</span></div></div>
+      <div class="player-heading"><span id="wendySetCount" class="portrait-score"><span>CANDY SETS</span><strong>0</strong></span><div class="wendy-portrait"><img class="portrait" src="./assets/friendly-witch.svg" alt="Wendy, a friendly witch" draggable="false"><strong class="portrait-name">WENDY</strong></div><div id="wendyPile" class="hand-pile" aria-label="Wendy's hidden hand"><img class="player-dish" src="./assets/candy-dish/witch-tray-green-red-v1-260x143.png" alt="" draggable="false"><span id="wendyCount" class="badge hand-count">5</span></div></div>
       <div id="wendySlots" class="slots" aria-label="Wendy's completed sets"></div>
     </section>
     <section class="center-area">
@@ -19,7 +19,7 @@
     </section>
     <section id="humanArea" class="player-area">
       <div id="humanSlots" class="slots" aria-label="Your candy hand"></div>
-      <div class="player-heading human-heading"><span id="humanSetCount" class="portrait-score"><span>SETS WON</span><strong>0</strong></span><div class="player-portrait"><img class="portrait" src="./assets/friendly-ghost.svg" alt="You, a friendly ghost" draggable="false"><strong class="portrait-name">PLAYER</strong></div><span id="humanTotalCandies" class="portrait-score"><span>Total candies</span><strong id="humanCount">5</strong></span></div>
+      <div class="player-heading human-heading"><span id="humanSetCount" class="portrait-score"><span>CANDY SETS</span><strong>0</strong></span><div class="player-portrait"><img class="portrait" src="./assets/friendly-ghost.svg" alt="You, a friendly ghost" draggable="false"><strong class="portrait-name">PLAYER</strong></div><div id="humanPile" class="hand-pile" aria-label="Your candy hand"><img class="player-dish" src="./assets/candy-dish/black-cat-tray-brown-yellow-v1-260x143.png" alt="" draggable="false"><span id="humanCount" class="badge hand-count">5</span></div></div>
     </section>
   </main>
   <div id="overlay" class="overlay"><section class="dialog" aria-modal="true" role="dialog" aria-labelledby="dialogTitle"><span class="eyebrow">A LITTLE FRIENDLY COMPETITION</span><h1 id="dialogTitle">Candy<br>Go Fish</h1><div id="dialogBody"><p>Ask Wendy for candies. Collect matching candies to claim a set.</p><p>Pick a candy you hold, then tap <b>Got any?</b> A match gives you one candy and another request. Go fish? Tap the Candy Dish to draw once, then switch turns.</p></div><button id="dialogAction" class="primary">Let's play</button><button id="dialogCancel" class="secondary" hidden>Keep playing</button></section></div>

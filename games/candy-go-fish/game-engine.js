@@ -37,10 +37,14 @@
       turn: random() < 0.5 ? 'human' : 'wendy', pending: null, finished: false,
       copies: config.rules.copiesPerType, typeCount: config.candies.length, history: [] };
     for (let index = 0; index < config.rules.initialHandSize; index++) {
-      for (const player of ['human', 'wendy']) { if (state.pile.length) state.hands[player].push(state.pile.shift()); }
+      for (const player of ['human', 'wendy']) {
+        if (!state.pile.length) continue;
+        // Leave a set-completing card in the dish and deal the next eligible one.
+        const next = state.pile.findIndex(card => count(state.hands[player], card.type) < state.copies - 1);
+        if (next < 0) throw new Error('Cannot deal the initial hand without a completed set');
+        state.hands[player].push(state.pile.splice(next, 1)[0]);
+      }
     }
-    collectSets(state, 'human', []);
-    collectSets(state, 'wendy', []);
     checkFinish(state);
     return state;
   }
