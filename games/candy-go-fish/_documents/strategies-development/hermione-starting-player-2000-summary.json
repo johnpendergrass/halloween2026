@@ -1,0 +1,315 @@
+{
+  "name": "hermione-starting-player-2000",
+  "options": {
+    "name": "hermione-starting-player-2000",
+    "seeds": 2000,
+    "seedStart": 2000000,
+    "pairs": [
+      [
+        "hermioneFinal",
+        "hermioneFinal"
+      ]
+    ],
+    "workers": 3
+  },
+  "variants": {
+    "ron": {
+      "module": "beginner"
+    },
+    "harryV1": {
+      "module": "medium"
+    },
+    "hermioneV1": {
+      "module": "legacyExpert",
+      "options": {
+        "samples": 8
+      }
+    },
+    "tactical": {
+      "module": "tactical"
+    },
+    "sureFirst": {
+      "module": "tactical",
+      "options": {
+        "certain": 100,
+        "completion": 4,
+        "pickup": 1
+      }
+    },
+    "completionFirst": {
+      "module": "tactical",
+      "options": {
+        "certain": 0,
+        "completion": 12,
+        "pickup": 1
+      }
+    },
+    "balanced": {
+      "module": "tactical",
+      "options": {
+        "certain": 4,
+        "completion": 6,
+        "pickup": 3
+      }
+    },
+    "pickupFirst": {
+      "module": "tactical",
+      "options": {
+        "certain": 8,
+        "completion": 3,
+        "pickup": 6
+      }
+    },
+    "successFirst": {
+      "module": "tactical",
+      "options": {
+        "certain": 15,
+        "success": 10,
+        "completion": 2,
+        "pickup": 1
+      }
+    },
+    "rollout32": {
+      "module": "expert",
+      "options": {
+        "samples": 32
+      }
+    },
+    "rollout64": {
+      "module": "expert",
+      "options": {
+        "samples": 64
+      }
+    },
+    "random": {
+      "module": "random"
+    },
+    "temporalMedium": {
+      "module": "temporal"
+    },
+    "temporalTactical": {
+      "module": "temporal",
+      "options": {
+        "style": "tactical",
+        "completion": 8,
+        "pickup": 2,
+        "progress": 0,
+        "certain": 12
+      }
+    },
+    "temporalCompletion": {
+      "module": "temporal",
+      "options": {
+        "style": "tactical",
+        "completion": 12,
+        "pickup": 1,
+        "progress": 0,
+        "certain": 0
+      }
+    },
+    "temporalSure": {
+      "module": "temporal",
+      "options": {
+        "style": "tactical",
+        "completion": 4,
+        "pickup": 1,
+        "progress": 0,
+        "certain": 100
+      }
+    },
+    "temporalBias2": {
+      "module": "temporal",
+      "options": {
+        "style": "tactical",
+        "completion": 12,
+        "pickup": 1,
+        "progress": 0,
+        "certain": 0,
+        "requestBias": 2
+      }
+    },
+    "temporalBias4": {
+      "module": "temporal",
+      "options": {
+        "style": "tactical",
+        "completion": 12,
+        "pickup": 1,
+        "progress": 0,
+        "certain": 0,
+        "requestBias": 4
+      }
+    },
+    "temporalBias8": {
+      "module": "temporal",
+      "options": {
+        "style": "tactical",
+        "completion": 12,
+        "pickup": 1,
+        "progress": 0,
+        "certain": 0,
+        "requestBias": 8
+      }
+    },
+    "mediumSet1": {
+      "module": "medium",
+      "options": {
+        "set": 1
+      }
+    },
+    "mediumSet2": {
+      "module": "medium",
+      "options": {
+        "set": 2
+      }
+    },
+    "mediumSet8": {
+      "module": "medium",
+      "options": {
+        "set": 8
+      }
+    },
+    "mediumSet16": {
+      "module": "medium",
+      "options": {
+        "set": 16
+      }
+    },
+    "mediumSet32": {
+      "module": "medium",
+      "options": {
+        "set": 32
+      }
+    },
+    "harryCandidate": {
+      "module": "mediumAdaptive"
+    },
+    "temporalSet0": {
+      "module": "temporal",
+      "options": {
+        "completion": 0
+      }
+    },
+    "temporalSet1": {
+      "module": "temporal",
+      "options": {
+        "completion": 1
+      }
+    },
+    "temporalSet2": {
+      "module": "temporal",
+      "options": {
+        "completion": 2
+      }
+    },
+    "temporalSet1Bias4": {
+      "module": "temporal",
+      "options": {
+        "completion": 1,
+        "requestBias": 4
+      }
+    },
+    "temporalSet1Bias8": {
+      "module": "temporal",
+      "options": {
+        "completion": 1,
+        "requestBias": 8
+      }
+    },
+    "harryFinal": {
+      "module": "calibratedMedium"
+    },
+    "hermioneFinal": {
+      "module": "calibratedExpert"
+    }
+  },
+  "hashes": {
+    "../shared/knowledge.js": "59c850ad8f561fa90c24c540526ba9c51ad3374fadeb0884ccb280ae09d6853c",
+    "../shared/temporal-beliefs.js": "1cd508d0c632cc25892ddaba48d0a510d83a36decaeb37fb9423ce5dc3ca7960",
+    "../strategies/beginner.js": "46e65e1a24a2a4dc40153c5c4ce9672e0f5a14e4f00b8f7682373cae8a4ee956",
+    "../strategies/medium.js": "bb75f810e523cab6863e921f0fa1636f40ae7b23d5f56b7dc4e43130f3fcfdc4",
+    "../strategies/temporal.js": "b65faf2fcaa8e71b27cd57c096bedcbb723bd5a0002cc1da186361ae586c53f3",
+    "../strategies/calibrated-medium.js": "2ad74180350d32650e290dbbc8e181b6a0d0e02faaad7317f780a835fd9a6f21",
+    "../strategies/calibrated-expert.js": "90ba2c366c10e32dc49be96e88c9e60c81145ef17ed2a5a72a309973b4ee554f",
+    "../../game-engine.js": "cd885e0ac9efdbe9c52924fa0f6c1995ec8f0c72757c33449ec6cd4be071990c",
+    "temporal-study.cjs": "8e01d2365720e77c72018f3c20cb200e491795956863fc2810316e741a49b210"
+  },
+  "elapsedSeconds": 346.19,
+  "rows": [
+    {
+      "a": "hermioneFinal",
+      "b": "hermioneFinal",
+      "copies": 3,
+      "games": 8000,
+      "wins": 3665,
+      "ties": 693,
+      "losses": 3642,
+      "score": 0.5014375,
+      "ci95": [
+        0.4936737211051421,
+        0.5092012788948578
+      ],
+      "independentDeals": 2000,
+      "asFirst": {
+        "score": 0.48625,
+        "ci95": [
+          0.46940669429050197,
+          0.5030933057094981
+        ],
+        "independentDeals": 2000
+      },
+      "asSecond": {
+        "score": 0.516625,
+        "ci95": [
+          0.49990299214625133,
+          0.5333470078537487
+        ],
+        "independentDeals": 2000
+      },
+      "averageRequests": 29.3705,
+      "averageSetsA": 4.10475,
+      "averageSetsB": 4.104875
+    },
+    {
+      "a": "hermioneFinal",
+      "b": "hermioneFinal",
+      "copies": 4,
+      "games": 8000,
+      "wins": 3660,
+      "ties": 719,
+      "losses": 3621,
+      "score": 0.5024375,
+      "ci95": [
+        0.4946568147134304,
+        0.5102181852865695
+      ],
+      "independentDeals": 2000,
+      "asFirst": {
+        "score": 0.502375,
+        "ci95": [
+          0.484979413096726,
+          0.519770586903274
+        ],
+        "independentDeals": 2000
+      },
+      "asSecond": {
+        "score": 0.5025,
+        "ci95": [
+          0.48485592871172245,
+          0.5201440712882774
+        ],
+        "independentDeals": 2000
+      },
+      "averageRequests": 51.729,
+      "averageSetsA": 4.1365,
+      "averageSetsB": 4.11
+    }
+  ],
+  "timing": {
+    "hermioneFinal": {
+      "decisions": 648796,
+      "medianMs": 1.5829999999987194,
+      "p95Ms": 3.9131000000052154,
+      "maximumMs": 9.12609999999404
+    }
+  }
+}

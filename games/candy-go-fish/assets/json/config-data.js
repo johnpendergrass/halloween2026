@@ -1,4 +1,4 @@
-// Generated from game-config.json by codex-john-docs/sync-config.cjs.
+// Generated from game-config.json by _documents/codex-john-docs/sync-config.cjs.
 window.CandyConfig = {
   "rules": {
     "copiesPerType": 3,
@@ -7,29 +7,33 @@ window.CandyConfig = {
   "players": {
     "human": {
       "name": "Player",
-      "portrait": "friendly-ghost.svg"
+      "portrait": "player-icons/friendly-ghost.svg"
     },
     "wendy": {
       "name": "Ron",
       "displayName": "Ron +",
-      "portrait": "opponent-icons/RON cartoon 01.png"
+      "portrait": "opponent-icons/RON.png",
+      "strategy": "beginner"
     }
   },
   "opponents": [
     {
       "name": "Ron",
       "displayName": "Ron +",
-      "portrait": "opponent-icons/RON cartoon 01.png"
+      "portrait": "opponent-icons/RON.png",
+      "strategy": "beginner"
     },
     {
       "name": "Harry",
       "displayName": "Harry ++",
-      "portrait": "opponent-icons/HARRY cartoon 02.png"
+      "portrait": "opponent-icons/HARRY.png",
+      "strategy": "medium"
     },
     {
       "name": "Hermione",
       "displayName": "Hermione +++",
-      "portrait": "opponent-icons/HERMIONE cartoon 01.png"
+      "portrait": "opponent-icons/HERMIONE.png",
+      "strategy": "expert"
     }
   ],
   "appearance": {

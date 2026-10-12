@@ -21,7 +21,7 @@ Empty identities have 82% transparency. Default imageScale is 150; narrow bars u
 Names require unique normalized shortName, trimmed/nonempty and at most 16 characters; longName is for accessibility/celebrations. Original PNGs are unchanged.
 
 After editing JSON run:
-node games/candy-go-fish/codex-john-docs/validate-candy-names.cjs
-node games/candy-go-fish/codex-john-docs/sync-config.cjs
+node games/candy-go-fish/_documents/codex-john-docs/validate-candy-names.cjs
+node games/candy-go-fish/_documents/codex-john-docs/sync-config.cjs
 
 The broader animation centralization and full presentation-value validation remain pending. The October 9 survey is a historical inventory, not current effective timing. See the current handoff for behavior.
