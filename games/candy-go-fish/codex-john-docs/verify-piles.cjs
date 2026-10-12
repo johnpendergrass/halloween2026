@@ -7,7 +7,7 @@ const config = require('../assets/json/game-config.json');
   const page = await browser.newPage({viewport:{width:338,height:526}});
   const errors = []; page.on('pageerror',e=>errors.push(e.message));
   const fast=structuredClone(config); Object.assign(fast.appearance,{thinkingMs:40,quoteFadeMs:40,quoteHoldMs:40,playerRequestHoldMs:40});
-  await page.route('**/game-config.json',route=>route.fulfill({json:fast}));
+  await page.route('**/game-config.json*',route=>route.fulfill({json:fast}));
   for (const actor of ['human','wendy']) for (const match of [true,false]) {
    await page.goto('http://127.0.0.1:8098/games/candy-go-fish/index.html');
    await page.locator('#humanSlots .slot').last().waitFor();

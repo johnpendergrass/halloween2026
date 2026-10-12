@@ -32,6 +32,8 @@ Screenshots are development artifacts. Tests use Chrome, not actual iPhone Safar
 
 ## Publishing
 
+Version the game's own CSS/JS URLs and JSON fetch as well as the three shell stamps. Updating only the iframe URL does not change nested resource cache keys; after the October 12 deploy the live HTML was current but a user still saw cached game code/styles. Current game resource version: 2026-1012-candy-cache. New artwork uses new filenames; changed artwork at an existing URL also needs a new filename or version.
+
 Save documentation as UTF-8. Before publishing, strictly decode all tracked `.md`/`.MD` files as UTF-8 to catch invalid byte sequences, including Windows-1252 smart quotes and dashes. On October 12 these caused the Pages Jekyll build to fail; encoding-only fix 7f20652 restored deployment. Verify the actual Pages Actions workflow succeeds and check the live version/content; a stale Pages "building" label does not establish that a build is still running.
 
-October 12 user requested refreshed docs, verification and commit/push of current UI and initial-deal changes. Publishing cache stamp: 2026-1012-candy-ui. October 11 appearance/piles commit: 1df4eac. Update APP_VERSION in app/app.js and both root index.html ?v= stamps together. Verify shell and game, commit intended files, push main and verify remote/local commit equality. This authorizes the present checkpoint only; obtain a new request for future pushes.
+October 12 user requested refreshed docs, verification and commit/push of current UI and initial-deal changes. Publishing cache stamp: 2026-1012-candy-cache. October 11 appearance/piles commit: 1df4eac. Update APP_VERSION in app/app.js and both root index.html ?v= stamps together. Verify shell and game, commit intended files, push main and verify remote/local commit equality. This authorizes the present checkpoint only; obtain a new request for future pushes.

@@ -29,7 +29,7 @@ const config = require('../assets/json/game-config.json');
     fast.appearance.quoteFadeMs = 80; fast.appearance.quoteHoldMs = 40; fast.appearance.requestHoldMs = 40; fast.appearance.requestGiveHoldMs = 40;
     fast.appearance.playerRequestHoldMs = 60000; // Automated manual-click round; real-time auto-send is checked separately.
     fast.players.human.name = 'Casper'; fast.players.wendy.name = 'Hazel';
-    await page.route('**/game-config.json', route => route.fulfill({ json: fast }));
+    await page.route('**/game-config.json*', route => route.fulfill({ json: fast }));
     await page.addInitScript(() => { const original = window.setTimeout; window.setTimeout = (fn, ms, ...args) => original(fn, Math.min(ms, 2), ...args); });
     await page.goto('http://127.0.0.1:8098/games/candy-go-fish/index.html');
     await page.locator('#humanSlots .slot').last().waitFor();

@@ -8,7 +8,7 @@ Live generic piles persist by engine card ID. Main candy size is 78%, rotation +
 
 Next priorities: earned-set/game-over popups; further pile appearance refinement; sound. Choice instructions now use a tail-free cream popup over the dish; top buttons are ceramic pumpkins with carved candlelit labels. Initial deals prohibit completed sets: five candies each, zero collected sets. Good Fish/variants/opponent strategy remain separate backlog; sound is unimplemented.
 
-October 12 user requested refreshed docs, verification and commit/push of current UI and initial-deal changes. Cache stamp: 2026-1012-candy-ui. October 11 appearance/piles commit: 1df4eac. Previous published checkpoint: 1d7a777, Overall gameplay ok, need to work on appearances. Further pushes require a new user request. 5a33e38 is the last Fast/Slow version; 83c418b predates breathing.
+October 12 user requested refreshed docs, verification and commit/push of current UI and initial-deal changes. Cache stamp: 2026-1012-candy-cache. October 11 appearance/piles commit: 1df4eac. Previous published checkpoint: 1d7a777, Overall gameplay ok, need to work on appearances. Further pushes require a new user request. 5a33e38 is the last Fast/Slow version; 83c418b predates breathing.
 
 Candy Swap remains separate. Keep project-wide notes here and game notes in that game's codex-john-docs/. Shared game requirements in games/ are authoritative. Plain HTML/CSS/JS; no build or newly invented shell settings/audio/pause API.
 

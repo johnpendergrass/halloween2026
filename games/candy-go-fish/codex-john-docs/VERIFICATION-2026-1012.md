@@ -8,4 +8,4 @@ Earlier targeted checks in this session confirmed restored tray/counts, choice p
 
 Quote regressions passed both actors' questions, Yes/No replies, acknowledgement/countdowns, shortcuts and unchanged candy timing. Pile regressions passed actual candy flights for public requests/player draws, private Wendy wrapper landing scale, counts and stable survivors after sets.
 
-Publishing cache stamp is 2026-1012-candy-ui in all three shell references. Save docs as UTF-8 and verify the actual Pages Actions conclusion and live site after pushing: a stale building status concealed the prior encoding failure.
+Publishing cache stamp is 2026-1012-candy-cache in all three shell references. Save docs as UTF-8 and verify the actual Pages Actions conclusion and live site after pushing: a stale building status concealed the prior encoding failure.
