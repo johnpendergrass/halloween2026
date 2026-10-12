@@ -9,7 +9,7 @@
     { "id": "threeMusketeers", "longName": "3 Musketeers", "shortName": "3 Musketeers", "image": "3Musketeers.png", "display": { "imageScale": 225, "rotationDegrees": -30 } },
     { "id": "butterfinger", "longName": "Butterfinger", "shortName": "Butterfinger", "image": "Butterfinger.png", "display": { "imageScale": 225, "rotationDegrees": -30 } },
     { "id": "dots", "longName": "Dots", "shortName": "Dots", "image": "Dots.png", "display": { "rotationDegrees": -30 } },
-    { "id": "lifeSaversGummies", "longName": "Life Savers Gummies", "shortName": "LS Gummies", "image": "LifeSaversGummies.png", "display": { "rotationDegrees": -30 } },
+    { "id": "lifeSaversGummies", "longName": "Life Savers Gummies", "shortName": "Life Savers", "image": "LifeSaversGummies.png", "display": { "rotationDegrees": -30 } },
     { "id": "mallomars", "longName": "Mallomars", "shortName": "Mallomars", "image": "Mallomars.png", "display": { "rotationDegrees": -30 } },
     { "id": "milkyWay", "longName": "Milky Way", "shortName": "Milky Way", "image": "MilkyWay.png", "display": { "imageScale": 225, "rotationDegrees": -30 } },
     { "id": "mounds", "longName": "Mounds", "shortName": "Mounds", "image": "Mounds.png", "display": { "imageScale": 225, "rotationDegrees": -30 } },

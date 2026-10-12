@@ -1,0 +1,1 @@
+Fallback before plain human grid dishes. CSS, HTML and JS snapshots preserved. Current change adds only the final human-grid dish CSS section; remove that section for a targeted rollback. Cat tray remains by user correction. Avoid restoring full files over later gameplay work.

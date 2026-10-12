@@ -6,7 +6,7 @@ img { -webkit-user-drag: none; }
 button { font: inherit; color: inherit; border: 0; cursor: pointer; touch-action: none; }
 button:disabled { cursor: default; }
 button:focus-visible { outline: 0.8vw solid #ffd56c; outline-offset: 0.7vw; }
-#table { height: 100%; display: grid; grid-template-rows: 13vw 53vw 36vw 52vw; align-content: center; padding: 0 3vw; background: radial-gradient(ellipse at 50% 45%, #2f7354 0%, #1e5943 65%, #153f33 100%); }
+#table { height: 100%; display: grid; grid-template-rows: 13vw 53vw 36vw 52vw; align-content: center; padding: 0 3vw; background: url("./assets/backgrounds/greenBlueGradient.png") center / 100% 100% no-repeat, radial-gradient(ellipse at 50% 45%, #2f7354 0%, #1e5943 65%, #153f33 100%); }
 #wendyArea { grid-row: 2; }
 .center-area { grid-row: 3; }
 #humanArea { grid-row: 4; }
@@ -103,9 +103,9 @@ h2 { font-size: max(14px,4.5vw); }
 #fishButton[data-speaker="wendy"] { grid-column: 1; }
 .speech-request.on-right, #askButton.speech-request { border-radius: 3vw 3vw 0.5vw 3vw; }
 @keyframes go-fish-arrival { 0% { transform: scale(0.85); opacity: 0.5; } 65% { transform: scale(1.06); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
-#centerCircle { width: 21vw; height: 21vw; justify-self: center; border-radius: 50%; background: #0c322b60; border: 0.4vw dashed #cfdfb867; position: relative; }
+#centerCircle { width: 21vw; height: 21vw; justify-self: center; border-radius: 50%; background: transparent; border: 0; position: relative; }
 #centerCircle:not(:disabled) { border-color: #ffe2a0; box-shadow: 0 0 4vw #ffe2a022; }
-#centerCircle > img { width: 88%; height: 88%; object-fit: contain; }
+#centerCircle > img { display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
 .pile-token { position: absolute; width: 12vw; height: 6vw; background: #dfaf62; border: 0.4vw solid #f8d9a0; border-radius: 2vw; left: 3vw; top: 8vw; transform: rotate(-30deg); }
 .pile-token:nth-child(2) { background: #b96d73; transform: rotate(25deg); left: 8vw; top: 11vw; }
 .pile-token:nth-child(3) { background: #84aeba; transform: rotate(75deg); left: 9vw; top: 4vw; }
@@ -176,3 +176,38 @@ h1 { font-size: max(24px,9vw); line-height: 1.15; margin: 3vw 0 4vw; }
   50% { transform: scale(1); }
 }
 @media (prefers-reduced-motion: reduce) { #fishButton.waiting-breath, #message.yes-answer.waiting-breath { animation: none !important; } }
+
+.hand-pile .player-dish { display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+
+/* Plain ceramic dishes replace only the human grid's outlined tiles. */
+#humanSlots .slot { border-color: transparent; background: transparent; box-shadow: none; }
+#humanSlots .slot::before {
+  content: ''; position: absolute; inset: -0.3vw; pointer-events: none;
+  background: url("./assets/candy-dish/plain-grid-dish-brown-yellow-v1-300x238.png") center / 100% 100% no-repeat;
+  z-index: 0;
+}
+#humanSlots .candy-art { z-index: 1; }
+#humanSlots .slot.selected::before { filter: drop-shadow(0 0 0.55vw #ffe08acc); }
+
+/* Wendy's matching dishes keep uncompleted goal identities hidden. */
+#wendySlots .slot { border-color: transparent; background: transparent; box-shadow: none; }
+#wendySlots .slot::before {
+  content: ''; position: absolute; inset: -0.3vw; pointer-events: none;
+  background: url("./assets/candy-dish/plain-grid-dish-green-red-v1-300x238.png") center / 100% 100% no-repeat;
+  z-index: 0;
+}
+#wendySlots .slot.unknown::after { content: none; }
+#wendySlots .candy-art { z-index: 1; }
+
+#wendySlots .slot.unknown::before { opacity: 0.4; filter: saturate(0.45); }
+#wendySlots .slot.complete::before { opacity: 1; filter: none; }
+
+/* Dim the empty dish and its zero badge, retaining candy-image opacity. */
+#humanSlots .slot.empty::before { opacity: 0.4; filter: saturate(0.45); }
+#humanSlots .slot.empty .badge { opacity: 0.4; filter: saturate(0.45); }
+
+/* Stable decorative cards; the dish remains one acknowledgement target. */
+.candy-pile-layer { position:absolute; inset:0; pointer-events:none; z-index:1; }
+.pile-candy { position:absolute; object-fit:contain; pointer-events:none; }
+.pile-number, .hand-count { z-index:3; }
+.pile-flight { z-index:10; }

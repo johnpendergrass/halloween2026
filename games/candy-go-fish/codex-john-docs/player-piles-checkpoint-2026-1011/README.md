@@ -1,0 +1,1 @@
+Before rectangular player dishes: snapshots of index.html and CSS. To revert only the piles, restore the three wrapped spans in each hand-pile from this markup and remove the player-dish image nodes. Retain counts/IDs and subsequent unrelated changes. No gameplay code was modified for these tray images.

@@ -100,7 +100,7 @@ window.CandyConfig = {
     {
       "id": "lifeSaversGummies",
       "longName": "Life Savers Gummies",
-      "shortName": "LS Gummies",
+      "shortName": "Life Savers",
       "image": "LifeSaversGummies.png",
       "display": {
         "rotationDegrees": -30

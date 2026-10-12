@@ -20,6 +20,7 @@ Run node games/candy-go-fish/codex-john-docs/<script> from repository root.
 | verify-engine.cjs | Rules, privacy, conservation, final sets and 1,000 games each with triples/quadruples |
 | verify-quotes.cjs | Both actors' Yes/No, auto-countdowns, middle shortcuts, grid shortcut at three stages, retained text, dialog pause, styles, flight scale/timing |
 | verify-go-fish-reply.cjs | Each middle draw target, single draw, retained question, coral/tail direction, breathing onset/peak, dialog stopping and reduced motion |
+| verify-piles.cjs | Actual request/player-draw artwork, private Wendy wrapper sizing, pile counts and survivor stability after sets |
 | verify-browser.cjs | 338x526/547x850 layout/targets, dialogs, alternate names, full round, sets/results, replay and file opening |
 | verify-shell.cjs | Registry/icon/menu, embedded layout and game-owned controls |
 | verify-speech.cjs | Alias for current quote checks |
@@ -31,4 +32,4 @@ Screenshots are development artifacts. Tests use Chrome, not actual iPhone Safar
 
 ## Publishing
 
-Current user requested commit/push with message "Overall gameplay ok, need to work on appearances". Update APP_VERSION in app/app.js and both root index.html ?v= stamps together. Verify shell and game, commit intended files, push main and verify remote/local commit equality. This authorizes the present checkpoint only; obtain a new request for future pushes.
+Current user requested refreshed docs, verification and commit/push of the appearance/pile work. Commit message: "Update candy artwork, persistent piles and transfer visuals". Publishing cache stamp: 2026-1011-candy-piles. Update APP_VERSION in app/app.js and both root index.html ?v= stamps together. Verify shell and game, commit intended files, push main and verify remote/local commit equality. This authorizes the present checkpoint only; obtain a new request for future pushes.

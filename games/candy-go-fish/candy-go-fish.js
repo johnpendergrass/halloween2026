@@ -6,6 +6,7 @@
     try { const response = await fetch('./assets/json/game-config.json'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
     catch (error) { console.warn('Using bundled candy configuration.', error); }
   }
+  const piles = CandyPiles();
   const byId = new Map(config.candies.map(candy => [candy.id, candy]));
   const el = id => document.getElementById(id);
   const humanName = config.players.human.name, opponentName = config.players.wendy.name;
@@ -119,8 +120,9 @@
       const scoreNumber = document.createElement('strong'); scoreNumber.textContent = total;
       el(player + 'SetCount').replaceChildren(scoreLabel, scoreNumber);
       el(player + 'SetCount').setAttribute('aria-label', config.players[player].name + ' has ' + total + (total === 1 ? ' set' : ' sets'));
-      el(player + 'Count').textContent = state.hands[player].length;
-      el(player + 'Pile').setAttribute('aria-label', config.players[player].name + ' holds ' + state.hands[player].length + (state.hands[player].length === 1 ? ' candy' : ' candies'));
+      if (el(player + 'Count')) el(player + 'Count').textContent = state.hands[player].length;
+      if (player === 'human') el('humanTotalCandies').setAttribute('aria-label', humanName + ' holds ' + state.hands.human.length + (state.hands.human.length === 1 ? ' candy' : ' candies'));
+      el(player + 'Pile')?.setAttribute('aria-label', config.players[player].name + ' holds ' + state.hands[player].length + (state.hands[player].length === 1 ? ' candy' : ' candies'));
       for (const type of config.layout.slotOrder) {
         const slot = el(player + '-' + type), quantity = CandyEngine.count(state.hands[player], type);
         const complete = state.sets[player].some(set => set.type === type);
@@ -165,9 +167,11 @@
     el('fishButton').hidden = el('fishButton').disabled;
     el('centerCircle').disabled = !['humanFishWait', 'wendyFishWait'].includes(phase) || overlayOpen;
     const center = el('centerCircle'); center.replaceChildren();
-    for (let index = 0; index < 4; index++) { const token = document.createElement('span'); token.className = 'pile-token'; center.append(token); }
+    const dish = document.createElement('img'); dish.src = './assets/candy-dish/ghost-plate-v2-300.png';
+    dish.alt = ''; dish.draggable = false; center.append(dish);
     const number = document.createElement('span'); number.className = 'pile-number'; number.textContent = state.pile.length; center.append(number);
     center.setAttribute('aria-label', 'Candy Dish; ' + (phase === 'wendyFishWait' ? 'let ' + opponentName + ' draw a candy' : 'draw a candy') + '; ' + state.pile.length + ' remaining');
+    piles.render(state);
     // Keep the opponent question until the human actually answers Go Fish.
     if (retainedOpponentRequest && ['fishResponse', 'wendyFishWait'].includes(phase)) {
       setMessageSpeaker('wendy');
@@ -285,12 +289,13 @@
     if (!keepQuote) message.classList.remove('speech-request', 'yes-answer', 'waiting-breath');
     return true;
   }
-  async function fly(type, source, destination, hidden, token) {
+  async function fly(type, source, destination, hidden, token, generic = null) {
     const from = source.getBoundingClientRect(), to = destination.getBoundingClientRect();
-    const candy = hidden ? document.createElement('div') : candyImage(type);
-    candy.className = hidden ? 'flying-token' : 'flying-candy'; document.body.append(candy);
-    candy.style.width = config.candyDisplay.giftWidthVw + 'vw';
-    candy.style.height = (hidden ? config.candyDisplay.giftWidthVw / 2 : config.candyDisplay.giftHeightVw) + 'vw';
+    const candy = generic ? piles.node(generic) : hidden ? document.createElement('div') : candyImage(type);
+    candy.className = generic ? 'flying-candy pile-flight' : hidden ? 'flying-token' : 'flying-candy'; candy.style.visibility = ''; document.body.append(candy);
+    candy.style.width = (generic ? generic.width : config.candyDisplay.giftWidthVw) + 'vw';
+    candy.style.height = (generic ? generic.width / 2 : hidden ? config.candyDisplay.giftWidthVw / 2 : config.candyDisplay.giftHeightVw) + 'vw';
+    candy.style.transform = 'none';
     const box = candy.getBoundingClientRect();
     const x = from.left + from.width / 2 - box.width / 2, y = from.top + from.height / 2 - box.height / 2;
     const dx = to.left + to.width / 2 - box.width / 2 - x, dy = to.top + to.height / 2 - box.height / 2 - y;
@@ -307,8 +312,10 @@
         const dissolve = Math.max(0, (t - config.candyDisplay.giftDissolveStart) / (1 - config.candyDisplay.giftDissolveStart));
         const curveX = 2 * remaining * t * controlX + t * t * dx;
         const curveY = 2 * remaining * t * controlY + t * t * dy;
-        const scale = 1 + (config.candyDisplay.giftMidScale - 1) * Math.sin(Math.PI * t);
-        return { offset: t, transform: `translate(${curveX}px,${curveY}px) rotate(${rotation * remaining}deg) scale(${scale})`, opacity: 1 - dissolve };
+        const landingScale = generic ? generic.targetWidth / generic.width : 1;
+        const baseScale = t <= .5 ? 1 : landingScale;
+        const scale = baseScale + (config.candyDisplay.giftMidScale - baseScale) * Math.sin(Math.PI * t);
+        return { offset: t, transform: `translate(${curveX}px,${curveY}px) rotate(${generic ? generic.rotation : rotation * remaining}deg) scale(${scale})`, opacity: 1 - dissolve };
       });
     if (reduced) frames = [{ opacity: 1 }, { opacity: 0 }];
     const animation = candy.animate(frames, { duration, easing: config.appearance.giftEasing, fill: 'forwards' });
@@ -322,7 +329,7 @@
     retainedOpponentRequest = null;
     yesWait = null;
     requestedGift = null;
-    generation++; state = CandyEngine.create(config); memory = WendyPlayer.createMemory(); reported = false; selected = null;
+    generation++; piles.reset(); state = CandyEngine.create(config); memory = WendyPlayer.createMemory(); reported = false; selected = null;
     overlayOpen = false; el('overlay').hidden = true; el('table').inert = false;
     el('message').style.visibility = ''; el('message').classList.remove('speech-request', 'yes-answer', 'waiting-breath');
     el('message').textContent = state.turn === 'human' ? humanName + ' starts this round.' : opponentName + ' starts this round.';
@@ -408,19 +415,22 @@
       updateMiddleControls();
     }
     requestedGift = null;
+    const transferringCard = state.hands[giver].find(card => card.type === type);
+    const pileFlight = transferringCard ? piles.begin(transferringCard, actor === 'human' ? el('wendyPile') : el('human-' + type)) : null;
     const events = CandyEngine.request(state, actor, type); WendyPlayer.observe(memory, events);
     const transfer = events.find(event => event.kind === 'transfer');
     if (transfer) {
       setMessageSpeaker(actor === 'human' ? 'wendy' : 'human');
       const source = actor === 'human' ? el('wendyPile') : el('human-' + type);
       const destination = actor === 'human' ? el('human-' + type) : el('wendyPile');
-      const flight = fly(type, source, destination, false, token);
+      piles.render(state);
+      const flight = fly(type, pileFlight.source, piles.destination(transferringCard, destination), false, token);
       retainedPlayerRequest = null;
       el('askButton').hidden = true;
       heldQuestion?.remove();
       el('message').replaceChildren(); el('message').classList.remove('speech-request', 'yes-answer', 'waiting-breath'); el('message').style.visibility = '';
       if (!await flight) return;
-      render();
+      piles.finish(); render();
       const completed = events.find(event => event.kind === 'set');
       if (completed) { if (!await celebrateSet(completed, token)) return; }
       else if (!await waitActive(650, token)) return;
@@ -451,10 +461,14 @@
     phase = 'drawing'; render();
     setMessageSpeaker(actor);
     if (actor === 'wendy') { el('message').textContent = 'Go fish, ' + opponentName + '!'; if (!await waitActive(500, token)) return; }
+    const drawingCard = state.pile[0];
+    const pileFlight = piles.begin(drawingCard, el('centerCircle'));
     const events = CandyEngine.fish(state), draw = events[0]; WendyPlayer.observe(memory, events);
     el('message').textContent = actor === 'human' ? 'You drew ' + byId.get(draw.type).shortName + '.' : opponentName + ' draws a candy.';
-    if (!await fly(draw.type, el('centerCircle'), actor === 'human' ? el('human-' + draw.type) : el('wendyPile'), actor === 'wendy', token)) return;
-    render();
+    piles.render(state);
+    const destination = actor === 'human' ? el('human-' + draw.type) : el('wendyPile');
+    if (!await fly(draw.type, pileFlight.source, piles.destination(drawingCard, destination), actor === 'wendy', token, actor === 'wendy' ? pileFlight.candy : null)) return;
+    piles.finish(); render();
     const completed = events.find(event => event.kind === 'set');
     if (completed) { if (!await celebrateSet(completed, token)) return; }
     else if (!await waitActive(1100, token)) return;

@@ -1,0 +1,10 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body { font-family: Arial, Helvetica, sans-serif; line-height: 1.35; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; color: #fff7df; background: #174b3c; }
+[hidden] { display: none !important; }
+img { -webkit-user-drag: none; }
+button { font: inherit; color: inherit; border: 0; cursor: pointer; touch-action: none; }
+button:disabled { cursor: default; }
+button:focus-visible { outline: 0.8vw solid #ffd56c; outline-offset: 0.7vw; }
+#table { height: 100%; display: grid; grid-template-rows: 13vw 53vw 36vw 52vw; align-content: center; padding: 0 3vw; background: radial-gradient(ellipse at 50% 45%, #2f7354 0%, #1e5943 65%, #153f33 100%); }
+#wendyArea { grid-row: 2; }

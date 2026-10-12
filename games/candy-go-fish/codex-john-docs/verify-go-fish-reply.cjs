@@ -22,6 +22,7 @@ async function clickMiddle(page, selector) {
      state.hands.wendy=[{type:types[2]},{type:types[2]},{type:types[3]}];
      state.sets={human:[],wendy:[]}; state.pile=[{type:types[4]},{type:types[5]},{type:types[6]}];
      state.turn='human'; state.finished=false; state.pending=null;
+     [state.pile,state.hands.human,state.hands.wendy].forEach((cards,owner)=>cards.forEach((card,index)=>card.id=owner+'-'+index));
      window.testState=state; return state;
     };
    });

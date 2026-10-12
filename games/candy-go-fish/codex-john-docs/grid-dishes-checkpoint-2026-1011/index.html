@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Go Fish Candy Edition</title>
+  <link rel="stylesheet" href="./candy-go-fish.css">
+</head>
+<body>
+  <main id="table">
+    <header class="game-bar"><button id="newGame"><span>New game</span></button><button id="rulesButton"><span>Rules</span></button></header>
+    <section id="wendyArea" class="player-area">
+      <div class="player-heading"><span id="wendySetCount" class="portrait-score"><span>SETS WON</span><strong>0</strong></span><div class="wendy-portrait"><img class="portrait" src="./assets/friendly-witch.svg" alt="Wendy, a friendly witch" draggable="false"><strong class="portrait-name">WENDY</strong></div><div id="wendyPile" class="hand-pile" aria-label="Wendy's hidden hand"><img class="player-dish" src="./assets/candy-dish/witch-tray-v1-260x143.png" alt="" draggable="false"><span id="wendyCount" class="badge hand-count">5</span></div></div>
+      <div id="wendySlots" class="slots" aria-label="Wendy's completed sets"></div>
+    </section>
+    <section class="center-area">
+      <div id="gameOver" class="game-over" hidden role="status" aria-live="polite"><strong id="gameOverTitle"></strong><p id="gameOverReason"></p><p id="gameOverRemaining" hidden></p><p id="gameOverScore"></p><button id="gameOverNew"><span>New game</span></button></div>
+      <div class="center-controls"><div id="message" role="status" aria-live="polite">Choose a candy from your hand.</div><button id="askButton" data-speaker="human">Got any?<span>ASK WENDY</span></button><button id="centerCircle" aria-label="Draw a candy" disabled></button><button id="fishButton"><span>Player says:</span><strong>NO, GO FISH!</strong></button></div>
+    </section>
+    <section id="humanArea" class="player-area">
+      <div id="humanSlots" class="slots" aria-label="Your candy hand"></div>
+      <div class="player-heading human-heading"><span id="humanSetCount" class="portrait-score"><span>SETS WON</span><strong>0</strong></span><div class="player-portrait"><img class="portrait" src="./assets/friendly-ghost.svg" alt="You, a friendly ghost" draggable="false"><strong class="portrait-name">PLAYER</strong></div><div id="humanPile" class="hand-pile" aria-label="Your candy hand"><img class="player-dish" src="./assets/candy-dish/black-cat-tray-v1-260x143.png" alt="" draggable="false"><span id="humanCount" class="badge hand-count">5</span></div></div>
+    </section>
+  </main>
+  <div id="overlay" class="overlay"><section class="dialog" aria-modal="true" role="dialog" aria-labelledby="dialogTitle"><span class="eyebrow">A LITTLE FRIENDLY COMPETITION</span><h1 id="dialogTitle">Candy<br>Go Fish</h1><div id="dialogBody"><p>Ask Wendy for candies. Collect matching candies to claim a set.</p><p>Pick a candy you hold, then tap <b>Got any?</b> A match gives you one candy and another request. Go fish? Tap the Candy Dish to draw once, then switch turns.</p></div><button id="dialogAction" class="primary">Let's play</button><button id="dialogCancel" class="secondary" hidden>Keep playing</button></section></div>
+  <script src="../game-helper.js"></script>
+  <script src="./assets/json/config-data.js"></script>
+  <script src="./game-engine.js"></script>
+  <script src="./computer-player.js"></script>
+  <script src="./candy-go-fish.js"></script>
+</body>
+</html>
