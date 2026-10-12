@@ -233,3 +233,23 @@ h1 { font-size: max(24px,9vw); line-height: 1.15; margin: 3vw 0 4vw; }
 .pile-candy { position:absolute; object-fit:contain; pointer-events:none; }
 .pile-number, .hand-count { z-index:3; }
 .pile-flight { z-index:10; }
+
+/* Larger portraits; prior layout saved in portrait-layout-checkpoint-2026-1012. */
+#table { grid-template-rows: 11vw 53vw 33vw 57vw; }
+.game-bar { padding-top: 0; align-items: flex-start; }
+.game-bar button { background-size: 85% auto; }
+.portrait { width: 22.5vw; height: 22.5vw; }
+.wendy-portrait, .player-portrait { width: 28vw; height: 23.5vw; }
+.wendy-portrait { transform: translateY(-3vw); }
+.player-heading { grid-template-columns: 1fr 28vw 1fr; }
+.human-heading { height: 26vw; padding-top: 2vw; }
+.opponent-arrow { position: absolute; top: 4.75vw; width: 13vw; height: 13vw; background: transparent; z-index: 2; display: grid; place-items: center; }
+.opponent-arrow.previous { left: -7vw; }
+.opponent-arrow.next { right: -7vw; }
+#wendySetCount { transform: translate(-2vw, 2vw); }
+#wendyPile { transform: translateX(2vw); }
+.wendy-portrait .portrait-name { left: 50%; right: auto; transform: translateX(-50%); white-space: nowrap; }
+.wendy-portrait .portrait { object-fit: cover; object-position: 50% 50%; object-view-box: inset(8%); }
+.opponent-arrow svg { width: 6vw; height: 10vw; fill: #eee3b8; pointer-events: none; }
+.opponent-arrow:active:not(:disabled) svg { transform: scale(.9); }
+.opponent-arrow:disabled { visibility: hidden; }

@@ -21,3 +21,5 @@ From repository root: python start-local/no-cache-server.py --port 8098 --bind 1
 ## Requirements exception
 
 The shared [game requirements](../README%20-%20game%20design%20requirements.md) are authoritative. At John's direction there is no dedicated Pause button. Local dialogs pause presentation, but the shell drawer does not notify/pause the game. There are no timed penalties. Game controls remain inside the game; score reporting uses only the existing helper.
+
+Opponent arrows cycle Ron +, Harry ++ and Hermione +++, using separate character portraits. Plain names are used in speech/results. Switching preserves the round and is locked only during dialogs/game-over. All currently share one strategy; beginner/medium/expert strategies are next. Larger portraits keep original name text size; see codex-john-docs/PORTRAIT-SIZE-DEMO-2026-1012.md for the one-file layout fallback.

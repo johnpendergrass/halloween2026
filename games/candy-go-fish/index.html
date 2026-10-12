@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Go Fish Candy Edition</title>
-  <link rel="stylesheet" href="./candy-go-fish.css?v=2026-1012-candy-start">
+  <link rel="stylesheet" href="./candy-go-fish.css?v=2026-1012-candy-opponents">
 </head>
 <body>
   <main id="table">
     <header class="game-bar"><button id="newGame"><span>NEW GAME</span></button><button id="rulesButton"><span>RULES</span></button></header>
     <section id="wendyArea" class="player-area">
-      <div class="player-heading"><span id="wendySetCount" class="portrait-score"><span>CANDY SETS</span><strong>0</strong></span><div class="wendy-portrait"><img class="portrait" src="./assets/friendly-witch.svg" alt="Wendy, a friendly witch" draggable="false"><strong class="portrait-name">WENDY</strong></div><div id="wendyPile" class="hand-pile" aria-label="Wendy's hidden hand"><img class="player-dish" src="./assets/candy-dish/witch-tray-green-red-v1-260x143.png" alt="" draggable="false"><span id="wendyCount" class="badge hand-count">5</span></div></div>
+      <div class="player-heading"><span id="wendySetCount" class="portrait-score"><span>CANDY SETS</span><strong>0</strong></span><div class="wendy-portrait"><button id="opponentPrevious" class="opponent-arrow previous" aria-label="Previous opponent"><svg viewBox="0 0 60 90" aria-hidden="true"><path d="M48 3 Q34 18 35 31 Q20 38 5 45 Q20 52 35 59 Q34 72 48 87 Q42 65 45 45 Q42 25 48 3Z"/></svg></button><button id="opponentNext" class="opponent-arrow next" aria-label="Next opponent"><svg viewBox="0 0 60 90" aria-hidden="true"><path d="M12 3 Q26 18 25 31 Q40 38 55 45 Q40 52 25 59 Q26 72 12 87 Q18 65 15 45 Q18 25 12 3Z"/></svg></button><img class="portrait" src="./assets/opponent-icons/RON cartoon 01.png" alt="Ron +" draggable="false"><strong class="portrait-name">WENDY</strong></div><div id="wendyPile" class="hand-pile" aria-label="Wendy's hidden hand"><img class="player-dish" src="./assets/candy-dish/witch-tray-green-red-v1-260x143.png" alt="" draggable="false"><span id="wendyCount" class="badge hand-count">5</span></div></div>
       <div id="wendySlots" class="slots" aria-label="Wendy's completed sets"></div>
     </section>
     <section class="center-area">
@@ -24,10 +24,10 @@
   </main>
   <div id="overlay" class="overlay"><section class="dialog" aria-modal="true" role="dialog" aria-labelledby="dialogTitle"><span class="eyebrow">A LITTLE FRIENDLY COMPETITION</span><h1 id="dialogTitle">Candy<br>Go Fish</h1><div id="dialogBody"><p>Ask Wendy for candies. Collect matching candies to claim a set.</p><p>Pick a candy you hold, then tap <b>Got any?</b> A match gives you one candy and another request. Go fish? Tap the Candy Dish to draw once, then switch turns.</p></div><button id="dialogAction" class="primary">Let's play</button><button id="dialogCancel" class="secondary" hidden>Keep playing</button></section></div>
   <script src="../game-helper.js"></script>
-  <script src="./assets/json/config-data.js?v=2026-1012-candy-start"></script>
-  <script src="./game-engine.js?v=2026-1012-candy-start"></script>
-  <script src="./computer-player.js?v=2026-1012-candy-start"></script>
-  <script src="./candy-piles.js?v=2026-1012-candy-start"></script>
-  <script src="./candy-go-fish.js?v=2026-1012-candy-start"></script>
+  <script src="./assets/json/config-data.js?v=2026-1012-candy-opponents"></script>
+  <script src="./game-engine.js?v=2026-1012-candy-opponents"></script>
+  <script src="./computer-player.js?v=2026-1012-candy-opponents"></script>
+  <script src="./candy-piles.js?v=2026-1012-candy-opponents"></script>
+  <script src="./candy-go-fish.js?v=2026-1012-candy-opponents"></script>
 </body>
 </html>

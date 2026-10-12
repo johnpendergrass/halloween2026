@@ -10,10 +10,28 @@ window.CandyConfig = {
       "portrait": "friendly-ghost.svg"
     },
     "wendy": {
-      "name": "Wendy",
-      "portrait": "friendly-witch.svg"
+      "name": "Ron",
+      "displayName": "Ron +",
+      "portrait": "opponent-icons/RON cartoon 01.png"
     }
   },
+  "opponents": [
+    {
+      "name": "Ron",
+      "displayName": "Ron +",
+      "portrait": "opponent-icons/RON cartoon 01.png"
+    },
+    {
+      "name": "Harry",
+      "displayName": "Harry ++",
+      "portrait": "opponent-icons/HARRY cartoon 02.png"
+    },
+    {
+      "name": "Hermione",
+      "displayName": "Hermione +++",
+      "portrait": "opponent-icons/HERMIONE cartoon 01.png"
+    }
+  ],
   "appearance": {
     "travelMs": 650,
     "thinkingMs": 1000,

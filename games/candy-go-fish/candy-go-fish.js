@@ -3,16 +3,19 @@
   // The generated companion keeps direct file:// opening functional.
   let config = window.CandyConfig;
   if (location.protocol !== 'file:') {
-    try { const response = await fetch('./assets/json/game-config.json?v=2026-1012-candy-start'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
+    try { const response = await fetch('./assets/json/game-config.json?v=2026-1012-candy-opponents'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
     catch (error) { console.warn('Using bundled candy configuration.', error); }
   }
   const piles = CandyPiles();
   const byId = new Map(config.candies.map(candy => [candy.id, candy]));
   const el = id => document.getElementById(id);
-  const humanName = config.players.human.name, opponentName = config.players.wendy.name;
+  const humanName = config.players.human.name;
+  let opponentName = config.players.wendy.name;
+  const opponents = config.opponents || [config.players.wendy];
+  let opponentIndex = Math.max(0, opponents.findIndex(player => player.name === opponentName));
   function escapeMarkup(value) { return value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;'); }
   document.querySelector('.player-portrait .portrait-name').textContent = humanName.toUpperCase();
-  document.querySelector('.wendy-portrait .portrait-name').textContent = opponentName.toUpperCase();
+  document.querySelector('.wendy-portrait .portrait-name').textContent = (config.players.wendy.displayName || opponentName).toUpperCase();
   for (const [player, selector] of [['human', '.player-portrait'], ['wendy', '.wendy-portrait']]) {
     const portrait = document.querySelector(selector + ' .portrait');
     portrait.src = './assets/' + config.players[player].portrait; portrait.alt = config.players[player].name;
@@ -114,6 +117,9 @@
   function render() {
     if (!state) return;
     const opening = openingPhase();
+    for (const id of ['opponentPrevious', 'opponentNext']) {
+      el(id).disabled = overlayOpen || phase === 'finished' || opponents.length < 2;
+    }
     el('table').classList.toggle('opening-board', opening);
     el('table').classList.toggle('starter-chosen', phase === 'starterReady');
     el('table').classList.toggle('starter-up', startingPlayer === 'wendy');
@@ -544,6 +550,27 @@
     }
   });
   el('gameOverNew').addEventListener('click', startGame);
+  function switchOpponent(direction) {
+    if (overlayOpen || phase === 'finished' || opponents.length < 2) return;
+    const previousName = opponentName;
+    opponentIndex = (opponentIndex + direction + opponents.length) % opponents.length;
+    Object.assign(config.players.wendy, opponents[opponentIndex]);
+    opponentName = config.players.wendy.name;
+    document.querySelector('.wendy-portrait .portrait-name').textContent = (config.players.wendy.displayName || opponentName).toUpperCase();
+    const portrait = document.querySelector('.wendy-portrait .portrait');
+    portrait.src = './assets/' + config.players.wendy.portrait; portrait.alt = opponentName;
+    el('wendySlots').setAttribute('aria-label', opponentName + "'s completed sets");
+    // Rename existing speech in place without rebuilding piles or interrupting motion.
+    for (const host of document.querySelectorAll('#message, #askButton, #fishButton, #heldOpponentQuestion, .stationary-speech')) {
+      const walker = document.createTreeWalker(host, NodeFilter.SHOW_TEXT);
+      while (walker.nextNode()) walker.currentNode.textContent = walker.currentNode.textContent.replaceAll(previousName, opponentName).replaceAll(previousName.toUpperCase(), opponentName.toUpperCase());
+    }
+    for (const node of document.querySelectorAll('[aria-label]')) {
+      node.setAttribute('aria-label', node.getAttribute('aria-label').replaceAll(previousName, opponentName));
+    }
+  }
+  el('opponentPrevious').addEventListener('click', () => switchOpponent(-1));
+  el('opponentNext').addEventListener('click', () => switchOpponent(1));
   el('dialogAction').addEventListener('click', () => closeAction());
   el('overlay').addEventListener('click', event => {
     if (event.target === el('overlay') && el('overlay').classList.contains('celebrating')) closeAction();

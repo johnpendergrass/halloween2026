@@ -6,6 +6,7 @@ game-config.json is authoritative. HTTP fetches it; direct file opening/fetch fa
 | --- | --- |
 | rules | copiesPerType 3, initialHandSize 5: 30 total, 20 initially in dish after dealing |
 | players | Names/portrait filenames for human/wendy role keys |
+| opponents | Ron/Harry/Hermione profiles with plain name, expertise displayName and character portrait path; all currently share one strategy |
 | appearance | quoteFadeMs 250; quoteHoldMs/playerRequestHoldMs 1000; yesAutoTransferMs 4000; thinkingMs 1000; giftTravelMs 1400 and accelerating easing |
 | candyDisplay | Slot fitting/rotation/stacking, giftWidthVw 22, giftHeightVw 17, giftArcVw 22, giftMidScale 1.5, giftDissolveStart 0.82 |
 | layout | Five columns, ten ordered candy IDs |
