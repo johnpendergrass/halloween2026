@@ -5,13 +5,13 @@ const assert = require('node:assert/strict');
 const root = path.resolve(__dirname, '../..');
 const config = require('../../assets/json/game-config.json');
 const referenced = new Set(['json/game-config.json', 'json/config-data.js']);
-for (const filename of ['index.html', 'candy-go-fish.css', 'js/candy-go-fish.js', 'js/candy-piles.js']) {
+for (const filename of ['index.html', 'candy-go-fish.css', 'js/candy-go-fish.js', 'js/candy-piles.js', 'js/candy-rain.js']) {
   const source = fs.readFileSync(path.join(root, filename), 'utf8');
   for (const match of source.matchAll(/\.\/assets\/([^'"\s?]+)/g)) {
     if (!match[1].endsWith('/')) referenced.add(match[1]);
   }
 }
-for (const profile of [...Object.values(config.players), ...config.opponents]) referenced.add(profile.portrait);
+for (const profile of [...Object.values(config.players), ...config.opponents, ...(config.playerCharacters || [])]) referenced.add(profile.portrait);
 for (const candy of config.candies) referenced.add('candybar-images/' + candy.image);
 const registry = JSON.parse(fs.readFileSync(path.resolve(root, '../../games.json'), 'utf8'));
 assert(JSON.stringify(registry).includes('assets/halloween-fish.svg'));

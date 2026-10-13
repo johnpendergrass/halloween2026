@@ -6,6 +6,8 @@ Ron, Harry and Hermione now use accepted, calibrated local algorithms. Fresh pai
 
 The game retains the spinning empty-dish starter sequence, no-opening-set deal, enlarged portraits, ceramic pumpkin buttons, CANDY SETS labels, persistent candy piles, private draw artwork and existing speech/transfer behavior. Sound remains future work. John accepted the strategies; focus on human play feel and remaining appearance/sound tasks before additional tuning.
 
-John requested a complete documentation update, commit and push of the current state. Current cache stamp is 2026-1012-candy-strategy-cleanup. Publishing checks include valid UTF-8, asset references, engine rules, browser gameplay and the actual Pages workflow. Empty locked design ideas directory has no contents and is not tracked by Git.
+John requested a complete documentation update, commit and push of the current state. Current cache stamp is 2026-1012-candy-welcome. Publishing checks include valid UTF-8, asset references, engine rules, browser gameplay and the actual Pages workflow. Empty locked design ideas directory has no contents and is not tracked by Git.
 
 Every new summary folder must have _START-HERE.md or an obvious contents index. Retired experiments are described in [strategy development](../games/candy-go-fish/_documents/strategies-development/_START-HERE.md); experimental simulation programs were removed, with compact validation evidence retained.
+
+Latest publishing checkpoint includes Boo/Mike/Sully player cycling, raised faces, a smaller earned-set popup, pumpkin-vine welcome frame, accented uppercase GO FISH! with smaller Candy Edition! subheading, rewritten gameplay help and integrated candy rain with graceful replay. The welcome waits for a click. The temporary candy rain demo is deleted. Startup-flash experiments were reverted and the unresolved flash is deferred on the game TODO list. The full current handoff linked above takes precedence over older notes.

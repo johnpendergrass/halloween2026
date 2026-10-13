@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+ <defs>
+  <radialGradient id="pumpkin" cx="35%" cy="25%" r="80%"><stop stop-color="#ffcc69"/><stop offset=".45" stop-color="#ee8528"/><stop offset="1" stop-color="#a94413"/></radialGradient>
+  <g id="fruit">
+   <path d="M-3-21Q-9-34 3-37L8-32Q1-29 4-21" fill="#6d5125" stroke="#364721" stroke-width="2"/>
+   <path d="M0-23C-10-29-26-21-28-5C-32 12-18 25-2 23C12 28 29 16 29-2C30-19 14-28 0-23Z" fill="url(#pumpkin)" stroke="#71381c" stroke-width="3"/>
+   <path d="M-12-21C-25-9-23 13-12 21M-2-23C-10-8-9 14-2 23M8-23C17-9 16 13 8 23M18-18C28-7 25 11 18 19" fill="none" stroke="#b44e17" stroke-width="2.5"/>
+   <path d="M-15-17Q-23-9-21 1M-4-17Q-8-9-7-3" fill="none" stroke="#ffda8b" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <g id="leaf"><path d="M0 0C-24-3-43-20-42-42C-18-44 4-28 0 0Z" fill="#587333" stroke="#283f25" stroke-width="3"/><path d="M-1-2L-34-34M-10-11L-29-13M-19-20L-21-34" fill="none" stroke="#b0aa56" stroke-width="2"/></g>
+  <g id="edge">
+   <path d="M100 70C190 44 210 92 300 70S410 50 500 70S610 89 700 70S810 47 900 70" fill="none" stroke="#1e3625" stroke-width="11" stroke-linecap="round"/>
+   <path d="M100 68C190 42 210 90 300 68S410 48 500 68S610 87 700 68S810 45 900 68" fill="none" stroke="#71813b" stroke-width="3" stroke-linecap="round"/>
+   <path d="M205 67C190 42 205 14 228 24C249 35 232 58 218 45C210 37 219 29 225 35M530 75C539 110 574 119 584 94C593 73 567 63 559 79C553 90 568 98 573 88M790 63C797 33 825 21 838 42C849 60 828 76 816 61C807 49 817 42 825 47" fill="none" stroke="#456037" stroke-width="4" stroke-linecap="round"/>
+   <use href="#leaf" transform="translate(185 65) rotate(-15)"/>
+   <use href="#leaf" transform="translate(400 63) rotate(170) scale(.75)"/>
+   <use href="#leaf" transform="translate(675 73) rotate(20) scale(.8)"/>
+   <use href="#leaf" transform="translate(865 64) rotate(165) scale(.65)"/>
+   <use href="#fruit" transform="translate(325 73) rotate(-12)"/>
+   <use href="#fruit" transform="translate(715 71) rotate(16) scale(.85)"/>
+  </g>
+ </defs>
+ <use href="#edge"/>
+ <use href="#edge" transform="rotate(90 500 500)"/>
+ <use href="#edge" transform="rotate(180 500 500)"/>
+ <use href="#edge" transform="rotate(270 500 500)"/>
+</svg>

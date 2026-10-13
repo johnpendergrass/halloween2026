@@ -12,6 +12,7 @@ const startRound = require('./start-round.cjs');
       Object.assign(testConfig.appearance, { thinkingMs: 40, quoteFadeMs: 40, quoteHoldMs: 40, playerRequestHoldMs: 40 });
       await page.route('**/game-config.json*', route => route.fulfill({ json: testConfig }));
       await page.goto('http://127.0.0.1:8098/games/candy-go-fish/index.html');
+      await page.locator('#overlay.welcoming #dialogAction').click();
       await page.locator('.opening-action').waitFor();
       await page.evaluate(() => {
         const create = CandyEngine.create;

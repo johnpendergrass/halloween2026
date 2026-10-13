@@ -6,8 +6,8 @@ window.CandyConfig = {
   },
   "players": {
     "human": {
-      "name": "Player",
-      "portrait": "player-icons/friendly-ghost.svg"
+      "name": "Boo",
+      "portrait": "player-icons/boo.png"
     },
     "wendy": {
       "name": "Ron",
@@ -16,6 +16,20 @@ window.CandyConfig = {
       "strategy": "beginner"
     }
   },
+  "playerCharacters": [
+    {
+      "name": "Boo",
+      "portrait": "player-icons/boo.png"
+    },
+    {
+      "name": "Mike",
+      "portrait": "player-icons/mike.png"
+    },
+    {
+      "name": "Sully",
+      "portrait": "player-icons/sully.png"
+    }
+  ],
   "opponents": [
     {
       "name": "Ron",

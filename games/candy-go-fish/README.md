@@ -1,8 +1,12 @@
-# Go Fish Candy Edition
+# GO FISH! — Candy Edition!
 
 Playable Halloween 2026 mini game, registered in slot 8. Open index.html for standalone play or launch through the application shell. Plain HTML/CSS/JS; HTTP and file opening work. Runtime JavaScript lives in js/, including the strategies.js adapter and strategies/shared subfolders. The development history and measured results are in [_documents/strategies-development](_documents/strategies-development/DEVELOPMENT-AND-IMPLEMENTATION.md). Old preview/demo wrappers, experimental policies and simulation programs have been removed.
 
 Start with [current handoff](_documents/codex-john-docs/CURRENT-STATE-2026-1012.md) and [next TODOs](_documents/codex-john-docs/NEXT-TODOS.md).
+
+The welcome now uses a pumpkin-vine frame and corner dishes, accented uppercase GO FISH! and a smaller Candy Edition! subheading. It stays until Let's play is clicked, then opens the starter spinner. The help screen emphasizes fishing ends a turn even after drawing a match, and empty hands/dish end the game. Boo, Mike and Sully cycle through player portraits without resetting the round. The smaller earned-set popup keeps its existing dismissal behavior.
+
+Game-over candy rain begins after three seconds. Either New Game control stops new drops and waits for remaining candy to finish falling before replay. The temporary rain demo has been removed. The startup flash remains unresolved; attempted loading fixes were reverted and the issue is deferred in NEXT-TODOS.md.
 
 Ten types, three copies each, five initially dealt per player with no completed sets in either opening hand. Request a held type; one-candy success keeps the turn. Triples collect automatically. Fishing currently always ends the turn; the proposed Good Fish rule is not implemented. Empty dish/hand or all sets ends the round after possible final-set collection.
 

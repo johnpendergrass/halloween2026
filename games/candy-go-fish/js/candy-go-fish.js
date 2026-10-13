@@ -3,13 +3,17 @@
   // The generated companion keeps direct file:// opening functional.
   let config = window.CandyConfig;
   if (location.protocol !== 'file:') {
-    try { const response = await fetch('./assets/json/game-config.json?v=2026-1012-candy-strategy-cleanup'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
+    try { const response = await fetch('./assets/json/game-config.json?v=2026-1012-candy-welcome'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
     catch (error) { console.warn('Using bundled candy configuration.', error); }
   }
   const piles = CandyPiles();
   const byId = new Map(config.candies.map(candy => [candy.id, candy]));
   const el = id => document.getElementById(id);
-  const humanName = config.players.human.name;
+  const candyRain = CandyRain({ host: document.body, candies: config.candies.map(candy => './assets/candybar-images/' + candy.image) });
+  let restarting = false;
+  let humanName = config.players.human.name;
+  const playerCharacters = config.playerCharacters || [config.players.human];
+  let playerCharacterIndex = Math.max(0, playerCharacters.findIndex(player => player.name === humanName));
   let opponentName = config.players.wendy.name;
   const opponents = config.opponents || [config.players.wendy];
   let opponentIndex = Math.max(0, opponents.findIndex(player => player.name === opponentName));
@@ -23,7 +27,7 @@
   el('wendySlots').setAttribute('aria-label', opponentName + "'s completed sets");
   el('askButton').querySelector('span').textContent = 'ASK ' + opponentName.toUpperCase();
   el('fishButton').setAttribute('aria-label', humanName + ' says: NO, GO FISH!');
-  el('dialogBody').querySelector('p').textContent = 'Ask ' + opponentName + ' for candies. Collect ' + config.rules.copiesPerType + ' of a kind to claim a set.';
+  el('dialogBody').querySelector('p').textContent = 'Ask for candies.';
   let state, memory, phase = 'intro', selected = null, generation = 0, overlayOpen = true, reported = false;
   let closeAction = startGame, displayedTurn = null;
   let yesWait = null;
@@ -119,6 +123,9 @@
     const opening = openingPhase();
     for (const id of ['opponentPrevious', 'opponentNext']) {
       el(id).disabled = overlayOpen || phase === 'finished' || opponents.length < 2;
+    }
+    for (const id of ['playerPrevious', 'playerNext']) {
+      el(id).disabled = overlayOpen || phase === 'finished' || playerCharacters.length < 2;
     }
     el('table').classList.toggle('opening-board', opening);
     el('table').classList.toggle('starter-chosen', phase === 'starterReady');
@@ -356,6 +363,10 @@
     candy.remove(); return valid;
   }
   function startGame() {
+    candyRain.stop(); restarting = false;
+    el('gameOverNew').disabled = false; el('gameOverNew').querySelector('span').textContent = 'New game';
+    el('newGame').disabled = false;
+    el('overlay').classList.remove('welcoming');
     el('heldOpponentQuestion')?.remove();
     playerRequestWait = null;
     retainedPlayerRequest = null;
@@ -413,9 +424,10 @@
     el('gameOverRemaining').hidden = state.reason !== 'emptyHand';
     el('gameOverRemaining').textContent = 'Candy Dish had ' + remaining + ' left.';
     el('gameOverScore').textContent = humanName + ' had ' + state.sets.human.length + (state.sets.human.length === 1 ? ' candy set; ' : ' candy sets; ') + opponentName + ' had ' + state.sets.wendy.length + '.';
+    candyRain.start(3000);
   }
   function showDialog(title, body, action, callback) {
-    el('overlay').classList.remove('celebrating');
+    el('overlay').classList.remove('celebrating', 'rules');
     el('table').inert = true; el('dialogCancel').hidden = true;
     overlayOpen = true; el('overlay').hidden = false; el('dialogTitle').textContent = title;
     el('dialogBody').innerHTML = body; el('dialogAction').textContent = action; closeAction = callback; render(); el('dialogAction').focus();
@@ -553,7 +565,16 @@
       event.preventDefault(); acknowledgeMiddle();
     }
   });
-  el('gameOverNew').addEventListener('click', startGame);
+  async function replayAfterRain() {
+    if (phase !== 'finished' || restarting) return;
+    restarting = true;
+    const token = generation;
+    el('gameOverNew').disabled = true; el('gameOverNew').querySelector('span').textContent = 'Finishing…';
+    el('newGame').disabled = true;
+    await candyRain.drain();
+    if (token === generation) startGame();
+  }
+  el('gameOverNew').addEventListener('click', replayAfterRain);
   function switchOpponent(direction) {
     if (overlayOpen || phase === 'finished' || opponents.length < 2) return;
     const previousName = opponentName;
@@ -575,13 +596,40 @@
   }
   el('opponentPrevious').addEventListener('click', () => switchOpponent(-1));
   el('opponentNext').addEventListener('click', () => switchOpponent(1));
+  function switchPlayerCharacter(direction) {
+    if (overlayOpen || phase === 'finished' || playerCharacters.length < 2) return;
+    const previousName = humanName;
+    playerCharacterIndex = (playerCharacterIndex + direction + playerCharacters.length) % playerCharacters.length;
+    Object.assign(config.players.human, playerCharacters[playerCharacterIndex]);
+    humanName = config.players.human.name;
+    document.querySelector('.player-portrait .portrait-name').textContent = humanName.toUpperCase();
+    const portrait = document.querySelector('.player-portrait .portrait');
+    portrait.src = './assets/' + config.players.human.portrait; portrait.alt = humanName;
+    for (const host of document.querySelectorAll('#message, #askButton, #fishButton, #heldOpponentQuestion, .stationary-speech')) {
+      const walker = document.createTreeWalker(host, NodeFilter.SHOW_TEXT);
+      while (walker.nextNode()) walker.currentNode.textContent = walker.currentNode.textContent.replaceAll(previousName, humanName).replaceAll(previousName.toUpperCase(), humanName.toUpperCase());
+    }
+    for (const node of document.querySelectorAll('[aria-label]')) {
+      node.setAttribute('aria-label', node.getAttribute('aria-label').replaceAll(previousName, humanName));
+    }
+  }
+  el('playerPrevious').addEventListener('click', () => switchPlayerCharacter(-1));
+  el('playerNext').addEventListener('click', () => switchPlayerCharacter(1));
   el('dialogAction').addEventListener('click', () => closeAction());
   el('overlay').addEventListener('click', event => {
     if (event.target === el('overlay') && el('overlay').classList.contains('celebrating')) closeAction();
   });
-  el('rulesButton').addEventListener('click', () => showDialog('How to play',
-    ('<p>Choose a candy you hold. Your question sends after a second, or tap it to send sooner.</p><p>Yes transfers one candy after four seconds. Tap either text box or the dish to act sooner. No waits for your tap.</p><p>When Wendy asks, tapping your matching candy gives it immediately. ' + state.copies + ' matching candies earn a set.</p><p>Fishing ends the turn. Empty dish, empty hand or all sets ends the round. Most sets wins.</p>').replaceAll('Wendy', escapeMarkup(opponentName)), 'Back to the table', () => { overlayOpen = false; el('overlay').hidden = true; el('table').inert = false; render(); el('rulesButton').focus(); }));
+  el('rulesButton').addEventListener('click', () => { if (restarting) return; showDialog('How to play',
+    '<p><b>Your turn:</b> Select a candy you hold to request a matching one.</p>' +
+    '<p>If the other player has it, you get one of theirs and ask again. If not, <b>GO FISH!</b> Tap the Candy Dish to draw one candy.</p>' +
+    '<p class="rule-emphasis"><strong>YOUR TURN ENDS WHEN YOU HAVE TO GO FISH, FOR ANY REASON.</strong><br>Even if you draw a match!</p>' +
+    '<p>Collect sets of <b>' + state.copies + ' matching candies</b>.</p>' +
+    '<p class="rule-emphasis"><strong>THE GAME ENDS WHEN EITHER PLAYER OR THE CANDY DISH RUNS OUT OF CANDY.</strong></p>' +
+    '<p><b>Most sets wins!</b></p>', 'Back to the table', () => { overlayOpen = false; el('overlay').hidden = true; el('table').inert = false; render(); el('rulesButton').focus(); });
+    el('overlay').classList.add('rules');
+  });
   el('newGame').addEventListener('click', () => {
+    if (phase === 'finished') { replayAfterRain(); return; }
     showDialog('Deal again?', '<p>This will end the current round and deal a fresh hand.</p>', 'Start a new round', startGame);
     el('dialogCancel').hidden = false;
   });
@@ -595,5 +643,11 @@
     event.preventDefault(); buttons[(index + (event.shiftKey ? -1 : 1) + buttons.length) % buttons.length].focus();
   });
   buildSlots();
+  addEventListener('pagehide', () => candyRain.stop());
   startGame();
+  showDialog('GO FISH!', el('dialogBody').innerHTML, "Let's play", startGame);
+  const welcomeSubtitle = document.createElement('span');
+  welcomeSubtitle.className = 'welcome-subtitle'; welcomeSubtitle.textContent = 'Candy Edition!';
+  el('dialogTitle').append(welcomeSubtitle);
+  el('overlay').classList.add('welcoming');
 })();

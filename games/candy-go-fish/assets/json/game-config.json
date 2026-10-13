@@ -1,6 +1,11 @@
 {
   "rules": { "copiesPerType": 3, "initialHandSize": 5 },
-  "players": { "human": { "name": "Player", "portrait": "player-icons/friendly-ghost.svg" }, "wendy": { "name": "Ron", "displayName": "Ron +", "portrait": "opponent-icons/RON.png", "strategy": "beginner" } },
+  "players": { "human": { "name": "Boo", "portrait": "player-icons/boo.png" }, "wendy": { "name": "Ron", "displayName": "Ron +", "portrait": "opponent-icons/RON.png", "strategy": "beginner" } },
+  "playerCharacters": [
+    { "name": "Boo", "portrait": "player-icons/boo.png" },
+    { "name": "Mike", "portrait": "player-icons/mike.png" },
+    { "name": "Sully", "portrait": "player-icons/sully.png" }
+  ],
   "opponents": [
     { "name": "Ron", "displayName": "Ron +", "portrait": "opponent-icons/RON.png", "strategy": "beginner" },
     { "name": "Harry", "displayName": "Harry ++", "portrait": "opponent-icons/HARRY.png", "strategy": "medium" },

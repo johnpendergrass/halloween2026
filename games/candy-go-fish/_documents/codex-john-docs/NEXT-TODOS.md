@@ -2,6 +2,8 @@
 
 Updated October 12, 2026. Overall gameplay is acceptable. Follow these priorities from John; work on each as a separate reviewable change.
 
+Deferred at John's request: investigate the brief green/partially drawn UI flash before the welcome screen. Boot-time visibility hiding, matching the loading background, awaiting artwork/font decoding and an opaque loading cover did not fix the observed glitch; all those experiments were reverted. A red HTML-background diagnostic did not produce a red flash. Both local servers served the current code with no-cache headers. Revisit later, ideally recording first-render frames in the actual test browser/shell before choosing another fix. Preserve the dimmed game artwork behind the welcome banner.
+
 October 12 update: the strategy-development priority below is completed locally and superseded. The three calibrated policies passed fresh paired validation and are installed in the game. John accepted them. See ../strategies-development/ABILITY-REPORT-2026-1012.md for results; review human play feel before any further tuning. John authorized documentation update, commit and push of the current checkpoint.
 
 Current priorities: review human play feel, then continue the appearance and sound tasks below. All three accepted strategies are installed and validated. The retired simulation code is described in ../strategies-development/DEVELOPMENT-AND-IMPLEMENTATION.md. See CURRENT-STATE-2026-1012.md for authoritative current paths.

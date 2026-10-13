@@ -16,6 +16,9 @@ const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary
     await page.screenshot({ path: path.join(__dirname, 'shell-menu.png') });
     await button.click();
     const frame = page.frameLocator('#gameFrame');
+    await frame.locator('#overlay.welcoming').waitFor();
+    await page.waitForTimeout(1200);
+    assert(await frame.locator('#overlay.welcoming').isVisible(), 'Welcome must stay until clicked');
     await startRound(frame);
     assert.equal(await page.locator('#gameNewButton, #gameRulesButton').count(), 0);
     assert.equal(await frame.locator('.game-bar').isVisible(), true);

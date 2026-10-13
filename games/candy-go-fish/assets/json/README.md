@@ -25,3 +25,5 @@ node games/candy-go-fish/_documents/codex-john-docs/validate-candy-names.cjs
 node games/candy-go-fish/_documents/codex-john-docs/sync-config.cjs
 
 The broader animation centralization and full presentation-value validation remain pending. The October 9 survey is a historical inventory, not current effective timing. See the current handoff for behavior.
+
+Player characters: playerCharacters lists Boo, Mike and Sully with their portrait paths. players.human defines the initial character; switching updates that profile without changing engine state. Player and opponent name labels are centered under their portrait circles.

@@ -9,6 +9,7 @@ const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary
       const errors = []; page.on('pageerror', error => errors.push(error.message));
       await page.addInitScript(() => { Math.random = () => .25; });
       await page.goto('file:///' + path.resolve(__dirname, '../../index.html').replaceAll('\\', '/'));
+      await page.locator('#overlay.welcoming #dialogAction').click();
       await page.locator('.opening-action').waitFor();
       const name = () => page.locator('.wendy-portrait .portrait-name').textContent();
       assert.equal(await name(), 'RON +');

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+ <defs>
+  <linearGradient id="copper" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffcb72"/><stop offset=".4" stop-color="#e97924"/><stop offset="1" stop-color="#8d3918"/></linearGradient>
+  <g id="coupling"><rect x="-14" y="-17" width="28" height="34" rx="5" fill="url(#copper)" stroke="#211a16" stroke-width="5"/><path d="M-6-13V13M6-13V13" stroke="#ffbd65" stroke-width="3"/></g>
+  <g id="valve"><circle r="23" fill="#22231e" stroke="#d87828" stroke-width="6"/><circle r="7" fill="#f6b652"/><path d="M-16 0H16M0-16V16" stroke="#eb9b3e" stroke-width="4"/></g>
+ </defs>
+ <rect x="70" y="70" width="860" height="860" rx="38" fill="none" stroke="#171c18" stroke-width="24"/>
+ <rect x="70" y="70" width="860" height="860" rx="38" fill="none" stroke="url(#copper)" stroke-width="13"/>
+ <rect x="67" y="67" width="860" height="860" rx="38" fill="none" stroke="#ffd18c" stroke-opacity=".6" stroke-width="3"/>
+ <use href="#coupling" transform="translate(250 70)"/><use href="#coupling" transform="translate(750 70)"/>
+ <use href="#coupling" transform="translate(250 930)"/><use href="#coupling" transform="translate(750 930)"/>
+ <use href="#coupling" transform="translate(70 250) rotate(90)"/><use href="#coupling" transform="translate(70 750) rotate(90)"/>
+ <use href="#coupling" transform="translate(930 250) rotate(90)"/><use href="#coupling" transform="translate(930 750) rotate(90)"/>
+ <use href="#valve" transform="translate(500 70)"/><use href="#valve" transform="translate(500 930)"/>
+ <use href="#valve" transform="translate(70 500)"/><use href="#valve" transform="translate(930 500)"/>
+</svg>

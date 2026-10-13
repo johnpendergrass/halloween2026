@@ -1,6 +1,7 @@
 // Enter gameplay through the opening spinner. Optional actor controls fixtures.
 module.exports = async function startRound(surface, actor) {
   const message = surface.locator('#message');
+  if (await surface.locator('#overlay.welcoming').isVisible()) await surface.locator('#dialogAction').click();
   await surface.locator('.opening-action').waitFor();
   if (actor) await message.evaluate((node, role) => {
     window.openingTestRandom = Math.random;
