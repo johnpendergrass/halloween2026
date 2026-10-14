@@ -118,7 +118,9 @@
     prepareWelcomeMusic() {
       try {
         prepareContext(false);
-        welcomeMusic ||= getClip('welcomeMusic', './assets/sounds/game-over-music.mp3', 'music');
+        // The dialog soundtrack. Two more candidates (haunted, earth) sit in
+        // the same folder for a later choice; only this one is wired up.
+        welcomeMusic ||= getClip('welcomeMusic', './assets/sounds/soundtrack-music-wonderful.mp3', 'music');
         welcomeMusic.clip.loop = true;
         if (!welcomeMusicWanted) welcomeMusic.gain.gain.value = 0;
         return welcomeMusic.clip;

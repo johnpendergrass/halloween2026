@@ -1,0 +1,21 @@
+Halloween 2026 - project status (the glance; details in claude-john-docs/ and codex-john-docs/)
+
+2026 1014 pm  John + Claude: read all Codex work. Soundtrack renamed to
+              soundtrack-music-wonderful.mp3 in code, checks and docs (not committed).
+              Wrote the plan to move Candy Go Fish to its own repo:
+              claude-john-docs/claudePlans/candy-go-fish-standalone-plan.md
+2026 1007-14  John + Codex: Candy Go Fish built in games/candy-go-fish, slot 8.
+              Complete and playable, full audio, 3 opponents, 3 player characters.
+              Committed + pushed 7cf177a, stamp 2026-1014-audio-controls.
+2026 1001     Shell: This Game tab with high scores + switches (switches not connected).
+2026 0927-30  Frame, panels, iframe games, games.json v2, board of 2 x 4 cells.
+
+NOT YET
+ - FIRST: execute the standalone plan (John decides framing, docs to carry, who makes the repo)
+ - commit the soundtrack rename; bump cache stamps before any push
+ - after the move: deprecate the slot 8 copy
+ - shell: Sound option A or B never chosen; Sound + game switches still change nothing
+ - Pages switch-on + iPhone home-screen test still unverified for the shell
+
+DETAIL  claude-john-docs/Claude-ToBe-Continued-2026-1014-1526.MD
+        games/candy-go-fish/_documents/codex-john-docs/CURRENT-STATE-2026-1014.md

@@ -9,7 +9,7 @@ UI effects are directly in this folder:
 - switch-to-ron-or-boo.mp3, switch-to-harry-or-mike.mp3, switch-to-hermione-or-sully.mp3: paired selector cues.
 - winsSet-player.mp3 and winsSet-opponent.mp3: distinct earned-set sounds; player WAV converted at 128 kbps and deleted at John's request.
 - confirmText.mp3: prepared, retained for future use; welcome, spinner-start and deal confirmations are silent.
-- game-over-music.mp3: looping dialog soundtrack, approximately 5.4 MiB / 4m41s stereo MP3. Provenance: _where-are-the-sounds-from.txt.
+- soundtrack-music-wonderful.mp3: looping dialog soundtrack, approximately 5.4 MiB / 4m41s stereo MP3. Provenance: _where-are-the-sounds-from.txt.
 
 speech/goes-first holds six named starter announcements. speech/victory holds 36 BIGWIN/CLOSE clips. victory-sounds.js is the generated index for HTTP and file opening; rerun sync-victory-sounds.cjs after victory filename changes. The source notes are in speech/_Speech generation used text-to-speech.online.txt. Text submitted for Hermione pronunciation used 'herm io ne'. Working candidates/masters are not runtime assets.
 
@@ -35,4 +35,4 @@ Per-sound gain defaults to 50%; both channels default ON at gain 1. Future indiv
 
 ## Checks
 
-From repository root, run node games/candy-go-fish/_documents/codex-john-docs/<script>: verify-assets.cjs, verify-victory-sounds.cjs, verify-sound-layout.cjs, verify-spinner-ticks.cjs, verify-welcome-music.cjs. Chrome checks do not replace physical iPhone listening/autoplay review. Current cache stamp: 2026-1014-audio-controls.
+From repository root, run node games/candy-go-fish/_documents/codex-john-docs/<script>: verify-assets.cjs, verify-victory-sounds.cjs, verify-sound-layout.cjs, verify-spinner-ticks.cjs, verify-welcome-music.cjs. Chrome checks do not replace physical iPhone listening/autoplay review. Current cache stamp: 2026-1014-soundtrack-rename.

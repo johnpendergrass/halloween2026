@@ -2,8 +2,15 @@ sounds come from:
 
 ------
 
-game-over-music is:
+soundtrack music is:
 
 2026 0410 HB The complete works (audio) (SideTrax)/Acoustic Music (Pack 06)/mp3/wonderful.mp3
+
+
+2026 0410 HB The Complete Works (audio) (SideTrax)\Creepshow 02 (Pack 83)\MP3\Haunted.mp3
+
+
+2026 0410 HB The Complete Works (audio) (SideTrax)\Acoustic Music 02 (Pack 66)\MP3\Earth.mp3
+
 
 ------

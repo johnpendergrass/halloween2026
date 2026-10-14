@@ -8,4 +8,4 @@ Results put score second and ending reason last. Winner portrait/name gets a lar
 
 Accepted strategies/gameplay remain. Mid-round switching keeps initial-deal history without exposing hidden human cards. Startup flash is unresolved/deferred. Physical iPhone audio/autoplay/loading review remains manual. See [verification](../games/candy-go-fish/_documents/codex-john-docs/VERIFICATION-2026-1014.md).
 
-Cache stamp: 2026-1014-audio-controls. John authorized documentation, commit and push of this checkpoint. Include active audio/code/docs/checks; exclude _DOWNLOADS/unused sources. Validate tracked Markdown UTF-8, remote equality, actual Pages workflow and live nested-resource stamps. Future pushes require a new request.
+Cache stamp: 2026-1014-soundtrack-rename. John authorized documentation, commit and push of this checkpoint. Include active audio/code/docs/checks; exclude _DOWNLOADS/unused sources. Validate tracked Markdown UTF-8, remote equality, actual Pages workflow and live nested-resource stamps. Future pushes require a new request.

@@ -506,6 +506,83 @@ icon in the top bar next to `short_title`; only if John asks.
   memory (`games.find(...)`) before opening the game. `localStorage` of
   the test origin is cleared afterwards.
 
+## 4k. Candy Go Fish implementation notes (games/candy-go-fish/, 2026-10-14 reading)
+
+Authoritative detail is in the game's own `_documents/`; this is the
+map Claude built while reading the code. Codex's style is dense (long
+lines, compact IIFEs, no comments on the obvious); anything Claude adds
+follows John's readable style instead.
+
+**Files and load order** (`index.html`, all with `?v=` stamps):
+`../game-helper.js` → `assets/json/config-data.js` (generated twin of
+`game-config.json`, used for `file://` opening or fetch failure) →
+`js/game-engine.js` (pure rules, `CandyEngine`) → `js/computer-player.js`
+(the original weighted-random policy, kept as Ron's baseline) →
+`js/shared/knowledge.js` (public-clue memory + exact hidden-card
+distribution), `temporal-memory.js`, `temporal-beliefs.js` (particle
+filter) → `js/strategies/beginner|medium|temporal|calibrated-*.js` →
+`js/strategies.js` (adapter; also publishes a decision trace as JSON in a
+`<script id="opponentDecisionTrace">`) → `js/candy-rain.js`,
+`js/candy-piles.js` → `assets/sounds/victory-sounds.js` (generated index
+of the 36 speech files) → `js/preload.js` → `js/sound.js` →
+`js/candy-go-fish.js` (the controller, one async IIFE, ~720 lines).
+
+**Engine model.** `CandyEngine.create(config)` deals so that no opening
+hand holds a completed set. State: `pile`, `hands.human/wendy`,
+`sets.human/wendy`, `turn`, `pending`, `finished`, `reason`, `winner`,
+`history`. `request()` returns events (`request`, `transfer`/`set` or
+`miss`); `fish()` always switches the turn. Public `history` never holds
+the identity of a private draw. The role key for the opponent is still
+`wendy` everywhere (the first opponent's name), whatever character is
+shown.
+
+**Controller phases**: `pickStarter → spinningStarter → starterReady`
+(empty-board spinner, 3.7 s, ticks follow the rendered rotation) then
+`choose / requesting / thinking / wendyRequest / fishResponse /
+humanFishWait / wendyFishWait / drawing / finished`. A `generation`
+counter invalidates every awaited step when a new round starts; `waitActive`
+and `playVisual` poll every 40 ms and pause while a dialog is open.
+`render()` rebuilds the whole board from state each time.
+
+**Audio.** `preload.js` loads every image and 48 short clips (plus the
+long soundtrack as a media element) while the welcome shows; the Play
+button says "Loading assets" until it settles, with 6 s / 20 s bounds and
+failure permitted. `sound.js` routes every clip through Web Audio: one
+gain per clip → `ui` or `music` channel gain → destination. Spinner ticks
+are a synthesized 18 ms noise burst through a 3.2 kHz low-pass. Channel
+state lives in memory only (no localStorage, per the shell rules).
+
+**Config.** `assets/json/game-config.json` is authoritative; after an
+edit run `node games/candy-go-fish/_documents/codex-john-docs/sync-config.cjs`
+(it validates candy names first). After renaming victory MP3s run
+`sync-victory-sounds.cjs`.
+
+**Checks** (`node games/candy-go-fish/_documents/codex-john-docs/<script>`
+from the repo root): `validate-candy-names`, `verify-engine` (1,000 games
+per set size), `verify-assets` (every referenced asset exists, no unused
+tracked asset; untracked audio is ignored), `verify-victory-sounds`,
+`verify-sound-layout`, `verify-spinner-ticks`, `verify-welcome-music`,
+`verify-browser`, `verify-shell`, `verify-player-switch`,
+`verify-opponent-switch`, `verify-candy-rain-game`. The browser checks
+hard-code Playwright at `C:/Users/johnp/.cache/codex-runtimes/...` and
+Chrome at `C:/Program Files/Google/Chrome/...`; most open the page by
+`file://`, some need the local server on port 8098.
+
+**Ties to the shell** (matter for the standalone move, see
+`claudePlans/candy-go-fish-standalone-plan.md`): the helper script tag
+and one `Halloween.reportScore` call; every size in `vw`, so the page
+assumes a 9:14 viewport (`#table` is 154vw tall); `verify-assets.cjs`
+reads `../../games.json`; docs link to the requirements file two folders
+up.
+
+**Publishing (Codex's rule, confirmed by a failed build):** Pages runs
+Jekyll on this repo, so every tracked Markdown file must be valid UTF-8
+before a push, and `_`-prefixed folders are not served (harmless, they
+are docs). Cache stamp lives in five places: `APP_VERSION` in
+`app/app.js`, two `?v=` in root `index.html`, every `?v=` in the game's
+`index.html`, and the config fetch in `js/candy-go-fish.js`; the docs
+also quote it.
+
 ## 5. iPhone "app" mode
 
 - Tags: `apple-mobile-web-app-capable`, `mobile-web-app-capable`,

@@ -582,6 +582,54 @@ game.
 The game switches (Slow / Fast, Easy / Hard) were not discussed this
 stretch; 6i still holds (they apply to the next newly started game).
 
+## 6k. Candy Go Fish (slot 8; John + Codex, 2026-10-07 to 10-14; Claude from 10-14)
+
+The first real game in the app, built by John with the Codex assistant
+while Claude was not involved. **Codex's documents are the authoritative
+record of the game**, not this file:
+
+- `games/candy-go-fish/_documents/_START-HERE.md` (reading guide)
+- `.../codex-john-docs/CURRENT-STATE-2026-1014.md` (behaviour, accepted
+  decisions), `NEXT-TODOS.md`, `RULES-AND-GAMEPLAY.md`,
+  `UI-AND-PRESENTATION.md`, `ARCHITECTURE-AND-DATA.md`
+- `.../strategies-development/_START-HERE.md` (the three opponents, with
+  40,000-game validation results)
+- root `codex-john-docs/Codex-ToBe-Continued-<date>.md` (project level)
+
+**What it is.** Go Fish with ten candy types, three copies each, five
+dealt per player. Ask for a candy you hold; a match gives you one card and
+another turn; Go Fish always ends the turn, even on a lucky draw. Triples
+collect themselves. The round ends when the dish or either hand is empty
+or all ten sets are taken; most sets wins, ties possible. Score reported
+to the shell is the human's set count (text "3–2").
+
+**Decisions John made with Codex that Claude must respect:**
+- No Pause button; the game's own dialogs pause it, the shell drawer does
+  not. No timed penalties.
+- Three opponents are three real algorithms, not a difficulty number:
+  Ron + (weighted random with simple memory), Harry ++ (probability over
+  public clues), Hermione +++ (1,024-particle belief tracking). They are
+  calibrated and accepted; **do not retune without a request**.
+  Opponents never see hidden cards or the dish order. Switching opponent
+  or player character mid-round keeps the hand, score and memory.
+- Sound is the game's own job (the shell switch never reached a game).
+  The dialogs carry UI and MUSIC speaker toggles; per-sound gain 50%.
+  Music loops on the welcome, "Deal again?" and Rules dialogs, fades in
+  over 3 s and out over 2 s, and resumes where it paused.
+- Rejected and removed, do not restore: opponent-only candy spill,
+  synthesized trumpet fanfare, opening/deal click sounds, various
+  startup-flash fixes. The startup flash itself is deferred by John.
+- Original full-screen candy rain is the only game-over celebration.
+  Victory speech (36 clips: winner x loser x BIGWIN/CLOSE) starts 2 s
+  after the banner; BIGWIN is a margin of 3 or more.
+
+**2026-10-14 (Claude):** soundtrack file renamed to
+`soundtrack-music-wonderful.mp3`; `haunted` and `earth` candidates sit in
+`assets/sounds/` untracked until John chooses. **John's next step is to
+move the game out of this repo** into its own folder and GitHub repo; the
+slot 8 copy stays but is deprecated. Plan and open decisions:
+`claudePlans/candy-go-fish-standalone-plan.md`.
+
 ## 6e. games.json v2: the first proposal (2026-09-29, superseded)
 
 Kept for the reasoning. The shape actually built is in section 6 above;

@@ -14,7 +14,7 @@ Separate player/opponent earned-set sounds play with their dialogs. Game-over sc
 
 Audio: UI effects live directly in assets/sounds; speeches are in speech/goes-first and speech/victory (six starters, 36 victory clips). Victory speech has a two-second delay and replay button. UI sounds default to 50% gain. Central preparation lives in js/preload.js; playback/channel control lives in js/sound.js.
 
-Looping game-over-music.mp3 accompanies welcome, Deal again? and Rules: three-second fade to 50%, two-second fade out on closing, then pause preserving position. A fresh page load starts from zero. Welcome autoplay may require a tap on the artwork. UI and MUSIC speaker toggles appear in the upper-left/right of all three dialogs; slash means muted. Channel states carry within the page session. The shell Sound switch cannot control this game. See [audio guide](assets/sounds/README.md).
+Looping soundtrack-music-wonderful.mp3 accompanies welcome, Deal again? and Rules: three-second fade to 50%, two-second fade out on closing, then pause preserving position. A fresh page load starts from zero. Welcome autoplay may require a tap on the artwork. UI and MUSIC speaker toggles appear in the upper-left/right of all three dialogs; slash means muted. Channel states carry within the page session. The shell Sound switch cannot control this game. See [audio guide](assets/sounds/README.md).
 
 ## Preview and configuration
 
@@ -30,4 +30,4 @@ The shared [game requirements](../README%20-%20game%20design%20requirements.md) 
 
 Startup flash remains unresolved and deferred; preload is not claimed as its fix. Physical iPhone audio/first-render review remains manual. Further sound elements, visual polish and older gameplay proposals are in [NEXT-TODOS](_documents/codex-john-docs/NEXT-TODOS.md).
 
-Current publishing cache stamp: 2026-1014-audio-controls.
+Current publishing cache stamp: 2026-1014-soundtrack-rename.
