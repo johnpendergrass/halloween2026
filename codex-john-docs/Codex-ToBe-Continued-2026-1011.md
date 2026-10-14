@@ -1,3 +1,5 @@
+Historical: superseded by [October 14 continuation](Codex-ToBe-Continued-2026-1014.md).
+
 # Project continuation - October 13, 2026
 
 Current work is Candy Go Fish in games/candy-go-fish, shell slot 8. Start with [the documentation guide](../games/candy-go-fish/_documents/_START-HERE.md) and [current handoff](../games/candy-go-fish/_documents/codex-john-docs/CURRENT-STATE-2026-1013.md).

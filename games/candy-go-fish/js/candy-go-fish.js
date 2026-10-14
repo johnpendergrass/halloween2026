@@ -3,10 +3,11 @@
   // The generated companion keeps direct file:// opening functional.
   let config = window.CandyConfig;
   if (location.protocol !== 'file:') {
-    try { const response = await fetch('./assets/json/game-config.json?v=2026-1013-candy-sound'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
+    try { const response = await fetch('./assets/json/game-config.json?v=2026-1014-audio-controls'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
     catch (error) { console.warn('Using bundled candy configuration.', error); }
   }
   const piles = CandyPiles();
+  CandyPreload.start(config);
   const byId = new Map(config.candies.map(candy => [candy.id, candy]));
   const el = id => document.getElementById(id);
   const candyRain = CandyRain({ host: document.body, candies: config.candies.map(candy => './assets/candybar-images/' + candy.image) });
@@ -134,6 +135,8 @@
     el('gameOver').parentElement.classList.toggle('finished', phase === 'finished');
     document.querySelector('.wendy-portrait').classList.toggle('portrait-active', displayedTurn === 'wendy' && !state.finished);
     document.querySelector('.player-portrait').classList.toggle('portrait-active', displayedTurn === 'human' && !state.finished);
+    document.querySelector('.wendy-portrait').classList.toggle('portrait-winner', phase === 'finished' && state.winner === 'wendy');
+    document.querySelector('.player-portrait').classList.toggle('portrait-winner', phase === 'finished' && state.winner === 'human');
     for (const player of ['human', 'wendy']) {
       el(player + 'Area').classList.toggle('active', displayedTurn === player && !state.finished);
       const total = state.sets[player].length;
@@ -367,7 +370,7 @@
     candyRain.stop(); restarting = false;
     el('gameOverNew').disabled = false; el('gameOverNew').querySelector('span').textContent = 'New game';
     el('newGame').disabled = false;
-    el('overlay').classList.remove('welcoming');
+    el('overlay').classList.remove('welcoming', 'new-round');
     el('heldOpponentQuestion')?.remove();
     playerRequestWait = null;
     retainedPlayerRequest = null;
@@ -385,7 +388,6 @@
   }
   async function spinStarter() {
     if (phase !== 'pickStarter' || overlayOpen) return;
-    CandySound.play('confirmText');
     startingPlayer = Math.random() < .5 ? 'human' : 'wendy';
     phase = 'spinningStarter'; render();
     const token = generation, dish = el('centerCircle').querySelector('img');
@@ -401,13 +403,17 @@
       { transform: 'rotate(' + (target + 4) + 'deg)', offset: .97, easing: 'ease-out' },
       { transform: 'rotate(' + target + 'deg)', offset: 1 }
     ], { duration, fill: 'forwards' });
-    if (!await playVisual(animation, duration, token)) return;
+    if (!reduced) CandySound.startSpinnerTicks(animation, dish);
+    let validSpin;
+    try { validSpin = await playVisual(animation, duration, token); }
+    finally { CandySound.stopSpinnerTicks(); }
+    if (!validSpin) return;
     dish.style.transform = 'rotate(' + (startingPlayer === 'human' ? 180 : 0) + 'deg)'; animation.cancel();
     phase = 'starterReady'; render();
+    CandySound.playGoesFirst(config.players[startingPlayer].name);
   }
   function dealGame() {
     if (phase !== 'starterReady' || overlayOpen) return;
-    CandySound.play('confirmText');
     state = CandyEngine.create(config); state.turn = startingPlayer;
     memory = OpponentStrategies.createMemory('wendy');
     OpponentStrategies.initializeMemory(memory, state.hands.wendy, state.hands.human.length);
@@ -453,6 +459,7 @@
         render(); resolve();
       });
       el('overlay').classList.add('celebrating');
+      CandySound.playSetFanfare(event.player);
     });
     return token === generation;
   }
@@ -633,8 +640,24 @@
   }
   el('playerPrevious').addEventListener('click', () => switchPlayerCharacter(-1));
   el('playerNext').addEventListener('click', () => switchPlayerCharacter(1));
+  function syncAudioControls() {
+    for (const [id, category] of [['dialogUiSound', 'ui'], ['dialogMusicSound', 'music']]) {
+      const enabled = CandySound.getChannel(category).enabled;
+      el(id).setAttribute('aria-pressed', String(enabled));
+      el(id).setAttribute('aria-label', (category === 'ui' ? 'UI sounds' : 'Music') + (enabled ? ' on: turn off' : ' off: turn on'));
+    }
+  }
+  for (const [id, category] of [['dialogUiSound', 'ui'], ['dialogMusicSound', 'music']]) {
+    el(id).addEventListener('click', () => {
+      const enabled = !CandySound.getChannel(category).enabled;
+      CandySound.setChannelEnabled(category, enabled);
+      if (category === 'music' && enabled) CandySound.startWelcomeMusic();
+      syncAudioControls();
+    });
+  }
+  syncAudioControls();
   el('dialogAction').addEventListener('click', () => {
-    if (el('overlay').classList.contains('welcoming')) CandySound.play('confirmText');
+    if (['welcoming', 'new-round', 'rules'].some(name => el('overlay').classList.contains(name))) CandySound.fadeOutWelcomeMusic();
     closeAction();
   });
   el('overlay').addEventListener('click', event => {
@@ -648,18 +671,27 @@
     '<p class="rule-emphasis"><strong>THE GAME ENDS WHEN EITHER PLAYER OR THE CANDY DISH RUNS OUT OF CANDY.</strong></p>' +
     '<p><b>Most sets wins!</b></p>', 'Back to the table', () => { overlayOpen = false; el('overlay').hidden = true; el('table').inert = false; render(); el('rulesButton').focus(); });
     el('overlay').classList.add('rules');
+    CandySound.startWelcomeMusic();
   });
   el('newGame').addEventListener('click', () => {
     if (phase === 'finished') { replayAfterRain(); return; }
     showDialog('Deal again?', '<p>This will end the current round and deal a fresh hand.</p>', 'Start a new round', startGame);
+    el('overlay').classList.add('new-round');
+    CandySound.startWelcomeMusic();
     el('dialogCancel').hidden = false;
   });
   el('dialogCancel').addEventListener('click', () => {
+    if (el('overlay').classList.contains('new-round')) {
+      CandySound.fadeOutWelcomeMusic();
+      el('overlay').classList.remove('new-round');
+    }
     overlayOpen = false; el('overlay').hidden = true; el('table').inert = false; render(); el('newGame').focus();
   });
   document.addEventListener('keydown', event => {
     if (!overlayOpen || event.key !== 'Tab') return;
-    const buttons = [el('dialogAction'), ...(!el('dialogCancel').hidden ? [el('dialogCancel')] : [])];
+    const buttons = [el('dialogUiSound'), el('dialogMusicSound'), el('dialogAction'), el('dialogCancel')]
+      .filter(button => !button.disabled && button.getClientRects().length && !button.hidden);
+    if (!buttons.length) return;
     const index = buttons.indexOf(document.activeElement);
     event.preventDefault(); buttons[(index + (event.shiftKey ? -1 : 1) + buttons.length) % buttons.length].focus();
   });
@@ -671,4 +703,16 @@
   welcomeSubtitle.className = 'welcome-subtitle'; welcomeSubtitle.textContent = 'Candy Edition!';
   el('dialogTitle').append(welcomeSubtitle);
   el('overlay').classList.add('welcoming');
+  el('dialogAction').disabled = true;
+  el('dialogAction').textContent = 'Loading assets';
+  // On browsers that block autoplay, a tap on the welcome artwork unlocks
+  // music. The Play button itself still enters the game on its first click.
+  el('overlay').addEventListener('pointerdown', event => {
+    if (el('overlay').classList.contains('welcoming') && !el('dialogAction').contains(event.target) && !event.target.closest('.audio-toggle')) CandySound.startWelcomeMusic();
+  });
+  CandyPreload.whenReady().then(() => {
+    el('dialogAction').disabled = false;
+    el('dialogAction').textContent = "Let's play";
+    if (el('overlay').classList.contains('welcoming')) CandySound.startWelcomeMusic();
+  });
 })();

@@ -1,14 +1,12 @@
 # Integration, preview, verification and publishing
 
-Updated October 13, 2026. [Current handoff](CURRENT-STATE-2026-1013.md) is authoritative.
+Updated October 14, 2026. [Current handoff](CURRENT-STATE-2026-1014.md) is authoritative.
 
-Plain HTML/CSS/JS, no build. Slot 8 registers Go Fish Candy Edition and the friendly fish SVG. Shell is 9:16, game 9:14. Follow games/README - game design requirements.md, including width-relative sizing, font/touch targets and standalone support.
+Plain HTML/CSS/JS, no build. Slot 8; shell 9:16, game 9:14. Follow shared game requirements. Only ../game-helper.js links game/app; no parent messaging/storage, shell Sound/settings API or recreated toolbar. No dedicated Pause button at John's direction. Local dialogs pause; shell drawer does not.
 
-Use only ../game-helper.js score reporting. No game parent messaging/storage or shell settings/audio API. Game-owned audio now lives in js/sound.js. John prefers no dedicated Pause button: local dialogs pause, shell drawer does not. Visible audio controls and shared shell sound integration remain future work. Do not recreate the removed shell game toolbar.
+## Preview and data
 
-## Preview
-
-From repository root: python start-local/no-cache-server.py --port 8098 --bind 127.0.0.1. Reuse an existing server. URLs: http://127.0.0.1:8098/games/candy-go-fish/index.html and root shell/slot 8. Direct file opening uses generated config-data.js. After JSON edits run node games/candy-go-fish/_documents/codex-john-docs/sync-config.cjs.
+Reuse an existing server, or run python start-local/no-cache-server.py --port 8098 --bind 127.0.0.1 from repository root. Open http://127.0.0.1:8098/games/candy-go-fish/index.html and root shell/slot 8. File opening uses config-data.js. Regenerate after JSON edits with sync-config.cjs; regenerate victory catalog after MP3 filename changes with sync-victory-sounds.cjs.
 
 ## Checks
 
@@ -16,31 +14,27 @@ Run node games/candy-go-fish/_documents/codex-john-docs/<script> from repository
 
 | Script | Coverage |
 | --- | --- |
-| verify-player-switch.cjs | Boo/Mike/Sully artwork, cycling, state preservation and locks |
-| verify-candy-rain-game.cjs | Three-second delay, readable results, both replay paths drain, early cancellation |
-| verify-assets.cjs | All current static/dynamic assets exist; no unused assets remain |
-| verify-abilities-browser.cjs | All profiles, triples/quadruples, pending-request and next-decision switching |
-| verify-opponent-switch.cjs | Portraits, cycling, state preservation and dialog/game-over locks |
-| validate-candy-names.cjs | Catalog naming/normalization constraints |
-| verify-engine.cjs | Rules, privacy, conservation, final sets and 1,000 games each with triples/quadruples |
-| verify-quotes.cjs | Both actors' Yes/No, auto-countdowns, middle shortcuts, grid shortcut at three stages, retained text, dialog pause, styles, flight scale/timing |
-| verify-go-fish-reply.cjs | Each middle draw target, single draw, retained question, coral/tail direction, breathing onset/peak, dialog stopping and reduced motion |
-| verify-piles.cjs | Actual request/player-draw artwork, private Wendy wrapper sizing, pile counts and survivor stability after sets |
-| verify-browser.cjs | 338x526/547x850 layout/targets, dialogs, alternate names, full round, sets/results, replay and file opening |
-| verify-shell.cjs | Registry/icon/menu, embedded layout and game-owned controls |
-| verify-speech.cjs | Alias for current quote checks |
-| verify-speech-redraw.cjs | Quote checks with delayed fade timers and completed-animation replay detection |
+| validate-candy-names.cjs | Catalog uniqueness/normalization/required fields/length |
+| verify-engine.cjs | Rules, privacy, conservation, final sets; 1,000 games each for triples/quadruples |
+| verify-assets.cjs | Runtime/catalog references and published-source exceptions |
+| verify-victory-sounds.cjs | 36 clips, BIGWIN boundary, both directions, tie/missing silence, cancellation |
+| verify-sound-layout.cjs | 48 short sounds preload/decode; separate set paths, gain/mute, starter/deal/file opening |
+| verify-spinner-ticks.cjs | Prepared/reused buffer, initial tick, acceleration/deceleration, mute/reduced motion |
+| verify-welcome-music.cjs | Music load/loop/autoplay/gesture/missing fallback, actual fade gains, pause/resume, Rules/new-round |
+| verify-browser.cjs | Phone/desktop layout, dialogs, full rounds/results/replay and file opening |
+| verify-shell.cjs | Registry/menu/icon, iframe layout and game-owned controls |
+| verify-player-switch.cjs / verify-opponent-switch.cjs | Cycling/portraits/preserved state/dialog-game-over locks |
+| verify-candy-rain-game.cjs | Original delayed rain, results accessibility, both replay drains/early cancellation |
+| verify-abilities-browser.cjs | Accepted policies, both set sizes, switching/pending decisions |
+| verify-quotes.cjs / verify-go-fish-reply.cjs | Replies/shortcuts/retained questions/breathing/pause/reduced motion |
+| verify-piles.cjs | Public/private art, counts and survivor stability |
 
-Browser scripts use local Chrome and bundled Playwright paths hardcoded in the harness; they are not runtime dependencies. Breathing targets intentionally never become stationary: tests use pointer clicks at their centers, rather than Playwright stable-box waits. Full-round acceleration still uses the existing timer shortcut; runtime waits count nominal active ticks and are not a general elapsed-time scheduler.
-
-Screenshots are development artifacts. Tests use Chrome, not actual iPhone Safari. Timing/strategy enjoyment and iPhone compositor behavior still need device review.
+Browser checks use local Chrome and bundled Playwright paths; these are not runtime dependencies. Breathing targets require center pointer clicks rather than stable-box waits. Test full-round acceleration is not a runtime elapsed-time scheduler. Screenshots are development evidence. Physical iPhone audio/autoplay/loading/compositor review remains manual. See VERIFICATION-2026-1014.md.
 
 ## Publishing
 
-Version the game's own CSS/JS URLs and JSON fetch as well as the three shell stamps. Updating only the iframe URL does not change nested resource cache keys; after the October 12 deploy the live HTML was current but a user still saw cached game code/styles. Current game resource version: 2026-1013-candy-sound. New artwork uses new filenames; changed artwork at an existing URL also needs a new filename or version.
+Current stamp: 2026-1014-audio-controls. Synchronize APP_VERSION, both root resource stamps, game resources and JSON fetch. Changing only the iframe URL does not invalidate nested caches. Same-URL changed artwork/audio needs filename/version changes.
 
-Save documentation as UTF-8. Before publishing, strictly decode all tracked `.md`/`.MD` files as UTF-8 to catch invalid byte sequences, including Windows-1252 smart quotes and dashes. On October 12 these caused the Pages Jekyll build to fail; encoding-only fix 7f20652 restored deployment. Verify the actual Pages Actions workflow succeeds and check the live version/content; a stale Pages "building" label does not establish that a build is still running.
+Strictly decode tracked Markdown as UTF-8 before publishing; invalid Windows-1252 bytes previously failed Pages/Jekyll. Include active audio, provenance, code/docs/checks and relevant previews; exclude _DOWNLOADS/unused sources. Delete WAV masters only on John's explicit request.
 
-October 12 user requested refreshed docs, verification and commit/push of current UI and initial-deal changes. Publishing cache stamp: 2026-1013-candy-sound. October 11 appearance/piles commit: 1df4eac. Update APP_VERSION in app/app.js and both root index.html ?v= stamps together. Verify shell and game, commit intended files, push main and verify remote/local commit equality. This authorizes the present checkpoint only; obtain a new request for future pushes.
-
-Audio checks: node games/candy-go-fish/_documents/codex-john-docs/verify-victory-sounds.cjs. Refresh supplied victory clips with sync-victory-sounds.cjs. Active MP3s are published; local untracked WAVs and duplicate downloads are intentionally excluded. See the October 13 handoff.
+John authorized complete documentation, commit and push for the October 14 checkpoint. Commit intended files, push main, confirm remote equality, actual Pages Actions success and live nested stamps/assets. Stale Pages labels do not establish workflow status. Future pushes require a new request.

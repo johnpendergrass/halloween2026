@@ -1,6 +1,6 @@
 # Current rules and interaction
 
-Current October 12 implementation and folder layout: [current handoff](CURRENT-STATE-2026-1012.md). Earlier paths, prototype strategy descriptions and preview instructions below are historical where superseded.
+Current rules/paths: [October 14 handoff](CURRENT-STATE-2026-1014.md). Core rules and shortcuts below remain; older handoff links/paths are historical.
 
 Updated October 11, 2026. [Current handoff](CONTINUATION-2026-1011.md) takes precedence.
 

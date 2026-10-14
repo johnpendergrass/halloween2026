@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Go Fish Candy Edition</title>
-  <link rel="stylesheet" href="./candy-go-fish.css?v=2026-1013-candy-sound">
+  <link rel="stylesheet" href="./candy-go-fish.css?v=2026-1014-audio-controls">
 </head>
 <body>
   <main id="table">
@@ -14,7 +14,7 @@
       <div id="wendySlots" class="slots" aria-label="Wendy's completed sets"></div>
     </section>
     <section class="center-area">
-      <div id="gameOver" class="game-over" hidden role="status" aria-live="polite"><strong id="gameOverTitle"></strong><p id="gameOverReason"></p><p id="gameOverRemaining" hidden></p><p id="gameOverScore"></p><button id="gameOverNew"><span>New game</span></button><button id="gameOverReplaySound" hidden aria-label="Replay victory speech" title="Replay victory speech"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M20 17 13 23H7v8h6l7 6Z" fill="currentColor"/><path d="M25 22q7 5 0 10M28 17q13 10 0 20M10 15a17 17 0 0 1 28-3" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="m38 5 1 9-9-1" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+      <div id="gameOver" class="game-over" hidden role="status" aria-live="polite"><strong id="gameOverTitle"></strong><p id="gameOverScore"></p><p id="gameOverRemaining" hidden></p><p id="gameOverReason"></p><button id="gameOverNew"><span>New game</span></button><button id="gameOverReplaySound" hidden aria-label="Replay victory speech" title="Replay victory speech"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M20 17 13 23H7v8h6l7 6Z" fill="currentColor"/><path d="M25 22q7 5 0 10M28 17q13 10 0 20M10 15a17 17 0 0 1 28-3" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="m38 5 1 9-9-1" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
       <div class="center-controls"><div id="message" role="status" aria-live="polite">Choose a candy from your hand.</div><button id="askButton" data-speaker="human">Got any?<span>ASK WENDY</span></button><button id="centerCircle" aria-label="Draw a candy" disabled></button><button id="fishButton"><span>Player says:</span><strong>NO, GO FISH!</strong></button></div>
     </section>
     <section id="humanArea" class="player-area">
@@ -22,24 +22,25 @@
       <div class="player-heading human-heading"><span id="humanSetCount" class="portrait-score"><span>CANDY SETS</span><strong>0</strong></span><div class="player-portrait"><button id="playerPrevious" class="opponent-arrow previous" aria-label="Previous player character"><svg viewBox="0 0 60 90" aria-hidden="true"><path d="M48 3 Q34 18 35 31 Q20 38 5 45 Q20 52 35 59 Q34 72 48 87 Q42 65 45 45 Q42 25 48 3Z"/></svg></button><button id="playerNext" class="opponent-arrow next" aria-label="Next player character"><svg viewBox="0 0 60 90" aria-hidden="true"><path d="M12 3 Q26 18 25 31 Q40 38 55 45 Q40 52 25 59 Q26 72 12 87 Q18 65 15 45 Q18 25 12 3Z"/></svg></button><img class="portrait" src="./assets/player-icons/boo.png" alt="Boo" draggable="false"><strong class="portrait-name">BOO</strong></div><div id="humanPile" class="hand-pile" aria-label="Your candy hand"><img class="player-dish" src="./assets/candy-dish/black-cat-tray.png" alt="" draggable="false"><span id="humanCount" class="badge hand-count">5</span></div></div>
     </section>
   </main>
-  <div id="overlay" class="overlay"><section class="dialog" aria-modal="true" role="dialog" aria-labelledby="dialogTitle"><h1 id="dialogTitle">GO FISH!<span class="welcome-subtitle">Candy Edition!</span></h1><div id="dialogBody"><p>Ask for candies.</p><p>Pick a candy you hold to request a matching one. If <b>YES</b>, you get a candy and another turn. If <b>NO</b> match, <b class="go-fish-accent">GO FISH!</b> Draw a candy, then switch turns.</p></div><button id="dialogAction" class="primary">Let's play</button><button id="dialogCancel" class="secondary" hidden>Keep playing</button></section></div>
+  <div id="overlay" class="overlay"><section class="dialog" aria-modal="true" role="dialog" aria-labelledby="dialogTitle"><div class="dialog-audio"><button id="dialogUiSound" class="audio-toggle" aria-label="UI sounds" aria-pressed="true"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M22 10 12 19H5v10h7l10 9Z" fill="currentColor"/><path d="M28 17q9 7 0 14M33 11q16 13 0 26" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path class="mute-slash" d="M5 5 43 43" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg><span>UI</span></button><button id="dialogMusicSound" class="audio-toggle" aria-label="Music" aria-pressed="true"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M22 10 12 19H5v10h7l10 9Z" fill="currentColor"/><path d="M28 17q9 7 0 14M33 11q16 13 0 26" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path class="mute-slash" d="M5 5 43 43" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg><span>MUSIC</span></button></div><h1 id="dialogTitle">GO FISH!<span class="welcome-subtitle">Candy Edition!</span></h1><div id="dialogBody"><p>Ask for candies.</p><p>Pick a candy you hold to request a matching one. If <b>YES</b>, you get a candy and another turn. If <b>NO</b> match, <b class="go-fish-accent">GO FISH!</b> Draw a candy, then switch turns.</p></div><button id="dialogAction" class="primary">Let's play</button><button id="dialogCancel" class="secondary" hidden>Keep playing</button></section></div>
   <script src="../game-helper.js"></script>
-  <script src="./assets/json/config-data.js?v=2026-1013-candy-sound"></script>
-  <script src="./js/game-engine.js?v=2026-1013-candy-sound"></script>
-  <script src="./js/computer-player.js?v=2026-1013-candy-sound"></script>
-  <script src="./js/shared/knowledge.js?v=2026-1013-candy-sound"></script>
-  <script src="./js/shared/temporal-memory.js?v=2026-1013-candy-sound"></script>
-  <script src="./js/shared/temporal-beliefs.js?v=2026-1013-candy-sound"></script>
-  <script src="./js/strategies/beginner.js?v=2026-1013-candy-sound"></script>
-  <script src="./js/strategies/medium.js?v=2026-1013-candy-sound"></script>
-  <script src="./js/strategies/temporal.js?v=2026-1013-candy-sound"></script>
-  <script src="./js/strategies/calibrated-medium.js?v=2026-1013-candy-sound"></script>
-  <script src="./js/strategies/calibrated-expert.js?v=2026-1013-candy-sound"></script>
-  <script src="./js/strategies.js?v=2026-1013-candy-sound"></script>
-  <script src="./js/candy-rain.js?v=2026-1013-candy-sound"></script>
-  <script src="./js/candy-piles.js?v=2026-1013-candy-sound"></script>
-  <script src="./assets/sounds/victory-sounds.js?v=2026-1013-candy-sound"></script>
-  <script src="./js/sound.js?v=2026-1013-candy-sound"></script>
-  <script src="./js/candy-go-fish.js?v=2026-1013-candy-sound"></script>
+  <script src="./assets/json/config-data.js?v=2026-1014-audio-controls"></script>
+  <script src="./js/game-engine.js?v=2026-1014-audio-controls"></script>
+  <script src="./js/computer-player.js?v=2026-1014-audio-controls"></script>
+  <script src="./js/shared/knowledge.js?v=2026-1014-audio-controls"></script>
+  <script src="./js/shared/temporal-memory.js?v=2026-1014-audio-controls"></script>
+  <script src="./js/shared/temporal-beliefs.js?v=2026-1014-audio-controls"></script>
+  <script src="./js/strategies/beginner.js?v=2026-1014-audio-controls"></script>
+  <script src="./js/strategies/medium.js?v=2026-1014-audio-controls"></script>
+  <script src="./js/strategies/temporal.js?v=2026-1014-audio-controls"></script>
+  <script src="./js/strategies/calibrated-medium.js?v=2026-1014-audio-controls"></script>
+  <script src="./js/strategies/calibrated-expert.js?v=2026-1014-audio-controls"></script>
+  <script src="./js/strategies.js?v=2026-1014-audio-controls"></script>
+  <script src="./js/candy-rain.js?v=2026-1014-audio-controls"></script>
+  <script src="./js/candy-piles.js?v=2026-1014-audio-controls"></script>
+  <script src="./assets/sounds/victory-sounds.js?v=2026-1014-audio-controls"></script>
+  <script src="./js/preload.js?v=2026-1014-audio-controls"></script>
+  <script src="./js/sound.js?v=2026-1014-audio-controls"></script>
+  <script src="./js/candy-go-fish.js?v=2026-1014-audio-controls"></script>
 </body>
 </html>

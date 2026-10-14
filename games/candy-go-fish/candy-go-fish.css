@@ -23,6 +23,9 @@ button:focus-visible { outline: 0.8vw solid #ffd56c; outline-offset: 0.7vw; }
 .portrait-active::before { opacity: 1; }
 .portrait-active .portrait { box-shadow: 0 0 1.5vw 0.5vw #ffe16b99, 0 0 6vw 2vw #ffe16b66; border-color: #ffe896; }
 .portrait-active .portrait-name { box-shadow: 0 0 3vw 0.7vw #ffe16b77; color: #ffed9e; }
+.portrait-winner::before { inset: -4vw -6vw -3vw; opacity: 1; background: radial-gradient(ellipse, #fff3aaee 0%, #ffe16baa 38%, #ffd65055 58%, #ffd65000 76%); }
+.portrait-winner .portrait { border-color: #fff8cf; box-shadow: 0 0 2vw 1vw #fff5bddd, 0 0 6vw 2.5vw #ffe16baa, 0 0 10vw 4vw #ffd65066; }
+.portrait-winner .portrait-name { color: #fff8cf; box-shadow: 0 0 2vw 0.6vw #fff5bdd0, 0 0 5vw 1.5vw #ffe16baa; text-shadow: 0 0.2vw 0.4vw #0009; }
 .portrait { position: relative; transition: box-shadow 350ms, border-color 350ms; }
 .portrait-name { transition: box-shadow 350ms; }
 .portrait-score { font-weight: bold; color: #fff3cf; justify-self: center; text-align: center; line-height: 1.2; }
@@ -142,6 +145,13 @@ h2 { font-size: max(14px,4.5vw); }
 .overlay { position: fixed; inset: 0; background: #082b25dd; display: grid; place-items: center; z-index: 20; padding: 5vw; }
 .dialog { background: #f4ecd8; color: #264334; border: 0.5vw solid #d7c69c; border-radius: 5vw; padding: 6vw; width: 90vw; text-align: center; box-shadow: 0 3vw 10vw #0004; }
 .dialog .eyebrow { color: #597159; }
+.dialog-audio { display: none; justify-content: space-between; margin: -2vw -2vw 1vw; }
+.welcoming .dialog-audio, .new-round .dialog-audio, .rules .dialog-audio { display: flex; }
+.audio-toggle { width: 15vw; min-height: 13vw; display: flex; flex-direction: column; align-items: center; justify-content: center; background: transparent; color: #264334; border: 0.25vw solid transparent; border-radius: 2vw; font-size: max(12px,3.6vw); font-weight: bold; line-height: 1.35; }
+.audio-toggle svg { width: 7vw; height: 7vw; }
+.audio-toggle .mute-slash { display: none; }
+.audio-toggle[aria-pressed="false"] .mute-slash { display: block; }
+.audio-toggle:focus-visible { outline: 0.4vw solid #816321; }
 .rules .dialog { padding: 4vw; max-height: 94vh; overflow-y: auto; }
 .rules h1 { font-size: max(22px,7vw); text-transform: uppercase; margin: 0 0 3vw; }
 .rules .dialog p { font-size: max(14px,4vw); margin: 2vw 0; }

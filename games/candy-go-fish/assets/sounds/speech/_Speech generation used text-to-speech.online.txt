@@ -1,0 +1,18 @@
+to generate the voices i used:
+
+www.text-to-speech.online/en/
+
+
+used the NeerjaExpressive IN voice
+
+set for speed normal
+set for pitch -10%
+
+Output MP3
+
+
+------------
+
+Mostly fine, but had to change spelling to get it to sound better:
+
+Hermione -->  Herm io ne

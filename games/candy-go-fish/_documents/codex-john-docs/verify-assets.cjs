@@ -9,9 +9,13 @@ const config = require('../../assets/json/game-config.json');
 const referenced = new Set(['json/game-config.json', 'json/config-data.js']);
 const audioWindow = { window: {} };
 vm.runInNewContext(fs.readFileSync(path.join(root, 'assets/sounds/victory-sounds.js'), 'utf8'), audioWindow);
-for (const filename of Object.values(audioWindow.window.CandyVictorySounds)) referenced.add('sounds/victory-announcements/' + filename);
-for (const filename of ['ronBoo', 'harryMike', 'hermioneSully']) referenced.add('sounds/players-and-opponents/' + filename + '.mp3');
-referenced.add('sounds/welcome-and-start-clicks/confirmText.mp3');
+for (const filename of Object.values(audioWindow.window.CandyVictorySounds)) referenced.add('sounds/speech/victory/' + filename);
+for (const filename of ['switch-to-ron-or-boo', 'switch-to-harry-or-mike', 'switch-to-hermione-or-sully']) referenced.add('sounds/' + filename + '.mp3');
+for (const name of ['ron', 'harry', 'hermione', 'boo', 'mike', 'sully']) referenced.add('sounds/speech/goes-first/' + name + ' goes first.mp3');
+referenced.add('sounds/confirmText.mp3');
+referenced.add('sounds/winsSet-player.mp3');
+referenced.add('sounds/winsSet-opponent.mp3');
+referenced.add('sounds/game-over-music.mp3');
 for (const filename of ['index.html', 'candy-go-fish.css', 'js/candy-go-fish.js', 'js/candy-piles.js', 'js/candy-rain.js']) {
   const source = fs.readFileSync(path.join(root, filename), 'utf8');
   for (const match of source.matchAll(/\.\/assets\/([^'"\s?]+)/g)) {
@@ -32,6 +36,6 @@ for (const entry of files.filter(entry => entry.isFile())) {
   const relative = path.relative(path.join(root, 'assets'), path.join(entry.parentPath, entry.name)).replaceAll('\\', '/');
   // Local audio masters/candidates are intentionally not included in this checkpoint.
   if (relative.startsWith('sounds/') && !trackedAudio.has('assets/' + relative)) continue;
-  assert(referenced.has(relative) || ['json/README.md', 'sounds/README.md', 'sounds/startGameSpinner/spinnerDing.mp3'].includes(relative), 'Unused asset remains: ' + relative);
+  assert(referenced.has(relative) || ['json/README.md', 'sounds/README.md', 'sounds/_where-are-the-sounds-from.txt', 'sounds/speech/_Speech generation used text-to-speech.online.txt'].includes(relative), 'Unused asset remains: ' + relative);
 }
 console.log('PASS: every live asset exists; published assets are used or documented retained sources.');

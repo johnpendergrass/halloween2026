@@ -1,21 +1,23 @@
 # Current UI and presentation
 
-Current October 12 implementation and folder layout: [current handoff](CURRENT-STATE-2026-1013.md). Earlier paths, prototype strategy descriptions and preview instructions below are historical where superseded.
+Updated October 14, 2026. [Current handoff](CURRENT-STATE-2026-1014.md) is authoritative.
 
-Updated October 13, 2026. See [handoff](CONTINUATION-2026-1011.md) for complete current behavior and [next TODOs](NEXT-TODOS.md) for priorities.
+The non-scrolling 9:14 board uses the green/blue gradient, ghost main plate, green/red opponent tray/dishes and brown/yellow player dishes/cat tray. Persistent piles track card IDs; survivors keep their arrangement. Human hand is the grid, cat tray shows count. Labels read CANDY SETS; completed-set badges are enlarged. Zero-count art is faint/badges hidden. Portrait selectors preserve round state.
 
-The non-scrolling 9:14 board uses greenBlueGradient.png, two rows of five ceramic dishes per side, portraits/names and CANDY SETS. Wendy has a green/red witch tray with a persistent generic candy pile/count. The brown/yellow player cat tray is restored on the right; its count badge is horizontally centered at 75% height, below the face. Completed-set badges/checkmarks are 125% of normal size. Human grid dishes are brown/yellow; Wendy’s goal dishes are green/red, muted until completed. Zero-count human dishes/badges dim separately from candy artwork. The main dish is ghost plate v2 with an overflowing generic pile/count. Opponent active identities remain hidden. Human absent identities are faint; one/two held candies use overlapping artwork/counts. The active side/portrait glows. Side highlights are inset 1vw vertically and 0.5vw horizontally. The Candy Dish remains unidentified.
+Current-turn glow remains in play. Game-over winner portrait/name gets a larger, brighter gold halo. Ties highlight neither side; replay clears it. Title first, score second, optional remaining-dish line next, ending reason last. Final hands/replay remain visible.
 
-Speech stays in the middle: Wendy left, human right, cream questions, light-green/black Yes, muted-coral No. Speaker asks:/says: labels use normal weight and the main text color. Rounded boxes have broad curved tails: Wendy up, human down. No Fast/Slow control or speech flights remain.
+Original full-screen candy rain starts three seconds after results: 60% generic, 40% branded, original sizes/spin/drift. Both New Game actions stop new drops and drain existing ones before replay. Reduced motion is sparse/slower/nonspinning. The opponent-only spill was rejected and removed.
 
-Both answers breathe gently at 4%: 500ms still, 1000ms eased first swell, then a one-second cycle. Only answers pulse. Dialogs/acknowledgement/transfers stop it, and reduced motion disables it.
+Pumpkin-vine welcome retains dimmed artwork. Loading assets is disabled until centralized preload settles, then Let's play; failure/timeout permits play. Starter spins 3.7 seconds with rotation-linked ticks and goes-first speech at landing. Opening/deal confirmations are silent. Startup flash remains unresolved; do not restore rejected cover/visibility fixes.
 
-YES retains both boxes for four seconds or an earlier middle click; NO waits indefinitely for a middle click. Wendy-request matching slot is an immediate gift shortcut. Human selection highlight ends when its question sends.
+Welcome, Deal again? and Rules share corner speaker toggles: UI left, MUSIC right. Normal speaker means on; slash means off. Targets are at least 13vw, accessible state/labels and dialog focus are maintained. Session channel state is shared and independent. Set dialogs omit them.
 
-Candy has no source bounce/glow. All routes curve/accelerate over 1400ms and fade near arrival. Actual named candy images fly on successful requests in both directions and player Go Fish draws, rotating toward upright and scaling 100%-150%-100%. Only private opponent draws use a generic wrapper: it retains rotation/color and shrinks from its 150% midpoint to Wendy’s resting width. Reduced motion uses stationary fades.
+Those three dialogs share looping music: three-second fade to 50%, two-second fade out when closing while gameplay proceeds, pause preserving position, resume on reopening. Welcome autoplay may require an artwork tap; other dialogs originate from gestures. MUSIC mute pauses immediately; re-enable resumes/fades in. UI mute leaves music playing.
 
-Set popup and game-over banner remain functional and are next to improve. Top buttons are ceramic pumpkins with carved candlelit text: NEW GAME v2 left and RULES v3 right, matching letter heights. HTML labels are visually hidden for accessibility. The choice instruction is a 48vw-wide tail-free cream popup centered over the dish, hidden immediately on selection. Separate Wendy fishing/draw announcements are removed; her private wrapper flight remains. Further pile refinement, popup polish and sound remain upcoming work.
+Speech is centered: cream questions, green YES, coral NO, curved tails and answer breathing. YES waits four active seconds or a middle shortcut; NO waits for a middle draw click. Requested held candy is an immediate gift shortcut. Public transfers/player draws fly actual candy; opponent private draw flies generic art. Flights curve/accelerate over 1400ms, scale 100%-150%-100%, fade near arrival; reduced motion fades. No source bounce/glow.
 
-Live pile defaults and placement are detailed in the current handoff. New deals randomize size/angle/hue/brightness/position once; surviving candies do not move during redraws or set removal. A separate pile-preview.html provides visual tuning controls.
+Set dismissal is user-controlled and precedes final results when needed. Separate player/opponent set MP3s play once. Victory speech starts after two seconds, replayable from banner speaker/repeat icon. Ties/missing clips have no replay control. New Game cancels speech during rain drain.
 
-October 13 audio: character/confirmation cues and delayed victory announcements are active. The game-over banner has a bottom-right speech replay icon, hidden for missing clips/ties. UI gain defaults to 50% per sound. Spinner remains silent; music, visible audio controls and preloading remain pending.
+Choice instruction is a wide tail-free cream popup, hidden on selection. Top controls are ceramic pumpkins with carved NEW GAME/RULES text. Retired preview wrappers are absent; historical art notes preserve alternatives rather than define active files.
+
+See [audio guide](../../assets/sounds/README.md), [next work](NEXT-TODOS.md) and [verification](INTEGRATION-AND-VERIFICATION.md). Physical iPhone review remains manual.

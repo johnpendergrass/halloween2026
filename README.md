@@ -2,7 +2,7 @@
 
 A collection of Halloween mini games for phone, tablet and PC browser.
 
-**Current work (October 13, 2026):** Go Fish Candy Edition is playable in slot 8. See [project continuation](codex-john-docs/Codex-ToBe-Continued-2026-1011.md) and its [appearance/sound TODOs](games/candy-go-fish/_documents/codex-john-docs/NEXT-TODOS.md).
+**Current work (October 14, 2026):** Go Fish Candy Edition is playable in slot 8. See [current handoff](games/candy-go-fish/_documents/codex-john-docs/CURRENT-STATE-2026-1014.md), [project continuation](codex-john-docs/Codex-ToBe-Continued-2026-1014.md) and [next work](games/candy-go-fish/_documents/codex-john-docs/NEXT-TODOS.md).
 
 **Original shell template (September 2026):** The three-panel frame (top bar, game
 panel, sliding bottom panel) is the app. The games in it are demos and
@@ -67,4 +67,4 @@ Three things to know before you design (all in section 1.8 of the rules):
 Phones keep old copies of the code. Before pushing, change the version stamp
 in **three places** so they fetch fresh files: `APP_VERSION` in `app/app.js`,
 and the two `?v=` tags in `index.html`.
-October 13 sound checkpoint: character cues, opening confirmations and 18 victory speeches with a replay icon are implemented. UI per-sound gain defaults to 50%; UI/music controls exist internally but visible controls and music are pending. Spinner sound trials were reverted. John is adding more speeches; implement welcome preloading after that. See the current October 13 handoff.
+October 14 checkpoint: central preload, 36 victory speeches, six starter announcements, spinner ticking, separate set sounds, looping/resuming dialog music and UI/MUSIC controls are implemented. Opening/deal clicks are silent. Winner portraits have a brighter halo; original full-screen rainfall remains. See the current handoff.

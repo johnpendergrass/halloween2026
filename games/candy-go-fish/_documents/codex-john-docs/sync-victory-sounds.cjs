@@ -2,7 +2,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const root = path.resolve(__dirname, '../..');
-const folder = path.join(root, 'assets/sounds/victory-announcements');
+const folder = path.join(root, 'assets/sounds/speech/victory');
 const sounds = {};
 for (const file of fs.readdirSync(folder).sort()) {
   const match = file.match(/^(.+?) beats? (.+?) (BIGWIN|CLOSE) - .+\.mp3$/i);

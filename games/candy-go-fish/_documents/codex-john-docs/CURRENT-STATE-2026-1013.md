@@ -1,5 +1,7 @@
 # Candy Go Fish: current sound checkpoint
 
+Historical: superseded by [October 14 current handoff](CURRENT-STATE-2026-1014.md). Paths, clip count, silent-spinner status and pending preload/music/controls below are no longer current.
+
 Updated October 13, 2026. This handoff takes precedence over older notes. Gameplay, accepted opponent algorithms, art, character switching, welcome, starter spinner, persistent piles and candy rain retain the October 12 behavior. See CURRENT-STATE-2026-1012.md for those details; the sound statements below supersede older descriptions.
 
 ## Implemented sound

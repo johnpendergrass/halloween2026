@@ -1,3 +1,11 @@
+# Current architecture — October 14, 2026
+
+[Current handoff](CURRENT-STATE-2026-1014.md) is authoritative. Runtime controller/engine/strategy adapter live in js/candy-go-fish.js, js/game-engine.js and js/strategies.js; accepted policies/support are in js/strategies and js/shared. js/preload.js centralizes artwork inventory, image/audio loading and generated tick calculation. js/sound.js owns cached media, playback, UI/music buses, fade/resume and channel controls. js/candy-piles.js tracks physical-card arrangements; js/candy-rain.js is the original celebration. HTML loads the victory catalog, preload and sound modules before the controller. Generated config-data.js supports standalone file opening. No build, remote speech service or runtime directory listing is needed.
+
+Opponent memory is initialized at the deal and observes every request/draw regardless of active policy. Own private draws are retained; human draw identities are discarded. Selectors update profiles without replacing memory. Welcome action reflects bounded readiness. Music stays a media element with currentTime preserved across dialog visits. Settings persist only in memory.
+
+The material below is historical: root runtime paths, demo wrappers and pending audio/preload claims do not describe current files.
+
 # Architecture and data
 
 Current October 12 implementation and folder layout: [current handoff](CURRENT-STATE-2026-1012.md). Earlier paths, prototype strategy descriptions and preview instructions below are historical where superseded.

@@ -1,5 +1,7 @@
 # Candy Go Fish: current state and publishing checkpoint
 
+Historical: the authoritative state is [October 14 handoff](CURRENT-STATE-2026-1014.md).
+
 Superseded by [October 13 handoff](CURRENT-STATE-2026-1013.md) for current sound and publishing state.
 
 Updated October 12, 2026. This was the authoritative handoff for **GO FISH! — Candy Edition!** Older dated notes and snapshots are historical and may name retired previews, experiments or asset paths.

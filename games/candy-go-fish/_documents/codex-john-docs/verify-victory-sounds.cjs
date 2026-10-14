@@ -8,7 +8,7 @@ const window = { addEventListener() {} };
 const sandbox = { window, setTimeout(fn, delay) { assert.equal(delay, 2000); pending = fn; return 1; }, clearTimeout() { pending = null; } };
 vm.runInNewContext(fs.readFileSync(path.join(root, 'assets/sounds/victory-sounds.js'), 'utf8'), sandbox);
 vm.runInNewContext(fs.readFileSync(path.join(root, 'js/sound.js'), 'utf8'), sandbox);
-for (const file of Object.values(window.CandyVictorySounds)) assert(fs.existsSync(path.join(root, 'assets/sounds/victory-announcements', file)));
+for (const file of Object.values(window.CandyVictorySounds)) assert(fs.existsSync(path.join(root, 'assets/sounds/speech/victory', file)));
 const sounds = window.CandySound;
 const played = [];
 sounds.play = key => played.push(key);
@@ -20,7 +20,9 @@ for (const [winner, loser, margin, expected] of [
   assert(pending); pending();
   assert.equal(played.at(-1), 'victory:' + window.CandyVictorySounds[`${winner.toLowerCase()}|${loser.toLowerCase()}|${expected}`]);
 }
-sounds.scheduleVictory('Ron', 'Sully', 3); assert.equal(pending, null);
+assert.equal(Object.keys(window.CandyVictorySounds).length, 36);
+sounds.scheduleVictory('Ron', 'Sully', 3); assert(pending);
+sounds.scheduleVictory('Harry', 'Ron', 3); assert.equal(pending, null);
 sounds.scheduleVictory('Harry', 'Mike', 0); assert.equal(pending, null);
 sounds.scheduleVictory('Harry', 'Mike', 3); sounds.cancelVictory(); assert.equal(pending, null);
 sounds.scheduleVictory('Harry', 'Mike', 3); sounds.setChannelEnabled('ui', false); assert.equal(pending, null);

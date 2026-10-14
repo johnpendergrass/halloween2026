@@ -1,3 +1,5 @@
+Current behavior: [October 14 handoff](../../_documents/codex-john-docs/CURRENT-STATE-2026-1014.md). Sound/preload/channel configuration is owned by js/preload.js and js/sound.js, not this JSON.
+
 # Candy Go Fish configuration
 
 game-config.json is authoritative. HTTP fetches it; direct file opening/fetch failure uses generated config-data.js. Do not edit the companion independently.
@@ -6,7 +8,7 @@ game-config.json is authoritative. HTTP fetches it; direct file opening/fetch fa
 | --- | --- |
 | rules | copiesPerType 3, initialHandSize 5: 30 total, 20 initially in dish after dealing |
 | players | Names/portrait filenames for human/wendy role keys |
-| opponents | Ron/Harry/Hermione profiles with plain name, expertise displayName and character portrait path; all currently share one strategy |
+| opponents | Ron/Harry/Hermione profiles with plain name, expertise displayName and character portrait path; use the accepted beginner, medium and expert strategies respectively |
 | appearance | quoteFadeMs 250; quoteHoldMs/playerRequestHoldMs 1000; yesAutoTransferMs 4000; thinkingMs 1000; giftTravelMs 1400 and accelerating easing |
 | candyDisplay | Slot fitting/rotation/stacking, giftWidthVw 22, giftHeightVw 17, giftArcVw 22, giftMidScale 1.5, giftDissolveStart 0.82 |
 | layout | Five columns, ten ordered candy IDs |

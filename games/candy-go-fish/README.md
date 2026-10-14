@@ -1,31 +1,33 @@
 # GO FISH! — Candy Edition!
 
-Playable Halloween 2026 mini game, registered in slot 8. Open index.html for standalone play or launch through the application shell. Plain HTML/CSS/JS; HTTP and file opening work. Runtime JavaScript lives in js/, including the strategies.js adapter and strategies/shared subfolders. The development history and measured results are in [_documents/strategies-development](_documents/strategies-development/DEVELOPMENT-AND-IMPLEMENTATION.md). Old preview/demo wrappers, experimental policies and simulation programs have been removed.
+Playable Halloween 2026 mini game, shell slot 8. Plain HTML/CSS/JavaScript, no framework or build. HTTP and direct index.html opening work.
 
-Start with [current handoff](_documents/codex-john-docs/CURRENT-STATE-2026-1013.md) and [next TODOs](_documents/codex-john-docs/NEXT-TODOS.md).
+Start with [_documents/_START-HERE.md](_documents/_START-HERE.md) and the authoritative [October 14 handoff](_documents/codex-john-docs/CURRENT-STATE-2026-1014.md). Older design/handoff notes are historical where superseded.
 
-The welcome now uses a pumpkin-vine frame and corner dishes, accented uppercase GO FISH! and a smaller Candy Edition! subheading. It stays until Let's play is clicked, then opens the starter spinner. The help screen emphasizes fishing ends a turn even after drawing a match, and empty hands/dish end the game. Boo, Mike and Sully cycle through player portraits without resetting the round. The smaller earned-set popup keeps its existing dismissal behavior.
+Ten candy types, three copies each, five dealt per player without completed opening sets. Successful requests transfer one card and keep the turn. Triples collect automatically; fishing always ends the turn. Empty hand/dish or all sets ends the round after any final-set celebration. Most sets wins. Good Fish is not implemented.
 
-Game-over candy rain begins after three seconds. Either New Game control stops new drops and waits for remaining candy to finish falling before replay. The temporary rain demo has been removed. The startup flash remains unresolved; attempted loading fixes were reverted and the issue is deferred in NEXT-TODOS.md.
+Boo/Mike/Sully are player characters; Ron +, Harry ++ and Hermione +++ use the accepted beginner/medium/expert algorithms. Mid-round switching preserves hands, scores and all observations since the initial deal. Strategies never see hidden player cards or dish order. See [strategy documentation](_documents/strategies-development/_START-HERE.md).
 
-Ten types, three copies each, five initially dealt per player with no completed sets in either opening hand. Request a held type; one-candy success keeps the turn. Triples collect automatically. Fishing currently always ends the turn; the proposed Good Fish rule is not implemented. Empty dish/hand or all sets ends the round after possible final-set collection.
+The pumpkin-vine welcome keeps dimmed game art behind it. Loading assets changes to Let's play after preload settles, with bounded failure fallback. Starter spinner lasts 3.7 seconds; soft ticks follow its actual rotation, then the selected character's goes-first speech plays. Opening/deal clicks are silent. YES holds four active seconds or a middle shortcut; NO waits for a draw click. Requested held candy shortcuts an opponent request. Persistent piles and curved candy flights remain.
 
-Both YES answers retain question/reply for four seconds, then transfer automatically; either middle text box or the Candy Dish shortcuts it. Both NO answers wait for a middle click to draw. Tapping a requested held candy during Wendy's request is an immediate gift shortcut.
+Separate player/opponent earned-set sounds play with their dialogs. Game-over score is second and ending reason last; winner portrait/name gets a larger gold halo. Original full-screen candy rain is the only celebration, including opponent wins. Replay drains active drops and clears the halo. The rejected opponent-spill experiment is removed.
 
-Quotes fade in place; cream question, light-green Yes, coral No. Curved tails indicate speaker. Answers gently breathe while waiting. Candy travels on a curve without source bounce, scaling 100%-150%-100% with an end fade.
+Audio: UI effects live directly in assets/sounds; speeches are in speech/goes-first and speech/victory (six starters, 36 victory clips). Victory speech has a two-second delay and replay button. UI sounds default to 50% gain. Central preparation lives in js/preload.js; playback/channel control lives in js/sound.js.
 
-Current artwork uses the green/blue gradient, ghost main plate, green/red Wendy tray/dishes and brown/yellow player dishes. Persistent generic piles track actual card IDs; player footer has the restored brown/yellow cat tray with a lowered count badge. Score labels read CANDY SETS; completed-set badges are 125% size. Main wrappers overflow the rim slightly; survivors keep their positions when cards move or collect into sets. Requests in either direction and player draws fly actual candy images; only Wendy’s private draw flies a generic wrapper, resizing to her tray.
+Looping game-over-music.mp3 accompanies welcome, Deal again? and Rules: three-second fade to 50%, two-second fade out on closing, then pause preserving position. A fresh page load starts from zero. Welcome autoplay may require a tap on the artwork. UI and MUSIC speaker toggles appear in the upper-left/right of all three dialogs; slash means muted. Channel states carry within the page session. The shell Sound switch cannot control this game. See [audio guide](assets/sounds/README.md).
 
-Current priorities: improve earned-set/game-over popups, refine pile appearance, then sound. The choice instruction is a tail-free cream popup over the dish; top buttons are ceramic pumpkins with carved candlelit NEW GAME and RULES labels. See [verification/integration](_documents/codex-john-docs/INTEGRATION-AND-VERIFICATION.md) and [configuration](assets/json/README.md).
+## Preview and configuration
 
-## Preview
+Reuse an existing server, or run from repository root:
 
-From repository root: python start-local/no-cache-server.py --port 8098 --bind 127.0.0.1. Reuse an existing server.
+    python start-local/no-cache-server.py --port 8098 --bind 127.0.0.1
 
-## Requirements exception
+Open http://127.0.0.1:8098/games/candy-go-fish/index.html or the root shell/slot 8. game-config.json is authoritative; regenerate assets/json/config-data.js using _documents/codex-john-docs/sync-config.cjs after edits. See [configuration](assets/json/README.md) and [verification](_documents/codex-john-docs/INTEGRATION-AND-VERIFICATION.md).
 
-The shared [game requirements](../README%20-%20game%20design%20requirements.md) are authoritative. At John's direction there is no dedicated Pause button. Local dialogs pause presentation, but the shell drawer does not notify/pause the game. There are no timed penalties. Game controls remain inside the game; score reporting uses only the existing helper.
+## Requirements and remaining work
 
-Opponent arrows cycle Ron +, Harry ++ and Hermione +++, using separate character portraits. Plain names are used in speech/results. Switching preserves the round and is locked only during dialogs/game-over. Ron, Harry and Hermione use the calibrated beginner, medium and expert strategies. Larger portraits keep original name text size; see _documents/codex-john-docs/PORTRAIT-SIZE-DEMO-2026-1012.md for the one-file layout fallback.
+The shared [game requirements](../README%20-%20game%20design%20requirements.md) are authoritative. At John's direction there is no dedicated Pause button. Local dialogs pause presentation; the shell drawer does not notify/pause the game. There are no timed penalties. The helper is the only game/shell link.
 
-Character cues, opening confirmations and 18 indexed victory speeches use the UI channel at 50% per-sound gain. Game-over speech starts after two seconds and can be repeated with the banner speaker button. Spinner rotation stays silent. Preloading waits until John supplies the remaining speeches.
+Startup flash remains unresolved and deferred; preload is not claimed as its fix. Physical iPhone audio/first-render review remains manual. Further sound elements, visual polish and older gameplay proposals are in [NEXT-TODOS](_documents/codex-john-docs/NEXT-TODOS.md).
+
+Current publishing cache stamp: 2026-1014-audio-controls.
