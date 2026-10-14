@@ -1,8 +1,8 @@
 # Candy Go Fish — documentation index
 
-Updated October 12, 2026.
+Updated October 13, 2026.
 
-Start with [current handoff](CURRENT-STATE-2026-1012.md), then [next TODOs](NEXT-TODOS.md). The current handoff describes the installed strategies, cleaned folder layout and remaining appearance/sound work.
+Start with [current handoff](CURRENT-STATE-2026-1013.md), then [next TODOs](NEXT-TODOS.md). The current handoff describes the installed strategies, cleaned folder layout and remaining appearance/sound work.
 
 - [Rules and gameplay](RULES-AND-GAMEPLAY.md)
 - [Opponent selector (historical design)](OPPONENT-SELECTION-2026-1012.md)

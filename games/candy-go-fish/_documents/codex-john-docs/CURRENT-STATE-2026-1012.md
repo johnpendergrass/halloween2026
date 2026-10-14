@@ -1,6 +1,14 @@
 # Candy Go Fish: current state and publishing checkpoint
 
-Updated October 12, 2026. This is the authoritative handoff for **GO FISH! — Candy Edition!** Older dated notes and snapshots are historical and may name retired previews, experiments or asset paths.
+Superseded by [October 13 handoff](CURRENT-STATE-2026-1013.md) for current sound and publishing state.
+
+Updated October 12, 2026. This was the authoritative handoff for **GO FISH! — Candy Edition!** Older dated notes and snapshots are historical and may name retired previews, experiments or asset paths.
+
+## October 13: first sound element
+
+Switching to Ron or Boo plays ronBoo.mp3; Harry or Mike plays harryMike.mp3; Hermione or Sully plays hermioneSully.mp3 from assets/sounds/players-and-opponents/. Runtime cues are 128 kbps stereo MP3 conversions; original WAVs remain as editing masters. Both arrow directions play the newly selected character's cue. Initial portraits are silent. Rapid switches replace the previous cue.
+
+js/sound.js owns playback and defaults to ON. The future global sound control can call CandySound.setEnabled(boolean); OFF immediately stops playing cues and blocks further playback. No global switch is implemented yet. Playback runs from the selector click for phone activation; blocked audio does not interrupt selection. Other game events remain silent.
 
 ## Welcome and help
 
@@ -55,3 +63,19 @@ Checks cover catalog/asset references, engine privacy/conservation and 1,000 gam
 Current publishing stamp: 2026-1012-candy-welcome. John authorized a full documentation update, demo removal, commit and push. Validate UTF-8 before publishing because invalid characters previously blocked Pages. Confirm remote equality, workflow success and live resource paths. New summary folders must have _START-HERE.md or an obvious contents guide.
 
 Remaining work: deferred startup flash, human play feel, further celebration/pile refinement and coordinated sound design. John accepted the strategies; tune further only when new evidence or requested work calls for it.
+
+Sound volume default: all cues use Web Audio gain 0.5 (50% signal amplitude). js/sound.js has a shared defaultVolume and a soundVolumes override map for individual tuning as new sounds are added. Device volume remains under user control. Chrome verification confirmed all three gain values and mute behavior; iPhone listening review remains manual.
+
+Audio categories: ui and music have independent enabled/volume state and Web Audio gain buses. Character-selection cues are UI. Future controls use CandySound.setChannelEnabled(category, boolean), setChannelVolume(category, 0..1), and getChannel(category). Both channels default ON at full channel gain; individual sounds still default to 50%, preserving current levels. Signal path: per-sound gain, category gain, device volume. UI switching stops only UI clips, leaving future music independent. No music asset or visible controls are added yet.
+
+Opening confirmation cue: confirmText.mp3 (128 kbps; original WAV retained) in assets/sounds/welcome-and-start-clicks/ plays for welcome Let's play, accepted choose-starting-player action, and accepted goes-first/start action. Either the starter message or dish uses the same guarded action, preventing duplicate cues while spinning. This is a UI cue at the default 50% per-sound gain. Other dialog confirmations remain silent for now.
+
+
+Spinner audio trial reverted at John's request: the tray rotation is silent again, with its original 3.7-second timing. Existing confirmText opening clicks and character-selection cues remain. vehicleCar.mp3 is retained as a supplied asset but is not used.
+
+
+SpinnerStart/ding trial reverted at John's request. Spinner rotation is silent with original timing; confirmation clicks remain. The existing spinnerDing.mp3 is retained in assets/sounds/startGameSpinner/ for possible use elsewhere (not currently played).
+
+Victory speech (October 13): 18 supplied clips indexed from assets/sounds/victory-announcements/. Two seconds after game-over presentation, winner/loser names and set margin select BIGWIN (3+ sets) or CLOSE (1-2 sets). Ties and missing combinations are silent. Speech is UI audio at default 50% gain. Replay cancels pending/playing speech immediately, including during rain drain; new rounds, UI/global mute and page exit also cancel it. Catalog script sync-victory-sounds.cjs generates assets/sounds/victory-sounds.js for HTTP and standalone file opening: re-run when adding/renaming clips. Naming is winner beats loser BIGWIN/CLOSE - description.mp3; beat is accepted too. Current source typo book is mapped to Boo without renaming. Name-only subfolder is not used. verify-victory-sounds.cjs checks catalog, threshold, both winner directions, silence and cancellation; browser check confirmed actual Harry-over-Mike game-over timing and MP3 decoding.
+
+Victory replay: bottom-right banner button shows a speaker with a curved repeat arrow, with a 13vw touch target and accessible Replay victory speech label. It appears only for results with an indexed speech clip. Clicking cancels any pending automatic announcement and restarts that result's speech immediately; audio still respects UI/global mute and volume. New-game rain drain disables the button. Phone/desktop browser checks verified layout, non-overlap with New game, immediate/repeated playback and cancellation of the initial two-second timer.

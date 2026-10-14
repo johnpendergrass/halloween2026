@@ -3,7 +3,7 @@
   // The generated companion keeps direct file:// opening functional.
   let config = window.CandyConfig;
   if (location.protocol !== 'file:') {
-    try { const response = await fetch('./assets/json/game-config.json?v=2026-1012-candy-welcome'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
+    try { const response = await fetch('./assets/json/game-config.json?v=2026-1013-candy-sound'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
     catch (error) { console.warn('Using bundled candy configuration.', error); }
   }
   const piles = CandyPiles();
@@ -363,6 +363,7 @@
     candy.remove(); return valid;
   }
   function startGame() {
+    CandySound.cancelVictory();
     candyRain.stop(); restarting = false;
     el('gameOverNew').disabled = false; el('gameOverNew').querySelector('span').textContent = 'New game';
     el('newGame').disabled = false;
@@ -384,6 +385,7 @@
   }
   async function spinStarter() {
     if (phase !== 'pickStarter' || overlayOpen) return;
+    CandySound.play('confirmText');
     startingPlayer = Math.random() < .5 ? 'human' : 'wendy';
     phase = 'spinningStarter'; render();
     const token = generation, dish = el('centerCircle').querySelector('img');
@@ -405,6 +407,7 @@
   }
   function dealGame() {
     if (phase !== 'starterReady' || overlayOpen) return;
+    CandySound.play('confirmText');
     state = CandyEngine.create(config); state.turn = startingPlayer;
     memory = OpponentStrategies.createMemory('wendy');
     OpponentStrategies.initializeMemory(memory, state.hands.wendy, state.hands.human.length);
@@ -425,6 +428,14 @@
     el('gameOverRemaining').textContent = 'Candy Dish had ' + remaining + ' left.';
     el('gameOverScore').textContent = humanName + ' had ' + state.sets.human.length + (state.sets.human.length === 1 ? ' candy set; ' : ' candy sets; ') + opponentName + ' had ' + state.sets.wendy.length + '.';
     candyRain.start(3000);
+    el('gameOverReplaySound').hidden = true;
+    el('gameOverReplaySound').disabled = false;
+    if (state.winner === 'human' || state.winner === 'wendy') {
+      const humanWon = state.winner === 'human';
+      CandySound.scheduleVictory(humanWon ? humanName : opponentName, humanWon ? opponentName : humanName,
+        Math.abs(state.sets.human.length - state.sets.wendy.length));
+      el('gameOverReplaySound').hidden = !CandySound.hasVictorySpeech;
+    }
   }
   function showDialog(title, body, action, callback) {
     el('overlay').classList.remove('celebrating', 'rules');
@@ -567,7 +578,9 @@
   });
   async function replayAfterRain() {
     if (phase !== 'finished' || restarting) return;
+    CandySound.cancelVictory();
     restarting = true;
+    el('gameOverReplaySound').disabled = true;
     const token = generation;
     el('gameOverNew').disabled = true; el('gameOverNew').querySelector('span').textContent = 'Finishing…';
     el('newGame').disabled = true;
@@ -575,12 +588,16 @@
     if (token === generation) startGame();
   }
   el('gameOverNew').addEventListener('click', replayAfterRain);
+  el('gameOverReplaySound').addEventListener('click', () => {
+    if (phase === 'finished' && !restarting) CandySound.replayVictory();
+  });
   function switchOpponent(direction) {
     if (overlayOpen || phase === 'finished' || opponents.length < 2) return;
     const previousName = opponentName;
     opponentIndex = (opponentIndex + direction + opponents.length) % opponents.length;
     Object.assign(config.players.wendy, opponents[opponentIndex]);
     opponentName = config.players.wendy.name;
+    CandySound.playCharacter(opponentName);
     document.querySelector('.wendy-portrait .portrait-name').textContent = (config.players.wendy.displayName || opponentName).toUpperCase();
     const portrait = document.querySelector('.wendy-portrait .portrait');
     portrait.src = './assets/' + config.players.wendy.portrait; portrait.alt = opponentName;
@@ -602,6 +619,7 @@
     playerCharacterIndex = (playerCharacterIndex + direction + playerCharacters.length) % playerCharacters.length;
     Object.assign(config.players.human, playerCharacters[playerCharacterIndex]);
     humanName = config.players.human.name;
+    CandySound.playCharacter(humanName);
     document.querySelector('.player-portrait .portrait-name').textContent = humanName.toUpperCase();
     const portrait = document.querySelector('.player-portrait .portrait');
     portrait.src = './assets/' + config.players.human.portrait; portrait.alt = humanName;
@@ -615,7 +633,10 @@
   }
   el('playerPrevious').addEventListener('click', () => switchPlayerCharacter(-1));
   el('playerNext').addEventListener('click', () => switchPlayerCharacter(1));
-  el('dialogAction').addEventListener('click', () => closeAction());
+  el('dialogAction').addEventListener('click', () => {
+    if (el('overlay').classList.contains('welcoming')) CandySound.play('confirmText');
+    closeAction();
+  });
   el('overlay').addEventListener('click', event => {
     if (event.target === el('overlay') && el('overlay').classList.contains('celebrating')) closeAction();
   });

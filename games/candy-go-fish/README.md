@@ -2,7 +2,7 @@
 
 Playable Halloween 2026 mini game, registered in slot 8. Open index.html for standalone play or launch through the application shell. Plain HTML/CSS/JS; HTTP and file opening work. Runtime JavaScript lives in js/, including the strategies.js adapter and strategies/shared subfolders. The development history and measured results are in [_documents/strategies-development](_documents/strategies-development/DEVELOPMENT-AND-IMPLEMENTATION.md). Old preview/demo wrappers, experimental policies and simulation programs have been removed.
 
-Start with [current handoff](_documents/codex-john-docs/CURRENT-STATE-2026-1012.md) and [next TODOs](_documents/codex-john-docs/NEXT-TODOS.md).
+Start with [current handoff](_documents/codex-john-docs/CURRENT-STATE-2026-1013.md) and [next TODOs](_documents/codex-john-docs/NEXT-TODOS.md).
 
 The welcome now uses a pumpkin-vine frame and corner dishes, accented uppercase GO FISH! and a smaller Candy Edition! subheading. It stays until Let's play is clicked, then opens the starter spinner. The help screen emphasizes fishing ends a turn even after drawing a match, and empty hands/dish end the game. Boo, Mike and Sully cycle through player portraits without resetting the round. The smaller earned-set popup keeps its existing dismissal behavior.
 
@@ -27,3 +27,5 @@ From repository root: python start-local/no-cache-server.py --port 8098 --bind 1
 The shared [game requirements](../README%20-%20game%20design%20requirements.md) are authoritative. At John's direction there is no dedicated Pause button. Local dialogs pause presentation, but the shell drawer does not notify/pause the game. There are no timed penalties. Game controls remain inside the game; score reporting uses only the existing helper.
 
 Opponent arrows cycle Ron +, Harry ++ and Hermione +++, using separate character portraits. Plain names are used in speech/results. Switching preserves the round and is locked only during dialogs/game-over. Ron, Harry and Hermione use the calibrated beginner, medium and expert strategies. Larger portraits keep original name text size; see _documents/codex-john-docs/PORTRAIT-SIZE-DEMO-2026-1012.md for the one-file layout fallback.
+
+Character cues, opening confirmations and 18 indexed victory speeches use the UI channel at 50% per-sound gain. Game-over speech starts after two seconds and can be repeated with the banner speaker button. Spinner rotation stays silent. Preloading waits until John supplies the remaining speeches.
