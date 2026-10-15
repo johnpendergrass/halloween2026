@@ -657,6 +657,36 @@ plan stays on file for later.
   starting `halloween2026:<folder>:`; the bare `halloween2026:<folder>`
   note stays the shell's. The helper comment and app.js note say the same.
 
+**2026-10-15 afternoon (John + Claude).** John wrote a todo list of eleven
+items (recorded in the game's `NEXT-TODOS.md`); items 1, 7 and the welcome
+half of 11 were built the same day:
+- **Candies per set (item 11, welcome half).** A two-way slider switch on
+  the welcome, just above Let's play: "Three candies per set" with three
+  red generic bars, "Four candies per set" with four blue bars, bars
+  angled 30 degrees and tucked together so the switch stays 60vw wide
+  with room around it. Two visual clues to the choice, by John's design:
+  a cream thumb slides under the chosen side and a green check sits on
+  that side's top-right corner. Four-candy sets deal one more card to
+  each player (six). The choice is remembered. Both sizes were audited
+  and tested first; nothing in the engine, strategies or screen hard-codes
+  three. Still to do: the same switch on Deal again?.
+- **The same slider style** replaced the checkbox on the Music popup's
+  Play switch, so both switches read the same way.
+- **Remembered characters (item 1).** The last opponent and player
+  character survive a reload or app restart, restored silently before the
+  welcome. New Game already kept them within a session.
+- **Speaker buttons.** John supplied a speaker photo. The UI and MUSIC
+  buttons show it with a bold label centred below in the page font and the
+  dark green of the welcome subtitle; a red slash crosses the speaker
+  when off. Two rejected variants: the label in white inside the cone
+  (unreadable with the slash) and dark green inside the cone.
+- **Welcome layout.** Taller box: speakers lower, clear of the vines;
+  switch below the text; breathing room under Let's play.
+- **Candy leaving the dish (item 7).** A candy the player gives now leaves
+  the dish the moment it starts flying, not when the next message shows.
+- **Internal role key.** The engine still calls whichever opponent is
+  showing `wendy`; John knows, and a rename is a separate question.
+
 ## 6e. games.json v2: the first proposal (2026-09-29, superseded)
 
 Kept for the reasoning. The shape actually built is in section 6 above;

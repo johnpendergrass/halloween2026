@@ -6,7 +6,7 @@
   let settled = false;
   const failures = [];
   const artwork = [
-    'backgrounds/green-blue-gradient.png', 'buttons/ceramic-pumpkin-new-game.png',
+    'backgrounds/green-blue-gradient.png', 'buttons/ceramic-pumpkin-new-game.png', 'buttons/speaker-grill.png',
     'buttons/ceramic-pumpkin-rules.png', 'candy-dish/ghost-plate.png',
     'candy-dish/witch-tray.png', 'candy-dish/black-cat-tray.png',
     'candy-dish/player-grid-dish.png', 'candy-dish/opponent-grid-dish.png',

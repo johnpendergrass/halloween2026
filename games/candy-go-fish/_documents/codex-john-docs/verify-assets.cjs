@@ -38,6 +38,6 @@ for (const entry of files.filter(entry => entry.isFile())) {
   const relative = path.relative(path.join(root, 'assets'), path.join(entry.parentPath, entry.name)).replaceAll('\\', '/');
   // Local audio masters/candidates are intentionally not included in this checkpoint.
   if (relative.startsWith('sounds/') && !trackedAudio.has('assets/' + relative)) continue;
-  assert(referenced.has(relative) || ['json/README.md', 'sounds/README.md', 'sounds/_where-are-the-sounds-from.txt', 'sounds/speech/_Speech generation used text-to-speech.online.txt'].includes(relative), 'Unused asset remains: ' + relative);
+  assert(referenced.has(relative) || ['json/README.md', 'sounds/README.md', 'sounds/_where-are-the-sounds-from.txt', 'sounds/speech/_where the speech generation came from.txt'].includes(relative), 'Unused asset remains: ' + relative);
 }
 console.log('PASS: every live asset exists; published assets are used or documented retained sources.');

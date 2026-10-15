@@ -147,23 +147,44 @@ h2 { font-size: max(14px,4.5vw); }
 .dialog .eyebrow { color: #597159; }
 .dialog-audio { display: none; justify-content: space-between; margin: -2vw -2vw 1vw; }
 .welcoming .dialog-audio, .new-round .dialog-audio, .rules .dialog-audio { display: flex; }
-.audio-toggle { width: 15vw; min-height: 13vw; display: flex; flex-direction: column; align-items: center; justify-content: center; background: transparent; color: #264334; border: 0.25vw solid transparent; border-radius: 2vw; font-size: max(12px,3.6vw); font-weight: bold; line-height: 1.35; }
-.audio-toggle svg { width: 7vw; height: 7vw; }
-.audio-toggle .mute-slash { display: none; }
-.audio-toggle[aria-pressed="false"] .mute-slash, .audio-toggle.is-off .mute-slash { display: block; }
+/* On the welcome the speaker buttons sit lower, clear of the vine border (John, 2026-10-15). */
+.welcoming .dialog-audio { margin-top: 1.6vw; }
+/* Speaker buttons (John's speaker-grill.png, 2026-10-15): the bold label sits
+   centred below the speaker in the page font, and a red slash crosses the
+   speaker alone when that channel is off. */
+.audio-toggle { position: relative; width: 15vw; min-height: 13vw; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 0.5vw; background: transparent; color: #264334; border: 0.25vw solid transparent; border-radius: 2vw; font-size: max(12px,3.6vw); font-weight: bold; line-height: 1.2; }
+.audio-toggle img { width: 11vw; height: 11vw; object-fit: contain; filter: drop-shadow(0 0.4vw 0.5vw #0005); }
+.audio-toggle::after { content: ''; position: absolute; top: 5.5vw; left: 50%; display: none; width: 12.5vw; height: 1.3vw; background: #d93a2b; border-radius: 1vw; transform: translate(-50%, -50%) rotate(-45deg); box-shadow: 0 0 0.5vw #0008; pointer-events: none; }
+.audio-toggle[aria-pressed="false"]::after, .audio-toggle.is-off::after { display: block; }
 /* Music popup: a second overlay above the dialog overlay, as tall as the Rules box (94vh). */
 .music-options { z-index: 30; background: #082b25f2; }
 .music-options .dialog { width: 90vw; height: 94vh; padding: 5vw; display: flex; flex-direction: column; }
 .music-options h1 { font-size: max(22px,7vw); margin: 0 0 3vw; }
 .music-row { display: flex; align-items: center; justify-content: space-between; gap: 3vw; margin: 3vw 0; font-size: max(14px,4.5vw); font-weight: bold; }
 .music-row .audio-toggle { width: 18vw; }
+.music-row .audio-toggle img { width: 12vw; height: 12vw; }
+.music-row .audio-toggle::after { top: 6vw; width: 13.5vw; }
 .track-picker { position: relative; display: flex; align-items: center; justify-content: center; width: 54vw; min-height: 13vw; padding: 0 12vw; box-sizing: border-box; background: #285b43; color: #fff4d5; border-radius: 3vw; }
 .track-picker .opponent-arrow { top: 0; height: 100%; }
 .track-picker .opponent-arrow.previous { left: 0; }
 .track-picker .opponent-arrow.next { right: 0; }
-.mode-switch { display: flex; width: 54vw; box-sizing: border-box; border: 0.5vw solid #285b43; border-radius: 3vw; overflow: hidden; }
-.mode-switch button { flex: 1; min-height: 12vw; padding: 0 1vw; background: transparent; color: #285b43; font-weight: bold; font-size: max(12px,3.6vw); }
-.mode-switch button[aria-pressed="true"] { background: #285b43; color: #fff4d5; }
+/* Two-way slider switch (John, 2026-10-15): two visual clues to the chosen side,
+   a cream thumb that slides under it and a green check in its top-right corner.
+   Used for candies-per-set on the welcome and for the Play mode in the Music popup. */
+.two-way { position: relative; display: flex; box-sizing: border-box; padding: 0.6vw; background: #c9d8c3; border: 0.4vw solid #285b43; border-radius: 3vw; }
+.two-way-thumb { position: absolute; top: 0.6vw; bottom: 0.6vw; left: 0.6vw; width: calc(50% - 0.6vw); background: #fff8e6; border-radius: 2.2vw; box-shadow: 0 0.4vw 0.8vw #0003; transition: transform .25s ease; }
+.two-way[data-selected="1"] .two-way-thumb { transform: translateX(100%); }
+.two-way button { position: relative; z-index: 1; flex: 1; min-height: 12vw; padding: 1vw 1.2vw; background: transparent; color: #5f7a62; font-weight: bold; font-size: max(12px,3.3vw); line-height: 1.2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.6vw; }
+.two-way button[aria-pressed="true"] { color: #264334; }
+.two-way button[aria-pressed="true"]::after { content: ''; position: absolute; top: -1.6vw; right: -1.6vw; width: 4.6vw; height: 4.6vw; border-radius: 50%; border: 0.4vw solid #fff8e6; box-sizing: border-box; background: #2f8f4e url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 12l5 5 11-11' fill='none' stroke='%23fff8e6' stroke-width='4.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 72% no-repeat; box-shadow: 0 0.2vw 0.4vw #0004; }
+.two-way-line { display: flex; align-items: center; gap: 0.7vw; }
+.two-way-line img { width: 4.2vw; height: 2.1vw; object-fit: contain; filter: drop-shadow(0 .15vw .2vw #0006); transform: rotate(-30deg); }
+.two-way-line img + img { margin-left: -1.6vw; }
+@media (prefers-reduced-motion: reduce) { .two-way-thumb { transition: none; } }
+.mode-switch { width: 64vw; }
+.mode-switch button { white-space: nowrap; }
+#setSizeChoice { display: none; width: 60vw; margin: 3.6vw auto 2.2vw; }
+.welcoming #setSizeChoice { display: flex; }
 .volume-row { flex-direction: column; align-items: stretch; gap: 1vw; }
 .volume-row input { width: 100%; height: 13vw; margin: 0; accent-color: #285b43; }
 .music-actions { margin-top: auto; display: flex; justify-content: space-between; gap: 3vw; }
@@ -174,7 +195,7 @@ h2 { font-size: max(14px,4.5vw); }
 .rules .dialog p { font-size: max(14px,4vw); margin: 2vw 0; }
 .rules .rule-emphasis { background: #e2e6cf; border-left: 0.7vw solid #617447; border-radius: 1vw; padding: 1.5vw 2vw; }
 .rules .primary { min-height: 13vw; margin-top: 2vw; }
-.welcoming .dialog { position: relative; width: 79.2vw; padding: 5.28vw 5.28vw 7.7vw; border-color: #32271d; isolation: isolate; }
+.welcoming .dialog { position: relative; width: 79.2vw; padding: 5.28vw 5.28vw 11vw; border-color: #32271d; isolation: isolate; }
 .welcoming h1 { position: relative; white-space: pre-line; font-size: max(23.1px,6.3vw); margin: 2.64vw 0 3.52vw; color: #df721d; -webkit-text-stroke: 0.7px #111; paint-order: stroke fill; text-shadow: 0 0.35vw 0.25vw #244b37; }
 .welcoming .welcome-subtitle { display: block; font-size: max(18px,4.8vw); margin-top: 1vw; color: #264334; -webkit-text-stroke: 0; text-shadow: none; }
 .welcoming .go-fish-accent { color: #df721d; -webkit-text-stroke: 0.5px #111; paint-order: stroke fill; text-shadow: 0 0.18vw 0.18vw #244b3780; }

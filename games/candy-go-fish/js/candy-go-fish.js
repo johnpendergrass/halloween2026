@@ -3,7 +3,7 @@
   // The generated companion keeps direct file:// opening functional.
   let config = window.CandyConfig;
   if (location.protocol !== 'file:') {
-    try { const response = await fetch('./assets/json/game-config.json?v=2026-1015-music-popup'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
+    try { const response = await fetch('./assets/json/game-config.json?v=2026-1015-set-size-speakers'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
     catch (error) { console.warn('Using bundled candy configuration.', error); }
   }
   const piles = CandyPiles();
@@ -12,11 +12,33 @@
   const el = id => document.getElementById(id);
   const candyRain = CandyRain({ host: document.body, candies: config.candies.map(candy => './assets/candybar-images/' + candy.image) });
   let restarting = false;
-  let humanName = config.players.human.name;
   const playerCharacters = config.playerCharacters || [config.players.human];
+  const opponents = config.opponents || [config.players.wendy];
+  // ---- Remembering who played last ----------------------------------------
+  // New Game keeps the chosen opponent and player character on its own; this
+  // note makes them survive a reload or an app restart too (John, 2026-10-15,
+  // item 1). Same key family and the same care as the music note: every read
+  // and write is wrapped, and an unknown name is simply ignored.
+  const PLAYERS_STORAGE_KEY = 'halloween2026:candy-go-fish:players';
+  function savePlayers() {
+    try { localStorage.setItem(PLAYERS_STORAGE_KEY, JSON.stringify({ opponent: opponentName, player: humanName })); }
+    catch (error) { console.warn('Player choices were not saved in this browser.', error); }
+  }
+  function restorePlayers() {
+    let saved;
+    try { saved = JSON.parse(localStorage.getItem(PLAYERS_STORAGE_KEY)); } catch (_) { saved = null; }
+    if (!saved || typeof saved !== 'object') return;
+    // Applied before anything is drawn, so there is no cue sound and nothing
+    // to rename: the table simply starts with the remembered characters.
+    const player = playerCharacters.find(character => character.name === saved.player);
+    const opponent = opponents.find(character => character.name === saved.opponent);
+    if (player) Object.assign(config.players.human, player);
+    if (opponent) Object.assign(config.players.wendy, opponent);
+  }
+  restorePlayers();
+  let humanName = config.players.human.name;
   let playerCharacterIndex = Math.max(0, playerCharacters.findIndex(player => player.name === humanName));
   let opponentName = config.players.wendy.name;
-  const opponents = config.opponents || [config.players.wendy];
   let opponentIndex = Math.max(0, opponents.findIndex(player => player.name === opponentName));
   function escapeMarkup(value) { return value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;'); }
   document.querySelector('.player-portrait .portrait-name').textContent = humanName.toUpperCase();
@@ -520,7 +542,11 @@
       setMessageSpeaker(actor === 'human' ? 'wendy' : 'human');
       const source = actor === 'human' ? el('wendyPile') : el('human-' + type);
       const destination = actor === 'human' ? el('human-' + type) : el('wendyPile');
-      piles.render(state);
+      // When the human gives a candy, redraw the whole board now, so the candy
+      // leaves the player's dish (and the count drops) the moment it starts
+      // flying rather than when the next message appears (John, 2026-10-15).
+      // When the human receives, only the piles redraw: the slot fills on arrival.
+      if (actor === 'wendy') render(); else piles.render(state);
       const flight = fly(type, pileFlight.source, piles.destination(transferringCard, destination), false, token);
       retainedPlayerRequest = null;
       el('askButton').hidden = true;
@@ -604,6 +630,7 @@
     opponentIndex = (opponentIndex + direction + opponents.length) % opponents.length;
     Object.assign(config.players.wendy, opponents[opponentIndex]);
     opponentName = config.players.wendy.name;
+    savePlayers();
     CandySound.playCharacter(opponentName);
     document.querySelector('.wendy-portrait .portrait-name').textContent = (config.players.wendy.displayName || opponentName).toUpperCase();
     const portrait = document.querySelector('.wendy-portrait .portrait');
@@ -626,6 +653,7 @@
     playerCharacterIndex = (playerCharacterIndex + direction + playerCharacters.length) % playerCharacters.length;
     Object.assign(config.players.human, playerCharacters[playerCharacterIndex]);
     humanName = config.players.human.name;
+    savePlayers();
     CandySound.playCharacter(humanName);
     document.querySelector('.player-portrait .portrait-name').textContent = humanName.toUpperCase();
     const portrait = document.querySelector('.player-portrait .portrait');
@@ -683,6 +711,7 @@
     el('trackName').textContent = CandySound.musicTracks.find(track => track.id === settings.track).name;
     el('modePaused').setAttribute('aria-pressed', String(settings.mode === 'paused'));
     el('modeContinuous').setAttribute('aria-pressed', String(settings.mode === 'continuous'));
+    el('modeChoice').dataset.selected = settings.mode === 'continuous' ? '1' : '0';
     // Slider stops 0 to 100 in steps of 20; sound.js scales the top a third
     // above the level the game first shipped with.
     el('musicVolume').value = Math.round(settings.volume * 100);
@@ -719,7 +748,7 @@
   for (const [id, mode] of [['modePaused', 'paused'], ['modeContinuous', 'continuous']]) {
     el(id).addEventListener('click', () => { CandySound.setMusicMode(mode); syncMusicPopup(); });
   }
-  el('musicCancel').addEventListener('click', () => { applyMusicSettings(musicBefore); closeMusicPopup(); });
+  el('musicCancel').addEventListener('click', () => { applyMusicSettings(musicBefore); syncMusicPopup(); closeMusicPopup(); });
   el('musicDone').addEventListener('click', () => { closeMusicPopup(); saveSoundSettings(); });
 
   // ---- Remembering the sound settings --------------------------------------
@@ -782,13 +811,40 @@
     if (!overlayOpen || event.key !== 'Tab') return;
     // Tab cycles within the popup while it is open, otherwise within the dialog.
     const controls = el('musicOverlay').hidden
-      ? [el('dialogUiSound'), el('dialogMusicSound'), el('dialogAction'), el('dialogCancel')]
+      ? [el('dialogUiSound'), el('dialogMusicSound'), el('setSizeThree'), el('setSizeFour'), el('dialogAction'), el('dialogCancel')]
       : [el('musicEnabled'), el('trackPrevious'), el('trackNext'), el('modePaused'), el('modeContinuous'), el('musicVolume'), el('musicCancel'), el('musicDone')];
     const buttons = controls.filter(button => !button.disabled && button.getClientRects().length && !button.hidden);
     if (!buttons.length) return;
     const index = buttons.indexOf(document.activeElement);
     event.preventDefault(); buttons[(index + (event.shiftKey ? -1 : 1) + buttons.length) % buttons.length].focus();
   });
+  // ---- Candies per set (John, 2026-10-15) -----------------------------------
+  // The welcome offers three or four candies per set. The engine, strategies,
+  // texts and hand art all read config.rules, so the choice only has to be
+  // written there before the next round is dealt. Four-candy sets deal one
+  // more card to each player. The choice is remembered like the other notes.
+  const baseRules = { ...config.rules };
+  const SET_SIZE_STORAGE_KEY = 'halloween2026:candy-go-fish:rules';
+  function applySetSize(copies) {
+    config.rules.copiesPerType = copies;
+    config.rules.initialHandSize = baseRules.initialHandSize + (copies - baseRules.copiesPerType);
+    el('setSizeChoice').dataset.selected = copies === 4 ? '1' : '0';
+    el('setSizeThree').setAttribute('aria-pressed', String(copies === 3));
+    el('setSizeFour').setAttribute('aria-pressed', String(copies === 4));
+  }
+  function saveSetSize() {
+    try { localStorage.setItem(SET_SIZE_STORAGE_KEY, JSON.stringify({ copiesPerType: config.rules.copiesPerType })); }
+    catch (error) { console.warn('The candies-per-set choice was not saved in this browser.', error); }
+  }
+  function restoreSetSize() {
+    let saved;
+    try { saved = JSON.parse(localStorage.getItem(SET_SIZE_STORAGE_KEY)); } catch (_) { saved = null; }
+    applySetSize(saved?.copiesPerType === 4 ? 4 : baseRules.copiesPerType);
+  }
+  for (const [id, copies] of [['setSizeThree', 3], ['setSizeFour', 4]]) {
+    el(id).addEventListener('click', () => { applySetSize(copies); saveSetSize(); });
+  }
+  restoreSetSize();
   buildSlots();
   addEventListener('pagehide', () => candyRain.stop());
   startGame();

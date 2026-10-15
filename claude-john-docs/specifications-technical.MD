@@ -579,6 +579,59 @@ startup with every field validated (unknown tune, out-of-range volume or
 bad JSON are ignored). Both are wrapped in try/catch so a browser that
 refuses storage still starts the game.
 
+**Candies per set (2026-10-15).** `config.rules.copiesPerType` is the
+single source: `engine.create` builds the deck from it, every strategy
+reads it from the view (`view.copiesPerType`), the Rules and celebration
+texts read `state.copies`, and the hand art stacks up to three images.
+`applySetSize(copies)` in `candy-go-fish.js` writes `copiesPerType` and
+`initialHandSize = base + (copies - baseCopies)` into `config.rules`,
+which the next `startGame` / `dealGame` picks up; `baseRules` is a copy of
+the file's values taken at load. Saved under
+`halloween2026:candy-go-fish:rules` as `{ copiesPerType }`; only 4 is
+honoured, anything else means the file default. The switch `#setSizeChoice`
+lives in the dialog markup between `#dialogBody` and `#dialogAction` and is
+shown by CSS only under `.welcoming` (add `.new-round` for Deal again?).
+Audit numbers: 300 simulated games per opponent per size, opponent win
+rates 60/66/83 percent at four copies against a random human versus
+58/58/76 at three; four-copy games average 47 requests versus 28.
+
+**Two-way slider switch (CSS).** `.two-way` is a flex row with a
+`.two-way-thumb` span absolutely positioned under the first half;
+`data-selected="1"` on the group translates the thumb by 100 percent
+(0.25 s, none under reduced motion). The pressed button
+(`aria-pressed="true"`) gets the dark text and a `::after` green circle with
+a cream check at `top/right: -1.6vw`, outside the button box, so it never
+overlaps the candy bars. JS sets `data-selected` and both `aria-pressed`
+values together (`applySetSize`, `syncMusicPopup`).
+
+**Remembered characters.** `halloween2026:candy-go-fish:players` holds
+`{ opponent, player }` (names). `restorePlayers()` runs before the
+module-level `humanName` / `opponentName` are read, so it simply
+`Object.assign`s the matching entries from `config.playerCharacters` and
+`config.opponents` into `config.players.human/wendy`; no cue sound, no
+renaming. Each switch function calls `savePlayers()`.
+
+**Speaker buttons.** `.audio-toggle` is a flex column: the 11vw image,
+then the label. The slash is the button's `::after`, absolutely centred on
+the image (`top: 5.5vw`) and shown by `aria-pressed="false"` (UI toggle,
+popup ON/OFF) or `.is-off` (the MUSIC button, which opens the popup).
+Lesson: an `img` with a CSS `filter` forms a stacking context and paints
+above later in-flow siblings; anything meant to sit over such an image
+needs `position: relative; z-index`.
+
+**Give-path redraw.** In `resolveRequest`, when the actor is the opponent
+(the human gives), `render()` runs before `fly()` instead of only
+`piles.render(state)`; the flight's source rectangle was snapshotted by
+`piles.begin` beforehand, so the redraw does not move it.
+
+**Stale checks.** `verify-go-fish-reply.cjs` (clicks Let's play and expects
+a selectable hand; the starter spinner now comes first) and
+`verify-quotes.cjs` (expects "Wendy asks:") fail on any current code and
+are not part of Codex's October 13/14 pass lists. Item 10 in
+`NEXT-TODOS.md`. The throwaway Playwright scripts written on 2026-10-15
+(give path, players note, set size, popup, four-copy UI rounds, node
+simulation) were not kept; their shape is described in the handoff.
+
 **Config.** `assets/json/game-config.json` is authoritative; after an
 edit run `node games/candy-go-fish/_documents/codex-john-docs/sync-config.cjs`
 (it validates candy names first). After renaming victory MP3s run
