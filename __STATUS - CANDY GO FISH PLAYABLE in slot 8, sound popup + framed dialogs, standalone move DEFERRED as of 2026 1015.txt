@@ -1,0 +1,23 @@
+Halloween 2026 - project status (the glance; details in claude-john-docs/ and codex-john-docs/)
+
+2026 1015 late  John + Claude: Sound popup (UI + music settings in one place, John's sketch
+              layout, vine frame, fits a phone without scrolling); vine frame on Deal again?
+              and Rules; set-size switch on Deal again? too; candy-bar NEW GAME / ?? SOUND
+              buttons; "NAME (you)"; soundtrack after the victory speech (Paused mode).
+              Stamp 2026-1015-sound-popup-frames, committed + pushed.
+2026 1015 pm  John + Claude: candy leaves dish at once; characters remembered; Three/Four
+              candies per set on the welcome; speaker-photo buttons; taller welcome.
+2026 1015 am  John + Claude: standalone move DEFERRED (plan kept on file). Music popup.
+2026 1014 pm  John + Claude: read Codex work, soundtrack renamed, standalone plan written.
+2026 1007-14  John + Codex: Candy Go Fish built in games/candy-go-fish, slot 8.
+2026 0927-30  Frame, panels, iframe games, games.json v2, board of 2 x 4 cells.
+
+NOT YET
+ - iPhone review: Sound popup, framed dialogs, candy-bar buttons, game-over music, preload time
+ - where settings live (John: revisit later); John's list items 2, 3, 6, 10
+   (games/candy-go-fish/_documents/codex-john-docs/NEXT-TODOS.md)
+ - shell: Sound option A or B never chosen; Sound + game switches still change nothing
+ - standalone move: deferred, plan in claude-john-docs/claudePlans/
+
+DETAIL  claude-john-docs/Claude-ToBe-Continued-2026-1015-1507.MD
+        games/candy-go-fish/_documents/codex-john-docs/CURRENT-STATE-2026-1015.md

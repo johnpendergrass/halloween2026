@@ -11,7 +11,8 @@ const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary
       await page.goto('file:///' + path.resolve(__dirname, '../../index.html').replaceAll('\\', '/'));
       await page.locator('#overlay.welcoming #dialogAction').click();
       await page.locator('.opening-action').waitFor();
-      const name = () => page.locator('.player-portrait .portrait-name').textContent();
+      // The table label carries " (you)" after the name (John, 2026-10-15).
+      const name = () => page.locator('.player-portrait .portrait-name').textContent().then(text => text.replace(' (you)', ''));
       assert.equal(await name(), 'BOO');
       async function checkPortrait(filename) {
         const image = page.locator('.player-portrait .portrait');

@@ -1,5 +1,7 @@
 # Claude — To Be Continued (2026-10-15 12:56)
 
+Superseded later the same afternoon by `Claude-ToBe-Continued-2026-1015-1507.MD`.
+
 Third checkpoint of 2026-10-15 (the morning one, `...-1015-1140.MD`, has
 the Music popup detail and John's eleven-item todo list). Read first:
 `games/candy-go-fish/_documents/codex-john-docs/CURRENT-STATE-2026-1015.md`

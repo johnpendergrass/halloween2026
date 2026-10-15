@@ -687,6 +687,56 @@ half of 11 were built the same day:
 - **Internal role key.** The engine still calls whichever opponent is
   showing `wendy`; John knows, and a rename is a separate question.
 
+**2026-10-15 later afternoon (John + Claude).** Items 4, 9 and the rest
+of 11 from John's list, plus a run of visual decisions:
+- **Every dialog wears the welcome frame.** Deal again? and Rules got the
+  vine-and-plate frame (John: "the same style treatment"). Deal again?
+  kept its text and button placement ("the overall text and button
+  placement is fine") but grew taller so the speaker clears the vine and
+  there is room under Keep playing. Rules shrank its type a little and
+  gained side padding so the shaded boxes and the button stay off the
+  vines; its speaker and title moved down 2vw and the gap under the title
+  shrank by the same amount. John dropped "Tap the Candy Dish to draw one
+  candy" from the rules text.
+- **One SOUND button, one Sound popup.** John: "I am concerned about
+  having various settings spread out all over." The UI speaker left the
+  three dialogs; a single speaker labelled SOUND at the top right opens
+  the popup, now called Sound, which holds UI sounds, music on/off, the
+  soundtrack, when to play and volume. Its layout follows John's sketch
+  (`games/candy-go-fish/design ideas/Sound requester layout.png`): title
+  SOUNDS; UI and MUSIC speakers side by side; a MUSIC SOUNDTRACK section
+  with each control below and to the right of its label; the volume
+  slider with tick numbers 0 to 100 instead of a live percentage; boxed
+  CANCEL and filled CONFIRM. The speaker toggles have no ON/OFF label: a
+  steady green glow means on (John asked for a pulse, then preferred a
+  still glow), the red slash means off. "Always" sits left, "Paused"
+  right. Controls were then made shorter and narrower, the fields spaced
+  out, the labels indented, and the popup sized to its content so it
+  never scrolls on a phone (the first framed version pushed the buttons
+  off John's screen; now only the rows scroll, on screens shorter than
+  the content).
+- **Candy-bar top buttons.** NEW GAME and RULES stopped being ceramic
+  pumpkins: they are the generic candy bar, tinted the light teal green
+  of the top of the table gradient, with the words printed on the
+  wrapper. John relabelled the right one "?? / SOUND", since Rules is
+  where the SOUND speaker lives. The pumpkins moved to the unused folder.
+- **"(you)".** The player's label under their portrait reads, for
+  example, "MIKE (you)", and the game-over title says "Mike (you) wins!"
+  when the player wins. Nowhere else: not the score line, the speech or
+  the bubbles. (John first wrote "Ron (you)", then: "I meant Mike (you)
+  cause Ron is never you.")
+- **Game-over soundtrack (item 4).** After the victory speech, about a
+  second of silence, then, only when music is on and in Paused mode, the
+  soundtrack ramps up and plays until the player taps New game. John's
+  framing: "add the victory screen, after the spoken words, as play when
+  paused event." Always mode needs nothing because the music is already
+  playing. With no speech the music comes in after three seconds.
+- **Settings inventory**, at John's request: UI sounds, music on/off,
+  soundtrack, when to play, volume (all in the Sound popup, reachable from
+  the welcome, Deal again? and Rules), candies per set (welcome and Deal
+  again?), and the opponent/player arrows on the table. Nothing else is a
+  setting. John: "we will revisit that issue later."
+
 ## 6e. games.json v2: the first proposal (2026-09-29, superseded)
 
 Kept for the reasoning. The shape actually built is in section 6 above;

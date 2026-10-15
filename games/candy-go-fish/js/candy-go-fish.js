@@ -3,7 +3,7 @@
   // The generated companion keeps direct file:// opening functional.
   let config = window.CandyConfig;
   if (location.protocol !== 'file:') {
-    try { const response = await fetch('./assets/json/game-config.json?v=2026-1015-set-size-speakers'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
+    try { const response = await fetch('./assets/json/game-config.json?v=2026-1015-sound-popup-frames'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
     catch (error) { console.warn('Using bundled candy configuration.', error); }
   }
   const piles = CandyPiles();
@@ -41,7 +41,10 @@
   let opponentName = config.players.wendy.name;
   let opponentIndex = Math.max(0, opponents.findIndex(player => player.name === opponentName));
   function escapeMarkup(value) { return value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;'); }
-  document.querySelector('.player-portrait .portrait-name').textContent = humanName.toUpperCase();
+  // On the table the player's name carries " (you)" (John, 2026-10-15). Everywhere
+  // else (game over, speech, labels) the plain name is used.
+  function showTableName() { document.querySelector('.player-portrait .portrait-name').textContent = humanName.toUpperCase() + ' (you)'; }
+  showTableName();
   document.querySelector('.wendy-portrait .portrait-name').textContent = (config.players.wendy.displayName || opponentName).toUpperCase();
   for (const [player, selector] of [['human', '.player-portrait'], ['wendy', '.wendy-portrait']]) {
     const portrait = document.querySelector(selector + ' .portrait');
@@ -444,7 +447,8 @@
   function finishGame() {
     phase = 'finished'; selected = null; render();
     if (!reported) { Halloween.reportScore(state.sets.human.length, state.sets.human.length + '–' + state.sets.wendy.length); reported = true; }
-    const title = state.winner === 'human' ? humanName + ' wins!' : state.winner === 'wendy' ? opponentName + ' wins!' : 'A sweet tie!';
+    // The player's win is announced with " (you)", as on the table (John, 2026-10-15).
+    const title = state.winner === 'human' ? humanName + ' (you) wins!' : state.winner === 'wendy' ? opponentName + ' wins!' : 'A sweet tie!';
     const remaining = state.pile.length + (state.pile.length === 1 ? ' candy' : ' candies');
     const handEnding = !state.hands.wendy.length && !state.hands.human.length ? 'Both players ran out of candies' :
       !state.hands.wendy.length ? opponentName + ' ran out of candies' : humanName + ' ran out of candies';
@@ -464,6 +468,10 @@
         Math.abs(state.sets.human.length - state.sets.wendy.length));
       el('gameOverReplaySound').hidden = !CandySound.hasVictorySpeech;
     }
+    // In "paused" mode the soundtrack ramps up a second after the victory
+    // speech (or after a short pause when there is no speech) and plays
+    // until New game is tapped.
+    CandySound.scheduleGameOverMusic();
   }
   function showDialog(title, body, action, callback) {
     el('overlay').classList.remove('celebrating', 'rules');
@@ -612,6 +620,7 @@
   async function replayAfterRain() {
     if (phase !== 'finished' || restarting) return;
     CandySound.cancelVictory();
+    CandySound.fadeOutWelcomeMusic(); // the game-over soundtrack (paused mode) fades while the candy rain drains
     restarting = true;
     el('gameOverReplaySound').disabled = true;
     const token = generation;
@@ -655,7 +664,7 @@
     humanName = config.players.human.name;
     savePlayers();
     CandySound.playCharacter(humanName);
-    document.querySelector('.player-portrait .portrait-name').textContent = humanName.toUpperCase();
+    showTableName();
     const portrait = document.querySelector('.player-portrait .portrait');
     portrait.src = './assets/' + config.players.human.portrait; portrait.alt = humanName;
     for (const host of document.querySelectorAll('#message, #askButton, #fishButton, #heldOpponentQuestion, .stationary-speech')) {
@@ -668,54 +677,51 @@
   }
   el('playerPrevious').addEventListener('click', () => switchPlayerCharacter(-1));
   el('playerNext').addEventListener('click', () => switchPlayerCharacter(1));
-  // The two speaker buttons on the welcome, Deal again? and Rules dialogs.
-  // UI is a plain on/off toggle. MUSIC only shows the state (slash = off)
-  // and opens the Music popup, where the real controls live.
+  // The SOUND speaker on the welcome, Deal again? and Rules dialogs only shows
+  // the state (slash = both channels off) and opens the Sound popup, where
+  // every sound setting lives (John, 2026-10-15).
   function syncAudioControls() {
-    const ui = CandySound.getChannel('ui').enabled;
-    el('dialogUiSound').setAttribute('aria-pressed', String(ui));
-    el('dialogUiSound').setAttribute('aria-label', 'UI sounds' + (ui ? ' on: turn off' : ' off: turn on'));
-    const music = CandySound.getChannel('music').enabled;
-    el('dialogMusicSound').classList.toggle('is-off', !music);
-    el('dialogMusicSound').setAttribute('aria-label', 'Music options (music ' + (music ? 'on' : 'off') + ')');
+    const ui = CandySound.getChannel('ui').enabled, music = CandySound.getChannel('music').enabled;
+    el('dialogSound').classList.toggle('is-off', !ui && !music);
+    el('dialogSound').setAttribute('aria-label', 'Sound options (UI sounds ' + (ui ? 'on' : 'off') + ', music ' + (music ? 'on' : 'off') + ')');
   }
-  el('dialogUiSound').addEventListener('click', () => {
-    CandySound.setChannelEnabled('ui', !CandySound.getChannel('ui').enabled);
-    syncAudioControls();
-    saveSoundSettings();
-  });
 
-  // ---- The Music popup ----------------------------------------------------
-  // Changes apply immediately so the player can hear them. Cancel puts back
-  // what was in force when the popup opened; Done simply closes it.
+  // ---- The Sound popup ----------------------------------------------------
+  // UI sounds, music on/off, soundtrack, when to play and volume. Changes
+  // apply immediately so the player can hear them. Cancel puts back what was
+  // in force when the popup opened; DONE closes it and saves.
   let musicBefore = null;
   const trackIds = CandySound.musicTracks.map(track => track.id);
   function musicSettings() {
     const channel = CandySound.getChannel('music');
-    return { enabled: channel.enabled, volume: channel.volume, track: CandySound.currentTrack, mode: CandySound.musicMode };
+    return { enabled: channel.enabled, volume: channel.volume, track: CandySound.currentTrack, mode: CandySound.musicMode, ui: CandySound.getChannel('ui').enabled };
   }
   function applyMusicSettings(settings) {
     CandySound.selectTrack(settings.track);
     CandySound.setMusicMode(settings.mode);
     CandySound.setChannelVolume('music', settings.volume);
+    CandySound.setChannelEnabled('ui', settings.ui);
     if (settings.enabled !== CandySound.getChannel('music').enabled) {
       CandySound.setChannelEnabled('music', settings.enabled);
       if (settings.enabled) CandySound.startWelcomeMusic();
     }
   }
+  // A speaker toggle in the popup: green glow when on (CSS), red slash when off.
+  function syncToggle(id, name, on) {
+    el(id).setAttribute('aria-pressed', String(on));
+    el(id).setAttribute('aria-label', name + (on ? ' on: turn off' : ' off: turn on'));
+  }
   function syncMusicPopup() {
     const settings = musicSettings();
-    el('musicEnabled').setAttribute('aria-pressed', String(settings.enabled));
-    el('musicEnabled').querySelector('span').textContent = settings.enabled ? 'ON' : 'OFF';
-    el('musicEnabled').setAttribute('aria-label', 'Music ' + (settings.enabled ? 'on: turn off' : 'off: turn on'));
+    syncToggle('uiEnabled', 'UI sounds', settings.ui);
+    syncToggle('musicEnabled', 'Music', settings.enabled);
     el('trackName').textContent = CandySound.musicTracks.find(track => track.id === settings.track).name;
     el('modePaused').setAttribute('aria-pressed', String(settings.mode === 'paused'));
     el('modeContinuous').setAttribute('aria-pressed', String(settings.mode === 'continuous'));
-    el('modeChoice').dataset.selected = settings.mode === 'continuous' ? '1' : '0';
+    el('modeChoice').dataset.selected = settings.mode === 'continuous' ? '0' : '1'; // Always sits left, Paused right
     // Slider stops 0 to 100 in steps of 20; sound.js scales the top a third
     // above the level the game first shipped with.
     el('musicVolume').value = Math.round(settings.volume * 100);
-    el('musicVolumeValue').textContent = el('musicVolume').value;
   }
   function openMusicPopup() {
     musicBefore = musicSettings();
@@ -727,9 +733,13 @@
     el('musicOverlay').hidden = true;
     musicBefore = null;
     syncAudioControls();
-    el('dialogMusicSound').focus();
+    el('dialogSound').focus();
   }
-  el('dialogMusicSound').addEventListener('click', openMusicPopup);
+  el('dialogSound').addEventListener('click', openMusicPopup);
+  el('uiEnabled').addEventListener('click', () => {
+    CandySound.setChannelEnabled('ui', !CandySound.getChannel('ui').enabled);
+    syncMusicPopup();
+  });
   el('musicEnabled').addEventListener('click', () => {
     applyMusicSettings({ ...musicSettings(), enabled: !CandySound.getChannel('music').enabled });
     syncMusicPopup();
@@ -743,7 +753,6 @@
   }
   el('musicVolume').addEventListener('input', () => {
     CandySound.setChannelVolume('music', Number(el('musicVolume').value) / 100);
-    el('musicVolumeValue').textContent = el('musicVolume').value;
   });
   for (const [id, mode] of [['modePaused', 'paused'], ['modeContinuous', 'continuous']]) {
     el(id).addEventListener('click', () => { CandySound.setMusicMode(mode); syncMusicPopup(); });
@@ -753,13 +762,13 @@
 
   // ---- Remembering the sound settings --------------------------------------
   // One small note in this browser's storage, written when the player taps
-  // Done in the popup or the UI toggle. The key starts with the shell's
+  // DONE in the Sound popup. The key starts with the shell's
   // prefix and the game folder, as "README - game design requirements" rule
   // 21 allows; the bare "halloween2026:candy-go-fish" note belongs to the
   // shell (scores and switches) and is never touched here.
   const SOUND_STORAGE_KEY = 'halloween2026:candy-go-fish:music';
   function saveSoundSettings() {
-    try { localStorage.setItem(SOUND_STORAGE_KEY, JSON.stringify({ ...musicSettings(), ui: CandySound.getChannel('ui').enabled })); }
+    try { localStorage.setItem(SOUND_STORAGE_KEY, JSON.stringify(musicSettings())); }
     catch (error) { console.warn('Sound settings were not saved in this browser.', error); }
   }
   function restoreSoundSettings() {
@@ -785,7 +794,7 @@
   });
   el('rulesButton').addEventListener('click', () => { if (restarting) return; showDialog('How to play',
     '<p><b>Your turn:</b> Select a candy you hold to request a matching one.</p>' +
-    '<p>If the other player has it, you get one of theirs and ask again. If not, <b>GO FISH!</b> Tap the Candy Dish to draw one candy.</p>' +
+    '<p>If the other player has it, you get one of theirs and ask again. If not, <b>GO FISH!</b></p>' +
     '<p class="rule-emphasis"><strong>YOUR TURN ENDS WHEN YOU HAVE TO GO FISH, FOR ANY REASON.</strong><br>Even if you draw a match!</p>' +
     '<p>Collect sets of <b>' + state.copies + ' matching candies</b>.</p>' +
     '<p class="rule-emphasis"><strong>THE GAME ENDS WHEN EITHER PLAYER OR THE CANDY DISH RUNS OUT OF CANDY.</strong></p>' +
@@ -795,6 +804,9 @@
   });
   el('newGame').addEventListener('click', () => {
     if (phase === 'finished') { replayAfterRain(); return; }
+    // The candies-per-set switch shows here too (CSS shows it under .new-round).
+    // startGame reads config.rules when it deals, so a change made here is
+    // used by the new round; Keep playing leaves the current round as it is.
     showDialog('Deal again?', '<p>This will end the current round and deal a fresh hand.</p>', 'Start a new round', startGame);
     el('overlay').classList.add('new-round');
     CandySound.startWelcomeMusic();
@@ -811,8 +823,8 @@
     if (!overlayOpen || event.key !== 'Tab') return;
     // Tab cycles within the popup while it is open, otherwise within the dialog.
     const controls = el('musicOverlay').hidden
-      ? [el('dialogUiSound'), el('dialogMusicSound'), el('setSizeThree'), el('setSizeFour'), el('dialogAction'), el('dialogCancel')]
-      : [el('musicEnabled'), el('trackPrevious'), el('trackNext'), el('modePaused'), el('modeContinuous'), el('musicVolume'), el('musicCancel'), el('musicDone')];
+      ? [el('dialogSound'), el('setSizeThree'), el('setSizeFour'), el('dialogAction'), el('dialogCancel')]
+      : [el('uiEnabled'), el('musicEnabled'), el('trackPrevious'), el('trackNext'), el('modeContinuous'), el('modePaused'), el('musicVolume'), el('musicCancel'), el('musicDone')];
     const buttons = controls.filter(button => !button.disabled && button.getClientRects().length && !button.hidden);
     if (!buttons.length) return;
     const index = buttons.indexOf(document.activeElement);

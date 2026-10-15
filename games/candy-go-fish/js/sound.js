@@ -25,6 +25,18 @@
   let enabled = true;
   let victoryTimer;
   let victorySound = null;
+  // Game over music (John, 2026-10-15): about a second after the victory speech
+  // ends, the soundtrack ramps up, but only in "paused" mode (in continuous
+  // mode it is already playing). It keeps playing until New game is tapped.
+  let victoryMusicTimer = null;
+  let victorySpeechPending = false; // a speech is scheduled, so it decides when the music starts
+  function victoryMusicAfter(ms) {
+    clearTimeout(victoryMusicTimer);
+    victoryMusicTimer = setTimeout(() => {
+      victoryMusicTimer = null;
+      if (musicMode === 'paused') window.CandySound.startWelcomeMusic();
+    }, ms);
+  }
   let spinnerFrame = null;
   let tickBuffer;
   // The dialog soundtrack. Three tunes; the player picks one in the Music
@@ -113,6 +125,7 @@
 
   function cancelVictory() {
     clearTimeout(victoryTimer);
+    clearTimeout(victoryMusicTimer); victoryMusicTimer = null; victorySpeechPending = false;
     for (const [key, { clip }] of clips) {
       if (key.startsWith('victory:')) { clip.pause(); clip.currentTime = 0; }
     }
@@ -273,7 +286,23 @@
       const filename = (window.CandyVictorySounds || {})[key];
       if (!filename) return; // Incomplete combinations intentionally stay silent.
       victorySound = 'victory:' + filename;
-      if (enabled && channels.ui.enabled) victoryTimer = setTimeout(() => this.play(victorySound), 2000);
+      if (enabled && channels.ui.enabled) {
+        victorySpeechPending = true;
+        victoryTimer = setTimeout(() => {
+          const clip = this.play(victorySound)?.clip;
+          if (!clip) { victoryMusicAfter(4000); return; }
+          // The soundtrack follows a second after the speech ends. A fallback
+          // timer covers a phone that silently refuses to play the clip.
+          const length = Number.isFinite(clip.duration) && clip.duration > 0 ? clip.duration * 1000 : 5000;
+          victoryMusicAfter(length + 1000);
+          clip.onended = () => victoryMusicAfter(1000);
+        }, 2000);
+      }
+    },
+    // Game over without a victory speech (a tie, UI sounds off, or no clip
+    // for this pairing): the soundtrack still comes in after a short pause.
+    scheduleGameOverMusic() {
+      if (!victorySpeechPending) victoryMusicAfter(3000);
     },
     playCharacter(name) {
       this.play(characterSounds[name]);

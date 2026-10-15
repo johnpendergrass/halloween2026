@@ -625,10 +625,64 @@ needs `position: relative; z-index`.
 `piles.begin` beforehand, so the redraw does not move it.
 
 **Stale checks.** `verify-go-fish-reply.cjs` (clicks Let's play and expects
-a selectable hand; the starter spinner now comes first) and
-`verify-quotes.cjs` (expects "Wendy asks:") fail on any current code and
-are not part of Codex's October 13/14 pass lists. Item 10 in
-`NEXT-TODOS.md`. The throwaway Playwright scripts written on 2026-10-15
+a selectable hand; the starter spinner now comes first), `verify-quotes.cjs`,
+`verify-speech.cjs` and `verify-speech-redraw.cjs` (the last three expect
+"Wendy asks:") fail on any current code and are not part of Codex's
+October 13/14 pass lists. Item 10 in `NEXT-TODOS.md`.
+
+**Dialog frames (2026-10-15 pm).** The vine-and-plate frame is one
+`::before` rule shared by `.welcoming`, `.new-round`, `.rules` and
+`.music-options` dialogs (`position: relative; isolation: isolate`, the
+frame at `inset: -3.2vw`, `z-index: -1`). A frame drawn by `::before`
+scrolls and clips with a scrolling box, so no framed dialog scrolls as a
+whole: Rules is a flex column with `max-height: 94vh` and only
+`#dialogBody` scrolls; the Sound popup likewise, with its rows in
+`.music-body` and the title and `.music-actions` pinned. The welcome, Deal
+again? and Rules dialogs share the `.dialog-audio` row (one `#dialogSound`
+button, `justify-content: flex-end`) and the `#setSizeChoice` switch
+shows under `.welcoming` and `.new-round`.
+
+**Sound popup (2026-10-15 pm).** Same overlay (`#musicOverlay`), same
+storage key and same `musicSettings()` snapshot, which now includes `ui`,
+so Cancel restores the UI channel too and `saveSoundSettings` writes the
+snapshot as is. Toggles `#uiEnabled` and `#musicEnabled` are `.audio-toggle`
+buttons without a label; `syncToggle(id, name, on)` sets `aria-pressed`
+and the aria-label, CSS draws the green glow (`box-shadow` on the image)
+or the red slash. The Always/Paused switch has Always on the left, so
+`#modeChoice` gets `data-selected` "0" for continuous and "1" for paused.
+The dialog SOUND button carries `.is-off` only when both channels are off.
+The volume `<output>` is gone; `.volume-ticks` is a flex row of six
+numbers under the range. The layout is sized by `vw` with a
+`@media (max-height: 700px)` block that tightens spacing on short screens.
+Measured with a throwaway script at 390x844, 390x664, 375x667, 390x560
+and 338x526: the buttons stay on screen and the body does not scroll.
+
+**Game-over music (2026-10-15 pm).** In `sound.js`, `victoryMusicAfter(ms)`
+arms one timer that calls `startWelcomeMusic()` only while
+`musicMode === 'paused'`. `scheduleVictory` sets `victorySpeechPending`
+when it arms the two-second speech timer; when the speech plays it arms
+the music for the clip's duration plus a second (a fallback for a phone
+that silently refuses the clip) and `clip.onended` re-arms it to one
+second. `scheduleGameOverMusic()`, called at the end of `finishGame`,
+arms three seconds when no speech is pending (tie, UI off, no clip).
+`cancelVictory` clears both timers; `replayAfterRain` calls
+`fadeOutWelcomeMusic()` so the music fades during the rain drain (a no-op
+in continuous mode). `verify-victory-sounds.cjs` was rewritten: its
+sandbox `setTimeout` keeps the 2000 ms timer as the speech and any other
+delay as the music timer, and the test fires them by hand.
+
+**Top buttons.** `.game-bar button` is 27vw by 13vw (13vw is the minimum
+target `verify-browser` enforces); the candy bar is a `::before` layer
+with `filter: hue-rotate(170deg) saturate(0.7)` (red bar, hue 1, to the
+gradient top #21786b, hue 171) so the cream text on top is untinted. The
+label is a visible `<span>` again (it used to be visually hidden under the
+carved pumpkin art). `preload.js` lost the two pumpkin entries.
+
+**"(you)".** `showTableName()` in `candy-go-fish.js` writes
+`humanName.toUpperCase() + ' (you)'` to the player's `.portrait-name`;
+`switchPlayerCharacter` calls it. The game-over title adds " (you)" to
+the human winner only. `verify-browser` and `verify-player-switch` were
+taught the suffix. The throwaway Playwright scripts written on 2026-10-15
 (give path, players note, set size, popup, four-copy UI rounds, node
 simulation) were not kept; their shape is described in the handoff.
 
@@ -643,7 +697,10 @@ per set size), `verify-assets` (every referenced asset exists, no unused
 tracked asset; untracked audio is ignored), `verify-victory-sounds`,
 `verify-sound-layout`, `verify-spinner-ticks`, `verify-welcome-music`,
 `verify-browser`, `verify-shell`, `verify-player-switch`,
-`verify-opponent-switch`, `verify-candy-rain-game`. The browser checks
+`verify-opponent-switch`, `verify-candy-rain-game`, `verify-piles`,
+`verify-abilities-browser`. All of these passed on 2026-10-15 at 15:00;
+the Playwright ones rewrite their PNGs under `codex-john-docs`, restored
+with `git checkout --` before committing. The browser checks
 hard-code Playwright at `C:/Users/johnp/.cache/codex-runtimes/...` and
 Chrome at `C:/Program Files/Google/Chrome/...`; most open the page by
 `file://`, some (`verify-browser`) need a local server on port 8098:

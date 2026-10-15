@@ -11,10 +11,13 @@ button:focus-visible { outline: 0.8vw solid #ffd56c; outline-offset: 0.7vw; }
 .center-area { grid-row: 3; }
 #humanArea { grid-row: 4; }
 .game-bar { display: flex; align-items: center; justify-content: space-between; font-size: max(12px,3.6vw); padding: 2vw 2vw 0; }
-.game-bar button { position: relative; width: 23vw; min-height: 13vw; background: transparent center / contain no-repeat; color: #382313; font-size: max(12px,3.6vw); font-weight: bold; }
-#newGame { background-image: url('./assets/buttons/ceramic-pumpkin-new-game.png'); }
-#rulesButton { background-image: url('./assets/buttons/ceramic-pumpkin-rules.png'); }
-.game-bar button > span { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+/* NEW GAME and RULES are generic candy bars with the words printed on the wrapper
+   (John, 2026-10-15; the ceramic pumpkins they replace are still in assets/buttons).
+   The bar is a ::before layer so its hue can change without tinting the text. */
+.game-bar button { position: relative; width: 27vw; min-height: 13vw; background: transparent; color: #fff4d5; font-size: max(11px,3.2vw); font-weight: bold; letter-spacing: 0.02em; text-shadow: 0 0.3vw 0.5vw #0009, 0 0 0.3vw #0008; }
+/* The red wrapper is turned to the light teal-green of the top of the table gradient (#21786b, hue 171). */
+.game-bar button::before { content: ''; position: absolute; inset: 0; background: url('./assets/generic-candies/candy-bar.png') center / contain no-repeat; filter: hue-rotate(170deg) saturate(0.7) drop-shadow(0 0.5vw 0.6vw #0006); }
+.game-bar button > span { position: relative; z-index: 1; white-space: nowrap; }
 .game-bar button:active { transform: translateY(0.4vw); }
 .portrait { width: 18vw; height: 18vw; border-radius: 50%; object-fit: cover; border: 0.5vw solid #e8dcaf; }
 .wendy-portrait, .player-portrait { position: relative; width: 24vw; height: 19vw; display: flex; justify-content: center; }
@@ -145,10 +148,12 @@ h2 { font-size: max(14px,4.5vw); }
 .overlay { position: fixed; inset: 0; background: #082b25dd; display: grid; place-items: center; z-index: 20; padding: 5vw; }
 .dialog { background: #f4ecd8; color: #264334; border: 0.5vw solid #d7c69c; border-radius: 5vw; padding: 6vw; width: 90vw; text-align: center; box-shadow: 0 3vw 10vw #0004; }
 .dialog .eyebrow { color: #597159; }
-.dialog-audio { display: none; justify-content: space-between; margin: -2vw -2vw 1vw; }
+/* One SOUND speaker at the top right of the welcome, Deal again? and Rules dialogs;
+   it opens the Sound popup where every sound setting lives (John, 2026-10-15). */
+.dialog-audio { display: none; justify-content: flex-end; margin: -2vw -2vw 1vw; }
 .welcoming .dialog-audio, .new-round .dialog-audio, .rules .dialog-audio { display: flex; }
 /* On the welcome the speaker buttons sit lower, clear of the vine border (John, 2026-10-15). */
-.welcoming .dialog-audio { margin-top: 1.6vw; }
+.welcoming .dialog-audio, .new-round .dialog-audio, .rules .dialog-audio { margin: 2.8vw 0 1vw; } /* a little lower and nearer the middle than on the other dialogs */
 /* Speaker buttons (John's speaker-grill.png, 2026-10-15): the bold label sits
    centred below the speaker in the page font, and a red slash crosses the
    speaker alone when that channel is off. */
@@ -158,13 +163,26 @@ h2 { font-size: max(14px,4.5vw); }
 .audio-toggle[aria-pressed="false"]::after, .audio-toggle.is-off::after { display: block; }
 /* Music popup: a second overlay above the dialog overlay, as tall as the Rules box (94vh). */
 .music-options { z-index: 30; background: #082b25f2; }
-.music-options .dialog { width: 90vw; height: 94vh; padding: 5vw; display: flex; flex-direction: column; }
-.music-options h1 { font-size: max(22px,7vw); margin: 0 0 3vw; }
-.music-row { display: flex; align-items: center; justify-content: space-between; gap: 3vw; margin: 3vw 0; font-size: max(14px,4.5vw); font-weight: bold; }
-.music-row .audio-toggle { width: 18vw; }
-.music-row .audio-toggle img { width: 12vw; height: 12vw; }
-.music-row .audio-toggle::after { top: 6vw; width: 13.5vw; }
-.track-picker { position: relative; display: flex; align-items: center; justify-content: center; width: 54vw; min-height: 13vw; padding: 0 12vw; box-sizing: border-box; background: #285b43; color: #fff4d5; border-radius: 3vw; }
+/* The Sound popup (John's sketch "design ideas/Sound requester layout.png", 2026-10-15)
+   wears the same vine-and-plate frame as the welcome. Title, then UI and MUSIC speakers
+   side by side, then the MUSIC SOUNDTRACK section: a label above each control with the
+   control to the right, tick numbers under the volume slider, boxed CANCEL / CONFIRM. */
+.music-options .dialog { position: relative; border-color: #32271d; isolation: isolate; width: 90vw; max-height: 94vh; padding: 16vw 7vw 17vw; display: flex; flex-direction: column; }
+.music-options h1 { font-size: max(22px,7vw); margin: 0 0 2vw; }
+/* The rows scroll when the screen is short; the title and the CANCEL / CONFIRM row stay put. */
+.music-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; }
+.toggle-row { display: flex; justify-content: center; gap: 12vw; margin: 1vw 0 4.5vw; }
+.toggle-item { display: flex; align-items: center; gap: 2.4vw; font-size: max(14px,4.5vw); font-weight: bold; }
+/* Popup toggles: no label. A steady green glow around the speaker means on; the red slash means off. */
+.toggle-item .audio-toggle { width: 16vw; min-height: 14vw; justify-content: center; }
+.toggle-item .audio-toggle img { width: 12vw; height: 12vw; border-radius: 50%; }
+.toggle-item .audio-toggle[aria-pressed="true"] img { box-shadow: 0 0 0 0.6vw #3fae5e, 0 0 2.4vw 1vw #3fae5ea0; }
+.toggle-item .audio-toggle::after { top: 50%; width: 13.5vw; }
+.music-section { font-size: max(13px,3.8vw); text-transform: uppercase; letter-spacing: 0.1em; color: #597159; margin: 2vw 0 0; padding-bottom: 1vw; border-bottom: 0.4vw solid #d7c69c; }
+/* Controls a bit smaller and lower than the labels suggest, with more air between fields (John, 2026-10-15). */
+.music-field { display: flex; flex-direction: column; align-items: flex-end; gap: 1.4vw; margin: 3vw 2vw 0 3vw; }
+.music-label { align-self: flex-start; font-size: max(14px,4.5vw); font-weight: bold; }
+.track-picker { position: relative; display: flex; align-items: center; justify-content: center; width: 50vw; min-height: 9.5vw; padding: 0 10vw; box-sizing: border-box; background: #285b43; color: #fff4d5; border-radius: 2.4vw; font-size: max(13px,4vw); font-weight: bold; }
 .track-picker .opponent-arrow { top: 0; height: 100%; }
 .track-picker .opponent-arrow.previous { left: 0; }
 .track-picker .opponent-arrow.next { right: 0; }
@@ -181,27 +199,46 @@ h2 { font-size: max(14px,4.5vw); }
 .two-way-line img { width: 4.2vw; height: 2.1vw; object-fit: contain; filter: drop-shadow(0 .15vw .2vw #0006); transform: rotate(-30deg); }
 .two-way-line img + img { margin-left: -1.6vw; }
 @media (prefers-reduced-motion: reduce) { .two-way-thumb { transition: none; } }
-.mode-switch { width: 64vw; }
-.mode-switch button { white-space: nowrap; }
-#setSizeChoice { display: none; width: 60vw; margin: 3.6vw auto 2.2vw; }
-.welcoming #setSizeChoice { display: flex; }
-.volume-row { flex-direction: column; align-items: stretch; gap: 1vw; }
-.volume-row input { width: 100%; height: 13vw; margin: 0; accent-color: #285b43; }
-.music-actions { margin-top: auto; display: flex; justify-content: space-between; gap: 3vw; }
-.music-actions .secondary, .music-actions .primary { flex: 1; min-width: 0; margin: 0; }
+#setSizeChoice { display: none; width: 60vw; margin: 5vw auto 4.4vw; }
+.welcoming #setSizeChoice, .new-round #setSizeChoice { display: flex; } /* on the welcome and on Deal again? (John, 2026-10-15) */
+.mode-switch { width: 50vw; }
+.mode-switch button { min-height: 8.5vw; padding: 0.6vw 1vw; font-size: max(12px,3.4vw); }
+.volume-field { align-items: stretch; margin-top: 1.4vw; }
+.volume-field input, .volume-ticks { width: 70vw; align-self: flex-end; box-sizing: border-box; }
+.volume-field input { width: 100%; height: 7vw; margin: 0; accent-color: #285b43; }
+.volume-ticks { display: flex; justify-content: space-between; padding: 0 1vw; margin-top: -1.4vw; font-size: max(11px,3.2vw); font-weight: bold; color: #597159; }
+.music-actions { flex: none; margin-top: 5vw; display: flex; justify-content: space-between; gap: 4vw; }
+.music-actions .secondary, .music-actions .primary { flex: 1; min-width: 0; min-height: 10.5vw; margin: 0; border-radius: 3vw; font-weight: bold; }
+.music-actions .secondary { border: 0.6vw solid #285b43; }
+/* Short screens (older or smaller phones, or the game inside the shell): tighter spacing in the Sound popup. */
+@media (max-height: 700px) {
+  .music-options .dialog { padding: 11vw 7vw 12vw; }
+  .toggle-row { margin: 0 0 2vw; }
+  .music-field { margin-top: 1.6vw; }
+  .volume-field { margin-top: 0.6vw; }
+  .music-actions { margin-top: 3vw; }
+}
 .audio-toggle:focus-visible { outline: 0.4vw solid #816321; }
-.rules .dialog { padding: 4vw; max-height: 94vh; overflow-y: auto; }
-.rules h1 { font-size: max(22px,7vw); text-transform: uppercase; margin: 0 0 3vw; }
-.rules .dialog p { font-size: max(14px,4vw); margin: 2vw 0; }
+/* Rules: same vine-and-plate frame as the welcome (John, 2026-10-15). The box itself no
+   longer scrolls (a scrolling box would clip the frame); only the text scrolls, and only
+   on a screen too short for it. Text is a little smaller than before so it normally fits. */
+.rules .dialog { position: relative; border-color: #32271d; isolation: isolate; padding: 4vw 7vw 12vw; max-height: 94vh; display: flex; flex-direction: column; }
+.rules #dialogBody { overflow-y: auto; min-height: 0; }
+/* Speakers sit 2vw lower on Rules to clear the vine; the title follows and the gap below it shrinks by the same 2vw (John, 2026-10-15). */
+.rules .dialog-audio { margin-top: 4.8vw; }
+.rules h1 { font-size: max(20px,6.2vw); text-transform: uppercase; margin: 0 0 0.4vw; }
+.rules .dialog p { font-size: max(13px,3.6vw); margin: 1.8vw 0; }
 .rules .rule-emphasis { background: #e2e6cf; border-left: 0.7vw solid #617447; border-radius: 1vw; padding: 1.5vw 2vw; }
-.rules .primary { min-height: 13vw; margin-top: 2vw; }
-.welcoming .dialog { position: relative; width: 79.2vw; padding: 5.28vw 5.28vw 11vw; border-color: #32271d; isolation: isolate; }
+.rules .primary { min-height: 13vw; margin-top: 2.4vw; align-self: center; }
+.welcoming .dialog { position: relative; width: 79.2vw; padding: 5.28vw 5.28vw 13.5vw; border-color: #32271d; isolation: isolate; }
+/* The Deal again? dialog wears the same vine-and-plate frame as the welcome, but keeps its own text and button layout (John, 2026-10-15). */
+.new-round .dialog { position: relative; border-color: #32271d; isolation: isolate; padding-bottom: 10vw; } /* taller: speakers clear the vine, room under Keep playing */
 .welcoming h1 { position: relative; white-space: pre-line; font-size: max(23.1px,6.3vw); margin: 2.64vw 0 3.52vw; color: #df721d; -webkit-text-stroke: 0.7px #111; paint-order: stroke fill; text-shadow: 0 0.35vw 0.25vw #244b37; }
 .welcoming .welcome-subtitle { display: block; font-size: max(18px,4.8vw); margin-top: 1vw; color: #264334; -webkit-text-stroke: 0; text-shadow: none; }
 .welcoming .go-fish-accent { color: #df721d; -webkit-text-stroke: 0.5px #111; paint-order: stroke fill; text-shadow: 0 0.18vw 0.18vw #244b3780; }
 .welcoming .dialog p { font-size: max(14.7px,3.78vw); margin: 2.64vw 0; }
 .welcoming .primary { min-width: 48.4vw; min-height: 14.3vw; margin-top: 1.65vw; font-size: max(14.7px,3.78vw); }
-.welcoming .dialog::before { content: ''; position: absolute; inset: -3.2vw; pointer-events: none; z-index: -1;
+.welcoming .dialog::before, .new-round .dialog::before, .rules .dialog::before, .music-options .dialog::before { content: ''; position: absolute; inset: -3.2vw; pointer-events: none; z-index: -1;
   background-image: url('./assets/candy-dish/ghost-plate.png'), url('./assets/candy-dish/ghost-plate.png'), url('./assets/candy-dish/ghost-plate.png'), url('./assets/candy-dish/ghost-plate.png'), url('./assets/decorations/welcome-vines.svg');
   background-position: left top, right top, left bottom, right bottom, center;
   background-size: 11.2vw 11.2vw, 11.2vw 11.2vw, 11.2vw 11.2vw, 11.2vw 11.2vw, 100% 100%; background-repeat: no-repeat;
@@ -307,7 +344,6 @@ h1 { font-size: max(24px,9vw); line-height: 1.15; margin: 3vw 0 4vw; }
 /* Larger portraits; prior layout saved in portrait-layout-checkpoint-2026-1012. */
 #table { grid-template-rows: 11vw 53vw 33vw 57vw; }
 .game-bar { padding-top: 0; align-items: flex-start; }
-.game-bar button { background-size: 85% auto; }
 .portrait { width: 22.5vw; height: 22.5vw; }
 .wendy-portrait, .player-portrait { width: 28vw; height: 23.5vw; }
 .wendy-portrait { transform: translateY(-3vw); }

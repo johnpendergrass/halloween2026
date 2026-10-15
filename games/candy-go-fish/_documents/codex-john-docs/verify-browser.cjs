@@ -34,7 +34,7 @@ const startRound = require('./start-round.cjs');
     await page.addInitScript(() => { const original = window.setTimeout; window.setTimeout = (fn, ms, ...args) => original(fn, Math.min(ms, 2), ...args); });
     await page.goto('http://127.0.0.1:8098/games/candy-go-fish/index.html');
     await page.locator('#humanSlots .slot').last().waitFor();
-    assert.equal(await page.locator('.player-portrait .portrait-name').textContent(), 'CASPER');
+    assert.equal(await page.locator('.player-portrait .portrait-name').textContent(), 'CASPER (you)'); // the table label carries " (you)" (John, 2026-10-15)
     assert.equal(await page.locator('.wendy-portrait .portrait-name').textContent(), 'HAZEL');
     await startRound(page);
     let actions = 0;
