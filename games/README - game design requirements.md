@@ -426,8 +426,15 @@ Sizes refer to the table in 1.3.
     switches, and MUST NOT try to (rule 21). Any sound control or setting
     a game needs, including one that changes during a game, is the game's
     own job, inside its own page.
-21. MUST NOT use `window.parent`, `postMessage`, cookies or `localStorage`
-    itself. The helper file is the only link between a game and the app.
+21. MUST NOT use `window.parent`, `postMessage` or cookies itself. The
+    helper file is the only link between a game and the app. A game MAY
+    remember its own settings (a chosen tune, a volume) in `localStorage`,
+    under a key that starts with `halloween2026:<folder_name>:` (note the
+    final colon, e.g. `halloween2026:candy-go-fish:music`). The bare
+    `halloween2026:<folder_name>` key belongs to the app and MUST NOT be
+    touched. Wrap every read and write in try/catch: some browsers refuse
+    storage, and the game must still start. (Relaxed 2026-10-15; before
+    that, games could not use `localStorage` at all.)
 
 **Not defined yet (do not invent your own)**
 

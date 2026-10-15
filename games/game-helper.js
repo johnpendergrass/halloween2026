@@ -18,8 +18,11 @@
    0 or less is not recorded. The app adds the date itself and shows the
    five in the This Game tab, e.g.  1.  42 (10-01-2026).
 
-   That is all a game has to do. It must not use window.parent or
-   localStorage itself; this file is the one place that does.
+   That is all a game has to do. It must not use window.parent itself;
+   this file is the one place that does. A game MAY keep its own settings
+   in localStorage (rule 21 in "README - game design requirements.md"):
+   under a key that starts with "halloween2026:<its folder>:" and never
+   the bare "halloween2026:<its folder>" key, which belongs to the app.
 
    HOW IT WORKS. The app shows each game in an <iframe>. From inside an
    iframe, window.parent is the page around it: the app. The app (app.js)

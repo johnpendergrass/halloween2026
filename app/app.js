@@ -20,7 +20,7 @@
 
 // Bump this (and the ?v= tags in index.html) whenever code changes, so
 // phones fetch fresh copies instead of old cached ones.
-const APP_VERSION = "2026-1014-soundtrack-rename";
+const APP_VERSION = "2026-1015-music-popup";
 
 /* ------------------------------------------------------------------------
    1. Settings and the games list
@@ -160,7 +160,9 @@ function fillThisGameTab(game) {
      "halloween2026:app"            { "sound": true }
      "halloween2026:<folder_name>"  { "scores": [ ... ], "settings": [0, 1] }
 
-   one for the whole app, and one per game. So the scores and the switch
+   one for the whole app, and one per game. A game may add notes of its
+   own under "halloween2026:<folder_name>:<something>" (requirements rule
+   21); the app never reads or writes those. So the scores and the switch
    positions belong to this phone or PC only; another player's phone has
    its own. (To look at them: the browser's developer tools, Application,
    Local Storage.)

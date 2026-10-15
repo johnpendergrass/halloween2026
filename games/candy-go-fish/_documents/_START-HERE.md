@@ -1,6 +1,7 @@
 # Start here: Candy Go Fish documentation
 
-- [October 14 current handoff](codex-john-docs/CURRENT-STATE-2026-1014.md) — authoritative gameplay, preload, sound, controls, winner highlight and publishing state.
+- [October 15 current handoff](codex-john-docs/CURRENT-STATE-2026-1015.md) — authoritative gameplay, preload, sound, Music popup, controls, winner highlight and publishing state.
+- [October 14 handoff](codex-john-docs/CURRENT-STATE-2026-1014.md) — historical (single soundtrack, MUSIC toggle).
 
 - [October 13 handoff](codex-john-docs/CURRENT-STATE-2026-1013.md) — historical sound checkpoint.
 - [Game documentation index](codex-john-docs/README.md) — rules, layout, configuration, verification and historical notes.

@@ -545,12 +545,39 @@ and `playVisual` poll every 40 ms and pause while a dialog is open.
 `render()` rebuilds the whole board from state each time.
 
 **Audio.** `preload.js` loads every image and 48 short clips (plus the
-long soundtrack as a media element) while the welcome shows; the Play
-button says "Loading assets" until it settles, with 6 s / 20 s bounds and
-failure permitted. `sound.js` routes every clip through Web Audio: one
-gain per clip → `ui` or `music` channel gain → destination. Spinner ticks
-are a synthesized 18 ms noise burst through a 3.2 kHz low-pass. Channel
-state lives in memory only (no localStorage, per the shell rules).
+three soundtracks as media elements, 20 s bound each) while the welcome
+shows; the Play button says "Loading assets" until it settles, with 6 s /
+20 s bounds and failure permitted. `sound.js` routes every clip through
+Web Audio: one gain per clip → `ui` or `music` channel gain → destination.
+Spinner ticks are a synthesized 18 ms noise burst through a 3.2 kHz
+low-pass.
+
+**Music (2026-10-15, Claude's code in John's readable style).** In
+`sound.js` a `musicTracks` table (`id`, `name`, `file`) holds one lazily
+created clip entry per tune; `currentTrack` points at the chosen one.
+`startWelcomeMusic` fades the current tune's clip gain 0 → 0.5 over 3 s;
+`fadeOutTrack(track, seconds, fadeInStart)` fades any tune to 0 and pauses
+it after the ramp (position kept). `fadeOutWelcomeMusic` is a 2 s fade of
+the current tune, and does nothing in `musicMode === 'continuous'`.
+`selectTrack(id)` fades the old tune out over 1 s and starts the new one
+if a dialog wants music. Channels carry a `scale`: music is `1 / 0.75`, so
+`setChannelVolume('music', v)` with the slider's 0..1 gives up to a third
+more than the original level (0.75 = old level, default 0.8). Mode API:
+`musicMode` / `setMusicMode('paused' | 'continuous')`.
+
+The popup lives in `index.html` as a second overlay `#musicOverlay`
+(`.music-options`, z-index 30, panel 90vw × 94vh, flex column with the
+Cancel/Done row pushed to the bottom). `candy-go-fish.js` snapshots the
+settings on open (`musicBefore`), applies each control immediately, and
+Cancel re-applies the snapshot. The Tab trap in the keydown handler
+switches to the popup's controls while it is open.
+
+**Saved settings.** Key `halloween2026:candy-go-fish:music`, value
+`{ enabled, volume, track, mode, ui }`, written by `saveSoundSettings()`
+on Done and on the UI toggle, read once by `restoreSoundSettings()` at
+startup with every field validated (unknown tune, out-of-range volume or
+bad JSON are ignored). Both are wrapped in try/catch so a browser that
+refuses storage still starts the game.
 
 **Config.** `assets/json/game-config.json` is authoritative; after an
 edit run `node games/candy-go-fish/_documents/codex-john-docs/sync-config.cjs`
@@ -566,7 +593,14 @@ tracked asset; untracked audio is ignored), `verify-victory-sounds`,
 `verify-opponent-switch`, `verify-candy-rain-game`. The browser checks
 hard-code Playwright at `C:/Users/johnp/.cache/codex-runtimes/...` and
 Chrome at `C:/Program Files/Google/Chrome/...`; most open the page by
-`file://`, some need the local server on port 8098.
+`file://`, some (`verify-browser`) need a local server on port 8098:
+`python start-local/no-cache-server.py --port 8098`. Two traps learned
+2026-10-15: a check whose assertion fails leaves the browser open and the
+node process hangs instead of exiting, so run checks one at a time and
+watch for silence; and `verify-assets` rejects any tracked audio that no
+code references, so a new MP3 must be added to its `referenced` list.
+`verify-welcome-music` still keys on the Wonderful file and the 0.5 clip
+ramp, both unchanged by the popup.
 
 **Ties to the shell** (matter for the standalone move, see
 `claudePlans/candy-go-fish-standalone-plan.md`): the helper script tag

@@ -16,6 +16,8 @@ referenced.add('sounds/confirmText.mp3');
 referenced.add('sounds/winsSet-player.mp3');
 referenced.add('sounds/winsSet-opponent.mp3');
 referenced.add('sounds/soundtrack-music-wonderful.mp3');
+referenced.add('sounds/soundtrack-music-haunted.mp3');
+referenced.add('sounds/soundtrack-music-earth.mp3');
 for (const filename of ['index.html', 'candy-go-fish.css', 'js/candy-go-fish.js', 'js/candy-piles.js', 'js/candy-rain.js']) {
   const source = fs.readFileSync(path.join(root, filename), 'utf8');
   for (const match of source.matchAll(/\.\/assets\/([^'"\s?]+)/g)) {

@@ -624,11 +624,38 @@ to the shell is the human's set count (text "3–2").
   after the banner; BIGWIN is a margin of 3 or more.
 
 **2026-10-14 (Claude):** soundtrack file renamed to
-`soundtrack-music-wonderful.mp3`; `haunted` and `earth` candidates sit in
-`assets/sounds/` untracked until John chooses. **John's next step is to
-move the game out of this repo** into its own folder and GitHub repo; the
-slot 8 copy stays but is deprecated. Plan and open decisions:
-`claudePlans/candy-go-fish-standalone-plan.md`.
+`soundtrack-music-wonderful.mp3`. A plan to move the game into its own
+repo was written (`claudePlans/candy-go-fish-standalone-plan.md`).
+
+**2026-10-15 (John + Claude): the standalone move is DEFERRED.** John
+wants to keep working inside halloween2026 with the game in slot 8; the
+plan stays on file for later.
+
+**2026-10-15: the Music popup.** John's design, built by Claude:
+- All three tunes are wired up and named after their files: Earth,
+  Haunted, Wonderful (default Wonderful). All three preload on the
+  welcome screen; John chose to see the startup cost before loading lazily.
+- The MUSIC speaker on the welcome, Deal again? and Rules dialogs keeps
+  its icon and label and shows the state (slash = off) but no longer
+  toggles: it opens a popup. The popup is a separate panel sized like the
+  tallest dialog (Rules, 94vh) so it fully covers whatever is underneath.
+  Cancel bottom left (restores what was in force when it opened), Done
+  bottom right (keeps and saves). Changes are heard as they are made.
+- Rows: Music ON/OFF; Soundtrack chosen with left/right arrows around the
+  name, like the character selectors; Play mode, a two-way switch between
+  "When paused" (music only while a dialog is open, the original
+  behaviour) and "Continuous" (keeps playing through the game, no ducking
+  under speeches for now); Volume, a slider feel with fixed stops 0, 20,
+  40, 60, 80, 100.
+- Loudness: the level the game shipped with sits at 75 on that scale, so
+  100 is a third louder; the default stop is 80.
+- Each tune remembers its position for the page session; switching fades
+  the old one out over 1 s. A reload starts them all from zero.
+- Settings are remembered between visits (tune, volume, on/off, play
+  mode, UI toggle). To allow this, **rule 21 of the game requirements was
+  relaxed**: a game may keep its own notes in localStorage under a key
+  starting `halloween2026:<folder>:`; the bare `halloween2026:<folder>`
+  note stays the shell's. The helper comment and app.js note say the same.
 
 ## 6e. games.json v2: the first proposal (2026-09-29, superseded)
 

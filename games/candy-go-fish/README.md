@@ -2,7 +2,7 @@
 
 Playable Halloween 2026 mini game, shell slot 8. Plain HTML/CSS/JavaScript, no framework or build. HTTP and direct index.html opening work.
 
-Start with [_documents/_START-HERE.md](_documents/_START-HERE.md) and the authoritative [October 14 handoff](_documents/codex-john-docs/CURRENT-STATE-2026-1014.md). Older design/handoff notes are historical where superseded.
+Start with [_documents/_START-HERE.md](_documents/_START-HERE.md) and the authoritative [October 15 handoff](_documents/codex-john-docs/CURRENT-STATE-2026-1015.md). Older design/handoff notes are historical where superseded.
 
 Ten candy types, three copies each, five dealt per player without completed opening sets. Successful requests transfer one card and keep the turn. Triples collect automatically; fishing always ends the turn. Empty hand/dish or all sets ends the round after any final-set celebration. Most sets wins. Good Fish is not implemented.
 
@@ -14,7 +14,7 @@ Separate player/opponent earned-set sounds play with their dialogs. Game-over sc
 
 Audio: UI effects live directly in assets/sounds; speeches are in speech/goes-first and speech/victory (six starters, 36 victory clips). Victory speech has a two-second delay and replay button. UI sounds default to 50% gain. Central preparation lives in js/preload.js; playback/channel control lives in js/sound.js.
 
-Looping soundtrack-music-wonderful.mp3 accompanies welcome, Deal again? and Rules: three-second fade to 50%, two-second fade out on closing, then pause preserving position. A fresh page load starts from zero. Welcome autoplay may require a tap on the artwork. UI and MUSIC speaker toggles appear in the upper-left/right of all three dialogs; slash means muted. Channel states carry within the page session. The shell Sound switch cannot control this game. See [audio guide](assets/sounds/README.md).
+Three looping soundtracks (Earth, Haunted, Wonderful; Wonderful by default) accompany welcome, Deal again? and Rules: three-second fade in, two-second fade out on closing, then pause preserving position; each tune keeps its own position for the page session. Welcome autoplay may require a tap on the artwork. The UI speaker (upper left) toggles effects. The MUSIC speaker (upper right) shows the music state and opens the Music popup: on/off, soundtrack arrows, play mode (When paused or Continuous) and a six-stop volume slider, with Cancel and Done. Done remembers the settings in this browser. The shell Sound switch cannot control this game. See [audio guide](assets/sounds/README.md).
 
 ## Preview and configuration
 
@@ -30,4 +30,4 @@ The shared [game requirements](../README%20-%20game%20design%20requirements.md) 
 
 Startup flash remains unresolved and deferred; preload is not claimed as its fix. Physical iPhone audio/first-render review remains manual. Further sound elements, visual polish and older gameplay proposals are in [NEXT-TODOS](_documents/codex-john-docs/NEXT-TODOS.md).
 
-Current publishing cache stamp: 2026-1014-soundtrack-rename.
+Current publishing cache stamp: 2026-1015-music-popup.

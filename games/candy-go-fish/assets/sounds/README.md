@@ -1,6 +1,6 @@
 # Candy Go Fish audio
 
-Updated October 14, 2026. [Current handoff](../../_documents/codex-john-docs/CURRENT-STATE-2026-1014.md) is authoritative.
+Updated October 15, 2026. [Current handoff](../../_documents/codex-john-docs/CURRENT-STATE-2026-1015.md) is authoritative.
 
 ## Inventory
 
@@ -9,13 +9,13 @@ UI effects are directly in this folder:
 - switch-to-ron-or-boo.mp3, switch-to-harry-or-mike.mp3, switch-to-hermione-or-sully.mp3: paired selector cues.
 - winsSet-player.mp3 and winsSet-opponent.mp3: distinct earned-set sounds; player WAV converted at 128 kbps and deleted at John's request.
 - confirmText.mp3: prepared, retained for future use; welcome, spinner-start and deal confirmations are silent.
-- soundtrack-music-wonderful.mp3: looping dialog soundtrack, approximately 5.4 MiB / 4m41s stereo MP3. Provenance: _where-are-the-sounds-from.txt.
+- soundtrack-music-earth.mp3 (5.1 MiB), soundtrack-music-haunted.mp3 (2.2 MiB) and soundtrack-music-wonderful.mp3 (5.4 MiB, 4m41s): the three looping soundtracks, shown in the Music popup as Earth, Haunted and Wonderful. Wonderful is the default. Provenance: _where-are-the-sounds-from.txt.
 
 speech/goes-first holds six named starter announcements. speech/victory holds 36 BIGWIN/CLOSE clips. victory-sounds.js is the generated index for HTTP and file opening; rerun sync-victory-sounds.cjs after victory filename changes. The source notes are in speech/_Speech generation used text-to-speech.online.txt. Text submitted for Hermione pronunciation used 'herm io ne'. Working candidates/masters are not runtime assets.
 
 ## Preparation and playback
 
-js/preload.js centralizes fixed/configured image inventory, image loading/decoding, audio loading and spinner-tick buffer calculation. sound.js owns cached media elements, playback and the UI/music gain buses. All 48 short clips plus the separate soundtrack are prepared. Image/short audio completion bounds are six seconds; music gets 20 seconds. Failures permit play. Long music remains a media element, not a fully decoded PCM buffer. Browser preload/readiness behavior varies by device.
+js/preload.js centralizes fixed/configured image inventory, image loading/decoding, audio loading and spinner-tick buffer calculation. sound.js owns cached media elements, playback and the UI/music gain buses. All 48 short clips plus all three soundtracks are prepared (John chose to preload every tune and judge the startup cost on the phone). Image/short audio completion bounds are six seconds; music gets 20 seconds. Failures permit play. Long music remains a media element, not a fully decoded PCM buffer. Browser preload/readiness behavior varies by device.
 
 Spinner: synthesized 18ms noise tick, softened by a 3.2kHz low-pass, 50% gain. First tick begins with rotation, then roughly every 60 degrees follows the actual plate speed with a minimum 28ms gap. Animation pause/mute/exit/reduced motion are handled. No spinner confirmation effect has been added; goes-first speech plays at landing.
 
@@ -23,16 +23,22 @@ Earned sets: human role uses winsSet-player; wendy/opponent role uses winsSet-op
 
 Victory: speech starts after two seconds, BIGWIN for a margin of at least three sets, CLOSE for one or two; ties/missing clips stay silent. Replay restarts immediately. New game, UI/global mute and page exit cancel pending/playing speeches; rain drain disables replay.
 
-## Music and controls
+## Music and controls (2026-10-15, Claude)
 
-Welcome, Deal again? and Rules share the soundtrack. It loops and fades to 50% over three seconds. Closing/confirming/canceling a dialog fades from its current volume to zero over two seconds while gameplay proceeds, then pauses preserving currentTime. Reopening resumes from there; fresh page load starts at zero, natural looping wraps at the end. No persistent storage is used.
+Welcome, Deal again? and Rules share the soundtrack. The chosen tune loops and fades in over three seconds. In the default play mode, When paused, closing/confirming/canceling a dialog fades it to zero over two seconds while gameplay proceeds, then pauses preserving currentTime; reopening resumes from there. In Continuous mode the dialog closing changes nothing and the tune keeps playing through the game. Each tune is its own media element, so switching away and back resumes that tune where it left off. A fresh page load starts every tune at zero.
 
 Welcome action shows Loading assets until preparation settles, then Let's play. Autoplay is attempted but may be blocked; a tap on welcome artwork retries/unlocks it. Let's play remains a single-click entry to the game. Other dialogs open from a user gesture.
 
-Upper-left UI and upper-right MUSIC speaker toggles appear on these three dialogs only. Diagonal slash means OFF; aria-pressed and accessible labels match state. Targets are at least 13vw and included in dialog focus navigation. Channel state persists across dialogs within the page session. UI mute leaves music independent; MUSIC mute pauses immediately and preserves position. Re-enable resumes/fades in. Device volume remains user-controlled; the shell sound switch has no game API.
+Two speaker buttons sit on these three dialogs only. Upper-left UI is an on/off toggle (slash = off). Upper-right MUSIC keeps its icon and label, shows the music state with the same slash, and opens the Music popup instead of toggling. The popup is a second overlay sized like the Rules box (90vw by 94vh) so it fully covers whatever dialog is underneath. Rows: Music ON/OFF speaker; Soundtrack with left/right arrows around the tune name (Earth, Haunted, Wonderful); Play with a two-way switch, When paused or Continuous; Volume slider with fixed stops 0, 20, 40, 60, 80, 100. Changes apply at once so they can be heard. Cancel (bottom left) restores what was in force when the popup opened; Done (bottom right) keeps it and saves. Tab cycles inside the popup while it is open. Set dialogs and the game-over banner have no music controls.
 
-Per-sound gain defaults to 50%; both channels default ON at gain 1. Future individual tuning uses soundVolumes. APIs: setChannelEnabled, setChannelVolume, getChannel and global setEnabled.
+Switching tunes fades the old one out over one second (keeping its position) and fades the new one in. Music OFF pauses immediately, preserving position; ON resumes with the fade-in. UI OFF stops effects and pending victory speech but leaves music alone.
+
+Volume: the slider value is the music channel volume (0 to 1). sound.js scales the music channel by 1/0.75, so the level the game first shipped with (clip gain 0.5 at channel gain 1) now sits at slider 75 and the top stop is a third louder. The default stop is 80. Per-sound gain stays 50%; the UI channel stays at gain 1.
+
+Remembered settings: Done in the popup, and the UI toggle, write one note to localStorage under the key halloween2026:candy-go-fish:music: { enabled, volume, track, mode, ui }. It is read once at startup, every value checked, and a missing or damaged note is ignored. This is allowed by rule 21 of the game requirements (relaxed 2026-10-15); the shell's own halloween2026:candy-go-fish note is never touched. Device volume remains user-controlled; the shell Sound switch has no game API.
+
+APIs in sound.js: musicTracks, currentTrack, selectTrack(id), musicMode, setMusicMode('paused'|'continuous'), setChannelEnabled, setChannelVolume, getChannel, prepareWelcomeMusic (returns the three clips), startWelcomeMusic, fadeOutWelcomeMusic and global setEnabled.
 
 ## Checks
 
-From repository root, run node games/candy-go-fish/_documents/codex-john-docs/<script>: verify-assets.cjs, verify-victory-sounds.cjs, verify-sound-layout.cjs, verify-spinner-ticks.cjs, verify-welcome-music.cjs. Chrome checks do not replace physical iPhone listening/autoplay review. Current cache stamp: 2026-1014-soundtrack-rename.
+From repository root, run node games/candy-go-fish/_documents/codex-john-docs/<script>: verify-assets.cjs, verify-victory-sounds.cjs, verify-sound-layout.cjs, verify-spinner-ticks.cjs, verify-welcome-music.cjs. The Music popup itself was checked on 2026-10-15 with two throwaway Playwright scripts (tune switching with position kept, Cancel/Done, Continuous surviving Let's play and Rules, settings restored after a reload, damaged note ignored); they were not kept. Chrome checks do not replace physical iPhone listening/autoplay review. Current cache stamp: 2026-1015-music-popup.

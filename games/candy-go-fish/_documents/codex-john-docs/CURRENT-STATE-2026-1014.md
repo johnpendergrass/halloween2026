@@ -1,6 +1,8 @@
+Historical: superseded by [CURRENT-STATE-2026-1015.md](CURRENT-STATE-2026-1015.md) (Music popup, three soundtracks, saved settings).
+
 # Candy Go Fish — current handoff
 
-Updated October 14, 2026. This is the authoritative current state. Older handoffs, design notes and checkpoints are historical where they conflict. Start here, then [NEXT-TODOS.md](NEXT-TODOS.md). The shared [game requirements](../../../README%20-%20game%20design%20requirements.md) remain authoritative.
+Updated October 14, 2026. This was the authoritative current state until October 15. Older handoffs, design notes and checkpoints are historical where they conflict. Start here, then [NEXT-TODOS.md](NEXT-TODOS.md). The shared [game requirements](../../../README%20-%20game%20design%20requirements.md) remain authoritative.
 
 ## Game and accepted behavior
 

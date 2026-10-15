@@ -62,8 +62,10 @@
       for (const profile of [...Object.values(config.players), ...(config.playerCharacters || []), ...(config.opponents || [])]) paths.add(profile.portrait);
       for (const candy of config.candies) paths.add('candybar-images/' + candy.image);
       // Nothing is played or unlocked here; playback remains gesture-owned.
+      // All three soundtrack tunes are prepared up front (John wants to see
+      // what that does to startup time before loading them lazily).
       const music = CandySound.prepareWelcomeMusic();
-      ready = Promise.all([...paths].map(path => loadImage('./assets/' + path)).concat(CandySound.prepareAssets().map(clip => loadAudio(clip)), music ? [loadAudio(music, 20000)] : []))
+      ready = Promise.all([...paths].map(path => loadImage('./assets/' + path)).concat(CandySound.prepareAssets().map(clip => loadAudio(clip)), music.map(clip => loadAudio(clip, 20000))))
         .then(() => { settled = true; });
       return ready;
     },

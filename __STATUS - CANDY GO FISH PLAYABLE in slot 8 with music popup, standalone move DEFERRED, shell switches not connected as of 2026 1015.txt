@@ -1,0 +1,21 @@
+Halloween 2026 - project status (the glance; details in claude-john-docs/ and codex-john-docs/)
+
+2026 1015 am  John + Claude: standalone move DEFERRED (plan kept on file).
+              Music popup built: three soundtracks (Earth/Haunted/Wonderful),
+              on/off, play mode (When paused / Continuous), volume stops,
+              settings remembered in localStorage (requirements rule 21 relaxed).
+              Stamp 2026-1015-music-popup, committed + pushed.
+2026 1014 pm  John + Claude: read Codex work, soundtrack renamed, standalone plan written.
+2026 1007-14  John + Codex: Candy Go Fish built in games/candy-go-fish, slot 8.
+2026 1001     Shell: This Game tab with high scores + switches (switches not connected).
+2026 0927-30  Frame, panels, iframe games, games.json v2, board of 2 x 4 cells.
+
+NOT YET
+ - iPhone review of the music popup and the triple-soundtrack preload time
+ - confirm the Pages build and live stamp after the 2026 1015 push
+ - shell: Sound option A or B never chosen; Sound + game switches still change nothing
+ - Pages switch-on + iPhone home-screen test still unverified for the shell
+ - standalone move: deferred, plan in claude-john-docs/claudePlans/
+
+DETAIL  claude-john-docs/Claude-ToBe-Continued-2026-1015-1140.MD
+        games/candy-go-fish/_documents/codex-john-docs/CURRENT-STATE-2026-1015.md

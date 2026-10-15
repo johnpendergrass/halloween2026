@@ -3,7 +3,7 @@
   // The generated companion keeps direct file:// opening functional.
   let config = window.CandyConfig;
   if (location.protocol !== 'file:') {
-    try { const response = await fetch('./assets/json/game-config.json?v=2026-1014-soundtrack-rename'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
+    try { const response = await fetch('./assets/json/game-config.json?v=2026-1015-music-popup'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
     catch (error) { console.warn('Using bundled candy configuration.', error); }
   }
   const piles = CandyPiles();
@@ -640,21 +640,112 @@
   }
   el('playerPrevious').addEventListener('click', () => switchPlayerCharacter(-1));
   el('playerNext').addEventListener('click', () => switchPlayerCharacter(1));
+  // The two speaker buttons on the welcome, Deal again? and Rules dialogs.
+  // UI is a plain on/off toggle. MUSIC only shows the state (slash = off)
+  // and opens the Music popup, where the real controls live.
   function syncAudioControls() {
-    for (const [id, category] of [['dialogUiSound', 'ui'], ['dialogMusicSound', 'music']]) {
-      const enabled = CandySound.getChannel(category).enabled;
-      el(id).setAttribute('aria-pressed', String(enabled));
-      el(id).setAttribute('aria-label', (category === 'ui' ? 'UI sounds' : 'Music') + (enabled ? ' on: turn off' : ' off: turn on'));
+    const ui = CandySound.getChannel('ui').enabled;
+    el('dialogUiSound').setAttribute('aria-pressed', String(ui));
+    el('dialogUiSound').setAttribute('aria-label', 'UI sounds' + (ui ? ' on: turn off' : ' off: turn on'));
+    const music = CandySound.getChannel('music').enabled;
+    el('dialogMusicSound').classList.toggle('is-off', !music);
+    el('dialogMusicSound').setAttribute('aria-label', 'Music options (music ' + (music ? 'on' : 'off') + ')');
+  }
+  el('dialogUiSound').addEventListener('click', () => {
+    CandySound.setChannelEnabled('ui', !CandySound.getChannel('ui').enabled);
+    syncAudioControls();
+    saveSoundSettings();
+  });
+
+  // ---- The Music popup ----------------------------------------------------
+  // Changes apply immediately so the player can hear them. Cancel puts back
+  // what was in force when the popup opened; Done simply closes it.
+  let musicBefore = null;
+  const trackIds = CandySound.musicTracks.map(track => track.id);
+  function musicSettings() {
+    const channel = CandySound.getChannel('music');
+    return { enabled: channel.enabled, volume: channel.volume, track: CandySound.currentTrack, mode: CandySound.musicMode };
+  }
+  function applyMusicSettings(settings) {
+    CandySound.selectTrack(settings.track);
+    CandySound.setMusicMode(settings.mode);
+    CandySound.setChannelVolume('music', settings.volume);
+    if (settings.enabled !== CandySound.getChannel('music').enabled) {
+      CandySound.setChannelEnabled('music', settings.enabled);
+      if (settings.enabled) CandySound.startWelcomeMusic();
     }
   }
-  for (const [id, category] of [['dialogUiSound', 'ui'], ['dialogMusicSound', 'music']]) {
+  function syncMusicPopup() {
+    const settings = musicSettings();
+    el('musicEnabled').setAttribute('aria-pressed', String(settings.enabled));
+    el('musicEnabled').querySelector('span').textContent = settings.enabled ? 'ON' : 'OFF';
+    el('musicEnabled').setAttribute('aria-label', 'Music ' + (settings.enabled ? 'on: turn off' : 'off: turn on'));
+    el('trackName').textContent = CandySound.musicTracks.find(track => track.id === settings.track).name;
+    el('modePaused').setAttribute('aria-pressed', String(settings.mode === 'paused'));
+    el('modeContinuous').setAttribute('aria-pressed', String(settings.mode === 'continuous'));
+    // Slider stops 0 to 100 in steps of 20; sound.js scales the top a third
+    // above the level the game first shipped with.
+    el('musicVolume').value = Math.round(settings.volume * 100);
+    el('musicVolumeValue').textContent = el('musicVolume').value;
+  }
+  function openMusicPopup() {
+    musicBefore = musicSettings();
+    syncMusicPopup();
+    el('musicOverlay').hidden = false;
+    el('musicDone').focus();
+  }
+  function closeMusicPopup() {
+    el('musicOverlay').hidden = true;
+    musicBefore = null;
+    syncAudioControls();
+    el('dialogMusicSound').focus();
+  }
+  el('dialogMusicSound').addEventListener('click', openMusicPopup);
+  el('musicEnabled').addEventListener('click', () => {
+    applyMusicSettings({ ...musicSettings(), enabled: !CandySound.getChannel('music').enabled });
+    syncMusicPopup();
+  });
+  for (const [id, step] of [['trackPrevious', -1], ['trackNext', 1]]) {
     el(id).addEventListener('click', () => {
-      const enabled = !CandySound.getChannel(category).enabled;
-      CandySound.setChannelEnabled(category, enabled);
-      if (category === 'music' && enabled) CandySound.startWelcomeMusic();
-      syncAudioControls();
+      const index = trackIds.indexOf(CandySound.currentTrack);
+      CandySound.selectTrack(trackIds[(index + step + trackIds.length) % trackIds.length]);
+      syncMusicPopup();
     });
   }
+  el('musicVolume').addEventListener('input', () => {
+    CandySound.setChannelVolume('music', Number(el('musicVolume').value) / 100);
+    el('musicVolumeValue').textContent = el('musicVolume').value;
+  });
+  for (const [id, mode] of [['modePaused', 'paused'], ['modeContinuous', 'continuous']]) {
+    el(id).addEventListener('click', () => { CandySound.setMusicMode(mode); syncMusicPopup(); });
+  }
+  el('musicCancel').addEventListener('click', () => { applyMusicSettings(musicBefore); closeMusicPopup(); });
+  el('musicDone').addEventListener('click', () => { closeMusicPopup(); saveSoundSettings(); });
+
+  // ---- Remembering the sound settings --------------------------------------
+  // One small note in this browser's storage, written when the player taps
+  // Done in the popup or the UI toggle. The key starts with the shell's
+  // prefix and the game folder, as "README - game design requirements" rule
+  // 21 allows; the bare "halloween2026:candy-go-fish" note belongs to the
+  // shell (scores and switches) and is never touched here.
+  const SOUND_STORAGE_KEY = 'halloween2026:candy-go-fish:music';
+  function saveSoundSettings() {
+    try { localStorage.setItem(SOUND_STORAGE_KEY, JSON.stringify({ ...musicSettings(), ui: CandySound.getChannel('ui').enabled })); }
+    catch (error) { console.warn('Sound settings were not saved in this browser.', error); }
+  }
+  function restoreSoundSettings() {
+    let saved;
+    try { saved = JSON.parse(localStorage.getItem(SOUND_STORAGE_KEY)); } catch (_) { saved = null; }
+    if (!saved || typeof saved !== 'object') return;
+    // Each value is checked before use: a hand-edited or outdated note must
+    // never stop the game from starting.
+    if (trackIds.includes(saved.track)) CandySound.selectTrack(saved.track);
+    if (saved.mode === 'paused' || saved.mode === 'continuous') CandySound.setMusicMode(saved.mode);
+    if (Number.isFinite(saved.volume) && saved.volume >= 0 && saved.volume <= 1) CandySound.setChannelVolume('music', saved.volume);
+    if (saved.enabled === false) CandySound.setChannelEnabled('music', false);
+    if (saved.ui === false) CandySound.setChannelEnabled('ui', false);
+  }
+  restoreSoundSettings();
   syncAudioControls();
   el('dialogAction').addEventListener('click', () => {
     if (['welcoming', 'new-round', 'rules'].some(name => el('overlay').classList.contains(name))) CandySound.fadeOutWelcomeMusic();
@@ -689,8 +780,11 @@
   });
   document.addEventListener('keydown', event => {
     if (!overlayOpen || event.key !== 'Tab') return;
-    const buttons = [el('dialogUiSound'), el('dialogMusicSound'), el('dialogAction'), el('dialogCancel')]
-      .filter(button => !button.disabled && button.getClientRects().length && !button.hidden);
+    // Tab cycles within the popup while it is open, otherwise within the dialog.
+    const controls = el('musicOverlay').hidden
+      ? [el('dialogUiSound'), el('dialogMusicSound'), el('dialogAction'), el('dialogCancel')]
+      : [el('musicEnabled'), el('trackPrevious'), el('trackNext'), el('modePaused'), el('modeContinuous'), el('musicVolume'), el('musicCancel'), el('musicDone')];
+    const buttons = controls.filter(button => !button.disabled && button.getClientRects().length && !button.hidden);
     if (!buttons.length) return;
     const index = buttons.indexOf(document.activeElement);
     event.preventDefault(); buttons[(index + (event.shiftKey ? -1 : 1) + buttons.length) % buttons.length].focus();
