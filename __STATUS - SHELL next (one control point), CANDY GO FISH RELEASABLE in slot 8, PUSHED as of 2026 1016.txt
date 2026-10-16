@@ -1,0 +1,22 @@
+Halloween 2026 - project status (the glance; the SHELL's details in claude-john-docs/, each game's in its own folder)
+
+2026 1016 pm   CANDY GO FISH RELEASABLE (John): every game todo closed, phone reviews closed, soundtracks
+              cut to 7.5 MB, Sound popup polished. The game's Claude docs moved out of the root
+              claude-john-docs into games/candy-go-fish/_documents/claude-john-docs/ (its own __STATUS
+              marker is in the game folder). COMMITTED AND PUSHED, stamp 2026-1016-releasable.
+              RULE: the root claude-john-docs is the shell's; each game keeps its own.
+2026 1016      Earlier: the game's iPhone sound, fast start, welcome, mix and flicker work (see the game).
+2026 1007-14   John + Codex built Candy Go Fish, slot 8.
+2026 0927-1001 Claude built the shell: frame, three panels, picker, iframes, scores, switches.
+
+NOT YET
+ - NEXT PROJECT (John, 2026 1016): one control point for the shell? Today the top Home/Settings buttons
+   AND the bottom sliding panel; idea: one Home button at the top that opens the sliding game panel
+   for the current game. Not started; agree the design before code.
+ - shell: per-game switches still change nothing; icons for the other games; placeholder slots;
+   requirements gaps; contribution workflow; home-screen test on the iPhone
+ - more halloween2026 games may follow (John); each gets _documents/claude-john-docs/ of its own
+
+DETAIL  claude-john-docs/Claude-ToBe-Continued-2026-1016-1415.MD (shell-level, one page)
+        claude-john-docs/specifications.MD (sections 2-4, 3a/3b for the shell's layout) and specifications-technical.MD
+        games/candy-go-fish/_documents/_START-HERE.md (the game's reading order)

@@ -242,7 +242,7 @@
   // here; the clip sits silent at gain 0 until startWelcomeMusic fades it in.
   function musicEntry(track) {
     if (!track.entry) {
-      const clip = new Audio('./assets/sounds/' + track.file);
+      const clip = new Audio('./assets/sounds/soundtracks/' + track.file);
       clip.preload = 'auto';
       clip.loop = true;
       const source = context.createMediaElementSource(clip);

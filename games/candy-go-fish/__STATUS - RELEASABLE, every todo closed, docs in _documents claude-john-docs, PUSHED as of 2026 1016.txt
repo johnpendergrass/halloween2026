@@ -1,0 +1,21 @@
+Candy Go Fish - game status (the glance; details in _documents/claude-john-docs/ and _documents/codex-john-docs/)
+
+2026 1016 pm   John declared the game RELEASABLE: every item in NEXT-TODOS closed, the pending phone
+              reviews closed. Same afternoon (Claude, at John's direction): soundtracks cut to 96 kbps
+              in assets/sounds/soundtracks/ (13.1 MB -> 7.5 MB, originals in design ideas/soundtrack
+              originals/); Sound popup polish (no slider tick marks, "play / Always", "only when /
+              Paused"); the game's Claude docs consolidated HERE from the root claude-john-docs.
+              COMMITTED AND PUSHED, stamp 2026-1016-releasable.
+2026 1016      Earlier the same day: iPhone sound closed (decoded buffers), fast start, small portraits,
+              set on arrival, shorter Go Fish pause, startup flash fixed, scrolling welcome, NEW/HELP,
+              quieter mix, phone flicker fixed.
+2026 1007-14   John + Codex built the game (codex-john-docs/ is that record).
+
+NOT YET
+ - nothing open. Maintenance only. If touched: bump the shared stamp (28 places), run the checks one
+   at a time against the 8098 server, write the handoff in _documents/claude-john-docs/ (not the root).
+
+DETAIL  _documents/_START-HERE.md (reading order)
+        _documents/claude-john-docs/Claude-ToBe-Continued-2026-1016-1415.MD (the day, one page)
+        _documents/claude-john-docs/specifications.MD and specifications-technical.MD
+        _documents/codex-john-docs/CURRENT-STATE-2026-1015.md (October 16 section) and NEXT-TODOS.md

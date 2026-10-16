@@ -243,10 +243,13 @@ h2 { font-size: max(14px,4.5vw); }
 #setSizeChoice { display: none; width: 60vw; margin: 5vw auto 4.4vw; }
 .welcoming #setSizeChoice, .new-round #setSizeChoice { display: flex; } /* on the welcome and on Deal again? (John, 2026-10-15) */
 .mode-switch { width: 44vw; }
-.mode-switch button { min-height: 7.5vw; padding: 0.5vw 1vw; font-size: max(11px,3.1vw); }
+.mode-switch button { min-height: 9.5vw; padding: 0.6vw 1vw; gap: 0; line-height: 1.1; font-size: max(11px,3.1vw); }
+/* Two lines per side (John, 2026-10-16): a small lowercase lead-in ("play", "only when") over the action word at the old size. */
+.mode-switch .mode-when { font-size: max(8px,1.9vw); font-weight: normal; letter-spacing: 0.02em; }
 .volume-field { align-items: stretch; margin-top: 4vw; }
 .volume-field input, .volume-ticks { width: 60vw; align-self: center; box-sizing: border-box; }
 .volume-field input { height: 6vw; margin: 0; accent-color: #285b43; }
+/* The numbers under the slider; the browser's own tick marks (a datalist) were removed 2026-10-16: the numbers tell the story. */
 .volume-ticks { display: flex; justify-content: space-between; padding: 0 1vw; margin-top: -1.4vw; font-size: max(10px,3vw); font-weight: bold; color: #597159; }
 .music-actions { flex: none; margin-top: 5vw; display: flex; justify-content: space-between; gap: 4vw; }
 .music-actions .secondary, .music-actions .primary { flex: 1; min-width: 0; min-height: 9.5vw; margin: 0; border-radius: 3vw; font-size: max(13px,4vw); font-weight: bold; }

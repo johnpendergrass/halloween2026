@@ -1,6 +1,6 @@
 # GO FISH! — Candy Edition!
 
-Playable Halloween 2026 mini game, shell slot 8. Plain HTML/CSS/JavaScript, no framework or build. HTTP and direct index.html opening work.
+RELEASABLE Halloween 2026 mini game (John, 2026-10-16: every todo closed, phone reviews done), shell slot 8. Plain HTML/CSS/JavaScript, no framework or build. HTTP and direct index.html opening work.
 
 Start with [_documents/_START-HERE.md](_documents/_START-HERE.md) and the authoritative [October 15 handoff](_documents/codex-john-docs/CURRENT-STATE-2026-1015.md). Older design/handoff notes are historical where superseded.
 
@@ -12,7 +12,7 @@ The pumpkin-vine welcome keeps dimmed game art behind it. Loading assets changes
 
 Separate player/opponent earned-set sounds play with their dialogs. Game-over score is second and ending reason last; winner portrait/name gets a larger gold halo. Original full-screen candy rain is the only celebration, including opponent wins. Replay drains active drops and clears the halo. The rejected opponent-spill experiment is removed.
 
-Audio: UI effects live directly in assets/sounds; speeches are in speech/goes-first and speech/victory (six starters, 36 victory clips). Victory speech has a two-second delay and replay button. UI sounds default to 50% gain. Central preparation lives in js/preload.js; playback/channel control lives in js/sound.js.
+Audio: UI effects live directly in assets/sounds, the three soundtracks in assets/sounds/soundtracks (96 kbps, originals in _documents/design ideas/soundtrack originals); speeches are in speech/goes-first and speech/victory (six starters, 36 victory clips). Victory speech has a two-second delay and replay button. UI sounds default to 25% gain, speech 37.5%, the character-switch sounds 18.75% (one number each in js/sound.js). Central preparation lives in js/preload.js; playback/channel control lives in js/sound.js.
 
 Three looping soundtracks (Earth, Haunted, Wonderful; Wonderful by default) accompany welcome, Deal again? and Rules: three-second fade in, two-second fade out on closing, then pause preserving position; each tune keeps its own position for the page session. Welcome autoplay may require a tap on the artwork. One SOUND speaker (upper right) opens the Sound popup: UI sounds and music on/off (green glow when on), soundtrack arrows, when to play (Always or Paused) and a six-stop volume slider, with CANCEL and CONFIRM. CONFIRM remembers the settings in this browser. In Paused mode the soundtrack also comes in a second after the victory speech at game over and plays until New game. The shell Sound switch cannot control this game. See [audio guide](assets/sounds/README.md). Since October 15 the speaker buttons use a speaker photo with the label below and a red slash when off, the welcome offers three or four candies per set (four deals six cards each), and the chosen characters, tune settings and set size are remembered in this browser.
 
@@ -28,8 +28,8 @@ Open http://127.0.0.1:8098/games/candy-go-fish/index.html or the root shell/slot
 
 The shared [game requirements](../README%20-%20game%20design%20requirements.md) are authoritative. At John's direction there is no dedicated Pause button. Local dialogs pause presentation; the shell drawer does not notify/pause the game. There are no timed penalties. The helper is the only game/shell link.
 
-Startup flash remains unresolved and deferred; preload is not claimed as its fix. Physical iPhone audio/first-render review remains manual. Further sound elements, visual polish and older gameplay proposals are in [NEXT-TODOS](_documents/codex-john-docs/NEXT-TODOS.md).
+The startup flash was fixed 2026-10-16 (index.html ships the welcome look). Physical iPhone reviews are complete as of 2026-10-16; NEXT-TODOS has no open items. Physical iPhone audio/first-render review remains manual. Further sound elements, visual polish and older gameplay proposals are in [NEXT-TODOS](_documents/codex-john-docs/NEXT-TODOS.md).
 
-Current publishing cache stamp: 2026-1016-welcome-scroll.
+Current publishing cache stamp: 2026-1016-releasable.
 
 Demo endings (developer aid): open index.html with ?demo=win, bigwin, loss, bigloss or tie and tap Let's play to see that game-over screen without playing a game.

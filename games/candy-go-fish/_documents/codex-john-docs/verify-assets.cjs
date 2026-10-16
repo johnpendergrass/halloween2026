@@ -16,9 +16,9 @@ referenced.add('sounds/speech/tie/tie - no one saw that coming.mp3');
 referenced.add('sounds/confirmText.mp3');
 referenced.add('sounds/winsSet-player.mp3');
 referenced.add('sounds/winsSet-opponent.mp3');
-referenced.add('sounds/soundtrack-music-wonderful.mp3');
-referenced.add('sounds/soundtrack-music-haunted.mp3');
-referenced.add('sounds/soundtrack-music-earth.mp3');
+referenced.add('sounds/soundtracks/soundtrack-music-wonderful.mp3');
+referenced.add('sounds/soundtracks/soundtrack-music-haunted.mp3');
+referenced.add('sounds/soundtracks/soundtrack-music-earth.mp3');
 for (const filename of ['index.html', 'candy-go-fish.css', 'js/candy-go-fish.js', 'js/candy-piles.js', 'js/candy-rain.js']) {
   const source = fs.readFileSync(path.join(root, filename), 'utf8');
   for (const match of source.matchAll(/\.\/assets\/([^'"\s?]+)/g)) {
@@ -39,6 +39,6 @@ for (const entry of files.filter(entry => entry.isFile())) {
   const relative = path.relative(path.join(root, 'assets'), path.join(entry.parentPath, entry.name)).replaceAll('\\', '/');
   // Local audio masters/candidates are intentionally not included in this checkpoint.
   if (relative.startsWith('sounds/') && !trackedAudio.has('assets/' + relative)) continue;
-  assert(referenced.has(relative) || ['json/README.md', 'sounds/README.md', 'sounds/_where-are-the-sounds-from.txt', 'sounds/speech/_where the speech generation came from.txt'].includes(relative), 'Unused asset remains: ' + relative);
+  assert(referenced.has(relative) || ['json/README.md', 'sounds/README.md', 'sounds/soundtracks/_where-are-the-sounds-from.txt', 'sounds/speech/_where the speech generation came from.txt'].includes(relative), 'Unused asset remains: ' + relative);
 }
 console.log('PASS: every live asset exists; published assets are used or documented retained sources.');
