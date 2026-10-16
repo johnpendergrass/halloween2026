@@ -1,0 +1,26 @@
+Halloween 2026 - project status (the glance; details in claude-john-docs/ and codex-john-docs/)
+
+2026 1015 night John + Claude: candy cannon = the opponent's win celebration (John's design, live);
+              iPhone silence diagnosed with ?debug=sound: clips that start on their own after a
+              tap (goes-first voice, victory/tie speech, demo endings) are blocked by iOS; tap-started
+              sounds fine. NOT the cannon/demo. Plan: claudePlans/iphone-speech-buffers-plan.md.
+              Stamp 2026-1015-sound-debug.
+2026 1015 late muted loss tried and removed; tie voiceover + half rain; ?demo= endings.
+2026 1015 eve  iPhone UI toggle fixed; Sound popup v2; green buttons; set-size notes; icon; shell rework.
+2026 1015 pm   Sound popup, vine frames, candy-bar buttons, "NAME (you)", game-over music.
+2026 1015 am   Standalone move DEFERRED (plan kept on file). Music popup.
+2026 1007-14   John + Codex: Candy Go Fish built in games/candy-go-fish, slot 8.
+2026 0927-30   Frame, panels, iframe games, games.json v2, board of 2 x 4 cells.
+
+NOT YET
+ - JOHN DECIDES: experiment / revert / buffer fix for the iPhone speech (plan file); then push, then phone test
+ - item 13: opponent's completed set appears before the flying candy arrives
+ - remove ?debug=sound when the sound problem is closed
+ - iPhone review: Sound popup v2, framed dialogs, shell tab + icon, game-over music, preload time
+ - where settings live (John: revisit later); items 2, 6, 10 (four stale checks)
+ - shell: per-game switches still change nothing; other games' icons
+ - standalone move: deferred, plan in claude-john-docs/claudePlans/
+
+DETAIL  claude-john-docs/Claude-ToBe-Continued-2026-1015-1927.MD
+        claude-john-docs/claudePlans/iphone-speech-buffers-plan.md
+        games/candy-go-fish/_documents/codex-john-docs/CURRENT-STATE-2026-1015.md

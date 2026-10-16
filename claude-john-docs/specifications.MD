@@ -839,6 +839,51 @@ endings.**
   'Workign fine. Just before adding new loss celebration'". Stamp
   `2026-1015-tie-voice-demo`.
 
+**Late evening of 2026-10-15, continued: the candy cannon and the iPhone.**
+
+- **The candy cannon (John's design, now the loss celebration).** "imagine a
+  cannon that is hidden behind the game over requester panel. it fires
+  candies up and out from behind that panel. the candies are aimed randomly
+  from maybe -30 degree to +30 degrees from vertical. each candy follows an
+  arch that is affected by gravity, some of them going off screen to the
+  sides... like a cannonball would go. each candy is a random branded candy
+  (75% of them) or a generic candy (25%). Same size options as the victory
+  candy rain. the candies then fall down behind the game over panel to the
+  bottom and are gone... When the user clicks the continue button we wait
+  for all candies to clear and then continue... The density and frequency
+  of the cannons should be an easy thing for you to adjust, as well as the
+  random velocities and the effect of gravity. i am aiming for a density of
+  maybe 50% of the candy rain." Claude's questions and John's answers:
+  launch point centred with about a quarter of the screen width of spread;
+  volleys rather than a fountain; peaks on screen with a few overshooting
+  the top; tumbling; the same three-second pause and run-until-New-game as
+  the rain; loss only; falling back behind the panel. Since the rain layer
+  already sat behind the game-over panel (z-index 2 under 3) and in front
+  of everything else, "the candy display would mirror what happened with
+  the candy rain" came for free. John: "that works really well. very good
+  job!" Committed and pushed at his request as the official loss ending.
+- **The iPhone silence.** John: "something has stopped the phone from
+  playing sound... no music. no ui." The ring/silent switch was normal.
+  Claude built a `?debug=sound` panel (engine state, switches, preload,
+  four test buttons) and John ran it on the phone: engine running, every
+  switch on, preload clean, the engine's own beep and a UI clip both heard.
+  Two live rounds then showed the pattern: sounds started inside a tap
+  play (artwork tap music, spinner ticks, UI clips); sounds that start on
+  their own later (the "goes first" voice, the victory speech, hence the
+  demo endings) do not, except once when the gap after the tap was short.
+  Conclusion: an iPhone rule, each clip a separate media element that may
+  only start inside or shortly after a tap; not the cannon, not the demo.
+  John asked whether to revert to the version before the loss work; Claude
+  advised that it would most likely stay silent and offered a ten-minute
+  experiment (the old version in a side folder on the live site), a
+  revert, or the real fix (speech and UI clips played from decoded
+  buffers, as the ticks already are). Plan on file:
+  `claudePlans/iphone-speech-buffers-plan.md`. John: "we will restart
+  tomorrow." Two lessons recorded there: the phone only runs the live
+  site, so a push must precede any phone test; and the voices after a real
+  game were probably never audible on the phone, the demo was just the
+  first time anyone listened for a timer-started sound.
+
 ## 6e. games.json v2: the first proposal (2026-09-29, superseded)
 
 Kept for the reasoning. The shape actually built is in section 6 above;

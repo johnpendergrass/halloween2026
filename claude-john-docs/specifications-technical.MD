@@ -809,6 +809,49 @@ also quote it.
   line-ending trap: `sound.js`, `candy-go-fish.js` and the stylesheet
   are CRLF, `candy-rain.js` and the Codex docs are LF.
 
+**Candy cannon and the sound diagnostic, 2026-10-15 late evening.**
+
+- **Cannon.** `js/candy-rain.js` has a `CANNON` table beside the `RAIN`
+  moods: `perVolley [5,8]`, `volleyMs [450,750]`, `maxOnScreen 60`,
+  `brandChance .75`, `spread .25` (launch zone as a share of the width,
+  centred), `angle 30` (degrees either side of straight up), `rise [.25,.6]`
+  (climb above the muzzle as a share of the height), `gravity 1.8` (screen
+  heights per second squared), `turns [90,540]`, `samples 40`. `fire()`
+  does schoolbook projectile motion: vy from the rise (vy² = 2gh), vx =
+  vy·tan(aim), flight time to two candy sizes below the bottom edge in
+  closed form, then 40 keyframes of `translate(x(t), y(t)) rotate(...)`
+  played with linear easing by `element.animate`, the same machinery and
+  the same `animations` set as the rain, so `drain()` and `stop()` need no
+  change. `start(waitMs, 'cannon', behindElement)` takes the game-over
+  panel; the muzzle is its top edge (bottom of the screen if absent).
+  Volleys are a `setTimeout` chain with jitter (`volley` timer), cleared
+  by stop/drain. Reduced motion: two candies every 1.5 s, no tumble.
+  `makeCandy()` is shared by rain and cannon. The layer stays at z-index 2
+  on `body` and the panel at z-index 3 in the root stacking context, so the
+  candies draw behind the panel and over the table.
+- **Audio wake-up.** `CandySound.unlock()` = `prepareContext()` (create +
+  resume) and is called first thing in the dialogs' confirm handler.
+- **`?debug=sound`.** A block at the bottom of `js/candy-go-fish.js`
+  builds a fixed panel (`#soundDebug`, z-index 100) refreshed twice a
+  second: `CandySound.engineState` ('none' or the AudioContext state),
+  `CandySound.enabled`, both channels' enabled/volume, `CandyPreload.settled`
+  and `failures`, the device string, and a six-line log. Buttons: Wake
+  engine (`unlock`), Engine beep (`CandySound.testTone()`, an oscillator
+  straight into the context destination), UI clip (`play('confirmText')`),
+  Plain clip (a `new Audio` NOT routed through the context). Absent without
+  the parameter; remove when no longer needed.
+- **Finding and plan.** See `claudePlans/iphone-speech-buffers-plan.md`.
+  Short form: iOS lets an `HTMLMediaElement` start only inside a user tap
+  or shortly after; every clip here is its own element routed through the
+  AudioContext by `createMediaElementSource`; the ticks (AudioBuffer
+  sources) are exempt. Proposed: decode the 48 UI clips at startup and the
+  chosen victory clip on demand into AudioBuffers and play them like the
+  ticks; music unchanged. Checks to rewrite: `verify-sound-layout`,
+  `verify-victory-sounds`.
+- **Session scripts (scratchpad):** `cannon_check.cjs` (brand mix, pause,
+  stacking, clickability, drain, two screenshots), `debug_panel_check.cjs`,
+  `endings_shot.cjs` (now expects `cannon` for the loss demos).
+
 ## 5. iPhone "app" mode
 
 - Tags: `apple-mobile-web-app-capable`, `mobile-web-app-capable`,
