@@ -3,7 +3,7 @@
   // The generated companion keeps direct file:// opening functional.
   let config = window.CandyConfig;
   if (location.protocol !== 'file:') {
-    try { const response = await fetch('./assets/json/game-config.json?v=2026-1015-sound-popup-frames'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
+    try { const response = await fetch('./assets/json/game-config.json?v=2026-1015-shell-sound-icon'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
     catch (error) { console.warn('Using bundled candy configuration.', error); }
   }
   const piles = CandyPiles();
@@ -446,7 +446,8 @@
   }
   function finishGame() {
     phase = 'finished'; selected = null; render();
-    if (!reported) { Halloween.reportScore(state.sets.human.length, state.sets.human.length + '–' + state.sets.wendy.length); reported = true; }
+    // The shell lists the result with the opponent and the set size (John, 2026-10-15).
+    if (!reported) { Halloween.reportScore(state.sets.human.length, state.sets.human.length + '–' + state.sets.wendy.length, ['vs. ' + opponentName, state.copies + ' set game']); reported = true; }
     // The player's win is announced with " (you)", as on the table (John, 2026-10-15).
     const title = state.winner === 'human' ? humanName + ' (you) wins!' : state.winner === 'wendy' ? opponentName + ' wins!' : 'A sweet tie!';
     const remaining = state.pile.length + (state.pile.length === 1 ? ' candy' : ' candies');
@@ -737,8 +738,10 @@
   }
   el('dialogSound').addEventListener('click', openMusicPopup);
   el('uiEnabled').addEventListener('click', () => {
-    CandySound.setChannelEnabled('ui', !CandySound.getChannel('ui').enabled);
-    syncMusicPopup();
+    // The redraw runs whatever happens inside the sound layer, so the button
+    // always shows the channel's real state.
+    try { CandySound.setChannelEnabled('ui', !CandySound.getChannel('ui').enabled); }
+    finally { syncMusicPopup(); }
   });
   el('musicEnabled').addEventListener('click', () => {
     applyMusicSettings({ ...musicSettings(), enabled: !CandySound.getChannel('music').enabled });
@@ -841,6 +844,7 @@
     config.rules.copiesPerType = copies;
     config.rules.initialHandSize = baseRules.initialHandSize + (copies - baseRules.copiesPerType);
     el('setSizeChoice').dataset.selected = copies === 4 ? '1' : '0';
+    for (const id of ['setSizeNote', 'setSizeNoteHuman']) el(id).textContent = copies + ' candies per set';
     el('setSizeThree').setAttribute('aria-pressed', String(copies === 3));
     el('setSizeFour').setAttribute('aria-pressed', String(copies === 4));
   }

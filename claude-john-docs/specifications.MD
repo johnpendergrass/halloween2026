@@ -496,7 +496,17 @@ does little to a game; what it does not do is the game's own job.
   text shown in its place (`reportScore(42, "Master Chef")`). 0 or less
   is not recorded. The app adds the date. Clear scores asks
   "You sure?  Yes  No" first; it clears only the current game's list.
-- **Switches**, right column: **Sound** always first (one switch for the
+- **2026-10-15: the app's Sound switch is gone** (see 6j and 6k). Sound
+  lives in each game. The scores list is five lines (ten was tried that
+  day and found too tall) and a score may carry **up to two short
+  notes** after the date (`reportScore(3, "3-2", ["vs. Ron", "3 set game"])`).
+  A game with no switches gets no switch column; its scores use the full
+  width. The tab's text (title, description, how_to_play) may use small
+  marks: `**bold**`, `__accent__` (a look the game defines), `~~rainbow~~`
+  (a colour per letter), `\n` for a line break, `!! ` for a shaded line;
+  and a game may have its tab drawn in its own style through a
+  `look-<folder>` class and a marked section 5b of the app stylesheet.
+- **Switches**, right column (as first built): **Sound** always first (one switch for the
   whole app; decided: it is to work immediately), then up to three on/off switches
   the designer declares in games.json (`settings`: label + default 0/1).
   **A game switch applies to the next newly started game**, never
@@ -524,10 +534,12 @@ does little to a game; what it does not do is the game's own job.
   switch applies to the next game" are John's decisions for the next
   step; they are not yet rules in the designers' docs.
 
-## 6j. OPEN QUESTION: how the Sound switch reaches a game (discussed 2026-10-01, NOT decided)
+## 6j. How the Sound switch reaches a game (discussed 2026-10-01; RESOLVED 2026-10-15 by removing the switch)
 
-**First thing to settle in the next session.** Nothing here is built, and
-none of it is in the designers' docs.
+**Resolved on 2026-10-15:** John had the app's Sound switch deleted ("it
+is now in the game"). Every sound control is the game's own, inside its
+page; the designers' docs say so (1.8, rule 20). The discussion below is
+kept for the reasoning. Nothing of options A or B was built.
 
 A name (John): the main app is called **Halloween 2026**; the games it
 shows are the iframe games.
@@ -736,6 +748,55 @@ of 11 from John's list, plus a run of visual decisions:
   the welcome, Deal again? and Rules), candies per set (welcome and Deal
   again?), and the opponent/player arrows on the table. Nothing else is a
   setting. John: "we will revisit that issue later."
+
+**2026-10-15 evening (John + Claude).** The iPhone review, the shell, and
+the Sound popup's second sketch:
+- **The UI toggle on the iPhone.** John: the UI speaker "usually does not
+  switch modes when I click it", then more precisely: ON to OFF "takes
+  several seconds to display the OFF (slash) icon", OFF to ON is
+  immediate. Two fixes. First, a rewind guard: iOS throws when a clip
+  that has not loaded is rewound, and the error aborted the redraw.
+  Second, and the real one, John's own suggestion: "make the button
+  essentially a toggle switch, with no responsibility for starting or
+  stopping sounds, rewinding them, etc." The OFF tap used to pause and
+  rewind all 48 UI clips and 36 victory clips, seconds of work on a
+  phone. Now it flips the flag (the channel's volume node goes to zero,
+  which is what silences things), cancels a pending speech, and pauses
+  only a clip that is actually playing; each sound rewinds itself when it
+  is played. John asked why not let sounds run to their end: it would
+  have worked too, at the price of a paused victory speech coming back
+  mid-sentence.
+- **Set-size reminders on the table.** "3 candies per set" in light text
+  under the ?? / SOUND bar and again above the player's dish, each centred
+  in its gap; they follow the switch.
+- **The shell.** John: "delete the SOUND option in the halloween2026 shell,
+  as it is now in the game." Done; a game with no switches gets the full
+  width for its scores. The score list shows `<score> <date> vs. <opponent>
+  <#> set game`; ten lines were tried ("too long a display") and it went
+  back to five. The text is John's own, from `design ideas/Text for THIS
+  GAME.txt`, laid out like the Rules box: centred, GO FISH in the welcome's
+  gold with the dark outline (title and text), "candy rainfall" with a
+  colour per letter, line breaks where he asked, no byline, credits
+  "v 0.19.2 10/2026 jp/claude/chatty". A cream sheet was tried for the tab
+  and rejected: it flashed while the panel slid shut (the tab used to
+  switch before the slide; now it switches after). Title "GO FISH - Candy
+  Edition", top bar "GO FISH".
+- **The icon.** John: the candy plate with candies piled on it. Built by a
+  script from the ghost plate and the real candy images: Snickers, Dots
+  and Red Vines, large, spilling a little over the rim, the ghost's face
+  and hands clear. In the This Game tab it stands alone, no orange frame,
+  30% larger. Saved in the game's candy-dish folder; the fish SVG retired.
+- **The Sound popup, second sketch** (`design ideas/Sound requester layout
+  2nd version.png`): SOUNDS; the UI speaker centred; a rule; the MUSIC
+  speaker centred; the three controls centred below with no labels. Both
+  speakers on the dialog's centre line, labels right-justified to one
+  edge; more air around the rule and under MUSIC; the controls shorter and
+  narrower. The confirm button is **OK** (John asked what is most common;
+  OK with Cancel is, and the house rule is now: settings dialogs Cancel /
+  OK, consequential choices named by their action, information dialogs
+  one button saying where you go). OK, Let's play, Start a new round, Back
+  to the table and the celebration button all take the brighter green of
+  the check marks; Keep playing and CANCEL are outlined in the dark green.
 
 ## 6e. games.json v2: the first proposal (2026-09-29, superseded)
 

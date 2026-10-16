@@ -31,7 +31,7 @@
 
     <!-- The ?v= tag forces phones to fetch fresh code after a publish.
      Change it (and APP_VERSION in app.js) whenever the code changes. -->
-    <link rel="stylesheet" href="./app/styles.css?v=2026-1015-sound-popup-frames" />
+    <link rel="stylesheet" href="./app/styles.css?v=2026-1015-shell-sound-icon" />
   </head>
 
   <body>
@@ -86,9 +86,9 @@
             <!-- This Game tab: app.js fills every part from the current
              game's games.json entry (fillThisGameTab). Empty fields are
              hidden, so a half-filled entry still reads cleanly.
-             Under the icon and name sit two columns: the game's five
-             high scores on the left, and the switches on the right
-             (Sound first, then up to three of the game's own). -->
+             Under the icon and name: the game's ten high scores, and,
+             only for a game that declared switches in games.json, a
+             second column with up to three of them. -->
             <div class="drawer-body this-game" id="tab-game" hidden>
               <div class="this-game-head">
                 <img class="this-game-icon" id="thisGameIcon" alt="" draggable="false" hidden />
@@ -114,9 +114,9 @@
                 </div>
                 <div class="this-game-settings" id="thisGameSettings"></div>
               </div>
-              <p id="thisGameDescription"></p>
+              <div id="thisGameDescription"></div>
               <h3 class="this-game-heading" id="thisGameHowHeading">How to play</h3>
-              <p id="thisGameHowToPlay"></p>
+              <div id="thisGameHowToPlay"></div>
               <p class="this-game-credits" id="thisGameCredits"></p>
             </div>
           </div>
@@ -124,6 +124,6 @@
       </div>
     </div>
 
-    <script src="./app/app.js?v=2026-1015-sound-popup-frames"></script>
+    <script src="./app/app.js?v=2026-1015-shell-sound-icon"></script>
   </body>
 </html>

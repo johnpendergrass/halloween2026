@@ -12,7 +12,7 @@ const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary
     await button.waitFor();
     const icon = button.locator('img');
     await icon.evaluate(img => img.decode());
-    assert((await icon.getAttribute('src')).includes('halloween-fish.svg'));
+    assert((await icon.getAttribute('src')).includes('icon-candy-plate.png')); // the candy-plate icon since 2026-10-15
     await page.screenshot({ path: path.join(__dirname, 'shell-menu.png') });
     await button.click();
     const frame = page.frameLocator('#gameFrame');
@@ -29,7 +29,7 @@ const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary
     assert.equal(await frame.locator('#dialogTitle').textContent(), 'Deal again?');
     await frame.locator('#dialogCancel').click();
     assert.equal(await frame.locator('#humanSlots .slot').count(), 10);
-    assert.equal(await page.locator('#topTitle').textContent(), 'Go Fish Candy Edition');
+    assert.equal(await page.locator('#topTitle').textContent(), 'GO FISH'); // the short_title since 2026-10-15
     const aligned = await frame.locator('#table').evaluate(table => {
       const opponent = table.querySelector('#wendySlots').getBoundingClientRect();
       const center = table.querySelector('.center-area').getBoundingClientRect();

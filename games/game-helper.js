@@ -11,12 +11,16 @@
 
        Halloween.reportScore(42);                  // the list shows 42
        Halloween.reportScore(42, "Master Chef");   // the list shows Master Chef
+       Halloween.reportScore(3, "3-2", ["vs. Ron", "3 set game"]);
 
    The number is ALWAYS given: the app ranks the scores by it, higher is
    better, and keeps the best five for this game on this device. The text
-   is optional; when given, it is shown in place of the number. A score of
-   0 or less is not recorded. The app adds the date itself and shows the
-   five in the This Game tab, e.g.  1.  42 (10-01-2026).
+   is optional; when given, it is shown in place of the number. The list
+   of notes is optional too: up to two short strings (about 16 characters
+   each) shown after the date, for things like the opponent or the game
+   variant. A score of 0 or less is not recorded. The app adds the date
+   itself and shows the five in the This Game tab, e.g.
+       1.  3-2 (10-15-2026)  vs. Ron  3 set game
 
    That is all a game has to do. It must not use window.parent itself;
    this file is the one place that does. A game MAY keep its own settings
@@ -35,7 +39,8 @@
    browser console, so the game still runs and can be tested alone.
 
    THAT IS ALL THERE IS. reportScore is the helper's only call. A game
-   cannot read the Sound switch or its own switches in the This Game tab.
+   cannot read its own switches in the This Game tab, and the app has no
+   sound switch of its own (since 2026-10-15): sound is the game's job.
 
    NOT HERE, ON PURPOSE: pausing. The player can open the app's bottom
    panel at any time; it covers about the lower half of the game, and the
@@ -62,11 +67,12 @@ const Halloween = {
   },
 
   /** Tell the app this game's result. `value` is a number (higher is
-      better); `text` is optional and is shown in place of the number. */
-  reportScore(value, text) {
+      better); `text` is optional and is shown in place of the number;
+      `notes` is optional, up to two short strings shown after the date. */
+  reportScore(value, text, notes) {
     const app = Halloween.findApp();
     if (app) {
-      app.reportScore(value, text);
+      app.reportScore(value, text, notes);
     } else {
       console.info("Halloween.reportScore: not inside the app, so the score " +
                    value + " was not saved.");

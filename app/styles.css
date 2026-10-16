@@ -446,10 +446,10 @@ body {
   font-size: 0.85em;
 }
 
-/* Under the icon and name: two equal columns. Left, the five high scores;
-   right, the switches (Sound first, then the game's own). app.js fills
-   both. On a phone, the icon row plus four switches just fill the open
-   drawer; the description below is reached by scrolling the tab. */
+/* Under the icon and name: the ten high scores on the left and, for a
+   game that declared switches, those on the right. app.js fills both and
+   adds .no-switches when there are none, so the scores take the whole
+   width. The description below is reached by scrolling the tab. */
 .this-game-panels {
   display: grid;
   /* The scores column is the wider one (3 shares to 2), because each line
@@ -458,6 +458,10 @@ body {
   grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
   gap: 4cqw;
   margin-bottom: 3cqw;
+}
+
+.this-game-panels.no-switches {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 /* The scores column's top line: "High Scores" and the Clear scores button
@@ -507,8 +511,10 @@ body {
   cursor: default;
 }
 
-/* The five lines, e.g.  1.  42  (10-01-2026), as a table of three columns:
-   the rank, the score, the date, with about two spaces between them.
+/* The five lines, e.g.  1.  3-2  (10-15-2026)  vs. Ron  3 set game, as a
+   table of five columns: the rank, the score, the date and two notes the
+   game may add, with about two spaces between them. A game that adds no
+   notes leaves the last two columns empty and they take no room.
    Each column is only as wide as its widest entry, and the whole table is
    centred under the heading. So with short scores it is narrow, with an
    indent on both sides; a longer score such as "Master Chef" widens the
@@ -521,7 +527,7 @@ body {
    wider than the space it has. */
 .score-list {
   display: grid;
-  grid-template-columns: auto minmax(0, auto) auto;
+  grid-template-columns: auto minmax(0, auto) auto auto auto;
   justify-content: center;
   column-gap: 2.4cqw;            /* about two spaces */
   align-items: center;           /* the smaller date sits mid-height in its line */
@@ -543,6 +549,14 @@ body {
 .score-date {
   font-size: 0.75em;
   opacity: 0.7;
+  white-space: nowrap;
+}
+
+/* A note after the date ("vs. Ron", "3 set game"): like the date, a little
+   less dim. */
+.score-note {
+  font-size: 0.75em;
+  opacity: 0.85;
   white-space: nowrap;
 }
 
@@ -618,6 +632,76 @@ body {
   margin-top: 3cqw;
   font-size: 1em;
   font-weight: 700;
+}
+
+/* The accent mark (__text__): bold unless a per-game look says more. */
+.this-game .accent {
+  font-weight: 700;
+}
+
+/* The rainbow mark (~~text~~): app.js wraps each letter in a span and these
+   seven colours repeat along the word. */
+.this-game .rainbow span:nth-child(7n+1) { color: #ff6b6b; }
+.this-game .rainbow span:nth-child(7n+2) { color: #ffa94d; }
+.this-game .rainbow span:nth-child(7n+3) { color: #ffe066; }
+.this-game .rainbow span:nth-child(7n+4) { color: #8ce99a; }
+.this-game .rainbow span:nth-child(7n+5) { color: #74c0fc; }
+.this-game .rainbow span:nth-child(7n+6) { color: #b197fc; }
+.this-game .rainbow span:nth-child(7n+7) { color: #f783ac; }
+
+/* A shaded emphasis line in the description or how-to-play text (a line
+   that starts with "!! " in games.json; app.js makeParagraph). */
+.this-game p.emphasis {
+  padding: 1.5cqw 2.5cqw;
+  border-left: 0.8cqw solid currentColor;
+  border-radius: 1cqw;
+  background: #ffffff14;
+}
+
+/* ------------------------------------------------------------------------
+   5b. Per-game looks. app.js puts look-<folder_name> on the This Game tab,
+   so a game may have its tab drawn in its own style. Everything in this
+   section is optional and belongs to one game; the rest of the app never
+   depends on it. Keep each game's rules together and name the game.
+   --------------------------------------------------------------------- */
+
+/* Candy Go Fish (John, 2026-10-15): the tab is laid out like the game's own
+   Rules box, centred lines, the HOW TO PLAY heading in capitals and the two
+   warnings as shaded boxes, but keeps the panel's own dark green and light
+   text (a cream sheet was tried and flashed while the panel closed). The
+   shade and edge are the game's rule-box colours, lightened for the dark. */
+.look-candy-go-fish {
+  text-align: center;
+}
+
+/* GO FISH in the title and the text: the welcome screen's gold with a dark
+   outline (candy-go-fish.css, .welcoming h1). */
+.look-candy-go-fish .accent {
+  color: #df721d;
+  -webkit-text-stroke: 0.6px #111;
+  paint-order: stroke fill;
+  text-shadow: 0 0.3cqw 0.3cqw #0009;
+}
+
+/* The icon is a candy plate already: shown as it is, no orange frame, and
+   about 30% larger than the other games' icons. */
+.look-candy-go-fish .this-game-icon {
+  width: 18.2cqw;
+  height: 18.2cqw;
+  padding: 0;
+  background: transparent;
+}
+
+.look-candy-go-fish .this-game-heading {
+  font-size: 1.25em;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.look-candy-go-fish p.emphasis {
+  background: #ffffff1a;
+  border-left-color: #a7c48f;
+  text-align: center;
 }
 
 /* ------------------------------------------------------------------------

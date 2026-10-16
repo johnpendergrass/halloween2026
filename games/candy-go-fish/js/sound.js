@@ -127,7 +127,7 @@
     clearTimeout(victoryTimer);
     clearTimeout(victoryMusicTimer); victoryMusicTimer = null; victorySpeechPending = false;
     for (const [key, { clip }] of clips) {
-      if (key.startsWith('victory:')) { clip.pause(); clip.currentTime = 0; }
+      if (key.startsWith('victory:') && !clip.paused) { clip.pause(); rewind(clip); }
     }
   }
 
@@ -138,11 +138,25 @@
     }
     if (!channel || channel === 'ui') stopSpinnerTicks();
 
+    // Only clips that are actually playing are touched. Pausing every idle
+    // media element (48 UI clips, 36 victory clips) took seconds on John's
+    // iPhone, so the OFF switch drew its slash seconds late (2026-10-15).
+    // The channel's gain is already zero when it is off, so nothing idle
+    // needs attention; each sound rewinds itself in play() before it starts.
     for (const { clip, category } of clips.values()) {
       if (channel && category !== channel) continue;
+      if (clip.paused) continue;
       clip.pause();
-      if (category !== 'music') clip.currentTime = 0;
+      if (category !== 'music') rewind(clip);
     }
+  }
+
+  // Put a clip back to its start. iOS Safari throws InvalidStateError when
+  // currentTime is set on a clip that has not loaded anything yet, so
+  // unloaded clips are skipped and errors swallowed.
+  function rewind(clip) {
+    if (clip.readyState === 0) return;
+    try { clip.currentTime = 0; } catch (_) { /* nothing to rewind */ }
   }
 
   // Get (creating on first use) the looping clip for one tune. Nothing plays
@@ -351,6 +365,7 @@
         prepareContext();
         const entry = getClip(sound, url);
         entry.gain.gain.value = soundVolumes[sound] ?? defaultVolume;
+        rewind(entry.clip); // a clip paused mid-way by the OFF switch starts over
         const playback = entry.clip.play();
         if (playback) playback.catch(() => {});
         return entry;

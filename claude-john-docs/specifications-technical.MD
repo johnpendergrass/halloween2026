@@ -434,7 +434,26 @@ icon in the top bar next to `short_title`; only if John asks.
 
 ## 4j. High scores, switches and the helper (2026-10-01)
 
-- **Storage**: `localStorage`, JSON text, two kinds of key:
+- **2026-10-15 changes (see also 4k).** The `halloween2026:app` note and
+  the Sound switch are gone (`soundIsOn`/`saveSound` removed; an old note
+  is ignored). `SCORES_SHOWN` is 5 again after a day at 10. A score may
+  hold `notes`, up to `MAX_SCORE_NOTES` (2) strings cut to
+  `MAX_NOTE_LENGTH` (16); `reportScore(value, text, notes)` through the
+  helper; `fillScores` always draws two note cells so the five-column grid
+  (`auto minmax(0,auto) auto auto auto`) lines up. `fillSwitches` hides the
+  column and toggles `.no-switches` on `.this-game-panels` when a game
+  declares none. Text marks: `appendMarkedText(parent, text)` splits on the
+  `MARK` regex (`**..**`, `__..__`, `~~..~~`, `\n`) and builds `b`,
+  `span.accent`, `span.rainbow > span` per letter, or `br`; `makeParagraph`
+  adds `.emphasis` for a `!! ` prefix; `plainText()` strips the marks for
+  the button's aria-label/title, the iframe title and the top bar. The tab
+  carries `look-<folder_name>` (set in `fillThisGameTab`), and styles.css
+  section 5b holds `.look-candy-go-fish` (centred text, uppercase heading,
+  accent in the welcome gold with `-webkit-text-stroke`, plain icon at
+  18.2cqw). `startGame` closes the drawer first and switches the tab in
+  `afterDrawerSettles()` (transitionend on the drawer's own `transform`,
+  600 ms fallback), because a visible tab switch flashed during the slide.
+- **Storage** (as first built): `localStorage`, JSON text, two kinds of key:
   `halloween2026:app` = `{ "sound": true }` and
   `halloween2026:<folder_name>` = `{ "scores": [...], "settings": [0, 1] }`.
   `readSaved(key)` returns `{}` for a missing, unreadable or non-object
@@ -677,6 +696,32 @@ with `filter: hue-rotate(170deg) saturate(0.7)` (red bar, hue 1, to the
 gradient top #21786b, hue 171) so the cream text on top is untinted. The
 label is a visible `<span>` again (it used to be visually hidden under the
 carved pumpkin art). `preload.js` lost the two pumpkin entries.
+
+**UI toggle on iOS (2026-10-15 evening).** `stopAll(channel)` and
+`cancelVictory` touch only clips with `!clip.paused`; `rewind(clip)` skips
+`readyState === 0` and swallows the InvalidStateError iOS throws for an
+unloaded clip; `play()` calls `rewind` before `clip.play()` so a clip
+paused mid-way by the OFF switch starts over. The popup's UI toggle
+handler redraws in a `finally`. Checked with a desktop simulation whose
+`currentTime` setter always throws (`ios_toggle_check.cjs`, scratch).
+
+**Set-size notes.** `#setSizeNote` (absolute, under the right bar button)
+and `#setSizeNoteHuman` (inside `#humanPile`, `bottom: 100%`) are written
+by `applySetSize`.
+
+**Icon.** `assets/candy-dish/icon-candy-plate.png`, 256x256, built by a
+scratch script (`make_icon2.py`: ghost plate at 250 px, three trimmed
+candy images resized, rotated and shadowed at hand-placed centres). The
+shell's `iconQualifies` accepts it; `verify-assets` and `verify-shell`
+name it.
+
+**Editing traps learned 2026-10-15.** `app/app.js` and `app/styles.css`
+have mixed line endings (CRLF from older edits, LF from newer), so an
+exact-text replacement must try both; a Bash heredoc holding a long
+Python script with quotes failed to parse once and a `str.find` slice of
+`index.html` swallowed three `<script>` tags (restored from git). Scratch
+edit scripts are now written as files and replace whole lines where they
+can.
 
 **"(you)".** `showTableName()` in `candy-go-fish.js` writes
 `humanName.toUpperCase() + ' (you)'` to the player's `.portrait-name`;

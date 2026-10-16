@@ -20,7 +20,7 @@
 
 // Bump this (and the ?v= tags in index.html) whenever code changes, so
 // phones fetch fresh copies instead of old cached ones.
-const APP_VERSION = "2026-1015-sound-popup-frames";
+const APP_VERSION = "2026-1015-shell-sound-icon";
 
 /* ------------------------------------------------------------------------
    1. Settings and the games list
@@ -123,19 +123,104 @@ function setTextOrHide(id, text) {
   element.hidden = !text;
 }
 
+/** title, description and how_to_play may carry a few small marks, and
+    nothing else (no HTML). description and how_to_play may also be a list of
+    strings, one paragraph each.
+      **bold**     the words between the stars are shown bold
+      __accent__   the words are shown in the game's accent style (bold by
+                   default; a per-game look in styles.css may do more, Candy
+                   Go Fish paints them gold with a dark outline)
+      ~~rainbow~~  every letter gets its own colour
+      \n           a new line inside the paragraph (in JSON: "\n")
+      !! text      a paragraph starting with "!! " is a shaded emphasis line
+    The text is built from nodes, never from innerHTML, so a stray "<" in a
+    games.json entry is shown as it is. */
+const MARK = /(\*\*.+?\*\*|__.+?__|~~.+?~~|\n)/;
+
+function hasParagraphs(text) {
+  return Array.isArray(text) ? text.some(Boolean) : Boolean(text);
+}
+
+/** The marks taken out again, for places that want plain words: the
+    button's spoken name, the iframe's title, warnings in the console. */
+function plainText(text) {
+  return String(text || "").replace(/\*\*|__|~~/g, "").replace(/\n/g, " ");
+}
+
+/** Append `text` to `parent` with its marks turned into elements. */
+function appendMarkedText(parent, text) {
+  String(text).split(MARK).forEach((piece) => {
+    if (piece === "" || piece === undefined) return;
+    if (piece === "\n") {
+      parent.appendChild(document.createElement("br"));
+    } else if (piece.startsWith("**")) {
+      const bold = document.createElement("b");
+      bold.textContent = piece.slice(2, -2);
+      parent.appendChild(bold);
+    } else if (piece.startsWith("__")) {
+      const accent = document.createElement("span");
+      accent.className = "accent";
+      accent.textContent = piece.slice(2, -2);
+      parent.appendChild(accent);
+    } else if (piece.startsWith("~~")) {
+      // One span per letter; the CSS colours them in turn (.rainbow span).
+      const rainbow = document.createElement("span");
+      rainbow.className = "rainbow";
+      for (const letter of piece.slice(2, -2)) {
+        const span = document.createElement("span");
+        span.textContent = letter;
+        rainbow.appendChild(span);
+      }
+      parent.appendChild(rainbow);
+    } else {
+      parent.appendChild(document.createTextNode(piece));
+    }
+  });
+}
+
+function makeParagraph(line) {
+  const paragraph = document.createElement("p");
+  let text = String(line);
+  if (text.startsWith("!! ")) {
+    paragraph.className = "emphasis";
+    text = text.slice(3);
+  }
+  appendMarkedText(paragraph, text);
+  return paragraph;
+}
+
+/** One line of marked text in an element, or the element hidden. */
+function setMarkedOrHide(id, text) {
+  const element = document.getElementById(id);
+  element.replaceChildren();
+  if (text) appendMarkedText(element, text);
+  element.hidden = !text;
+}
+
+function setParagraphsOrHide(id, text) {
+  const element = document.getElementById(id);
+  const lines = (Array.isArray(text) ? text : [text]).filter(Boolean);
+  element.replaceChildren(...lines.map(makeParagraph));
+  element.hidden = lines.length === 0;
+}
+
 /** Fill the This Game tab from a games.json entry. Called whenever a game
     is loaded, so the tab always describes what is in the game panel. The
     text comes straight from the file; the high scores and the switches
     are section 4. */
 function fillThisGameTab(game) {
+  // A per-game look: the tab carries look-<folder_name>, and styles.css may
+  // hold rules for it (section 5b). A game without such rules looks as usual.
+  const tab = document.getElementById("tab-game");
+  tab.className = "drawer-body this-game look-" + game.folder_name;
   fillScores(game);
   fillSwitches(game);
-  setTextOrHide("thisGameTitle", game.title);
+  setMarkedOrHide("thisGameTitle", game.title);
   // "Designer, date" on one line, whichever parts exist.
   setTextOrHide("thisGameByline", [game.designer, game.date].filter(Boolean).join(", "));
-  setTextOrHide("thisGameDescription", game.description);
-  setTextOrHide("thisGameHowToPlay", game.how_to_play);
-  document.getElementById("thisGameHowHeading").hidden = !game.how_to_play;
+  setParagraphsOrHide("thisGameDescription", game.description);
+  setParagraphsOrHide("thisGameHowToPlay", game.how_to_play);
+  document.getElementById("thisGameHowHeading").hidden = !hasParagraphs(game.how_to_play);
   setTextOrHide("thisGameCredits", game.credits ? "Credits: " + game.credits : "");
 
   // The icon, under the same spec as the buttons; hidden if it fails.
@@ -157,10 +242,11 @@ function fillThisGameTab(game) {
    device, called localStorage. Each note has a name (a "key") and holds
    text; the app stores JSON text in two kinds of note:
 
-     "halloween2026:app"            { "sound": true }
      "halloween2026:<folder_name>"  { "scores": [ ... ], "settings": [0, 1] }
 
-   one for the whole app, and one per game. A game may add notes of its
+   one per game. (Until 2026-10-15 there was also "halloween2026:app" with
+   the app-wide Sound switch; that switch is gone, sound is each game's
+   own business, and an old note of that name is simply ignored.) A game may add notes of its
    own under "halloween2026:<folder_name>:<something>" (requirements rule
    21); the app never reads or writes those. So the scores and the switch
    positions belong to this phone or PC only; another player's phone has
@@ -176,9 +262,10 @@ function fillThisGameTab(game) {
    --------------------------------------------------------------------- */
 
 const STORAGE_PREFIX = "halloween2026:";
-const APP_STORAGE_KEY = STORAGE_PREFIX + "app";
-const SCORES_SHOWN = 5;          // the High scores list is always this long
-const MAX_GAME_SWITCHES = 3;     // a game's own switches; Sound is extra
+const SCORES_SHOWN = 5;          // the High scores list is always this long (10 was tried on 2026-10-15: too tall)
+const MAX_SCORE_NOTES = 2;       // short notes a game may add to a score
+const MAX_NOTE_LENGTH = 16;      // characters per note; longer ones are cut
+const MAX_GAME_SWITCHES = 3;     // a game's own switches
 
 /** The name of a game's note in the browser's storage. */
 function storageKeyFor(game) {
@@ -228,11 +315,14 @@ function dateForList(savedDate) {
   return "(" + month + "-" + day + "-" + year + ")";
 }
 
-/** The five lines of the High scores column: "1." to "5.", then the score
+/** The five lines of the High scores list: "1." to "5.", then the score
     (right-adjusted) or "---" where there is none yet, then the date the
-    score was made, e.g.  1.  42 (10-01-2026). A saved score looks like
+    score was made, then up to two short notes the game added, e.g.
+      1.  3-2 (10-15-2026)  vs. Ron  3 set game
+    A saved score looks like
       { "value": 42, "date": "2026-10-01" }                         or
-      { "value": 42, "text": "Master Chef", "date": "2026-10-01" }
+      { "value": 42, "text": "Master Chef", "date": "2026-10-01" }  or
+      { "value": 3, "text": "3-2", "date": "2026-10-15", "notes": ["vs. Ron", "3 set game"] }
     and the text, when a game gave one, is shown in place of the number. */
 function fillScores(game) {
   const savedScores = readSaved(storageKeyFor(game)).scores;
@@ -260,17 +350,28 @@ function fillScores(game) {
     const row = document.createElement("div");
     row.className = "score-row";
     row.append(rank, value, date);
+    // Always two note cells, so the grid's columns line up; an empty cell
+    // is simply empty.
+    const notes = score && Array.isArray(score.notes) ? score.notes : [];
+    for (let slot = 0; slot < MAX_SCORE_NOTES; slot += 1) {
+      const note = document.createElement("span");
+      note.className = "score-note";
+      note.textContent = typeof notes[slot] === "string" ? notes[slot] : "";
+      row.appendChild(note);
+    }
     list.appendChild(row);
   }
 }
 
 /** A game reports a result (through games/game-helper.js). `value` is a
     number, higher is better; `text` is optional and is shown in place of
-    the number. The app adds today's date. The score joins the list of the
-    game now in the panel, the list is sorted best first and cut back to
-    five, saved, and drawn again.
+    the number; `notes` is optional, a list of up to two short strings
+    shown after the date (Candy Go Fish sends the opponent and the set
+    size). The app adds today's date. The score joins the list of the game
+    now in the panel, the list is sorted best first and cut back to five,
+    saved, and drawn again.
     A value that is not a number, or is 0 or less, is not recorded. */
-function reportScore(value, text) {
+function reportScore(value, text, notes) {
   if (!currentGame) return;
   if (typeof value !== "number" || !Number.isFinite(value) || value <= 0) {
     console.info('"' + currentGame.title + '" reported the score ' +
@@ -282,6 +383,14 @@ function reportScore(value, text) {
   const score = { value: value, date: todayAsText() };
   const hasText = text !== undefined && text !== null && String(text).trim() !== "";
   if (hasText) score.text = String(text).trim();
+  // Notes: only strings, trimmed, at most two, each cut to a short length,
+  // so a game cannot stretch the list with a paragraph.
+  if (Array.isArray(notes)) {
+    const kept = notes.filter((note) => typeof note === "string" && note.trim() !== "")
+                      .slice(0, MAX_SCORE_NOTES)
+                      .map((note) => note.trim().slice(0, MAX_NOTE_LENGTH));
+    if (kept.length > 0) score.notes = kept;
+  }
 
   const data = readSaved(storageKeyFor(currentGame));
   const scores = Array.isArray(data.scores) ? data.scores : [];
@@ -325,18 +434,6 @@ document.getElementById("clearYes").addEventListener("click", clearScores);
 window.halloweenApp = {
   reportScore: reportScore,
 };
-
-/** Is sound switched on? One answer for the whole app, on until the
-    player turns it off. */
-function soundIsOn() {
-  return readSaved(APP_STORAGE_KEY).sound !== false;
-}
-
-function saveSound(isOn) {
-  const data = readSaved(APP_STORAGE_KEY);
-  data.sound = isOn;
-  writeSaved(APP_STORAGE_KEY, data);
-}
 
 /** The switches a game asks for in its games.json entry: a list of
     { "label": "Easy / Hard", "default": 0 }. No list = no switches. */
@@ -399,22 +496,25 @@ function makeSwitch(label, isOn, onChange) {
   return button;
 }
 
-/** The switches column: Sound first (every game has it, and it is one
-    switch for the whole app: off here is off in every game), then the
-    game's own switches. */
+/** The switches column: the game's own switches, if it declared any.
+    A game without switches gets no column at all, and the High scores
+    list spreads across the whole width (CSS .no-switches). The app-wide
+    Sound switch that used to come first was removed on 2026-10-15: sound
+    is each game's own business now. */
 function fillSwitches(game) {
   const holder = document.getElementById("thisGameSettings");
   holder.replaceChildren();
-  holder.appendChild(makeSwitch("Sound", soundIsOn(), saveSound));
 
   const positions = currentSettings(game);
+  holder.hidden = positions.length === 0;
+  document.querySelector(".this-game-panels").classList.toggle("no-switches", positions.length === 0);
   gameSwitches(game).forEach((entry, index) => {
     const label = entry.label || "Option " + (index + 1);
     const saveThisSwitch = (isOn) => saveSetting(game, index, isOn ? 1 : 0);
     holder.appendChild(makeSwitch(label, positions[index] === 1, saveThisSwitch));
   });
 
-  // Sound works at once; a game's own switches wait for a new game.
+  // A game's own switches wait for a new game.
   if (positions.length > 0) {
     const hint = document.createElement("p");
     hint.className = "setting-hint";
@@ -435,8 +535,8 @@ const topTitle = document.getElementById("topTitle");
 function loadGame(game) {
   currentGame = game;   // a score reported from now on belongs to this game
   gameFrame.src = "./games/" + game.folder_name + "/index.html?v=" + APP_VERSION;
-  gameFrame.title = game.title;
-  topTitle.textContent = game.short_title || game.title;
+  gameFrame.title = plainText(game.title);
+  topTitle.textContent = plainText(game.short_title || game.title);
   fillThisGameTab(game);
   markCurrentButton(game);
 }
@@ -452,11 +552,31 @@ function markCurrentButton(game) {
   });
 }
 
-/** Start one of the real games and get the bottom panel out of the way. */
+/** Run fn once the panel has finished sliding, or at once when it does not
+    slide (reduced motion). A fallback timer covers a browser that never
+    sends transitionend; the slide itself takes 300 ms (styles.css). */
+function afterDrawerSettles(fn) {
+  let done = false;
+  const finish = (event) => {
+    // Only the panel's own slide counts, not a child's or its shadow's.
+    if (event && (event.target !== drawer || event.propertyName !== "transform")) return;
+    if (done) return;
+    done = true;
+    drawer.removeEventListener("transitionend", finish);
+    fn();
+  };
+  drawer.addEventListener("transitionend", finish);
+  setTimeout(finish, 600);
+}
+
+/** Start one of the real games and get the bottom panel out of the way.
+    The tab switch waits until the panel is out of sight: switching first
+    flashed the This Game tab while the panel slid down, which showed once
+    that tab had a light look of its own (2026-10-15). */
 function startGame(game) {
   loadGame(game);
-  showTab("game");   // next time the drawer opens, it is about this game
   closeDrawer();
+  afterDrawerSettles(() => showTab("game"));   // next time the drawer opens, it is about this game
 }
 
 /** Back to game0 (the home game) with the bottom panel open. */
@@ -490,7 +610,7 @@ function iconQualifies(img) {
     blank (which also flags a half-filled games.json entry). */
 function showTextInstead(button, game) {
   button.replaceChildren();
-  const text = game.short_title || game.title || "";
+  const text = plainText(game.short_title || game.title);
   if (text) {
     button.classList.add("is-text");
     button.textContent = text;
@@ -510,8 +630,8 @@ function showTextInstead(button, game) {
 function makeIconButton(game) {
   const button = document.createElement("button");
   button.className = "game-button";
-  button.setAttribute("aria-label", game.title);
-  button.title = game.title;
+  button.setAttribute("aria-label", plainText(game.title));
+  button.title = plainText(game.title);
   button.dataset.folder = game.folder_name;   // so markCurrentButton() can find it
   button.addEventListener("click", () => startGame(game));
 

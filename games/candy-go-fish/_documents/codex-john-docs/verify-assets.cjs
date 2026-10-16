@@ -27,8 +27,8 @@ for (const filename of ['index.html', 'candy-go-fish.css', 'js/candy-go-fish.js'
 for (const profile of [...Object.values(config.players), ...config.opponents, ...(config.playerCharacters || [])]) referenced.add(profile.portrait);
 for (const candy of config.candies) referenced.add('candybar-images/' + candy.image);
 const registry = JSON.parse(fs.readFileSync(path.resolve(root, '../../games.json'), 'utf8'));
-assert(JSON.stringify(registry).includes('assets/halloween-fish.svg'));
-referenced.add('halloween-fish.svg');
+assert(JSON.stringify(registry).includes('assets/candy-dish/icon-candy-plate.png')); // the candy-plate icon since 2026-10-15
+referenced.add('candy-dish/icon-candy-plate.png');
 for (const relative of referenced) {
   assert(fs.statSync(path.join(root, 'assets', relative)).isFile(), 'Missing live asset: ' + relative);
 }

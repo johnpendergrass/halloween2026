@@ -1,0 +1,13 @@
+Ask for candies.
+
+Pick a candy you hold to request a matching one.  Get it, or else GO FISH!
+
+Play as your favorite non-AI 3D animated character!
+
+Challenge Hermione for a hard battle.  Ron not-so-much.
+
+Win, and get a candy rainfall!  Lose, and maybe not.
+
+Good luck!
+
+Credits: v 0.19.2 10/2026 jp/claude/chatty

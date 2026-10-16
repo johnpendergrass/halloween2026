@@ -19,6 +19,11 @@ button:focus-visible { outline: 0.8vw solid #ffd56c; outline-offset: 0.7vw; }
 .game-bar button::before { content: ''; position: absolute; inset: 0; background: url('./assets/generic-candies/candy-bar.png') center / contain no-repeat; filter: hue-rotate(170deg) saturate(0.7) drop-shadow(0 0.5vw 0.6vw #0006); }
 .game-bar button > span { position: relative; z-index: 1; white-space: nowrap; }
 .game-bar button:active { transform: translateY(0.4vw); }
+/* Small reminder of the set size in play, under the ?? / SOUND button (John, 2026-10-15). */
+.game-bar { position: relative; }
+.set-size-note { position: absolute; right: 3.5vw; top: 13.9vw; font-size: max(10px,2.9vw); font-weight: normal; color: #f3f6ef; opacity: 0.85; white-space: nowrap; pointer-events: none; }
+/* The same note above the player's dish, centred over it, clear of the cat. */
+.set-size-note-human { right: auto; top: auto; bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 2.1vw; }
 .portrait { width: 18vw; height: 18vw; border-radius: 50%; object-fit: cover; border: 0.5vw solid #e8dcaf; }
 .wendy-portrait, .player-portrait { position: relative; width: 24vw; height: 19vw; display: flex; justify-content: center; }
 .portrait-name { position: absolute; right: -3vw; bottom: -0.3vw; font-size: max(14px,5vw); background: #173f32; color: #ffe3a4; border-radius: 2vw; padding: 0 1.5vw; text-shadow: 0 0.3vw 0.4vw #0005; }
@@ -163,26 +168,32 @@ h2 { font-size: max(14px,4.5vw); }
 .audio-toggle[aria-pressed="false"]::after, .audio-toggle.is-off::after { display: block; }
 /* Music popup: a second overlay above the dialog overlay, as tall as the Rules box (94vh). */
 .music-options { z-index: 30; background: #082b25f2; }
-/* The Sound popup (John's sketch "design ideas/Sound requester layout.png", 2026-10-15)
-   wears the same vine-and-plate frame as the welcome. Title, then UI and MUSIC speakers
-   side by side, then the MUSIC SOUNDTRACK section: a label above each control with the
-   control to the right, tick numbers under the volume slider, boxed CANCEL / CONFIRM. */
+/* The Sound popup (John's second sketch "design ideas/Sound requester layout 2nd
+   version.png", 2026-10-15) wears the same vine-and-plate frame as the welcome. Title,
+   the UI speaker centred, a rule, the MUSIC speaker centred, then the soundtrack
+   arrows, the Always / Paused switch and the volume slider centred below it with no
+   labels; boxed CANCEL / OK. */
 .music-options .dialog { position: relative; border-color: #32271d; isolation: isolate; width: 90vw; max-height: 94vh; padding: 16vw 7vw 17vw; display: flex; flex-direction: column; }
 .music-options h1 { font-size: max(22px,7vw); margin: 0 0 2vw; }
-/* The rows scroll when the screen is short; the title and the CANCEL / CONFIRM row stay put. */
+/* The rows scroll when the screen is short; the title and the CANCEL / OK row stay put. */
 .music-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; }
-.toggle-row { display: flex; justify-content: center; gap: 12vw; margin: 1vw 0 4.5vw; }
-.toggle-item { display: flex; align-items: center; gap: 2.4vw; font-size: max(14px,4.5vw); font-weight: bold; }
+/* Each speaker sits on the dialog's centre line (the middle column), so UI and MUSIC
+   line up over the controls below; the label fills the left column, right-justified. */
+.toggle-row { display: flex; justify-content: center; margin: 1vw 0 4vw; }
+.toggle-item { display: grid; grid-template-columns: 1fr 16vw 1fr; width: 100%; align-items: center; gap: 0; }
+.toggle-item > .audio-toggle { grid-column: 2; }
+.toggle-label { grid-column: 1; justify-self: end; padding-right: 2.4vw; }
+.music-rule { border: 0; border-top: 0.4vw solid #d7c69c; margin: 0 2vw 5vw; }
+.toggle-item { font-size: max(14px,4.5vw); font-weight: bold; }
 /* Popup toggles: no label. A steady green glow around the speaker means on; the red slash means off. */
 .toggle-item .audio-toggle { width: 16vw; min-height: 14vw; justify-content: center; }
 .toggle-item .audio-toggle img { width: 12vw; height: 12vw; border-radius: 50%; }
 .toggle-item .audio-toggle[aria-pressed="true"] img { box-shadow: 0 0 0 0.6vw #3fae5e, 0 0 2.4vw 1vw #3fae5ea0; }
 .toggle-item .audio-toggle::after { top: 50%; width: 13.5vw; }
-.music-section { font-size: max(13px,3.8vw); text-transform: uppercase; letter-spacing: 0.1em; color: #597159; margin: 2vw 0 0; padding-bottom: 1vw; border-bottom: 0.4vw solid #d7c69c; }
-/* Controls a bit smaller and lower than the labels suggest, with more air between fields (John, 2026-10-15). */
-.music-field { display: flex; flex-direction: column; align-items: flex-end; gap: 1.4vw; margin: 3vw 2vw 0 3vw; }
-.music-label { align-self: flex-start; font-size: max(14px,4.5vw); font-weight: bold; }
-.track-picker { position: relative; display: flex; align-items: center; justify-content: center; width: 50vw; min-height: 9.5vw; padding: 0 10vw; box-sizing: border-box; background: #285b43; color: #fff4d5; border-radius: 2.4vw; font-size: max(13px,4vw); font-weight: bold; }
+/* The three music controls, centred, with air between them (John, 2026-10-15). */
+.music-field { display: flex; flex-direction: column; align-items: center; margin: 3vw 0 0; }
+.toggle-row + .music-field { margin-top: 6vw; } /* a bit more room under the MUSIC speaker */
+.track-picker { position: relative; display: flex; align-items: center; justify-content: center; width: 44vw; min-height: 8.5vw; padding: 0 9vw; box-sizing: border-box; background: #285b43; color: #fff4d5; border-radius: 2.4vw; font-size: max(12px,3.6vw); font-weight: bold; }
 .track-picker .opponent-arrow { top: 0; height: 100%; }
 .track-picker .opponent-arrow.previous { left: 0; }
 .track-picker .opponent-arrow.next { right: 0; }
@@ -201,21 +212,21 @@ h2 { font-size: max(14px,4.5vw); }
 @media (prefers-reduced-motion: reduce) { .two-way-thumb { transition: none; } }
 #setSizeChoice { display: none; width: 60vw; margin: 5vw auto 4.4vw; }
 .welcoming #setSizeChoice, .new-round #setSizeChoice { display: flex; } /* on the welcome and on Deal again? (John, 2026-10-15) */
-.mode-switch { width: 50vw; }
-.mode-switch button { min-height: 8.5vw; padding: 0.6vw 1vw; font-size: max(12px,3.4vw); }
-.volume-field { align-items: stretch; margin-top: 1.4vw; }
-.volume-field input, .volume-ticks { width: 70vw; align-self: flex-end; box-sizing: border-box; }
-.volume-field input { width: 100%; height: 7vw; margin: 0; accent-color: #285b43; }
-.volume-ticks { display: flex; justify-content: space-between; padding: 0 1vw; margin-top: -1.4vw; font-size: max(11px,3.2vw); font-weight: bold; color: #597159; }
+.mode-switch { width: 44vw; }
+.mode-switch button { min-height: 7.5vw; padding: 0.5vw 1vw; font-size: max(11px,3.1vw); }
+.volume-field { align-items: stretch; margin-top: 4vw; }
+.volume-field input, .volume-ticks { width: 60vw; align-self: center; box-sizing: border-box; }
+.volume-field input { height: 6vw; margin: 0; accent-color: #285b43; }
+.volume-ticks { display: flex; justify-content: space-between; padding: 0 1vw; margin-top: -1.4vw; font-size: max(10px,3vw); font-weight: bold; color: #597159; }
 .music-actions { flex: none; margin-top: 5vw; display: flex; justify-content: space-between; gap: 4vw; }
-.music-actions .secondary, .music-actions .primary { flex: 1; min-width: 0; min-height: 10.5vw; margin: 0; border-radius: 3vw; font-weight: bold; }
-.music-actions .secondary { border: 0.6vw solid #285b43; }
+.music-actions .secondary, .music-actions .primary { flex: 1; min-width: 0; min-height: 9.5vw; margin: 0; border-radius: 3vw; font-size: max(13px,4vw); font-weight: bold; }
 /* Short screens (older or smaller phones, or the game inside the shell): tighter spacing in the Sound popup. */
 @media (max-height: 700px) {
   .music-options .dialog { padding: 11vw 7vw 12vw; }
-  .toggle-row { margin: 0 0 2vw; }
-  .music-field { margin-top: 1.6vw; }
-  .volume-field { margin-top: 0.6vw; }
+  .toggle-row { margin: 0 0 1.4vw; }
+  .music-rule { margin-bottom: 2vw; }
+  .music-field { margin-top: 2vw; }
+  .volume-field { margin-top: 2.4vw; }
   .music-actions { margin-top: 3vw; }
 }
 .audio-toggle:focus-visible { outline: 0.4vw solid #816321; }
@@ -245,8 +256,12 @@ h2 { font-size: max(14px,4.5vw); }
 }
 h1 { font-size: max(24px,9vw); line-height: 1.15; margin: 3vw 0 4vw; }
 .dialog p { font-size: max(14px,4.5vw); margin: 3vw 0; }
-.primary { background: #285b43; border-radius: 3vw; min-height: 14vw; min-width: 55vw; font-size: max(14px,4.5vw); font-weight: bold; color: #fff4d5; margin-top: 3vw; }
-.secondary { display: block; margin: 2vw auto 0; min-height: 13vw; min-width: 55vw; background: transparent; color: #264334; font-size: max(14px,4.5vw); }
+/* Every confirming button (Let's play, Start a new round, Back to the table, the celebration's
+   button, the Sound popup's OK) is the brighter green of the check marks (John, 2026-10-15). */
+.primary { background: #2f8f4e; border-radius: 3vw; min-height: 14vw; min-width: 55vw; font-size: max(14px,4.5vw); font-weight: bold; color: #fff4d5; margin-top: 3vw; }
+/* Secondary buttons (Keep playing, the Sound popup's CANCEL): outlined in the dark green,
+   bold, the same shape as the filled primary ones (John, 2026-10-15). */
+.secondary { display: block; margin: 2.4vw auto 0; min-height: 12vw; min-width: 55vw; box-sizing: border-box; background: transparent; color: #264334; border: 0.6vw solid #285b43; border-radius: 3vw; font-size: max(14px,4.2vw); font-weight: bold; }
 .overlay.celebrating { background: #082b25a6; }
 .celebrating .dialog { width: 80vw; padding: 4vw; border-color: #e7bc58; background: radial-gradient(ellipse at center, #fff8df, #efe0b7); }
 .celebrating h1 { font-size: max(22px,6vw); margin: 1vw 0; }

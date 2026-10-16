@@ -72,10 +72,19 @@ UI/music have independent gain buses and ON/OFF state. On welcome, Deal again? a
 - **Checks.** verify-victory-sounds was rewritten for the two timers and now tests the game-over music; verify-browser and verify-player-switch learned about (you); verify-speech and verify-speech-redraw turn out to expect "Wendy asks:" and join the stale list (item 10). Every other check passes.
 - **Welcome spacing.** Speakers a little lower and nearer the middle, the switch lower with more room before Let's play, more room under it.
 
+## October 15 evening (Claude, at John's direction)
+
+- **UI toggle on iPhone fixed.** The OFF tap no longer pauses every idle clip (seconds on a phone); it flips the flag, zeroes the channel gain, cancels a pending speech and pauses only a playing clip; rewinds are guarded against iOS and happen in play(). The popup always redraws.
+- **Sound popup, second sketch.** SOUNDS; UI speaker; rule; MUSIC speaker; soundtrack arrows, Always/Paused, volume, all centred without labels; CANCEL (outlined) and OK (bright green #2f8f4e). Every primary button is that green now; every secondary button is outlined.
+- **Set-size notes** on the table under ?? / SOUND and above the player's dish.
+- **Icon** assets/candy-dish/icon-candy-plate.png (ghost plate, Snickers, Dots, Red Vines); halloween-fish.svg retired to _documents/design ideas/unused.
+- **Shell (app/):** no Sound switch; five scores with up to two notes (the game sends "vs. <opponent>" and "<n> set game"); text marks and a per-game look; the tab switches after the panel has slid shut; games.json entry rewritten (title "__GO FISH__ - Candy Edition", short title GO FISH, John's text, credits v 0.19.2 10/2026 jp/claude/chatty, no designer/date).
+- **Checks:** every Codex check passes except the four stale ones; verify-shell and verify-assets know the new icon; verify-browser/player-switch know "(you)".
+
 ## Files, checks and publishing
 
 index.html/candy-go-fish.css are entry/layout. js/candy-go-fish.js coordinates UI; js/sound.js owns playback/buses/volume; js/preload.js prepares assets; js/candy-rain.js is the original celebration; js/candy-piles.js owns persistent piles. Engine/accepted policies stay in js/, js/strategies and js/shared. assets/json/game-config.json is authoritative; regenerate config-data.js with sync-config.cjs after edits.
 
-Current cache stamp: 2026-1015-sound-popup-frames. Keep APP_VERSION, both root stamps and game resources/config fetch synchronized. Physical iPhone audio and first-render review remain manual. Tests use local Chrome/bundled Playwright; they are development dependencies only. See [verification guide](INTEGRATION-AND-VERIFICATION.md) and [October 14 verification](VERIFICATION-2026-1014.md). The October 15 popup checks are described in assets/sounds/README.md.
+Current cache stamp: 2026-1015-shell-sound-icon. Keep APP_VERSION, both root stamps and game resources/config fetch synchronized. Physical iPhone audio and first-render review remain manual. Tests use local Chrome/bundled Playwright; they are development dependencies only. See [verification guide](INTEGRATION-AND-VERIFICATION.md) and [October 14 verification](VERIFICATION-2026-1014.md). The October 15 popup checks are described in assets/sounds/README.md.
 
 John requested complete documentation, commit and push for this checkpoint. Publish active MP3s, current code, docs and relevant verification previews; do not publish _DOWNLOADS candidates or unused working sources. Strictly validate tracked Markdown as UTF-8 before pushing because invalid encoding previously failed Pages. Confirm remote/local commit equality, the actual Pages workflow and live nested-resource stamps.

@@ -3,11 +3,12 @@
 *For anyone making a mini game for Halloween 2026, and for their AI
 assistants.*
 
-Version 4, 2026-10-01. This version covers **sizes, text, artwork and
-colours**, and, new in version 4, **how your game lives with the app**:
-the bottom panel, pausing, high scores, sound and settings (1.8, 2.5 and
-rules 18 to 22). Later versions will add file-size limits, naming rules,
-and how to test and submit.
+Version 4, 2026-10-01, amended 2026-10-15 (the app's Sound switch is
+gone, scores may carry two short notes). This version
+covers **sizes, text, artwork and colours**, and, new in version 4, **how
+your game lives with the app**: the bottom panel, pausing, high scores,
+sound and settings (1.8, 2.5 and rules 18 to 22). Later versions will add
+file-size limits, naming rules, and how to test and submit.
 
 - **Part 1 is for designers.** Everything is measured on one drawing
   canvas, in real pixels.
@@ -251,25 +252,32 @@ does very little to your game, so a few things are your game's own job.
 - Your game only has to tell the app the result when a game ends: **a
   number**, where higher is better. It may add **a short text to show in
   place of the number**, for example "Master Chef". The list is still
-  ordered by the number. About 11 characters fit.
+  ordered by the number. About 11 characters fit. It may also add **up to
+  two short notes** (about 16 characters each) shown after the date, such
+  as the opponent or the variant: `1.  3-2  (10-15-2026)  vs. Ron  3 set game`.
 - Scores are kept **on the player's own phone or PC**. Players do not see
   each other's scores.
 - A game without scores does nothing; its list just stays empty.
 
 ### Sound and settings (the switches in the bottom panel)
 
-- The This Game tab shows **one Sound switch**, always first. It is one
-  switch for the whole app: off in one game is off in all of them.
-- Below it, the tab shows **up to three on/off switches of your game's
+- **The app has no sound switch** (it had one until 2026-10-15; it was
+  removed because it could not reach the games anyway). Sound on, sound
+  off, music and volume are **your game's own controls**, inside your
+  canvas. Remember: an iPhone plays nothing until the player has tapped
+  something on your page.
+- The This Game tab shows **up to three on/off switches of your game's
   own**, if you name them in your `games.json` entry, for example
-  "Easy / Hard" (the `_about` block in `games.json` says how).
+  "Easy / Hard" (the `_about` block in `games.json` says how). A game
+  that names none gets no switch column, and its high scores use the
+  whole width.
 - The app draws these switches and remembers each player's choices on
   their device. **That is all they do today: no game can read them, so
   they change nothing in any game.**
-- So any sound control or setting your game really needs, including
-  anything that should change in the middle of a game, is **your game's
-  own responsibility**: build it inside your canvas (options on your own
-  start screen, for instance).
+- So any setting your game really needs, including anything that should
+  change in the middle of a game, is **your game's own responsibility**:
+  build it inside your canvas (options on your own start screen, for
+  instance).
 
 ---
 
@@ -417,15 +425,17 @@ Sizes refer to the table in 1.3.
     page. A game MUST NOT expect the app to pause it or to tell it that
     the panel opened or closed.
 19. **Scores.** A game MAY report a score when a game ends, and MUST do it
-    only with `Halloween.reportScore(number)` or
-    `Halloween.reportScore(number, text)` from the helper file (2.5). The
-    number is required and higher MUST mean better.
+    only with `Halloween.reportScore(number)`,
+    `Halloween.reportScore(number, text)` or
+    `Halloween.reportScore(number, text, [note, note])` from the helper
+    file (2.5). The number is required and higher MUST mean better; the
+    notes are at most two short strings.
 20. **Sound and settings.** A game MAY declare up to three on/off switches
-    in its `games.json` entry; the app shows them under its Sound switch
-    and remembers them. A game cannot read the Sound switch or its own
-    switches, and MUST NOT try to (rule 21). Any sound control or setting
-    a game needs, including one that changes during a game, is the game's
-    own job, inside its own page.
+    in its `games.json` entry; the app shows them beside the high scores
+    and remembers them. A game cannot read its own switches, and MUST NOT
+    try to (rule 21). The app has no sound switch: every sound control or
+    setting a game needs, including one that changes during a game, is
+    the game's own job, inside its own page.
 21. MUST NOT use `window.parent`, `postMessage` or cookies itself. The
     helper file is the only link between a game and the app. A game MAY
     remember its own settings (a chosen tune, a volume) in `localStorage`,
@@ -470,10 +480,10 @@ Halloween.reportScore(42, "Master Chef");
 - `games/stack-o-lantern/` is the worked example: one `<script>` line in
   its `index.html`, one call in `gameOver()`.
 
-**That is the helper's only call.** A game cannot read the Sound switch or
-its own switches. The switches can be declared (the `settings` field, see
-the `_about` block of `games.json`); the app shows and remembers them, and
-nothing more.
+**That is the helper's only call.** A game cannot read its own switches.
+The switches can be declared (the `settings` field, see the `_about` block
+of `games.json`); the app shows and remembers them, and nothing more. The
+app has no sound switch of its own.
 
 **Pausing.** There is no helper call for it, on purpose: the app sends
 your game no signal when the bottom panel opens or closes, and your page
@@ -516,7 +526,7 @@ The canvas is shrunk to fit each device.
 
 ## Coming in later versions
 
-- A way for games to use the Sound switch and their own switches
+- A way for games to use their own switches
 - Sound rules (iPhones play nothing until the first tap)
 - Your `games.json` entry and your icon (for now, the `_about` block at
   the bottom of `games.json` explains every field)
