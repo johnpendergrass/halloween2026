@@ -1,6 +1,14 @@
 # Plan: make speech and UI clips play on the iPhone (2026-10-15 evening, John + Claude)
 
-Status: PROPOSED, not started. John to choose tomorrow: "experiment", "revert" or "go".
+Status: CHOSEN 2026-10-16 (John: "go ahead with option C"), not yet started.
+Fallback: git tag `before-iphone-speech-buffers` (= 300675c) on GitHub, plus
+John's hand copy of the game folder. Two additions decided 2026-10-16 after
+John's phone tests (character arrows silent too; music a coin flip on the
+artwork tap, nothing from the Rules tap; iOS Now Playing shows the tune as
+"paused" when play was asked before the file was ready): (1) never call
+`startWelcomeMusic()` outside a tap, so the `whenReady().then(...)` call
+goes; (2) every tap during play (Let's play, dish, arrows, candies) retries
+the music when it is wanted and `clip.paused`. Option A is dropped.
 
 ## The problem
 
