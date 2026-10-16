@@ -1,6 +1,6 @@
 # Halloween 2026 — Specifications (design decisions)
 
-Last updated: 2026-10-16 12:22 (three small fixes, uncommitted: set on arrival, shorter Go Fish pause, startup flash traced and fixed; see the end of 6k. Before that: 2026-10-16 11:33, iPhone sound closed, 6k)
+Last updated: 2026-10-16 13:28 (scrolling welcome with the shell's text, NEW and HELP, the quieter mix, phone flicker of the dish candies; the last four entries of 6k. Before that: 2026-10-16 12:22, three small fixes, 6k)
 
 This file records WHAT the app looks like and WHY. Technical "how" lives in
 `specifications-technical.MD`. Companion notes in this folder:
@@ -1005,6 +1005,41 @@ problem is wider, and the fix is chosen.**
   `welcoming` class and a disabled "Loading assets" button), so the first
   paint is the welcome. No cover, no visibility trick; the earlier
   experiments of that kind stay reverted.
+- **The welcome says what the shell says (afternoon, John's design).**
+  John wanted the welcome's text to be the This Game text from the shell,
+  formatted the same way: orange outlined GO FISH!, "candy rainfall" with
+  a colour per letter, his line breaks, "Good luck!" dropped, a two-line
+  credit at the end ("v 0.19.2 10/2026" / "jp/claude/chatty", no
+  "Credits:"). The first attempt shrank the type to fit; John: "that is
+  not working, but we still need the content." Decided: the title,
+  subtitle and text scroll inside a box with no visible border, under the
+  SOUND button; the three/four switch and Let's play stay fixed below
+  it. A down chevron sits along the bottom of the box when there is more
+  below, an up chevron along the top when there is more above (never
+  when there is not); a tap scrolls most of a box, a finger drags. At the
+  start the title, subtitle and the lines through "Get it, or else GO
+  FISH!" are in view. Text sizes went back to the welcome's own. The old
+  two-paragraph welcome stays in an HTML comment as the fallback, and
+  John saved a screenshot of it in the design-ideas folder.
+- **NEW and HELP.** The two candy-bar buttons on the table were NEW GAME
+  and ?? / SOUND; John shortened them.
+- **The mix, a quarter quieter (John, by ear on the desktop).** The UI
+  sounds were at half level and felt loud next to the music: now a
+  quarter. Then by ear: the character-switch sounds a quarter below that,
+  the spoken lines (goes first, victory, tie) half again above the UI
+  level, and all the music a quarter quieter at every slider stop (the
+  stops 0 to 100 and the default 80 stay; it is what 100 means that
+  dropped). Each level is one number in `sound.js` for the next round of
+  tuning on the phone.
+- **The dish candies flickered on the phone (John), not on the desktop.**
+  Cause: every redraw of the table threw away every candy picture and
+  made new ones; a phone paints a brand-new picture blank for a frame
+  while it decodes it again, a desktop keeps the decoded picture around.
+  Decided: keep the pictures. A candy keeps its picture for the whole
+  round and is only moved between the dish and the tray; the centre plate
+  is made once; a slot's artwork is redrawn only when its count or its
+  completed check changes. The cheaper "decode before painting" hint was
+  added too, for the pictures that genuinely are new (the flying candy).
 
 ## 6e. games.json v2: the first proposal (2026-09-29, superseded)
 

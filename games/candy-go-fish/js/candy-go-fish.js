@@ -3,7 +3,7 @@
   // The generated companion keeps direct file:// opening functional.
   let config = window.CandyConfig;
   if (location.protocol !== 'file:') {
-    try { const response = await fetch('./assets/json/game-config.json?v=2026-1016-three-fixes'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
+    try { const response = await fetch('./assets/json/game-config.json?v=2026-1016-welcome-scroll'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
     catch (error) { console.warn('Using bundled candy configuration.', error); }
   }
   const piles = CandyPiles();
@@ -74,7 +74,9 @@
   }
   function image(type) { return './assets/candybar-images/' + byId.get(type).image; }
   function candyImage(type, className = '') {
-    const img = document.createElement('img'); img.src = image(type); img.alt = ''; img.draggable = false; img.className = className; return img;
+    const img = document.createElement('img'); img.src = image(type); img.alt = ''; img.draggable = false; img.className = className;
+    img.decoding = 'sync'; // finish decoding before the frame paints, so a new candy never shows blank for a frame
+    return img;
   }
   function buildSlots() {
     for (const player of ['human', 'wendy']) {
@@ -181,7 +183,7 @@
         const complete = state.sets[player].some(set => set.type === type);
         const canGive = requestedGift?.token === generation && !requestedGift.released && requestedGift.type === type;
         const available = player === 'human' && quantity > 0 && (phase === 'choose' || canGive) && !overlayOpen;
-        slot.replaceChildren(); slot.className = 'slot';
+        slot.className = 'slot';
         const highlighted = player === 'human' && ((selected === type && phase === 'choose') || canGive);
         slot.classList.toggle('complete', complete); slot.classList.toggle('selected', Boolean(highlighted));
         slot.classList.toggle('available', available);
@@ -190,17 +192,27 @@
           slot.setAttribute('aria-label', byId.get(type).longName + (complete ? '; completed set' : '; you have ' + quantity + (canGive ? '; give one to ' + opponentName : '; select to ask')));
           slot.setAttribute('aria-pressed', String(Boolean(highlighted)));
         } else slot.setAttribute('aria-label', complete ? byId.get(type).longName + '; completed set' : 'Uncompleted goal');
-        if (player === 'human' || complete) {
-          const art = document.createElement('span'); art.className = 'candy-art';
-          art.append(candyImage(type, 'first' + (quantity > 1 ? ' stacked' : '')));
-          if (player === 'human' && quantity > 1) art.prepend(candyImage(type, 'second'));
-          if (player === 'human' && quantity > 2) art.prepend(candyImage(type, 'third'));
-          slot.append(art);
-          slot.classList.toggle('empty', !quantity && !complete);
-          if (complete || quantity > 0) {
-            const badge = document.createElement('span'); badge.className = 'badge'; badge.textContent = complete ? '✓' : quantity; slot.append(badge);
+        const shown = player === 'human' || complete;
+        slot.classList.toggle('empty', shown && !quantity && !complete);
+        slot.classList.toggle('unknown', !shown);
+        // The artwork (candy images and badge) depends only on these, so it
+        // is rebuilt only when they change. Rebuilding it on every redraw
+        // made the candies flash on phones (John, 2026-10-16).
+        const drawn = shown ? quantity + '|' + complete : 'hidden';
+        if (slot.dataset.drawn !== drawn) {
+          slot.dataset.drawn = drawn;
+          slot.replaceChildren();
+          if (shown) {
+            const art = document.createElement('span'); art.className = 'candy-art';
+            art.append(candyImage(type, 'first' + (quantity > 1 ? ' stacked' : '')));
+            if (player === 'human' && quantity > 1) art.prepend(candyImage(type, 'second'));
+            if (player === 'human' && quantity > 2) art.prepend(candyImage(type, 'third'));
+            slot.append(art);
+            if (complete || quantity > 0) {
+              const badge = document.createElement('span'); badge.className = 'badge'; badge.textContent = complete ? '✓' : quantity; slot.append(badge);
+            }
           }
-        } else slot.classList.add('unknown');
+        }
       }
     }
     el('askButton').disabled = phase !== 'choose' || !selected || overlayOpen;
@@ -222,12 +234,15 @@
     el('fishButton').hidden = el('fishButton').disabled;
     el('centerCircle').disabled = !['humanFishWait', 'wendyFishWait'].includes(phase) || overlayOpen;
     const center = el('centerCircle');
-    if (!opening || !center.querySelector('img')) {
-    center.replaceChildren();
-    const dish = document.createElement('img'); dish.src = './assets/candy-dish/ghost-plate.png';
-    dish.alt = ''; dish.draggable = false; center.append(dish);
-    const number = document.createElement('span'); number.className = 'pile-number'; number.textContent = state.pile.length; center.append(number);
+    // The plate and its number are made once and kept; only the number's
+    // text changes. Rebuilding them (and so the pile layer on top) on every
+    // redraw made the dish flash on phones (John, 2026-10-16).
+    if (!center.querySelector('img')) {
+      const dish = document.createElement('img'); dish.src = './assets/candy-dish/ghost-plate.png';
+      dish.alt = ''; dish.draggable = false; dish.decoding = 'sync'; center.append(dish);
+      const number = document.createElement('span'); number.className = 'pile-number'; center.append(number);
     }
+    center.querySelector('.pile-number').textContent = state.pile.length;
     if (!opening) center.querySelector('img').style.transform = '';
     center.setAttribute('aria-label', 'Candy Dish; ' + (phase === 'wendyFishWait' ? 'let ' + opponentName + ' draw a candy' : 'draw a candy') + '; ' + state.pile.length + ' remaining');
     piles.render(state);
@@ -911,6 +926,21 @@
   el('overlay').classList.add('welcoming');
   el('dialogAction').disabled = true;
   el('dialogAction').textContent = 'Loading assets';
+  // The welcome's title and text scroll inside a borderless box (John,
+  // 2026-10-16). The two chevrons show only when there is more above or
+  // below, and a tap on one scrolls by most of the box's height.
+  const scrollBox = el('dialogScroll');
+  function updateScrollArrows() {
+    const hiddenBelow = scrollBox.scrollHeight - scrollBox.clientHeight - scrollBox.scrollTop;
+    el('scrollUp').hidden = scrollBox.scrollTop <= 1;
+    el('scrollDown').hidden = hiddenBelow <= 1;
+  }
+  scrollBox.addEventListener('scroll', updateScrollArrows);
+  window.addEventListener('resize', updateScrollArrows);
+  if (document.fonts) document.fonts.ready.then(updateScrollArrows);
+  el('scrollUp').addEventListener('click', () => scrollBox.scrollBy({ top: -scrollBox.clientHeight * .7, behavior: 'smooth' }));
+  el('scrollDown').addEventListener('click', () => scrollBox.scrollBy({ top: scrollBox.clientHeight * .7, behavior: 'smooth' }));
+  updateScrollArrows();
   // The welcome music starts from a tap on the welcome artwork, and only
   // from a tap: phones refuse a start that no tap is behind, and iOS left
   // the tune registered-but-paused when the game asked as soon as loading

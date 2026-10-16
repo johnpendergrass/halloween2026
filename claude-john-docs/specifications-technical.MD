@@ -1,6 +1,6 @@
 # Halloween 2026 — Technical Specifications
 
-Last updated: 2026-10-16 12:22 (render(players), requestHoldMs live again, startup flash: first-paint recording and the HTML fix; end of 4k. Before that: 2026-10-16 11:33, Option C as built, 4k)
+Last updated: 2026-10-16 13:28 (welcome scroll box, volume constants and gainFor, image reuse in candy-piles.js and render; end of 4k. Before that: 2026-10-16 12:22, render(players) and the startup flash, 4k)
 
 ## 1. Stack and hosting
 
@@ -1013,6 +1013,57 @@ also quote it.
   first painted iframe frame is the welcome. The `.welcome-subtitle`
   line break depends on `.welcoming`, which is why the plain frame showed
   "GO FISH!Candy Edition!" as one line.
+- **Welcome scroll box (afternoon).** `index.html`: `<div
+  class="dialog-scroll-wrap"><div id="dialogScroll" class="dialog-scroll">`
+  wraps `#dialogTitle` and `#dialogBody`; after the inner div come
+  `#scrollUp` and `#scrollDown` (buttons with an inline SVG chevron,
+  `hidden` by default). CSS: both wrappers and the arrows are `display:
+  contents` / `display: none` by default, so every other dialog (Rules,
+  whose `#dialogBody` must stay a flex child of `.dialog` to scroll) is
+  laid out as before; under `.welcoming` the wrap is a positioned block
+  (`margin-top: 0.6vw`, below the SOUND label, where an earlier -4vw let
+  the up-fade cover the label), the box is `height: 54vw; overflow-y:
+  auto; overflow-x: hidden; touch-action: pan-y; scrollbar-width: none`
+  plus the WebKit scrollbar rule, and the arrows are absolute 7vw strips
+  on cream gradients at the top and bottom edges. `touch-action: pan-y`
+  on the scroller is what lets a finger drag it although `body` is
+  `touch-action: none` (the gesture stops at the scrolling element).
+  Script (after the welcome block): `updateScrollArrows()` hides the up
+  arrow when `scrollTop <= 1` and the down arrow when less than a pixel is
+  left below; bound to the box's `scroll`, `resize`, `document.fonts.ready`
+  and once at startup; the arrows call `scrollBy` by 70% of the box with
+  smooth behaviour. The welcome's h1 margin is `0 0 2.2vw` (inside the
+  box; a negative margin would clip). Fit measured in the shell (dialog
+  bottom vs iframe height): 390x844 542/594, 375x667 480/525, 360x780
+  500/548, 1024x1366 982/1076. Text: `.welcome-credits` 2.6vw grey.
+- **Volume constants (`sound.js`).** `uiVolume` 0.25, `speechVolume`
+  0.375, `musicVolume` 0.5 (the tune's fade-in target, formerly the shared
+  `defaultVolume`), `soundVolumes` overrides (`spinnerTick: uiVolume`, the
+  three `switch-to-*` keys at `uiVolume * 0.75`), and `gainFor(sound)`:
+  override, else speech level for keys starting `goes-first:` or
+  `victory:`, else `uiVolume`. Music channel `scale` 1 (was 1 / 0.75);
+  effective music gain = slider/100 x scale x musicVolume. The slider's
+  stops are unchanged. `verify-sound-layout` asserts 0.25 / 0.375 / 0.1875
+  by key prefix.
+- **Image reuse (the phone flicker).** `candy-piles.js`: `elements` map
+  (card id -> `<img>`), `style(img, candy)` applies size, place, rotation,
+  filter and the `moving` visibility, `node(candy)` makes a fresh styled
+  image (the flight's flier), `element(candy)` returns the kept one;
+  `render` keeps each host's `.candy-pile-layer`, removes children not in
+  the new list and appends the list (append moves existing nodes, so a
+  card going dish -> tray keeps its element); `reset()` clears the map.
+  `candy-go-fish.js` `render`: the centre plate `<img>` and `.pile-number`
+  are created once if missing and only the number's text is updated (the
+  old code rebuilt them, and so the pile layer, on every non-opening
+  redraw); each slot stores `dataset.drawn = quantity|complete` (or
+  `hidden`) and only rebuilds its children when that changes, while the
+  classes (complete, selected, available, empty, unknown) are still set
+  every time; `candyImage` sets `decoding = 'sync'`. Measured with a
+  throwaway script patching `document.createElement`: three selection
+  redraws create three images, all the speech bubble's candy
+  (`fillRequestBubble` still rebuilds the bubble each render); the 39
+  images in the slots, centre and tray are the same elements before and
+  after.
 
 ## 5. iPhone "app" mode
 

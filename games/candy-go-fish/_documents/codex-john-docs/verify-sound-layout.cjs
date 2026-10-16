@@ -31,7 +31,8 @@ const startupSounds = ['confirmText', 'winsSet-player', 'winsSet-opponent',
     // Startup decodes the twelve short sounds and none of the victory speeches.
     assert.deepEqual(await page.evaluate(() => CandySound.decodedSounds.sort()), [...startupSounds].sort());
     await page.locator('#overlay.welcoming #dialogAction').click();
-    // Each plays at once from its buffer: a voice with a real length at 50% gain.
+    // Each plays at once from its buffer: a voice with a real length at 25% gain (uiVolume);
+    // the three character-switch sounds sit a quarter lower (0.1875), the spoken lines higher (0.375).
     const voices = await page.evaluate(keys => keys.map(key => {
       const voice = CandySound.play(key);
       return voice && { sound: voice.sound, duration: voice.duration, gain: voice.gain };
@@ -40,7 +41,8 @@ const startupSounds = ['confirmText', 'winsSet-player', 'winsSet-opponent',
       assert(voice, startupSounds[index] + ' plays');
       assert.equal(voice.sound, startupSounds[index]);
       assert(voice.duration > 0 && voice.duration < 10, startupSounds[index] + ' has a sensible length');
-      assert.equal(voice.gain, .5);
+      const key = startupSounds[index];
+      assert.equal(voice.gain, key.startsWith('switch-to-') ? .1875 : key.startsWith('goes-first:') ? .375 : .25);
     }
     assert.equal(await page.evaluate(() => voiceStarts), 12);
     assert.equal(await page.evaluate(() => CandySound.play('no-such-sound')), undefined);
@@ -75,12 +77,12 @@ const startupSounds = ['confirmText', 'winsSet-player', 'winsSet-opponent',
         return { sound: voice.sound, gain: voice.gain };
       }, role);
       assert.equal(fanfare.sound, key);
-      assert.equal(fanfare.gain, .5);
+      assert.equal(fanfare.gain, .25);
     }
     await page.evaluate(() => CandySound.setEnabled(false));
     assert.equal(await page.evaluate(() => CandySound.playSetFanfare('human')), undefined);
     assert.equal(await page.evaluate(() => CandySound.playSetFanfare('wendy')), undefined);
     assert.deepEqual(errors, []);
-    console.log('PASS: 12 sounds decode at startup and play from buffers at 50% gain; 37 victory speeches decode on demand; timer-started goes-first speech plays; mute respected.');
+    console.log('PASS: 12 sounds decode at startup and play from buffers at 25% gain; 37 victory speeches decode on demand; timer-started goes-first speech plays; mute respected.');
   } finally { await browser.close(); server.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Go Fish Candy Edition</title>
-  <link rel="stylesheet" href="./candy-go-fish.css?v=2026-1016-three-fixes">
+  <link rel="stylesheet" href="./candy-go-fish.css?v=2026-1016-welcome-scroll">
 </head>
 <body>
   <main id="table">
-    <header class="game-bar"><button id="newGame"><span>NEW GAME</span></button><button id="rulesButton" aria-label="Rules and sound"><span>?? / SOUND</span></button><span id="setSizeNote" class="set-size-note">3 candies per set</span></header>
+    <header class="game-bar"><button id="newGame"><span>NEW</span></button><button id="rulesButton" aria-label="Help: rules and sound"><span>HELP</span></button><span id="setSizeNote" class="set-size-note">3 candies per set</span></header>
     <section id="wendyArea" class="player-area">
       <div class="player-heading"><span id="wendySetCount" class="portrait-score"><span>CANDY SETS</span><strong>0</strong></span><div class="wendy-portrait"><button id="opponentPrevious" class="opponent-arrow previous" aria-label="Previous opponent"><svg viewBox="0 0 60 90" aria-hidden="true"><path d="M48 3 Q34 18 35 31 Q20 38 5 45 Q20 52 35 59 Q34 72 48 87 Q42 65 45 45 Q42 25 48 3Z"/></svg></button><button id="opponentNext" class="opponent-arrow next" aria-label="Next opponent"><svg viewBox="0 0 60 90" aria-hidden="true"><path d="M12 3 Q26 18 25 31 Q40 38 55 45 Q40 52 25 59 Q26 72 12 87 Q18 65 15 45 Q18 25 12 3Z"/></svg></button><img class="portrait" src="./assets/opponent-icons/RON.webp" alt="Ron +" draggable="false"><strong class="portrait-name">WENDY</strong></div><div id="wendyPile" class="hand-pile" aria-label="Wendy's hidden hand"><img class="player-dish" src="./assets/candy-dish/witch-tray.png" alt="" draggable="false"><span id="wendyCount" class="badge hand-count">5</span></div></div>
       <div id="wendySlots" class="slots" aria-label="Wendy's completed sets"></div>
@@ -25,28 +25,33 @@
   <!-- The overlay starts in its welcome look (class welcoming) and with the button disabled, so the very first paint,
        before the scripts have loaded and fetched the config, already shows the vine-framed welcome and not the plain
        dialog it would otherwise be for up to a second on a phone (John, 2026-10-16). The script sets both again. -->
-  <div id="overlay" class="overlay welcoming"><section class="dialog" aria-modal="true" role="dialog" aria-labelledby="dialogTitle"><div class="dialog-audio"><button id="dialogSound" class="audio-toggle" aria-label="Sound options" aria-haspopup="dialog"><img src="./assets/buttons/speaker-grill.png" alt="" draggable="false"><span>SOUND</span></button></div><h1 id="dialogTitle">GO FISH!<span class="welcome-subtitle">Candy Edition!</span></h1><div id="dialogBody"><p>Ask for candies.</p><p>Pick a candy you hold to request a matching one. If <b>YES</b>, you get a candy and another turn. If <b>NO</b> match, <b class="go-fish-accent">GO FISH!</b> Draw a candy, then switch turns.</p></div><div id="setSizeChoice" class="two-way" role="group" aria-label="Candies per set"><span class="two-way-thumb" aria-hidden="true"></span><button id="setSizeThree" aria-pressed="true"><span class="two-way-line">Three<img src="./assets/generic-candies/candy-bar.png" alt="" draggable="false" style="filter:hue-rotate(0deg)"><img src="./assets/generic-candies/candy-bar.png" alt="" draggable="false" style="filter:hue-rotate(0deg)"><img src="./assets/generic-candies/candy-bar.png" alt="" draggable="false" style="filter:hue-rotate(0deg)"></span><span>candies per set</span></button><button id="setSizeFour" aria-pressed="false"><span class="two-way-line">Four<img src="./assets/generic-candies/candy-bar.png" alt="" draggable="false" style="filter:hue-rotate(195deg)"><img src="./assets/generic-candies/candy-bar.png" alt="" draggable="false" style="filter:hue-rotate(195deg)"><img src="./assets/generic-candies/candy-bar.png" alt="" draggable="false" style="filter:hue-rotate(195deg)"><img src="./assets/generic-candies/candy-bar.png" alt="" draggable="false" style="filter:hue-rotate(195deg)"></span><span>candies per set</span></button></div><button id="dialogAction" class="primary" disabled>Loading assets</button><button id="dialogCancel" class="secondary" hidden>Keep playing</button></section></div>
+  <div id="overlay" class="overlay welcoming"><section class="dialog" aria-modal="true" role="dialog" aria-labelledby="dialogTitle"><div class="dialog-audio"><button id="dialogSound" class="audio-toggle" aria-label="Sound options" aria-haspopup="dialog"><img src="./assets/buttons/speaker-grill.png" alt="" draggable="false"><span>SOUND</span></button></div><div class="dialog-scroll-wrap"><div id="dialogScroll" class="dialog-scroll"><h1 id="dialogTitle">GO FISH!<span class="welcome-subtitle">Candy Edition!</span></h1><!-- The welcome text is the shell's This Game text (games.json, _documents/design ideas/Text for THIS GAME.txt) with its
+           marks turned into elements the way app.js does: __accent__ = go-fish-accent, ~~rainbow~~ = one span per letter.
+           The earlier, shorter text is kept here as the fallback (John, 2026-10-16):
+           <p>Ask for candies.</p><p>Pick a candy you hold to request a matching one. If <b>YES</b>, you get a candy and
+           another turn. If <b>NO</b> match, <b class="go-fish-accent">GO FISH!</b> Draw a candy, then switch turns.</p> -->
+      <div id="dialogBody"><p>Ask for candies.</p><p>Pick a candy you hold<br>to request a matching one.<br>Get it, or else <b class="go-fish-accent">GO FISH!</b></p><p>Play as your favorite<br>non-AI animated 3D character!</p><p>Challenge Hermione for a hard battle.<br>Ron not-so-much.</p><p>Win, and get a <b class="rainbow"><span>c</span><span>a</span><span>n</span><span>d</span><span>y</span><span> </span><span>r</span><span>a</span><span>i</span><span>n</span><span>f</span><span>a</span><span>l</span><span>l</span></b>!<br>Lose, and maybe not.</p><p class="welcome-credits">v 0.19.2 10/2026<br>jp/claude/chatty</p></div></div><button id="scrollUp" class="scroll-arrow up" type="button" aria-label="Scroll the text up" hidden><svg viewBox="0 0 100 50" aria-hidden="true"><path d="M12 38 L50 10 L88 38"/></svg></button><button id="scrollDown" class="scroll-arrow down" type="button" aria-label="Scroll the text down" hidden><svg viewBox="0 0 100 50" aria-hidden="true"><path d="M12 12 L50 40 L88 12"/></svg></button></div><div id="setSizeChoice" class="two-way" role="group" aria-label="Candies per set"><span class="two-way-thumb" aria-hidden="true"></span><button id="setSizeThree" aria-pressed="true"><span class="two-way-line">Three<img src="./assets/generic-candies/candy-bar.png" alt="" draggable="false" style="filter:hue-rotate(0deg)"><img src="./assets/generic-candies/candy-bar.png" alt="" draggable="false" style="filter:hue-rotate(0deg)"><img src="./assets/generic-candies/candy-bar.png" alt="" draggable="false" style="filter:hue-rotate(0deg)"></span><span>candies per set</span></button><button id="setSizeFour" aria-pressed="false"><span class="two-way-line">Four<img src="./assets/generic-candies/candy-bar.png" alt="" draggable="false" style="filter:hue-rotate(195deg)"><img src="./assets/generic-candies/candy-bar.png" alt="" draggable="false" style="filter:hue-rotate(195deg)"><img src="./assets/generic-candies/candy-bar.png" alt="" draggable="false" style="filter:hue-rotate(195deg)"><img src="./assets/generic-candies/candy-bar.png" alt="" draggable="false" style="filter:hue-rotate(195deg)"></span><span>candies per set</span></button></div><button id="dialogAction" class="primary" disabled>Loading assets</button><button id="dialogCancel" class="secondary" hidden>Keep playing</button></section></div>
   <!-- The Music popup. It covers whichever dialog is open underneath (sized to the
        tallest one, Rules) and closes back to it with Cancel or Done. -->
   <div id="musicOverlay" class="overlay music-options" hidden><section class="dialog" aria-modal="true" role="dialog" aria-labelledby="musicTitle"><h1 id="musicTitle">SOUNDS</h1><div class="music-body"><div class="toggle-row"><span class="toggle-item"><span class="toggle-label">UI</span><button id="uiEnabled" class="audio-toggle" aria-pressed="true" aria-label="UI sounds"><img src="./assets/buttons/speaker-grill.png" alt="" draggable="false"></button></span></div><hr class="music-rule"><div class="toggle-row"><span class="toggle-item"><span class="toggle-label">MUSIC</span><button id="musicEnabled" class="audio-toggle" aria-pressed="true" aria-label="Music"><img src="./assets/buttons/speaker-grill.png" alt="" draggable="false"></button></span></div><div class="music-field"><div class="track-picker" role="group" aria-label="Soundtrack"><button id="trackPrevious" class="opponent-arrow previous" aria-label="Previous soundtrack"><svg viewBox="0 0 60 90" aria-hidden="true"><path d="M48 3 Q34 18 35 31 Q20 38 5 45 Q20 52 35 59 Q34 72 48 87 Q42 65 45 45 Q42 25 48 3Z"/></svg></button><strong id="trackName">Wonderful</strong><button id="trackNext" class="opponent-arrow next" aria-label="Next soundtrack"><svg viewBox="0 0 60 90" aria-hidden="true"><path d="M12 3 Q26 18 25 31 Q40 38 55 45 Q40 52 25 59 Q26 72 12 87 Q18 65 15 45 Q18 25 12 3Z"/></svg></button></div></div><div class="music-field"><div id="modeChoice" class="two-way mode-switch" role="group" aria-label="When music plays"><span class="two-way-thumb" aria-hidden="true"></span><button id="modeContinuous" aria-pressed="false">Always</button><button id="modePaused" aria-pressed="true">Paused</button></div></div><div class="music-field volume-field"><input id="musicVolume" type="range" min="0" max="100" step="20" value="80" list="musicVolumeStops" aria-label="Music volume"><datalist id="musicVolumeStops"><option value="0"></option><option value="20"></option><option value="40"></option><option value="60"></option><option value="80"></option><option value="100"></option></datalist><div class="volume-ticks" aria-hidden="true"><span>0</span><span>20</span><span>40</span><span>60</span><span>80</span><span>100</span></div></div></div><div class="music-actions"><button id="musicCancel" class="secondary">CANCEL</button><button id="musicDone" class="primary">OK</button></div></section></div>
   <script src="../game-helper.js"></script>
-  <script src="./assets/json/config-data.js?v=2026-1016-three-fixes"></script>
-  <script src="./js/game-engine.js?v=2026-1016-three-fixes"></script>
-  <script src="./js/computer-player.js?v=2026-1016-three-fixes"></script>
-  <script src="./js/shared/knowledge.js?v=2026-1016-three-fixes"></script>
-  <script src="./js/shared/temporal-memory.js?v=2026-1016-three-fixes"></script>
-  <script src="./js/shared/temporal-beliefs.js?v=2026-1016-three-fixes"></script>
-  <script src="./js/strategies/beginner.js?v=2026-1016-three-fixes"></script>
-  <script src="./js/strategies/medium.js?v=2026-1016-three-fixes"></script>
-  <script src="./js/strategies/temporal.js?v=2026-1016-three-fixes"></script>
-  <script src="./js/strategies/calibrated-medium.js?v=2026-1016-three-fixes"></script>
-  <script src="./js/strategies/calibrated-expert.js?v=2026-1016-three-fixes"></script>
-  <script src="./js/strategies.js?v=2026-1016-three-fixes"></script>
-  <script src="./js/candy-rain.js?v=2026-1016-three-fixes"></script>
-  <script src="./js/candy-piles.js?v=2026-1016-three-fixes"></script>
-  <script src="./assets/sounds/victory-sounds.js?v=2026-1016-three-fixes"></script>
-  <script src="./js/preload.js?v=2026-1016-three-fixes"></script>
-  <script src="./js/sound.js?v=2026-1016-three-fixes"></script>
-  <script src="./js/candy-go-fish.js?v=2026-1016-three-fixes"></script>
+  <script src="./assets/json/config-data.js?v=2026-1016-welcome-scroll"></script>
+  <script src="./js/game-engine.js?v=2026-1016-welcome-scroll"></script>
+  <script src="./js/computer-player.js?v=2026-1016-welcome-scroll"></script>
+  <script src="./js/shared/knowledge.js?v=2026-1016-welcome-scroll"></script>
+  <script src="./js/shared/temporal-memory.js?v=2026-1016-welcome-scroll"></script>
+  <script src="./js/shared/temporal-beliefs.js?v=2026-1016-welcome-scroll"></script>
+  <script src="./js/strategies/beginner.js?v=2026-1016-welcome-scroll"></script>
+  <script src="./js/strategies/medium.js?v=2026-1016-welcome-scroll"></script>
+  <script src="./js/strategies/temporal.js?v=2026-1016-welcome-scroll"></script>
+  <script src="./js/strategies/calibrated-medium.js?v=2026-1016-welcome-scroll"></script>
+  <script src="./js/strategies/calibrated-expert.js?v=2026-1016-welcome-scroll"></script>
+  <script src="./js/strategies.js?v=2026-1016-welcome-scroll"></script>
+  <script src="./js/candy-rain.js?v=2026-1016-welcome-scroll"></script>
+  <script src="./js/candy-piles.js?v=2026-1016-welcome-scroll"></script>
+  <script src="./assets/sounds/victory-sounds.js?v=2026-1016-welcome-scroll"></script>
+  <script src="./js/preload.js?v=2026-1016-welcome-scroll"></script>
+  <script src="./js/sound.js?v=2026-1016-welcome-scroll"></script>
+  <script src="./js/candy-go-fish.js?v=2026-1016-welcome-scroll"></script>
 </body>
 </html>

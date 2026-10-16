@@ -29,16 +29,42 @@
   const decodes = new Map();
   // Every UI sound that is playing right now (a "voice": one source node).
   const voices = new Set();
-  const defaultVolume = 0.5;
-  // Per-sound overrides: 0 = silent, 1 = full signal level.
-  const soundVolumes = { spinnerTick: 0.5 };
+  // Gain of each UI sound (clips, speeches, the spinner tick): 0 = silent,
+  // 1 = the file's full level. Was 0.5 until 2026-10-16; John found the UI
+  // too loud next to the music, so 0.25 is the new starting point.
+  const uiVolume = 0.25;
+  // The spoken lines (the 'goes-first:' and 'victory:' keys) sit above the
+  // other UI sounds (John, 2026-10-16: "about 25% louder", 0.375).
+  const speechVolume = 0.375;
+  // Per-sound overrides, for when one sound needs to sit above or below the
+  // rest. The spinner tick is listed so it is easy to find; it follows uiVolume.
+  // The three character-switch sounds (the portrait arrows) sit a quarter
+  // below the rest (John, 2026-10-16).
+  const soundVolumes = {
+    spinnerTick: uiVolume,
+    'switch-to-ron-or-boo': uiVolume * 0.75,
+    'switch-to-harry-or-mike': uiVolume * 0.75,
+    'switch-to-hermione-or-sully': uiVolume * 0.75
+  };
+  // The soundtrack's own gain inside its channel (the fade-in target). It
+  // used to share the UI constant; it is unchanged at 0.5.
+  const musicVolume = 0.5;
+  // gainFor(sound): the gain a UI sound plays at, an override first, else
+  // the speech level for a spoken line, else the common UI level.
+  function gainFor(sound) {
+    if (sound in soundVolumes) return soundVolumes[sound];
+    if (sound.startsWith('goes-first:') || sound.startsWith('victory:')) return speechVolume;
+    return uiVolume;
+  }
   // Channel volume (0 to 1, what the Music popup's slider sets) multiplies
-  // each sound's own gain. `scale` is applied on top: the music channel
-  // can go a third louder than the level the game first shipped with, so
-  // that level now sits at volume 0.75 and the default stop is 0.8.
+  // each sound's own gain. `scale` is applied on top and sets what the
+  // slider's 100 means. The music scale was 1 / 0.75 (a third above the
+  // level the game first shipped with); John found all the music too loud,
+  // so it is a quarter lower since 2026-10-16: scale 1. The slider's stops
+  // (0, 20, 40, 60, 80, 100) and the default stop of 80 are unchanged.
   const channels = {
     ui: { enabled: true, volume: 1, scale: 1, gain: null },
-    music: { enabled: true, volume: 0.8, scale: 1 / 0.75, gain: null }
+    music: { enabled: true, volume: 0.8, scale: 1, gain: null }
   };
   // When the soundtrack plays: 'paused' = only while a dialog is open (the
   // game is paused behind it); 'continuous' = it keeps going during play.
@@ -155,7 +181,7 @@
     const source = context.createBufferSource();
     const gain = context.createGain();
     source.buffer = buffer;
-    gain.gain.value = soundVolumes[sound] ?? defaultVolume;
+    gain.gain.value = gainFor(sound);
     source.connect(gain); gain.connect(channels.ui.gain);
     const voice = { sound, duration: buffer.duration, gain: gain.gain.value, onended: null, source, stopped: false };
     source.onended = () => {
@@ -180,7 +206,7 @@
     const gain = context.createGain();
     source.buffer = tickBuffer;
     filter.type = 'lowpass'; filter.frequency.value = 3200;
-    gain.gain.value = soundVolumes.spinnerTick ?? defaultVolume;
+    gain.gain.value = soundVolumes.spinnerTick ?? uiVolume;
     source.connect(filter); filter.connect(gain); gain.connect(channels.ui.gain);
     tickSources.add(source);
     source.onended = () => { tickSources.delete(source); source.disconnect(); filter.disconnect(); gain.disconnect(); };
@@ -238,7 +264,7 @@
     const now = context.currentTime;
     // Explicitly preserve the envelope's current level before replacing its
     // scheduled ramp; some browsers otherwise fall back to its initial zero.
-    const level = fadeInStart === null ? 0 : defaultVolume * Math.min(1, Math.max(0, (now - fadeInStart) / 3));
+    const level = fadeInStart === null ? 0 : musicVolume * Math.min(1, Math.max(0, (now - fadeInStart) / 3));
     gain.cancelScheduledValues(now);
     gain.setValueAtTime(level, now);
     gain.linearRampToValueAtTime(0, now + seconds);
@@ -279,7 +305,7 @@
         const gain = entry.gain.gain;
         gain.cancelScheduledValues(context.currentTime);
         gain.setValueAtTime(0, context.currentTime);
-        gain.linearRampToValueAtTime(defaultVolume, context.currentTime + 3);
+        gain.linearRampToValueAtTime(musicVolume, context.currentTime + 3);
       };
       clip.onplaying = fadeIn;
       try {

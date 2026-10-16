@@ -11,7 +11,7 @@ button:focus-visible { outline: 0.8vw solid #ffd56c; outline-offset: 0.7vw; }
 .center-area { grid-row: 3; }
 #humanArea { grid-row: 4; }
 .game-bar { display: flex; align-items: center; justify-content: space-between; font-size: max(12px,3.6vw); padding: 2vw 2vw 0; }
-/* NEW GAME and RULES are generic candy bars with the words printed on the wrapper
+/* NEW and HELP (John, 2026-10-16; were NEW GAME and ?? / SOUND) are generic candy bars with the words printed on the wrapper
    (John, 2026-10-15; the ceramic pumpkins they replace are still in assets/buttons).
    The bar is a ::before layer so its hue can change without tinting the text. */
 .game-bar button { position: relative; width: 27vw; min-height: 13vw; background: transparent; color: #fff4d5; font-size: max(11px,3.2vw); font-weight: bold; letter-spacing: 0.02em; text-shadow: 0 0.3vw 0.5vw #0009, 0 0 0.3vw #0008; }
@@ -19,7 +19,7 @@ button:focus-visible { outline: 0.8vw solid #ffd56c; outline-offset: 0.7vw; }
 .game-bar button::before { content: ''; position: absolute; inset: 0; background: url('./assets/generic-candies/candy-bar.png') center / contain no-repeat; filter: hue-rotate(170deg) saturate(0.7) drop-shadow(0 0.5vw 0.6vw #0006); }
 .game-bar button > span { position: relative; z-index: 1; white-space: nowrap; }
 .game-bar button:active { transform: translateY(0.4vw); }
-/* Small reminder of the set size in play, under the ?? / SOUND button (John, 2026-10-15). */
+/* Small reminder of the set size in play, under the HELP button (John, 2026-10-15). */
 .game-bar { position: relative; }
 .set-size-note { position: absolute; right: 3.5vw; top: 13.9vw; font-size: max(10px,2.9vw); font-weight: normal; color: #f3f6ef; opacity: 0.85; white-space: nowrap; pointer-events: none; }
 /* The same note above the player's dish, centred over it, clear of the cat. */
@@ -158,7 +158,37 @@ h2 { font-size: max(14px,4.5vw); }
 .dialog-audio { display: none; justify-content: flex-end; margin: -2vw -2vw 1vw; }
 .welcoming .dialog-audio, .new-round .dialog-audio, .rules .dialog-audio { display: flex; }
 /* On the welcome the speaker buttons sit lower, clear of the vine border (John, 2026-10-15). */
-.welcoming .dialog-audio, .new-round .dialog-audio, .rules .dialog-audio { margin: 2.8vw 0 1vw; } /* a little lower and nearer the middle than on the other dialogs */
+.welcoming .dialog-audio, .new-round .dialog-audio, .rules .dialog-audio { margin: 2.8vw 0 1vw; }
+/* Welcome (2026-10-16): the longer This Game text needs the room, so the title moves up into the speaker's
+   row, the paragraphs are smaller and closer, and the set-size switch sits nearer its neighbours. */
+.welcoming .dialog-audio { margin: 3.4vw 0 0; }
+.welcoming h1 { margin: 0 0 2.2vw; }
+.welcoming .welcome-subtitle { margin-top: 0.4vw; }
+/* The welcome's title and text scroll inside a borderless box (John, 2026-10-16); the set-size switch and the
+   button stay below it. Outside the welcome the two wrappers vanish from layout (display: contents), so every
+   other dialog, Rules with its own scrolling body above all, is laid out exactly as before. The scrollbar is
+   hidden; the two chevrons (shown by candy-go-fish.js only when there is more above or below) do that job. */
+.dialog-scroll-wrap, .dialog-scroll { display: contents; }
+.scroll-arrow { display: none; }
+.welcoming .dialog-scroll-wrap { display: block; position: relative; margin: 0.6vw 0 0; }
+.welcoming .dialog-scroll { display: block; height: 54vw; overflow-y: auto; overflow-x: hidden; touch-action: pan-y; scrollbar-width: none; }
+.welcoming .dialog-scroll::-webkit-scrollbar { display: none; }
+.welcoming .welcome-credits { font-size: max(10px,2.6vw); color: #5f7a62; margin: 2vw 0 0.5vw; }
+.welcoming .scroll-arrow:not([hidden]) { display: grid; place-items: center; position: absolute; left: 0; right: 0; height: 7vw; padding: 0; z-index: 1; touch-action: auto; }
+.welcoming .scroll-arrow svg { width: 7vw; height: 3.5vw; fill: none; stroke: #264334; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
+.welcoming .scroll-arrow.up { top: 0; background: linear-gradient(#f4ecd8 60%, #f4ecd800); }
+.welcoming .scroll-arrow.down { bottom: 0; background: linear-gradient(#f4ecd800, #f4ecd8 40%); }
+.welcoming #setSizeChoice { margin: 2.6vw auto 2.4vw; }
+/* The rainbow mark, the shell's seven colours in turn (app/styles.css .this-game .rainbow), outlined so the
+   paler ones read on cream. */
+.welcoming .rainbow { -webkit-text-stroke: 0.5px #111; paint-order: stroke fill; }
+.welcoming .rainbow span:nth-child(7n+1) { color: #ff6b6b; }
+.welcoming .rainbow span:nth-child(7n+2) { color: #ffa94d; }
+.welcoming .rainbow span:nth-child(7n+3) { color: #ffe066; }
+.welcoming .rainbow span:nth-child(7n+4) { color: #8ce99a; }
+.welcoming .rainbow span:nth-child(7n+5) { color: #74c0fc; }
+.welcoming .rainbow span:nth-child(7n+6) { color: #b197fc; }
+.welcoming .rainbow span:nth-child(7n+7) { color: #f783ac; } /* a little lower and nearer the middle than on the other dialogs */
 /* Speaker buttons (John's speaker-grill.png, 2026-10-15): the bold label sits
    centred below the speaker in the page font, and a red slash crosses the
    speaker alone when that channel is off. */

@@ -1,0 +1,25 @@
+Halloween 2026 - project status (the glance; details in claude-john-docs/ and codex-john-docs/)
+
+2026 1016 pm   Claude, at John's direction, COMMITTED AND PUSHED (stamp 2026-1016-welcome-scroll):
+              SCROLLING WELCOME (the shell's This Game text in a borderless box with up/down chevrons;
+              switch and Let's play fixed below); table buttons NEW and HELP; QUIETER MIX (UI 0.25,
+              speech 0.375, character-switch 0.1875, music a quarter lower at every stop); the PHONE
+              FLICKER of the dish candies fixed by keeping the candy images across redraws.
+2026 1016 noon Three small fixes pushed: set on arrival (item 13), 0.4 s NO GO FISH pause, startup flash
+              (item 4) traced with a screencast and fixed in index.html.
+2026 1016 eve  (of the sound work) John: "the sound seems to be working fine now." SOUND CLOSED.
+2026 1016 am/pm OPTION C PASSED on the iPhone; FAST START; SMALL PORTRAITS (8.8 MB -> 183 kB WebP).
+2026 1015      candy cannon, tie voiceover, demo endings, Sound popup v2, icon, shell rework.
+2026 1007-14   John + Codex: Candy Go Fish built in games/candy-go-fish, slot 8.
+
+NOT YET
+ - JOHN: try the afternoon on the phone (scrolling welcome, the mix, no dish flicker); volumes are one
+   number each in sound.js
+ - JOHN: a REAL cold start on the phone = private tab or cleared site data (a new stamp is NOT cold), on cellular
+ - iPhone review: Sound popup v2, framed dialogs, shell tab + icon, game-over music in Paused mode
+ - where settings live (John: revisit later); items 2, 6, 10 (four stale checks)
+ - shell: per-game switches still change nothing; other games' icons; standalone move deferred
+
+DETAIL  claude-john-docs/Claude-ToBe-Continued-2026-1016-1328.MD (the afternoon in one page)
+        claude-john-docs/specifications.MD 6k and specifications-technical.MD 4k (2026-10-16 entries, the last four)
+        games/candy-go-fish/_documents/codex-john-docs/CURRENT-STATE-2026-1015.md (October 16 section) and NEXT-TODOS.md
