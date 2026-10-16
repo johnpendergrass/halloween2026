@@ -3,7 +3,7 @@
   // The generated companion keeps direct file:// opening functional.
   let config = window.CandyConfig;
   if (location.protocol !== 'file:') {
-    try { const response = await fetch('./assets/json/game-config.json?v=2026-1016-sound-fix-worked'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
+    try { const response = await fetch('./assets/json/game-config.json?v=2026-1016-three-fixes'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
     catch (error) { console.warn('Using bundled candy configuration.', error); }
   }
   const piles = CandyPiles();
@@ -145,7 +145,10 @@
       updateMiddleControls();
     } else drawCandy();
   }
-  function render() {
+  // render(players): redraw the table. `players` names whose dishes and counts
+  // to redraw; everything else (buttons, centre dish, piles) is always redrawn.
+  // Only the gift flight passes a shorter list (see resolveRequest).
+  function render(players = ['human', 'wendy']) {
     if (!state) return;
     const opening = openingPhase();
     for (const id of ['opponentPrevious', 'opponentNext']) {
@@ -163,7 +166,7 @@
     document.querySelector('.player-portrait').classList.toggle('portrait-active', displayedTurn === 'human' && !state.finished);
     document.querySelector('.wendy-portrait').classList.toggle('portrait-winner', phase === 'finished' && state.winner === 'wendy');
     document.querySelector('.player-portrait').classList.toggle('portrait-winner', phase === 'finished' && state.winner === 'human');
-    for (const player of ['human', 'wendy']) {
+    for (const player of players) {
       el(player + 'Area').classList.toggle('active', displayedTurn === player && !state.finished);
       const total = state.sets[player].length;
       const scoreLabel = document.createElement('span'); scoreLabel.textContent = 'CANDY SETS';
@@ -353,7 +356,11 @@
     if (fishReply) return true;
     if (requestType) render();
     // Answers appear automatically, but receipt always waits for acknowledgement.
-    const effectiveHold = requestType ? quoteTiming.holdMs : Math.min(holdMs, quoteTiming.holdMs);
+    // The hold is the caller's holdMs, capped at quoteHoldMs. For the opponent's
+    // question that is requestGiveHoldMs when the human has the candy (the window
+    // to tap it) and requestHoldMs when not (a short pause before the human's
+    // NO, GO FISH reply; John asked for it shorter, 2026-10-16).
+    const effectiveHold = Math.min(holdMs, quoteTiming.holdMs);
     if (!await waitActive(effectiveHold, token, () => giftShortcutUsed(token), true)) return false;
     if (!keepQuote) message.classList.remove('speech-request', 'yes-answer', 'waiting-breath');
     return true;
@@ -554,11 +561,14 @@
       setMessageSpeaker(actor === 'human' ? 'wendy' : 'human');
       const source = actor === 'human' ? el('wendyPile') : el('human-' + type);
       const destination = actor === 'human' ? el('human-' + type) : el('wendyPile');
-      // When the human gives a candy, redraw the whole board now, so the candy
-      // leaves the player's dish (and the count drops) the moment it starts
-      // flying rather than when the next message appears (John, 2026-10-15).
+      // The giver's side redraws at take-off, the receiver's on arrival.
+      // When the human gives a candy, redraw the human's dish now, so the candy
+      // leaves it (and the count drops) the moment it starts flying (John,
+      // 2026-10-15). The opponent's dish waits: the engine has already recorded
+      // any set this candy completes, and drawing it now would show the check
+      // mark while the candy is still in the air (John, 2026-10-16, item 13).
       // When the human receives, only the piles redraw: the slot fills on arrival.
-      if (actor === 'wendy') render(); else piles.render(state);
+      if (actor === 'wendy') render(['human']); else piles.render(state);
       const flight = fly(type, pileFlight.source, piles.destination(transferringCard, destination), false, token);
       retainedPlayerRequest = null;
       el('askButton').hidden = true;

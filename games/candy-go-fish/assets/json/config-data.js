@@ -58,7 +58,7 @@ window.CandyConfig = {
     "quoteFadeMs": 250,
     "quoteHoldMs": 1000,
     "yesAutoTransferMs": 4000,
-    "requestHoldMs": 900,
+    "requestHoldMs": 400,
     "requestGiveHoldMs": 1000,
     "requestHighlightDelayMs": 500,
     "playerRequestHoldMs": 1000

@@ -1,6 +1,6 @@
 # Halloween 2026 — Technical Specifications
 
-Last updated: 2026-10-16 11:33 (Option C as built, fast start, cold-start measurements, portraits, line-ending trap; see 4k. Before that: 2026-10-01 12:39, the two sound options in section 7)
+Last updated: 2026-10-16 12:22 (render(players), requestHoldMs live again, startup flash: first-paint recording and the HTML fix; end of 4k. Before that: 2026-10-16 11:33, Option C as built, 4k)
 
 ## 1. Stack and hosting
 
@@ -981,6 +981,38 @@ also quote it.
   Per-file endings differ (`sound.js`, `candy-go-fish.js`, both
   `index.html` and `app.js` are CRLF; `preload.js`, the checks and the
   docs are LF); edit scripts must detect the file's own ending.
+- **`render(players)` (midday, item 13).** `render` in `candy-go-fish.js`
+  takes an optional list of players whose dishes and counts to redraw
+  (default both; the buttons, centre dish and piles always redraw). The
+  gift flight in `resolveRequest` calls `render(['human'])` when the
+  opponent is taking and `piles.render(state)` when the human is
+  receiving; the full `render()` after the flight shows the set. Verified
+  with a throwaway script asserting the opponent slot has no `complete`
+  class and the counts are unchanged while `.flying-candy` exists.
+- **`requestHoldMs` is live again.** `presentSpeech` computed
+  `effectiveHold = requestType ? quoteHoldMs : min(holdMs, quoteHoldMs)`,
+  so every request bubble was held 1 s whatever the caller passed. Now
+  `min(holdMs, quoteHoldMs)` for all. `game-config.json` `requestHoldMs`
+  900 -> 400 (`sync-config.cjs` run). `waitActive` with `quoteWait` still
+  caps at `quoteHoldMs`. Measured with a MutationObserver on the
+  `.stationary-speech` clones: question fade-in to reply fade-in 693 ms.
+- **Startup flash: how it was recorded and what it was.** Throwaway
+  Playwright script: CDP `Network.clearBrowserCache`,
+  `Network.emulateNetworkConditions` (150 ms, 10 Mbps),
+  `Page.startScreencast` (png, every frame) on the shell page, click the
+  game button, and every 15 ms sample the iframe's `readyState`,
+  `#overlay.className`, `#dialogAction.textContent` and
+  `styleSheets.length`. Timeline on 4G: overlay in the DOM at 0.2 s with
+  class `overlay` and "Let's play"; stylesheet at 0.5 s (first paint of
+  the plain dialog); page complete at 1.3 s; `welcoming` added at 1.5 s,
+  after the script's awaited config fetch. Fix in `index.html`:
+  `<div id="overlay" class="overlay welcoming">` and
+  `<button id="dialogAction" class="primary" disabled>Loading assets`.
+  `startGame()` removes the class and the welcome block re-adds it, so the
+  script path is unchanged; `whenReady` enables the button. After: the
+  first painted iframe frame is the welcome. The `.welcome-subtitle`
+  line break depends on `.welcoming`, which is why the plain frame showed
+  "GO FISH!Candy Edition!" as one line.
 
 ## 5. iPhone "app" mode
 

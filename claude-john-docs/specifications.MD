@@ -1,6 +1,6 @@
 # Halloween 2026 — Specifications (design decisions)
 
-Last updated: 2026-10-16 11:33 (iPhone sound closed: Option C decoded buffers heard on the phone, fast start, 512 px WebP portraits, debug panel removed; see 6k. Before that: 2026-10-01 12:39, Sound switch discussion, 6j)
+Last updated: 2026-10-16 12:22 (three small fixes, uncommitted: set on arrival, shorter Go Fish pause, startup flash traced and fixed; see the end of 6k. Before that: 2026-10-16 11:33, iPhone sound closed, 6k)
 
 This file records WHAT the app looks like and WHY. Technical "how" lives in
 `specifications-technical.MD`. Companion notes in this folder:
@@ -981,6 +981,30 @@ problem is wider, and the fix is chosen.**
   stay PNG (not a problem). Still to do: item 13 (the opponent's set
   appearing before the candy arrives); a real cold start on the phone
   (private tab or cleared site data) on cellular.
+- **Set on arrival (midday, item 13).** The giver's side redraws at
+  take-off, the receiver's on arrival, in both directions. Before, the
+  opponent's take redrew the whole board at take-off, after the engine had
+  already recorded the set, so the check mark and the set count showed
+  while the candy was still in the air. Nothing else about the flight
+  changed.
+- **A shorter pause before the human's NO, GO FISH (John).** John felt the
+  opponent's "no" came faster than his own. It does when he taps Ask
+  (0.25 s after the question is sent); otherwise his question auto-sends
+  after 1 s. Decided: the opponent's unsatisfiable question is held 0.4 s
+  instead of 1 s before the reply fades in (`requestHoldMs`, tunable; 0
+  makes it instant). The give case keeps its 1 s window for tapping the
+  matching candy.
+- **The startup flash, traced and fixed (NEXT-TODOS item 4, deferred since
+  October).** John: "a quick flash of another popup ... 'welcome to go fish
+  candy edition' ... it flashes by so fast i cannot really read it." A
+  screencast of the shell on throttled 4G showed what it is: the welcome
+  dialog itself in its plain look (title and subtitle run together, rules
+  text, a green Let's play, no vine frame), on screen for about a second
+  before the script adds the welcome styling. John confirmed the frame.
+  Decided: ship the welcome look in the HTML (the overlay starts with the
+  `welcoming` class and a disabled "Loading assets" button), so the first
+  paint is the welcome. No cover, no visibility trick; the earlier
+  experiments of that kind stay reverted.
 
 ## 6e. games.json v2: the first proposal (2026-09-29, superseded)
 
