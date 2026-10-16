@@ -3,7 +3,7 @@
   // The generated companion keeps direct file:// opening functional.
   let config = window.CandyConfig;
   if (location.protocol !== 'file:') {
-    try { const response = await fetch('./assets/json/game-config.json?v=2026-1015-tie-voice-demo'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
+    try { const response = await fetch('./assets/json/game-config.json?v=2026-1015-candy-cannon'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
     catch (error) { console.warn('Using bundled candy configuration.', error); }
   }
   const piles = CandyPiles();
@@ -460,9 +460,10 @@
     el('gameOverRemaining').hidden = state.reason !== 'emptyHand';
     el('gameOverRemaining').textContent = 'Candy Dish had ' + remaining + ' left.';
     el('gameOverScore').textContent = humanName + ' had ' + state.sets.human.length + (state.sets.human.length === 1 ? ' candy set; ' : ' candy sets; ') + opponentName + ' had ' + state.sets.wendy.length + '.';
-    // Half-strength rain for a tie; the full rain otherwise (the opponent's
-    // win still gets the full rain until John's new loss celebration exists).
-    candyRain.start(3000, state.winner === 'tie' ? 'tie' : 'full');
+    // The player's win: the full candy rain. A tie: half of it. The opponent's
+    // win: the candy cannon, firing from behind the game-over panel (John,
+    // 2026-10-15). All three start three seconds after the result shows.
+    candyRain.start(3000, state.winner === 'human' ? 'full' : state.winner === 'tie' ? 'tie' : 'cannon', el('gameOver'));
     el('gameOverReplaySound').hidden = true;
     el('gameOverReplaySound').disabled = false;
     // A tie (margin 0) gets its own voiceover; the names do not matter then.
@@ -790,6 +791,7 @@
   restoreSoundSettings();
   syncAudioControls();
   el('dialogAction').addEventListener('click', () => {
+    CandySound.unlock(); // a tap is the only thing that wakes a phone's audio engine
     if (['welcoming', 'new-round', 'rules'].some(name => el('overlay').classList.contains(name))) CandySound.fadeOutWelcomeMusic();
     closeAction();
   });

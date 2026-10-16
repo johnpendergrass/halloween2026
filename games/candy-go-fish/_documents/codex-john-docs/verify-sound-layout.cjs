@@ -13,7 +13,8 @@ const root = path.resolve(__dirname, '../..');
     await page.goto('file:///' + path.join(root, 'index.html').replaceAll('\\', '/'));
     await page.evaluate(() => CandyPreload.whenReady());
     assert.deepEqual(await page.evaluate(() => CandyPreload.failures), [], 'Preloaded assets load successfully');
-    assert.equal(await page.evaluate(() => CandySound.prepareAssets().filter(clip => clip.readyState >= 4).length), 48);
+    // 48 clips plus the tie voiceover added 2026-10-15 (assets/sounds/speech/tie).
+    assert.equal(await page.evaluate(() => CandySound.prepareAssets().filter(clip => clip.readyState >= 4).length), 49);
     await page.locator('#overlay.welcoming #dialogAction').click();
     const urls = await page.evaluate(() => {
       const results = [];
@@ -26,9 +27,10 @@ const root = path.resolve(__dirname, '../..');
       results.push(CandySound.playSetFanfare('human').clip.src);
       results.push(CandySound.playSetFanfare('wendy').clip.src);
       for (const file of Object.values(CandyVictorySounds)) results.push(CandySound.play('victory:' + file).clip.src);
+      results.push(CandySound.play('victory:tie').clip.src);
       return results;
     });
-    assert.equal(urls.length, 48);
+    assert.equal(urls.length, 49);
     for (const url of urls) assert(fs.existsSync(require('node:url').fileURLToPath(url)), url);
     const audioData = urls.map(url => fs.readFileSync(require('node:url').fileURLToPath(url)).toString('base64'));
     await page.evaluate(async recordings => {
@@ -63,6 +65,6 @@ const root = path.resolve(__dirname, '../..');
     assert.equal(await page.evaluate(() => CandySound.playSetFanfare('human')), undefined);
     assert.equal(await page.evaluate(() => CandySound.playSetFanfare('wendy')), undefined);
     assert.deepEqual(errors, []);
-    console.log('PASS: 48 sounds preload and decode; separate player/opponent set clips use 50% gain and respect mute; spinner/deal work over file opening.');
+    console.log('PASS: 49 sounds preload and decode; separate player/opponent set clips use 50% gain and respect mute; spinner/deal work over file opening.');
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

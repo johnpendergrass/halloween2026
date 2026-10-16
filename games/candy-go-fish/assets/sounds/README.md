@@ -21,7 +21,7 @@ Spinner: synthesized 18ms noise tick, softened by a 3.2kHz low-pass, 50% gain. F
 
 Earned sets: human role uses winsSet-player; wendy/opponent role uses winsSet-opponent. Each plays once when its set dialog appears. The synthesized trumpet trial was removed.
 
-Victory: speech starts after two seconds, BIGWIN for a margin of at least three sets, CLOSE for one or two, the tie voiceover for a tie; missing clips stay silent. Replay restarts immediately. New game, UI/global mute and page exit cancel pending/playing speeches; rain drain disables replay.
+Audio wake-up: phones keep the Web Audio context suspended until a tap resumes it; CandySound.unlock() does that from the dialogs' confirm button (Let's play and the others) as well as the first dish tap (spinner ticks). Victory: speech starts after two seconds, BIGWIN for a margin of at least three sets, CLOSE for one or two, the tie voiceover for a tie; missing clips stay silent. Replay restarts immediately. New game, UI/global mute and page exit cancel pending/playing speeches; rain drain disables replay.
 
 ## Music and controls (2026-10-15, Claude)
 
@@ -41,4 +41,4 @@ APIs in sound.js: musicTracks, currentTrack, selectTrack(id), musicMode, setMusi
 
 ## Checks
 
-From repository root, run node games/candy-go-fish/_documents/codex-john-docs/<script>: verify-assets.cjs, verify-victory-sounds.cjs, verify-sound-layout.cjs, verify-spinner-ticks.cjs, verify-welcome-music.cjs. The Music popup itself was checked on 2026-10-15 with two throwaway Playwright scripts (tune switching with position kept, Cancel/Done, Continuous surviving Let's play and Rules, settings restored after a reload, damaged note ignored); they were not kept. Chrome checks do not replace physical iPhone listening/autoplay review. Current cache stamp: 2026-1015-tie-voice-demo.
+From repository root, run node games/candy-go-fish/_documents/codex-john-docs/<script>: verify-assets.cjs, verify-victory-sounds.cjs, verify-sound-layout.cjs, verify-spinner-ticks.cjs, verify-welcome-music.cjs. The Music popup itself was checked on 2026-10-15 with two throwaway Playwright scripts (tune switching with position kept, Cancel/Done, Continuous surviving Let's play and Rules, settings restored after a reload, damaged note ignored); they were not kept. Chrome checks do not replace physical iPhone listening/autoplay review. Current cache stamp: 2026-1015-candy-cannon.

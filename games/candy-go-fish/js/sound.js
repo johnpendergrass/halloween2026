@@ -290,6 +290,14 @@
       if (!enabled) { stopAll(); cancelVictory(); }
     },
     get enabled() { return enabled; },
+    // unlock(): call this inside a tap. Phones keep the audio engine asleep
+    // until a tap resumes it, and every sound here is routed through it. In a
+    // normal game the first dish tap wakes it (startSpinnerTicks); the demo
+    // endings never reach a dish tap, so Let's play wakes it instead (John,
+    // 2026-10-15: full sound on the desktop, none on the phone).
+    unlock() {
+      try { prepareContext(); } catch (_) { /* no audio on this device; nothing to wake */ }
+    },
     cancelVictory,
     get hasVictorySpeech() { return Boolean(victorySound); },
     replayVictory() {
