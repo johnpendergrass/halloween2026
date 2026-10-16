@@ -1,0 +1,33 @@
+Character portraits - the originals (moved here 2026-10-16, John + Claude)
+
+These six PNGs were the live portraits in assets/opponent-icons and
+assets/player-icons until 2026-10-16. The game now uses 512 x 512 WebP
+copies of them (same file names, .webp) made from these files with
+Pillow: longest side 512, LANCZOS resample, WebP quality 85.
+
+WHY
+A cold start of the game (empty browser cache, as every friend's first
+visit is) downloaded about 12 MB, and these six files were 8.8 MB of it:
+HERMIONE 2.0 MB, RON 1.9, HARRY 1.8, sully 1.4, mike 1.0, boo 0.6. On a
+good 4G connection they alone blew past the six-second preload bound,
+so "Let's play" could not appear before about 6.4 seconds.
+
+The portrait is drawn as a circle 22.5% of the frame width. The frame is
+capped by screen height, so the largest the portrait is ever drawn is:
+  iPhone (3x)              ~258 device px
+  iPad 12.9 portrait (2x)  ~311 device px   <- the biggest real case
+  1080p monitor            ~123 device px
+  4K monitor               ~246 device px at any Windows scaling
+  8K monitor               ~492 device px
+512 px covers all of them. The 1024 px originals were never shown at
+more than a third of their size.
+
+RESULT
+Six WebP files, about 180 kB in total (fifty times smaller), with the
+transparent backgrounds of the three opponent portraits kept. WebP is
+shown by every browser that runs this game (iOS 14+, Chrome, Edge,
+Firefox, Safari).
+
+If a portrait ever needs redoing, start from these originals (or from
+_documents/design ideas/opponents and players, where the earlier
+candidates live) and make a new 512 WebP the same way.

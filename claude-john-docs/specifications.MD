@@ -958,8 +958,26 @@ problem is wider, and the fix is chosen.**
   the welcome is the page itself arriving cold from the Pages edge on a
   first visit; every friend's first visit is a cold start, so this is
   still worth a look (item 5 in the game's NEXT-TODOS).
+- **The portraits were the wait (same afternoon).** John asked whether
+  the stamp had really been bumped, because the cellular restart was
+  brisk. It had; a stamp only refreshes the scripts and stylesheets,
+  while the music and images stay cached for ten minutes and are then
+  revalidated without a download, so his run was warm. A measured cold
+  start against the live site showed the welcome appearing within a
+  second or two and the wait being the six character portraits: 8.8 MB
+  of 1024 px PNGs drawn at no more than about 311 device pixels on any
+  device John cares about (iPhone, iPad, PC browser, even a 4K monitor,
+  where the frame's height cap makes the portrait 246 device pixels at
+  any scaling). Decided: 512 px WebP, quality 85, which John accepted
+  after seeing the drawn sizes and a trial table (183 kB for all six,
+  fifty times smaller, transparency kept, WebP shown by every browser
+  that runs the game). Originals kept in the design-ideas folder under
+  "character portraits" with a note, as John asked. The candies (500 px,
+  1.8 MB, already at their drawn size) are left for a possible later
+  WebP-only pass.
 - **Still to do.** Remove the `?debug=sound` panel; item 13 (the
-  opponent's set appearing before the candy arrives); cellular test.
+  opponent's set appearing before the candy arrives); a real cold start
+  on the phone (private tab or cleared site data) on cellular.
 
 ## 6e. games.json v2: the first proposal (2026-09-29, superseded)
 

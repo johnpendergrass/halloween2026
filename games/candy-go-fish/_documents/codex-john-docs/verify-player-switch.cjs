@@ -20,11 +20,11 @@ const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary
         await image.evaluate(node => node.decode());
         assert(await image.evaluate(node => node.naturalWidth > 0));
       }
-      await checkPortrait('boo.png');
+      await checkPortrait('boo.webp');
       for (const expected of ['MIKE', 'SULLY', 'BOO']) { await page.locator('#playerNext').click(); assert.equal(await name(), expected); }
-      await page.locator('#playerNext').click(); await checkPortrait('mike.png');
-      await page.locator('#playerNext').click(); await checkPortrait('sully.png');
-      await page.locator('#playerNext').click(); await checkPortrait('boo.png');
+      await page.locator('#playerNext').click(); await checkPortrait('mike.webp');
+      await page.locator('#playerNext').click(); await checkPortrait('sully.webp');
+      await page.locator('#playerNext').click(); await checkPortrait('boo.webp');
       await page.locator('#playerPrevious').click(); assert.equal(await name(), 'SULLY');
       await page.evaluate(() => {
         const create = CandyEngine.create;

@@ -13,7 +13,7 @@ const path = require('node:path');
 const root = path.resolve(__dirname, '../..');
 const types = {
   '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript',
-  '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml',
+  '.json': 'application/json', '.png': 'image/png', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml',
   '.mp3': 'audio/mpeg', '.txt': 'text/plain', '.md': 'text/markdown'
 };
 function serveGame() {

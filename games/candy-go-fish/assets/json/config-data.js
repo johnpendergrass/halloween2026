@@ -7,46 +7,46 @@ window.CandyConfig = {
   "players": {
     "human": {
       "name": "Boo",
-      "portrait": "player-icons/boo.png"
+      "portrait": "player-icons/boo.webp"
     },
     "wendy": {
       "name": "Ron",
       "displayName": "Ron +",
-      "portrait": "opponent-icons/RON.png",
+      "portrait": "opponent-icons/RON.webp",
       "strategy": "beginner"
     }
   },
   "playerCharacters": [
     {
       "name": "Boo",
-      "portrait": "player-icons/boo.png"
+      "portrait": "player-icons/boo.webp"
     },
     {
       "name": "Mike",
-      "portrait": "player-icons/mike.png"
+      "portrait": "player-icons/mike.webp"
     },
     {
       "name": "Sully",
-      "portrait": "player-icons/sully.png"
+      "portrait": "player-icons/sully.webp"
     }
   ],
   "opponents": [
     {
       "name": "Ron",
       "displayName": "Ron +",
-      "portrait": "opponent-icons/RON.png",
+      "portrait": "opponent-icons/RON.webp",
       "strategy": "beginner"
     },
     {
       "name": "Harry",
       "displayName": "Harry ++",
-      "portrait": "opponent-icons/HARRY.png",
+      "portrait": "opponent-icons/HARRY.webp",
       "strategy": "medium"
     },
     {
       "name": "Hermione",
       "displayName": "Hermione +++",
-      "portrait": "opponent-icons/HERMIONE.png",
+      "portrait": "opponent-icons/HERMIONE.webp",
       "strategy": "expert"
     }
   ],

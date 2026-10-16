@@ -1,19 +1,22 @@
 Halloween 2026 - project status (the glance; details in claude-john-docs/ and codex-john-docs/)
 
 2026 1016 pm   John + Claude: OPTION C PASSED on the iPhone (wifi, live site, every sound heard).
-              Then FAST START: Let's play no longer waits for the music; only the chosen tune
-              preloads; stamp 2026-1016-fast-start pushed. Twelve checks green. Cold blank popup
-              before the welcome (page arriving cold from Pages) still ~10 s, not addressed.
+              Then FAST START (Let's play no longer waits for the music; only the chosen tune
+              preloads) and SMALL PORTRAITS (six 1024 px PNGs = 8.8 MB -> 512 px WebP = 183 kB;
+              originals in _documents/design ideas/character portraits). Measured cold start of
+              the live site: welcome in ~1 s; Let's play was 6.4 s on good 4G because of the
+              portraits. Stamp 2026-1016-small-portraits pushed. Twelve checks green.
 2026 1016 am   phone tests widened the finding; DECIDED option C; fallback tag
               before-iphone-speech-buffers = 300675c pushed; John hand-copied the game folder.
 2026 1015      candy cannon, ?debug=sound, tie voiceover, demo endings, Sound popup v2, icon, shell rework.
 2026 1007-14   John + Codex: Candy Go Fish built in games/candy-go-fish, slot 8.
 
 NOT YET
- - JOHN: cold-start phone test of the fast start (new stamp = cold), then a cellular run
+ - JOHN: a REAL cold start on the phone = private tab or cleared site data (a new stamp is NOT cold:
+   music and images stay cached), on cellular
  - remove ?debug=sound (sound problem closed)
  - item 13: opponent's completed set appears before the flying candy arrives
- - cold blank popup before the welcome (NEXT-TODOS item 5): measure, then maybe lighten fonts/vines
+ - later, John's call: candies to WebP at the same 500 px (1.8 MB -> ~0.5 MB)
  - iPhone review: Sound popup v2, framed dialogs, shell tab + icon
  - where settings live (John: revisit later); items 2, 6, 10 (four stale checks)
  - shell: per-game switches still change nothing; other games' icons; standalone move deferred
