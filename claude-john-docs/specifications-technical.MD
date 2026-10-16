@@ -964,10 +964,15 @@ also quote it.
   `sync-config.cjs`), the two default `<img src>` in `index.html`, the
   two switch checks and `serve-game.cjs`'s MIME map changed. Originals:
   `_documents/design ideas/character portraits/` with
-  `_why these were converted.txt`. The after timings are in the
-  ToBeContinued for this day. Candies left alone (500 px, drawn up to
-  ~720 device px on the celebration dialog, so no resize; WebP-only is a
-  possible later 1.3 MB saving).
+  `_why these were converted.txt`. After, same script, live site: 3.5 MB
+  in 60 files; Let's play 1.0 s on wifi, 3.3 s on good 4G (0 failures,
+  music ready at 4.1 s), still 7.6 s on slow 4G (19 bounds passed; the
+  5.4 MB tune competes with the images for 1.6 Mbps, music ready at
+  21.6 s). The shell adds 0.3 to 1.3 s. Next lever if slow 4G matters:
+  start the tune's download only after `ready` settles, so the images
+  and sounds have the line to themselves. Candies left alone (500 px,
+  drawn up to ~720 device px on the celebration dialog, so no resize;
+  WebP-only is a possible later 1.3 MB saving).
 - **Line endings, a trap.** This Git Bash's `sed -i` strips CR from CRLF
   files. Git (`core.autocrlf=true`) stores LF either way, so the commits
   were unaffected, but the working files were converted back by hand.
