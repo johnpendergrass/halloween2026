@@ -18,6 +18,7 @@ const sandbox = { window,
 vm.runInNewContext(fs.readFileSync(path.join(root, 'assets/sounds/victory-sounds.js'), 'utf8'), sandbox);
 vm.runInNewContext(fs.readFileSync(path.join(root, 'js/sound.js'), 'utf8'), sandbox);
 for (const file of Object.values(window.CandyVictorySounds)) assert(fs.existsSync(path.join(root, 'assets/sounds/speech/victory', file)));
+assert(fs.existsSync(path.join(root, 'assets/sounds/speech/tie', 'tie - no one saw that coming.mp3')), 'tie voiceover present');
 const sounds = window.CandySound;
 const played = [];
 const clip = { duration: 3 };
@@ -35,7 +36,8 @@ for (const [winner, loser, margin, expected] of [
 assert.equal(Object.keys(window.CandyVictorySounds).length, 36);
 sounds.scheduleVictory('Ron', 'Sully', 3); assert(pending);
 sounds.scheduleVictory('Harry', 'Ron', 3); assert.equal(pending, null);
-sounds.scheduleVictory('Harry', 'Mike', 0); assert.equal(pending, null);
+// A tie (margin 0) plays the single tie voiceover (John, 2026-10-15).
+sounds.scheduleVictory('Harry', 'Mike', 0); assert(pending); pending(); assert.equal(played.at(-1), 'victory:tie');
 sounds.scheduleVictory('Harry', 'Mike', 3); sounds.cancelVictory(); assert.equal(pending, null);
 sounds.scheduleVictory('Harry', 'Mike', 3); sounds.setChannelEnabled('ui', false); assert.equal(pending, null);
 sounds.setChannelEnabled('ui', true);
@@ -53,10 +55,10 @@ musicPending(); assert.equal(musicStarts, 1);
 sounds.setMusicMode('continuous');
 sounds.scheduleVictory('Harry', 'Mike', 3); pending(); clip.onended(); musicPending();
 assert.equal(musicStarts, 1);
-// No speech (a tie, or no clip for the pairing): music after 3 s in paused mode.
+// No speech (no clip for the pairing): music after 3 s in paused mode.
 sounds.setMusicMode('paused');
 sounds.scheduleVictory('Harry', 'Ron', 3); sounds.scheduleGameOverMusic();
 assert.equal(musicDelay, 3000); musicPending(); assert.equal(musicStarts, 2);
 // New game cancels a pending music start.
 sounds.scheduleGameOverMusic(); sounds.cancelVictory(); assert.equal(musicPending, null);
-console.log('Victory catalog, BIGWIN boundary, both winner directions, missing/tied silence, cancellation and game-over music passed.');
+console.log('Victory catalog, BIGWIN boundary, both winner directions, tie voiceover, missing-clip silence, cancellation and game-over music passed.');

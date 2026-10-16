@@ -91,6 +91,10 @@
     for (const key of Object.values(characterSounds)) paths.set(key, './assets/sounds/' + key + '.mp3');
     for (const name of Object.keys(characterSounds)) paths.set('goes-first:' + name.toLowerCase(), './assets/sounds/speech/goes-first/' + encodeURIComponent(name.toLowerCase() + ' goes first.mp3'));
     for (const file of Object.values(window.CandyVictorySounds || {})) paths.set('victory:' + file, './assets/sounds/speech/victory/' + encodeURIComponent(file));
+    // The tie has one voiceover of its own (John, 2026-10-15). It carries the
+    // 'victory:' prefix so cancelling, replaying and the music timing treat it
+    // like any victory speech.
+    paths.set('victory:tie', './assets/sounds/speech/tie/' + encodeURIComponent('tie - no one saw that coming.mp3'));
     return paths;
   }
 
@@ -292,14 +296,19 @@
       cancelVictory();
       if (victorySound) this.play(victorySound);
     },
+    // scheduleVictory(winner, loser, margin): margin 0 is a tie and plays the
+    // tie voiceover; otherwise the winner's BIGWIN (margin of three or more) or
+    // CLOSE speech against this loser.
     scheduleVictory(winner, loser, margin) {
       cancelVictory();
       victorySound = null;
-      if (margin <= 0) return;
-      const key = [winner.toLowerCase(), loser.toLowerCase(), margin >= 3 ? 'BIGWIN' : 'CLOSE'].join('|');
-      const filename = (window.CandyVictorySounds || {})[key];
-      if (!filename) return; // Incomplete combinations intentionally stay silent.
-      victorySound = 'victory:' + filename;
+      if (margin <= 0) victorySound = 'victory:tie';
+      else {
+        const key = [winner.toLowerCase(), loser.toLowerCase(), margin >= 3 ? 'BIGWIN' : 'CLOSE'].join('|');
+        const filename = (window.CandyVictorySounds || {})[key];
+        if (!filename) return; // Incomplete combinations intentionally stay silent.
+        victorySound = 'victory:' + filename;
+      }
       if (enabled && channels.ui.enabled) {
         victorySpeechPending = true;
         victoryTimer = setTimeout(() => {
@@ -313,8 +322,8 @@
         }, 2000);
       }
     },
-    // Game over without a victory speech (a tie, UI sounds off, or no clip
-    // for this pairing): the soundtrack still comes in after a short pause.
+    // Game over without a speech (UI sounds off, or no clip for this
+    // pairing): the soundtrack still comes in after a short pause.
     scheduleGameOverMusic() {
       if (!victorySpeechPending) victoryMusicAfter(3000);
     },

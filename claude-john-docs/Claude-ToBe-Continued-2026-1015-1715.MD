@@ -1,5 +1,7 @@
 # Claude — To Be Continued (2026-10-15 17:15)
 
+Superseded later the same evening by `Claude-ToBe-Continued-2026-1015-1825.MD`.
+
 Fifth checkpoint of 2026-10-15. Read first:
 `games/candy-go-fish/_documents/codex-john-docs/CURRENT-STATE-2026-1015.md`
 (its three "October 15" sections) and `NEXT-TODOS.md`, then

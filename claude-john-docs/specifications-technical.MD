@@ -772,6 +772,43 @@ are docs). Cache stamp lives in five places: `APP_VERSION` in
 `index.html`, and the config fetch in `js/candy-go-fish.js`; the docs
 also quote it.
 
+**Endings, 2026-10-15 late evening.**
+
+- **Rain moods.** `js/candy-rain.js` now has a `MOODS` table at the top
+  (`full` and `tie`; a `trickle` row existed for an hour and is gone):
+  burst, perTick, tickMs, maxOnScreen, total, brands, fallMs range, turns
+  range, drift share and an extra CSS filter. `start(waitMs, moodName)`
+  picks a row; the layer carries `data-mood`. `drop()` counts candies
+  since the last start so a mood can have a finite `total`. `finishGame`
+  passes `'tie'` for a tie and `'full'` otherwise. The old code is the
+  `full` row, number for number.
+- **Tie voiceover.** `sound.js` `assetMap()` adds `victory:tie` ->
+  `assets/sounds/speech/tie/tie - no one saw that coming.mp3`. The
+  `victory:` prefix is what `cancelVictory` and the preload key on, so
+  the tie clip is preloaded, cancelled by New game and replayed by the
+  speaker button like any speech. `scheduleVictory(winner, loser, 0)`
+  selects it; `finishGame` now calls `scheduleVictory` for every result
+  (names are irrelevant on a tie) and shows the replay button whenever
+  `hasVictorySpeech`. `verify-victory-sounds.cjs` asserts the clip plays
+  for margin 0 and that the file exists; `verify-assets.cjs` lists it.
+- **Demo endings.** At the bottom of `js/candy-go-fish.js`: `DEMO_SETS`
+  maps `win [6,4]`, `bigwin [8,2]`, `loss [4,6]`, `bigloss [2,8]`,
+  `tie [5,5]` (player sets, opponent sets, ten types). When `?demo=` is a
+  key, the welcome's Let's play callback is `playDemoEnding` instead of
+  `startGame`: it runs `startGame()`, creates a real engine state, pools
+  every card, hands whole types to each player as `{type, cards}` sets,
+  empties pile and hands, sets `finished`, `reason 'allSets'` and
+  `winner`, then calls `finishGame()`. Works over `file://` and HTTP. The
+  shell's iframe URL does not carry the query, so open the game page
+  directly (`/games/candy-go-fish/index.html?demo=loss`).
+- **Session scripts (scratchpad, not in the repo):** `endings_shot.cjs`
+  (five demos, mood, replay button, screenshots), `tie_check.cjs` (over
+  port 8098: the tie clip is fetched with 200 during preload, the tie
+  demo shows the replay button). Edits were made with whole-line Python
+  scripts (`edit_endings.py`, `edit_tie.py`, `remove_loss.py`) per the
+  line-ending trap: `sound.js`, `candy-go-fish.js` and the stylesheet
+  are CRLF, `candy-rain.js` and the Codex docs are LF.
+
 ## 5. iPhone "app" mode
 
 - Tags: `apple-mobile-web-app-capable`, `mobile-web-app-capable`,

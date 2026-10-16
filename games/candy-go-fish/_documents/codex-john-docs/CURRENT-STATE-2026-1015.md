@@ -81,10 +81,18 @@ UI/music have independent gain buses and ON/OFF state. On welcome, Deal again? a
 - **Shell (app/):** no Sound switch; five scores with up to two notes (the game sends "vs. <opponent>" and "<n> set game"); text marks and a per-game look; the tab switches after the panel has slid shut; games.json entry rewritten (title "__GO FISH__ - Candy Edition", short title GO FISH, John's text, credits v 0.19.2 10/2026 jp/claude/chatty, no designer/date).
 - **Checks:** every Codex check passes except the four stale ones; verify-shell and verify-assets know the new icon; verify-browser/player-switch know "(you)".
 
+## October 15 late evening (Claude, at John's direction)
+
+- **Loss ending in progress.** A muted loss (grey trickle of wrappers, grey player portrait, swaying winner, green-grey box) was built and removed the same evening; John wants a real celebration for the opponent and will describe it. The opponent's win gets the full rain meanwhile.
+- **Tie voiceover.** assets/sounds/speech/tie/tie - no one saw that coming.mp3 (John), wired as 'victory:tie' in sound.js; plays like a victory speech, replay button shown; the tie's rain is half strength (mood table in js/candy-rain.js).
+- **Demo endings.** Open the game page with ?demo=win, bigwin, loss, bigloss or tie; Let's play jumps to that game over with a real deal rearranged into sets. New game deals a normal round.
+- **New todo 13:** the opponent's dish shows a completed set before the flying candy arrives.
+- **Checks:** verify-candy-rain-game, verify-browser, verify-victory-sounds (tie added), verify-assets (tie file), verify-shell pass.
+
 ## Files, checks and publishing
 
-index.html/candy-go-fish.css are entry/layout. js/candy-go-fish.js coordinates UI; js/sound.js owns playback/buses/volume; js/preload.js prepares assets; js/candy-rain.js is the original celebration; js/candy-piles.js owns persistent piles. Engine/accepted policies stay in js/, js/strategies and js/shared. assets/json/game-config.json is authoritative; regenerate config-data.js with sync-config.cjs after edits.
+index.html/candy-go-fish.css are entry/layout. js/candy-go-fish.js coordinates UI; js/sound.js owns playback/buses/volume; js/preload.js prepares assets; js/candy-rain.js is the candy rain with a mood table (full, tie); js/candy-piles.js owns persistent piles. Engine/accepted policies stay in js/, js/strategies and js/shared. assets/json/game-config.json is authoritative; regenerate config-data.js with sync-config.cjs after edits.
 
-Current cache stamp: 2026-1015-shell-sound-icon. Keep APP_VERSION, both root stamps and game resources/config fetch synchronized. Physical iPhone audio and first-render review remain manual. Tests use local Chrome/bundled Playwright; they are development dependencies only. See [verification guide](INTEGRATION-AND-VERIFICATION.md) and [October 14 verification](VERIFICATION-2026-1014.md). The October 15 popup checks are described in assets/sounds/README.md.
+Current cache stamp: 2026-1015-tie-voice-demo. Keep APP_VERSION, both root stamps and game resources/config fetch synchronized. Physical iPhone audio and first-render review remain manual. Tests use local Chrome/bundled Playwright; they are development dependencies only. See [verification guide](INTEGRATION-AND-VERIFICATION.md) and [October 14 verification](VERIFICATION-2026-1014.md). The October 15 popup checks are described in assets/sounds/README.md.
 
 John requested complete documentation, commit and push for this checkpoint. Publish active MP3s, current code, docs and relevant verification previews; do not publish _DOWNLOADS candidates or unused working sources. Strictly validate tracked Markdown as UTF-8 before pushing because invalid encoding previously failed Pages. Confirm remote/local commit equality, the actual Pages workflow and live nested-resource stamps.

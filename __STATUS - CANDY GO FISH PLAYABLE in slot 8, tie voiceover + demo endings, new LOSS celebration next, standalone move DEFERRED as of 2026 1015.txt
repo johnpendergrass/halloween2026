@@ -1,0 +1,23 @@
+Halloween 2026 - project status (the glance; details in claude-john-docs/ and codex-john-docs/)
+
+2026 1015 late John + Claude: muted loss ending tried and removed (John wants a real celebration
+              for the opponent, to be described); tie voiceover (John's clip) + half rain;
+              ?demo=win|bigwin|loss|bigloss|tie shows an ending without playing. Stamp 2026-1015-tie-voice-demo.
+2026 1015 eve  iPhone UI toggle fixed; Sound popup v2 (CANCEL / OK); green confirm buttons; set-size
+              notes; candy-plate icon; SHELL: no Sound switch, five scores + notes, per-game look.
+2026 1015 pm   Sound popup, vine frames, candy-bar buttons, "NAME (you)", game-over music;
+              candy leaves dish at once; characters remembered; Three/Four per set.
+2026 1015 am   Standalone move DEFERRED (plan kept on file). Music popup.
+2026 1007-14   John + Codex: Candy Go Fish built in games/candy-go-fish, slot 8.
+2026 0927-30   Frame, panels, iframe games, games.json v2, board of 2 x 4 cells.
+
+NOT YET
+ - NEW LOSS CELEBRATION: John to describe (NEXT-TODOS item 12); show with ?demo=loss
+ - item 13: opponent's completed set appears before the flying candy arrives
+ - iPhone review: UI toggle, Sound popup v2, framed dialogs, shell tab + icon, game-over music
+ - where settings live (John: revisit later); items 2, 6, 10 (four stale checks)
+ - shell: per-game switches still change nothing; other games' icons
+ - standalone move: deferred, plan in claude-john-docs/claudePlans/
+
+DETAIL  claude-john-docs/Claude-ToBe-Continued-2026-1015-1825.MD
+        games/candy-go-fish/_documents/codex-john-docs/CURRENT-STATE-2026-1015.md

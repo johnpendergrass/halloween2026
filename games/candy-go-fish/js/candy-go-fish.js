@@ -3,7 +3,7 @@
   // The generated companion keeps direct file:// opening functional.
   let config = window.CandyConfig;
   if (location.protocol !== 'file:') {
-    try { const response = await fetch('./assets/json/game-config.json?v=2026-1015-shell-sound-icon'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
+    try { const response = await fetch('./assets/json/game-config.json?v=2026-1015-tie-voice-demo'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
     catch (error) { console.warn('Using bundled candy configuration.', error); }
   }
   const piles = CandyPiles();
@@ -460,15 +460,16 @@
     el('gameOverRemaining').hidden = state.reason !== 'emptyHand';
     el('gameOverRemaining').textContent = 'Candy Dish had ' + remaining + ' left.';
     el('gameOverScore').textContent = humanName + ' had ' + state.sets.human.length + (state.sets.human.length === 1 ? ' candy set; ' : ' candy sets; ') + opponentName + ' had ' + state.sets.wendy.length + '.';
-    candyRain.start(3000);
+    // Half-strength rain for a tie; the full rain otherwise (the opponent's
+    // win still gets the full rain until John's new loss celebration exists).
+    candyRain.start(3000, state.winner === 'tie' ? 'tie' : 'full');
     el('gameOverReplaySound').hidden = true;
     el('gameOverReplaySound').disabled = false;
-    if (state.winner === 'human' || state.winner === 'wendy') {
-      const humanWon = state.winner === 'human';
-      CandySound.scheduleVictory(humanWon ? humanName : opponentName, humanWon ? opponentName : humanName,
-        Math.abs(state.sets.human.length - state.sets.wendy.length));
-      el('gameOverReplaySound').hidden = !CandySound.hasVictorySpeech;
-    }
+    // A tie (margin 0) gets its own voiceover; the names do not matter then.
+    const humanWon = state.winner === 'human';
+    CandySound.scheduleVictory(humanWon ? humanName : opponentName, humanWon ? opponentName : humanName,
+      Math.abs(state.sets.human.length - state.sets.wendy.length));
+    el('gameOverReplaySound').hidden = !CandySound.hasVictorySpeech;
     // In "paused" mode the soundtrack ramps up a second after the victory
     // speech (or after a short pause when there is no speech) and plays
     // until New game is tapped.
@@ -863,8 +864,33 @@
   restoreSetSize();
   buildSlots();
   addEventListener('pagehide', () => candyRain.stop());
+  // ---- Demo endings (a developer aid) --------------------------------------
+  // Open the page with ?demo=win, ?demo=bigwin, ?demo=loss, ?demo=bigloss or
+  // ?demo=tie and "Let's play" jumps straight to that game-over screen (John,
+  // 2026-10-15: "show me these effects without playing entire games"). A real
+  // deal is made, then every candy is moved by hand into completed sets, so the
+  // table, the rain, the speech and the music behave exactly as after a real
+  // game. "big" means a margin of three or more, which picks the BIGWIN speech.
+  // New game afterwards deals an ordinary round.
+  const DEMO_SETS = { win: [6, 4], bigwin: [8, 2], loss: [4, 6], bigloss: [2, 8], tie: [5, 5] };
+  const demoEnding = DEMO_SETS[new URLSearchParams(location.search).get('demo')] ? new URLSearchParams(location.search).get('demo') : null;
+  function playDemoEnding() {
+    startGame();
+    state = CandyEngine.create(config);
+    const [humanSets] = DEMO_SETS[demoEnding];
+    const everyCard = [...state.pile, ...state.hands.human, ...state.hands.wendy];
+    state.pile = []; state.hands.human = []; state.hands.wendy = [];
+    config.candies.forEach((candy, index) => {
+      const owner = index < humanSets ? 'human' : 'wendy';
+      state.sets[owner].push({ type: candy.id, cards: everyCard.filter(card => card.type === candy.id) });
+    });
+    state.finished = true; state.reason = 'allSets';
+    const difference = state.sets.human.length - state.sets.wendy.length;
+    state.winner = difference > 0 ? 'human' : difference < 0 ? 'wendy' : 'tie';
+    finishGame();
+  }
   startGame();
-  showDialog('GO FISH!', el('dialogBody').innerHTML, "Let's play", startGame);
+  showDialog('GO FISH!', el('dialogBody').innerHTML, "Let's play", demoEnding ? playDemoEnding : startGame);
   const welcomeSubtitle = document.createElement('span');
   welcomeSubtitle.className = 'welcome-subtitle'; welcomeSubtitle.textContent = 'Candy Edition!';
   el('dialogTitle').append(welcomeSubtitle);

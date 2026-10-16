@@ -11,7 +11,7 @@ UI effects are directly in this folder:
 - confirmText.mp3: prepared, retained for future use; welcome, spinner-start and deal confirmations are silent.
 - soundtrack-music-earth.mp3 (5.1 MiB), soundtrack-music-haunted.mp3 (2.2 MiB) and soundtrack-music-wonderful.mp3 (5.4 MiB, 4m41s): the three looping soundtracks, shown in the Music popup as Earth, Haunted and Wonderful. Wonderful is the default. Provenance: _where-are-the-sounds-from.txt.
 
-speech/goes-first holds six named starter announcements. speech/victory holds 36 BIGWIN/CLOSE clips. victory-sounds.js is the generated index for HTTP and file opening; rerun sync-victory-sounds.cjs after victory filename changes. The source notes are in speech/_where the speech generation came from.txt. Text submitted for Hermione pronunciation used 'herm io ne'. Working candidates/masters are not runtime assets.
+speech/goes-first holds six named starter announcements. speech/victory holds 36 BIGWIN/CLOSE clips. speech/tie holds the one tie voiceover (John, 2026-10-15), wired by name in sound.js assetMap as 'victory:tie'. victory-sounds.js is the generated index for HTTP and file opening; rerun sync-victory-sounds.cjs after victory filename changes. The source notes are in speech/_where the speech generation came from.txt. Text submitted for Hermione pronunciation used 'herm io ne'. Working candidates/masters are not runtime assets.
 
 ## Preparation and playback
 
@@ -21,7 +21,7 @@ Spinner: synthesized 18ms noise tick, softened by a 3.2kHz low-pass, 50% gain. F
 
 Earned sets: human role uses winsSet-player; wendy/opponent role uses winsSet-opponent. Each plays once when its set dialog appears. The synthesized trumpet trial was removed.
 
-Victory: speech starts after two seconds, BIGWIN for a margin of at least three sets, CLOSE for one or two; ties/missing clips stay silent. Replay restarts immediately. New game, UI/global mute and page exit cancel pending/playing speeches; rain drain disables replay.
+Victory: speech starts after two seconds, BIGWIN for a margin of at least three sets, CLOSE for one or two, the tie voiceover for a tie; missing clips stay silent. Replay restarts immediately. New game, UI/global mute and page exit cancel pending/playing speeches; rain drain disables replay.
 
 ## Music and controls (2026-10-15, Claude)
 
@@ -41,4 +41,4 @@ APIs in sound.js: musicTracks, currentTrack, selectTrack(id), musicMode, setMusi
 
 ## Checks
 
-From repository root, run node games/candy-go-fish/_documents/codex-john-docs/<script>: verify-assets.cjs, verify-victory-sounds.cjs, verify-sound-layout.cjs, verify-spinner-ticks.cjs, verify-welcome-music.cjs. The Music popup itself was checked on 2026-10-15 with two throwaway Playwright scripts (tune switching with position kept, Cancel/Done, Continuous surviving Let's play and Rules, settings restored after a reload, damaged note ignored); they were not kept. Chrome checks do not replace physical iPhone listening/autoplay review. Current cache stamp: 2026-1015-shell-sound-icon.
+From repository root, run node games/candy-go-fish/_documents/codex-john-docs/<script>: verify-assets.cjs, verify-victory-sounds.cjs, verify-sound-layout.cjs, verify-spinner-ticks.cjs, verify-welcome-music.cjs. The Music popup itself was checked on 2026-10-15 with two throwaway Playwright scripts (tune switching with position kept, Cancel/Done, Continuous surviving Let's play and Rules, settings restored after a reload, damaged note ignored); they were not kept. Chrome checks do not replace physical iPhone listening/autoplay review. Current cache stamp: 2026-1015-tie-voice-demo.

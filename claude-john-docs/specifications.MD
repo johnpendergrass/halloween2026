@@ -798,6 +798,47 @@ the Sound popup's second sketch:
   to the table and the celebration button all take the brighter green of
   the check marks; Keep playing and CANCEL are outlined in the dark green.
 
+**Later in the evening of 2026-10-15 (Claude, at John's direction): the
+endings.**
+
+- **The loss ending, first try, removed.** John: "i want to rethink the
+  celebration screen when the player does not win. i would rather not add
+  any significant assets, but it should be a very muted celebration,
+  rather than the candy rainfall when the player wins." Claude proposed,
+  from the existing assets, a candy trickle (a handful of dim grey
+  wrappers, slow, hardly turning, no brand candies because those went to
+  the opponent), the player's portrait fading to grey, the winner's
+  portrait swaying, a green-grey game-over box, and no change to the
+  music; John: "i would keep the music cues as is... still regular volume
+  at the same timing." It was built and shown, then John changed course:
+  "lets try something different. more work, but maybe more reward. i still
+  want a celebration, even if it is for the other player. so i will
+  describe it more fully next." The loss pieces were removed the same
+  evening; the opponent's win gets the full rain again until the new
+  celebration is designed. The rain module kept its mood table.
+- **The tie has a voice.** John recorded `tie - no one saw that coming`
+  and put it in `assets/sounds/speech/tie/`. It plays exactly where a
+  victory speech would (two seconds after game over, replay button shown,
+  music a second after it ends in Paused mode). John, when the removal
+  of the loss ending was announced: "no, keep the tie voiceover!!!" It
+  stayed, with the tie's half-strength rain.
+- **Seeing an ending without playing a game.** John asked whether the
+  endings could be shown "without me having to play entire games and
+  trying to win/lose/tie". The game page takes `?demo=win`, `bigwin`,
+  `loss`, `bigloss` or `tie`; Let's play then jumps to that game over
+  with a real deal rearranged into completed sets. The tap on Let's play
+  is the sound unlock, so speech and music play as in a real game. "big"
+  means a margin of three, which picks the BIGWIN speech. New game deals
+  a normal round. It is a developer aid, left in because it costs nothing
+  and John will want it again for the new loss celebration.
+- **Noticed by John, for the list (item 13):** when the opponent takes a
+  candy from the player that completes a set, the opponent's dish shows
+  the check-marked set while the candy is still flying over; it should
+  appear only when the candy has arrived.
+- **Checkpoint.** John: "do another /update the commit should be tagged
+  'Workign fine. Just before adding new loss celebration'". Stamp
+  `2026-1015-tie-voice-demo`.
+
 ## 6e. games.json v2: the first proposal (2026-09-29, superseded)
 
 Kept for the reasoning. The shape actually built is in section 6 above;

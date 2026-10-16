@@ -12,6 +12,7 @@ vm.runInNewContext(fs.readFileSync(path.join(root, 'assets/sounds/victory-sounds
 for (const filename of Object.values(audioWindow.window.CandyVictorySounds)) referenced.add('sounds/speech/victory/' + filename);
 for (const filename of ['switch-to-ron-or-boo', 'switch-to-harry-or-mike', 'switch-to-hermione-or-sully']) referenced.add('sounds/' + filename + '.mp3');
 for (const name of ['ron', 'harry', 'hermione', 'boo', 'mike', 'sully']) referenced.add('sounds/speech/goes-first/' + name + ' goes first.mp3');
+referenced.add('sounds/speech/tie/tie - no one saw that coming.mp3');
 referenced.add('sounds/confirmText.mp3');
 referenced.add('sounds/winsSet-player.mp3');
 referenced.add('sounds/winsSet-opponent.mp3');
