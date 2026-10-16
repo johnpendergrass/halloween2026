@@ -252,9 +252,11 @@
     prepareWelcomeMusic() {
       try {
         prepareContext(false);
-        // All three tunes are prepared so switching in the popup is instant.
-        // Returns the clips so preload.js can wait for them.
-        return musicTracks.map(track => musicEntry(track).clip);
+        // Only the chosen tune is prepared (so only one download, 2 to 5 MB,
+        // competes with the startup; John's iPhone, 2026-10-16). The other
+        // two are created, and start downloading, when picked in the Sound
+        // popup (selectTrack). Returns the clip so preload.js can watch it.
+        return [musicEntry(currentTrack).clip];
       } catch (_) { return []; }
     },
     // startWelcomeMusic(): ask the current tune to play and fade in. Call it
@@ -317,6 +319,9 @@
       if (context) fadeOutTrack(currentTrack, 1, musicFadeInStart);
       musicFadeStarted = false; musicFadeInStart = null;
       currentTrack = track;
+      // Create the new tune's element now so its download starts at once,
+      // even when nothing wants to play it yet.
+      if (context) { try { musicEntry(track); } catch (_) { /* no audio here */ } }
       if (wanted) this.startWelcomeMusic();
     },
     // prepareAssets(): start decoding every UI clip and "goes first" speech

@@ -4,6 +4,11 @@
   const images = new Map();
   let ready = Promise.resolve();
   let settled = false;
+  // The soundtrack downloads on its own, after "Let's play" is enabled
+  // (John's iPhone, 2026-10-16: waiting for 13 MB of music made the
+  // button take ten seconds on a cold start). Music failures are still
+  // recorded in `failures` when they happen.
+  let musicReady = Promise.resolve();
   const failures = [];
   const artwork = [
     'backgrounds/green-blue-gradient.png', 'buttons/speaker-grill.png', 'candy-dish/ghost-plate.png',
@@ -80,15 +85,18 @@
       for (const profile of [...Object.values(config.players), ...(config.playerCharacters || []), ...(config.opponents || [])]) paths.add(profile.portrait);
       for (const candy of config.candies) paths.add('candybar-images/' + candy.image);
       // Nothing is played or unlocked here; playback remains gesture-owned.
-      // All three soundtrack tunes are prepared up front (John wants to see
-      // what that does to startup time before loading them lazily). The
-      // short UI clips are fetched and decoded into buffers (2026-10-16).
+      // "Let's play" waits for the images and the twelve short sounds
+      // (fetched and decoded into buffers, 2026-10-16). The chosen tune is
+      // prepared here too, but the button does not wait for it; the other
+      // two tunes are fetched only when picked in the Sound popup.
       const music = CandySound.prepareWelcomeMusic();
-      ready = Promise.all([...paths].map(path => loadImage('./assets/' + path)).concat(CandySound.prepareAssets().map(entry => loadBuffer(entry)), music.map(clip => loadAudio(clip, 20000))))
+      musicReady = Promise.all(music.map(clip => loadAudio(clip, 20000)));
+      ready = Promise.all([...paths].map(path => loadImage('./assets/' + path)).concat(CandySound.prepareAssets().map(entry => loadBuffer(entry))))
         .then(() => { settled = true; });
       return ready;
     },
     get settled() { return settled; },
+    whenMusicReady() { return musicReady; },
     get failures() { return failures.slice(); },
     whenReady() { return ready; }
   };

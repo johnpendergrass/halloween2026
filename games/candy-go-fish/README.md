@@ -30,6 +30,6 @@ The shared [game requirements](../README%20-%20game%20design%20requirements.md) 
 
 Startup flash remains unresolved and deferred; preload is not claimed as its fix. Physical iPhone audio/first-render review remains manual. Further sound elements, visual polish and older gameplay proposals are in [NEXT-TODOS](_documents/codex-john-docs/NEXT-TODOS.md).
 
-Current publishing cache stamp: 2026-1016-sound-buffers.
+Current publishing cache stamp: 2026-1016-fast-start.
 
 Demo endings (developer aid): open index.html with ?demo=win, bigwin, loss, bigloss or tie and tap Let's play to see that game-over screen without playing a game.

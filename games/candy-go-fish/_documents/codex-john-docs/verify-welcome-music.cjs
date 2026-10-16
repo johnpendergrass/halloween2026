@@ -18,6 +18,9 @@ const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary
       await page.goto('file:///'+path.resolve(__dirname,'../../index.html').replaceAll('\\','/'));
       await page.waitForFunction(()=>document.getElementById('dialogAction').textContent==="Let's play" && !document.getElementById('dialogAction').disabled);
       if (autoplay === 'missing') {
+        // Since 2026-10-16 Let's play does not wait for the music, so the
+        // failure is awaited separately.
+        await page.evaluate(()=>CandyPreload.whenMusicReady());
         assert((await page.evaluate(()=>CandyPreload.failures)).some(url=>url.endsWith('missing-test-music.mp3')));
         await page.locator('#dialogAction').click();
         assert(await page.locator('#overlay').isHidden());

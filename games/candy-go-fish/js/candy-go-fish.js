@@ -3,11 +3,12 @@
   // The generated companion keeps direct file:// opening functional.
   let config = window.CandyConfig;
   if (location.protocol !== 'file:') {
-    try { const response = await fetch('./assets/json/game-config.json?v=2026-1016-sound-buffers'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
+    try { const response = await fetch('./assets/json/game-config.json?v=2026-1016-fast-start'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
     catch (error) { console.warn('Using bundled candy configuration.', error); }
   }
   const piles = CandyPiles();
-  CandyPreload.start(config);
+  // Preparation starts further down, after the saved sound settings are
+  // restored, so the tune that preloads is the one the player chose.
   const byId = new Map(config.candies.map(candy => [candy.id, candy]));
   const el = id => document.getElementById(id);
   const candyRain = CandyRain({ host: document.body, candies: config.candies.map(candy => './assets/candybar-images/' + candy.image) });
@@ -790,6 +791,7 @@
   }
   restoreSoundSettings();
   syncAudioControls();
+  CandyPreload.start(config);
   el('dialogAction').addEventListener('click', () => {
     CandySound.unlock(); // a tap is the only thing that wakes a phone's audio engine
     if (['welcoming', 'new-round', 'rules'].some(name => el('overlay').classList.contains(name))) CandySound.fadeOutWelcomeMusic();

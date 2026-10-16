@@ -929,6 +929,21 @@ also quote it.
   async function with a `setImmediate` settle after each fired timer.
   `verify-welcome-music` taps the title in all three modes. All twelve
   non-stale checks pass; the four stale ones (item 10) were not run.
+- **Fast start (same afternoon; stamp `2026-1016-fast-start`).**
+  `preload.js` keeps two promises: `ready` (images + the twelve decodes;
+  enables Let's play) and `musicReady` (`whenMusicReady()`, the chosen
+  tune's `loadAudio` with the 20 s bound, failures still pushed).
+  `prepareWelcomeMusic()` returns `[musicEntry(currentTrack).clip]` only;
+  `CandyPreload.start(config)` moved from line 10 of `candy-go-fish.js`
+  to just after `restoreSoundSettings()` so `currentTrack` is the saved
+  one when the element is created (no top-level `await` sits between the
+  two places, so nothing else changes). `selectTrack` now calls
+  `musicEntry(track)` when the context exists, which creates the element
+  with `preload = 'auto'` and so starts the download at the popup tap.
+  Throwaway check: with the MP3 route delayed 4 s the button was enabled
+  in 271 ms; only Earth was created with Earth saved; the arrow created
+  Haunted. The cold blank popup before the welcome (scripts, CSS, fonts,
+  `welcome-vines.svg` from a cold Pages edge) is not addressed.
 - **Line endings, a trap.** This Git Bash's `sed -i` strips CR from CRLF
   files. Git (`core.autocrlf=true`) stores LF either way, so the commits
   were unaffected, but the working files were converted back by hand.

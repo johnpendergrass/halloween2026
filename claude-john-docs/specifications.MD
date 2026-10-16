@@ -944,8 +944,22 @@ problem is wider, and the fix is chosen.**
   fanfares; game over with the speech and then the tune; `?demo=tie`.
   If the game-over tune does not come in Paused mode, a tap should
   start it; that case (a timer, not a tap) is the one known soft spot.
-- **Still to do after the phone test.** Remove the `?debug=sound` panel;
-  item 13 (the opponent's set appearing before the candy arrives).
+- **Phone test passed** (John, wifi, live site): every sound heard,
+  including the goes-first voice, the arrows and the victory speech.
+- **Fast start, same afternoon (John's "option 3").** John's cold first
+  start took about ten seconds of blank popup and ten more of "Loading
+  assets"; the second start was brisk. Decided and built: "Let's play"
+  waits only for the images and the twelve short sounds; the music never
+  holds the button; only the chosen tune downloads at startup, the other
+  two when picked in the popup. The music does not start by itself when
+  it arrives (that would be a start with no tap behind it): in Always
+  mode the next tap during play starts it, in Paused mode the next dialog
+  does; the player never goes back to the welcome. The blank popup before
+  the welcome is the page itself arriving cold from the Pages edge on a
+  first visit; every friend's first visit is a cold start, so this is
+  still worth a look (item 5 in the game's NEXT-TODOS).
+- **Still to do.** Remove the `?debug=sound` panel; item 13 (the
+  opponent's set appearing before the candy arrives); cellular test.
 
 ## 6e. games.json v2: the first proposal (2026-09-29, superseded)
 

@@ -1,0 +1,23 @@
+Halloween 2026 - project status (the glance; details in claude-john-docs/ and codex-john-docs/)
+
+2026 1016 pm   John + Claude: OPTION C PASSED on the iPhone (wifi, live site, every sound heard).
+              Then FAST START: Let's play no longer waits for the music; only the chosen tune
+              preloads; stamp 2026-1016-fast-start pushed. Twelve checks green. Cold blank popup
+              before the welcome (page arriving cold from Pages) still ~10 s, not addressed.
+2026 1016 am   phone tests widened the finding; DECIDED option C; fallback tag
+              before-iphone-speech-buffers = 300675c pushed; John hand-copied the game folder.
+2026 1015      candy cannon, ?debug=sound, tie voiceover, demo endings, Sound popup v2, icon, shell rework.
+2026 1007-14   John + Codex: Candy Go Fish built in games/candy-go-fish, slot 8.
+
+NOT YET
+ - JOHN: cold-start phone test of the fast start (new stamp = cold), then a cellular run
+ - remove ?debug=sound (sound problem closed)
+ - item 13: opponent's completed set appears before the flying candy arrives
+ - cold blank popup before the welcome (NEXT-TODOS item 5): measure, then maybe lighten fonts/vines
+ - iPhone review: Sound popup v2, framed dialogs, shell tab + icon
+ - where settings live (John: revisit later); items 2, 6, 10 (four stale checks)
+ - shell: per-game switches still change nothing; other games' icons; standalone move deferred
+
+DETAIL  claude-john-docs/specifications.MD 6k and specifications-technical.MD 4k (2026-10-16 entries)
+        claude-john-docs/claudePlans/iphone-speech-buffers-plan.md
+        games/candy-go-fish/_documents/codex-john-docs/CURRENT-STATE-2026-1015.md (October 16 section)
