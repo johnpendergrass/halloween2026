@@ -33,7 +33,7 @@ Browser checks use local Chrome and bundled Playwright paths; these are not runt
 
 ## Publishing
 
-Current stamp: 2026-1015-candy-cannon. Synchronize APP_VERSION, both root resource stamps, game resources and JSON fetch. Changing only the iframe URL does not invalidate nested caches. Same-URL changed artwork/audio needs filename/version changes.
+Current stamp: 2026-1015-sound-debug. Synchronize APP_VERSION, both root resource stamps, game resources and JSON fetch. Changing only the iframe URL does not invalidate nested caches. Same-URL changed artwork/audio needs filename/version changes.
 
 Strictly decode tracked Markdown as UTF-8 before publishing; invalid Windows-1252 bytes previously failed Pages/Jekyll. Include active audio, provenance, code/docs/checks and relevant previews; exclude _DOWNLOADS/unused sources. Delete WAV masters only on John's explicit request.
 
