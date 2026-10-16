@@ -884,6 +884,69 @@ endings.**
   game were probably never audible on the phone, the demo was just the
   first time anyone listened for a timer-started sound.
 
+**2026-10-16 morning (John's phone tests, no code; Claude): the sound
+problem is wider, and the fix is chosen.**
+
+- **John's tests on the live site, inside the shell** (UI on, music on,
+  Always, volume 80): nothing on the welcome; Let's play silent (by
+  design); the spinner ticks heard; no "goes first" voice; the character
+  arrows silent; ?? / SOUND and the popup, no change, still silent. On
+  wifi one whole run was silent except the ticks until he went back to
+  the shell's picker, reopened the game and tapped the artwork, when the
+  music started. The iPhone's notch (Dynamic Island) showed the game's
+  soundtrack as a "Now Playing" track, sometimes paused, sometimes
+  playing, with the page title scrolling and the system pause button.
+- **What that means** (Claude): the notch control is iOS treating a long
+  media element as a song; "paused" there means the tap's play request
+  was accepted but the file was not ready and the request stalled past
+  the short window iOS allows after a tap. Put with yesterday: the engine
+  is fine (ticks always play); **every media element is unreliable on the
+  phone, tap-started or timer-started** (arrows, voices, speech, sometimes
+  music); readiness ("Loading assets" clearing) is only a hint on the
+  phone. John asked whether the welcome is the only place sound can be
+  switched on: for the music, effectively yes; it is asked to start in
+  five places (artwork tap, loading-finished with no tap, Rules open,
+  Deal again? open, MUSIC on in the popup) and never during play.
+- **Decoded buffers explained** to John: the same MP3s, fetched as now,
+  decoded in the browser into raw samples at startup (milliseconds a
+  clip), about 30 MB of memory, the 37 victory speeches decoded only when
+  needed, the three soundtracks untouched. John: "go ahead with option C,
+  but first lets make absolutely sure that we have a fallback."
+- **Decided.** Option C from `claudePlans/iphone-speech-buffers-plan.md`,
+  plus two music rules: never ask the music to play outside a tap (the
+  loading-finished call goes), and every tap during play retries the
+  music when it is wanted and not playing. Fallback: tag
+  `before-iphone-speech-buffers` on commit 300675c, pushed; John also
+  copies the game folder outside the project by hand. The Now Playing
+  pause button controlling the music from outside the game is accepted.
+
+**2026-10-16, Option C built (Claude; one commit, stamp
+`2026-1016-sound-buffers`, pushed for John's phone test).**
+
+- **What changed for the player.** Nothing visible. The same twelve UI
+  sounds and 37 speeches, the same three tunes, the same popup. The
+  difference is how a sound is played: UI clips and speech now come from
+  the audio engine's own decoded copies (as the spinner ticks always did),
+  so a voice that starts from a timer, seconds after a tap, plays on the
+  phone. The music is still a media element, because a tune is minutes
+  long; it is now only ever asked to start inside a tap, and every tap
+  during play gives a stalled tune another chance.
+- **Two small behaviour changes.** (1) The welcome music no longer tries
+  to start by itself when loading finishes; the artwork tap is the one
+  start, on every browser (desktop Chrome blocked the auto-start anyway
+  unless the site had been played a lot). (2) A tap during play restarts
+  a tune that is wanted but not playing: Always mode, or the game-over
+  tune; in Paused mode, where the tune was faded out on purpose, taps do
+  nothing.
+- **What John tests on the phone** (live site, alone and in the shell):
+  artwork tap starts the music; Let's play; dish tap gives ticks and then
+  the "goes first" voice; the character arrows speak; a round with set
+  fanfares; game over with the speech and then the tune; `?demo=tie`.
+  If the game-over tune does not come in Paused mode, a tap should
+  start it; that case (a timer, not a tap) is the one known soft spot.
+- **Still to do after the phone test.** Remove the `?debug=sound` panel;
+  item 13 (the opponent's set appearing before the candy arrives).
+
 ## 6e. games.json v2: the first proposal (2026-09-29, superseded)
 
 Kept for the reasoning. The shape actually built is in section 6 above;

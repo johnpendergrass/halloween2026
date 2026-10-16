@@ -29,11 +29,11 @@ Run node games/candy-go-fish/_documents/codex-john-docs/<script> from repository
 | verify-quotes.cjs / verify-go-fish-reply.cjs | Replies/shortcuts/retained questions/breathing/pause/reduced motion |
 | verify-piles.cjs | Public/private art, counts and survivor stability |
 
-Browser checks use local Chrome and bundled Playwright paths; these are not runtime dependencies. Breathing targets require center pointer clicks rather than stable-box waits. Test full-round acceleration is not a runtime elapsed-time scheduler. Screenshots are development evidence. Physical iPhone audio/autoplay/loading/compositor review remains manual. See VERIFICATION-2026-1014.md.
+Browser checks use local Chrome and bundled Playwright paths; these are not runtime dependencies. verify-sound-layout serves the game itself over http (serve-game.cjs) because the decoded sounds are fetched with fetch(), which Chrome refuses over file://. Breathing targets require center pointer clicks rather than stable-box waits. Test full-round acceleration is not a runtime elapsed-time scheduler. Screenshots are development evidence. Physical iPhone audio/autoplay/loading/compositor review remains manual. See VERIFICATION-2026-1014.md.
 
 ## Publishing
 
-Current stamp: 2026-1015-sound-debug. Synchronize APP_VERSION, both root resource stamps, game resources and JSON fetch. Changing only the iframe URL does not invalidate nested caches. Same-URL changed artwork/audio needs filename/version changes.
+Current stamp: 2026-1016-sound-buffers. Synchronize APP_VERSION, both root resource stamps, game resources and JSON fetch. Changing only the iframe URL does not invalidate nested caches. Same-URL changed artwork/audio needs filename/version changes.
 
 Strictly decode tracked Markdown as UTF-8 before publishing; invalid Windows-1252 bytes previously failed Pages/Jekyll. Include active audio, provenance, code/docs/checks and relevant previews; exclude _DOWNLOADS/unused sources. Delete WAV masters only on John's explicit request.
 

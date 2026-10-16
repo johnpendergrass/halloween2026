@@ -20,7 +20,7 @@
 
 // Bump this (and the ?v= tags in index.html) whenever code changes, so
 // phones fetch fresh copies instead of old cached ones.
-const APP_VERSION = "2026-1015-sound-debug";
+const APP_VERSION = "2026-1016-sound-buffers";
 
 /* ------------------------------------------------------------------------
    1. Settings and the games list

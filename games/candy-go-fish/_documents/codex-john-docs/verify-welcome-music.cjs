@@ -24,7 +24,9 @@ const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary
         assert.deepEqual(errors,[]);
         continue;
       }
-      if (!autoplay) await page.locator('#dialogTitle').click();
+      // Since 2026-10-16 the music never starts on its own, even where autoplay
+      // is allowed: a tap on the welcome artwork is the only start.
+      await page.locator('#dialogTitle').click();
       await page.waitForFunction(()=>audioRamps.some(ramp=>ramp.value===.5));
       const music=await page.evaluate(()=>{const clip=audioClips.find(clip=>clip.src.endsWith('soundtrack-music-wonderful.mp3'));return{loop:clip.loop,paused:clip.paused,ready:clip.readyState,duration:clip.duration};});
       assert.equal(music.loop,true);assert.equal(music.paused,false);assert(music.ready>=3);assert(music.duration>280);

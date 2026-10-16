@@ -3,7 +3,7 @@
   // The generated companion keeps direct file:// opening functional.
   let config = window.CandyConfig;
   if (location.protocol !== 'file:') {
-    try { const response = await fetch('./assets/json/game-config.json?v=2026-1015-sound-debug'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
+    try { const response = await fetch('./assets/json/game-config.json?v=2026-1016-sound-buffers'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
     catch (error) { console.warn('Using bundled candy configuration.', error); }
   }
   const piles = CandyPiles();
@@ -939,14 +939,22 @@
   el('overlay').classList.add('welcoming');
   el('dialogAction').disabled = true;
   el('dialogAction').textContent = 'Loading assets';
-  // On browsers that block autoplay, a tap on the welcome artwork unlocks
-  // music. The Play button itself still enters the game on its first click.
-  el('overlay').addEventListener('pointerdown', event => {
-    if (el('overlay').classList.contains('welcoming') && !el('dialogAction').contains(event.target) && !event.target.closest('.audio-toggle')) CandySound.startWelcomeMusic();
-  });
+  // The welcome music starts from a tap on the welcome artwork, and only
+  // from a tap: phones refuse a start that no tap is behind, and iOS left
+  // the tune registered-but-paused when the game asked as soon as loading
+  // finished (John, 2026-10-16). Both pointerdown and click are listened
+  // to, because on John's iPhone pointerdown alone worked only sometimes.
+  // The Play button itself still enters the game on its first click.
+  const welcomeArtworkTapped = event => el('overlay').classList.contains('welcoming') && !el('dialogAction').contains(event.target) && !event.target.closest('.audio-toggle');
+  el('overlay').addEventListener('pointerdown', event => { if (welcomeArtworkTapped(event)) CandySound.startWelcomeMusic(); });
+  el('overlay').addEventListener('click', event => { if (welcomeArtworkTapped(event)) { CandySound.unlock(); CandySound.startWelcomeMusic(); } });
+  // Every tap anywhere is a chance to wake the audio engine and to restart
+  // a soundtrack that stalled (asked for before its file was ready). This
+  // runs after the tapped element's own handler, so a tap that fades the
+  // music out (closing a dialog in Paused mode) is not undone.
+  document.addEventListener('click', () => CandySound.userTapped());
   CandyPreload.whenReady().then(() => {
     el('dialogAction').disabled = false;
     el('dialogAction').textContent = "Let's play";
-    if (el('overlay').classList.contains('welcoming')) CandySound.startWelcomeMusic();
   });
 })();

@@ -1,4 +1,18 @@
 /* Game-owned audio gateway. A future global sound switch can call setEnabled. */
+//
+// Two kinds of sound live here (John's iPhone, 2026-10-15/16):
+//
+// - UI clips and speech (arrows, set fanfares, "goes first", victory, tie)
+//   are DECODED BUFFERS. At startup each short MP3 is fetched and decoded
+//   into raw samples (an AudioBuffer); playing one makes a throwaway
+//   AudioBufferSourceNode, exactly like the spinner ticks. The phone's
+//   audio engine, once a tap has woken it, plays these whenever the game
+//   asks, with no tap required: a timer-started voice works. Media
+//   elements (new Audio) did not: iOS only let each of them start inside
+//   a tap, and sometimes not even then.
+// - The three soundtracks stay MEDIA ELEMENTS (they are minutes long; a
+//   decoded copy would be tens of MB each). They are only ever asked to
+//   play inside a tap, and every tap during play retries a stalled one.
 (() => {
   'use strict';
   const characterSounds = {
@@ -6,7 +20,15 @@
     Harry: 'switch-to-harry-or-mike', Mike: 'switch-to-harry-or-mike',
     Hermione: 'switch-to-hermione-or-sully', Sully: 'switch-to-hermione-or-sully'
   };
+  // Music clips only (media elements routed through the engine).
   const clips = new Map();
+  // Decoded UI clips and speeches, by sound key (see assetMap).
+  const buffers = new Map();
+  // Decodes in flight or finished, by sound key: a promise of the buffer,
+  // or of null when the fetch or the decode failed.
+  const decodes = new Map();
+  // Every UI sound that is playing right now (a "voice": one source node).
+  const voices = new Set();
   const defaultVolume = 0.5;
   // Per-sound overrides: 0 = silent, 1 = full signal level.
   const soundVolumes = { spinnerTick: 0.5 };
@@ -25,6 +47,9 @@
   let enabled = true;
   let victoryTimer;
   let victorySound = null;
+  // Bumped by cancelVictory: a speech that finishes decoding after its game
+  // over was cancelled (New game tapped) must not play late.
+  let victoryToken = 0;
   // Game over music (John, 2026-10-15): about a second after the victory speech
   // ends, the soundtrack ramps up, but only in "paused" mode (in continuous
   // mode it is already playing). It keeps playing until New game is tapped.
@@ -84,6 +109,8 @@
     tickBuffer ||= CandyPreload.createSpinnerTick(context);
   }
 
+  // Every UI sound and speech, by key: the file it comes from. Keys that
+  // start with 'victory:' are the 36 victory speeches and the tie.
   function assetMap() {
     const paths = new Map([['confirmText', './assets/sounds/confirmText.mp3'],
       ['winsSet-player', './assets/sounds/winsSet-player.mp3'],
@@ -98,18 +125,51 @@
     return paths;
   }
 
-  function getClip(sound, url, category = 'ui') {
-    let entry = clips.get(sound);
-    if (!entry) {
-      const clip = new Audio(url);
-      clip.preload = 'auto';
-      const source = context.createMediaElementSource(clip);
-      const gain = context.createGain();
-      source.connect(gain); gain.connect(channels[category].gain);
-      entry = { clip, gain, category };
-      clips.set(sound, entry);
-    }
-    return entry;
+  // ---- Decoded buffers -----------------------------------------------------
+  // decode(sound): fetch the MP3 and decode it into an AudioBuffer, once.
+  // Returns a promise of the buffer, or of null if anything failed (the
+  // failed attempt is forgotten, so the next call tries again: a flaky
+  // phone connection should not silence a sound for the whole game).
+  // Decoding needs the engine to exist but not to be awake, so it works
+  // before any tap.
+  function decode(sound) {
+    if (buffers.has(sound)) return Promise.resolve(buffers.get(sound));
+    if (decodes.has(sound)) return decodes.get(sound);
+    const url = assetMap().get(sound);
+    if (!url) return Promise.resolve(null);
+    const task = fetch(url)
+      .then(response => { if (!response.ok) throw new Error(url + ': ' + response.status); return response.arrayBuffer(); })
+      // The callback form of decodeAudioData works on older iOS too.
+      .then(bytes => new Promise((resolve, reject) => { prepareContext(false); context.decodeAudioData(bytes, resolve, reject); }))
+      .then(buffer => { buffers.set(sound, buffer); return buffer; })
+      .catch(() => { decodes.delete(sound); return null; });
+    decodes.set(sound, task);
+    return task;
+  }
+
+  // playBuffer(sound, buffer): start one voice on the UI channel. The
+  // returned voice tells the caller how long the sound is and lets it hear
+  // the end (scheduleVictory times the game-over music from it). Stopping a
+  // voice early does not count as ending.
+  function playBuffer(sound, buffer) {
+    const source = context.createBufferSource();
+    const gain = context.createGain();
+    source.buffer = buffer;
+    gain.gain.value = soundVolumes[sound] ?? defaultVolume;
+    source.connect(gain); gain.connect(channels.ui.gain);
+    const voice = { sound, duration: buffer.duration, gain: gain.gain.value, onended: null, source, stopped: false };
+    source.onended = () => {
+      voices.delete(voice); source.disconnect(); gain.disconnect();
+      if (!voice.stopped && voice.onended) voice.onended();
+    };
+    voices.add(voice);
+    source.start();
+    return voice;
+  }
+
+  function stopVoice(voice) {
+    voice.stopped = true;
+    try { voice.source.stop(); } catch (_) { /* Already ended. */ }
   }
 
   function spinnerTick() {
@@ -129,9 +189,10 @@
 
   function cancelVictory() {
     clearTimeout(victoryTimer);
+    victoryToken++;
     clearTimeout(victoryMusicTimer); victoryMusicTimer = null; victorySpeechPending = false;
-    for (const [key, { clip }] of clips) {
-      if (key.startsWith('victory:') && !clip.paused) { clip.pause(); rewind(clip); }
+    for (const voice of voices) {
+      if (voice.sound.startsWith('victory:')) stopVoice(voice);
     }
   }
 
@@ -139,37 +200,31 @@
     if (!channel || channel === 'music') {
       welcomeMusicWanted = false; musicFadeStarted = false;
       for (const track of musicTracks) clearTimeout(track.stopTimer);
+      // Only a tune that is actually playing is touched; it keeps its position.
+      for (const { clip } of clips.values()) {
+        if (!clip.paused) clip.pause();
+      }
     }
-    if (!channel || channel === 'ui') stopSpinnerTicks();
-
-    // Only clips that are actually playing are touched. Pausing every idle
-    // media element (48 UI clips, 36 victory clips) took seconds on John's
-    // iPhone, so the OFF switch drew its slash seconds late (2026-10-15).
-    // The channel's gain is already zero when it is off, so nothing idle
-    // needs attention; each sound rewinds itself in play() before it starts.
-    for (const { clip, category } of clips.values()) {
-      if (channel && category !== channel) continue;
-      if (clip.paused) continue;
-      clip.pause();
-      if (category !== 'music') rewind(clip);
+    if (!channel || channel === 'ui') {
+      stopSpinnerTicks();
+      for (const voice of voices) stopVoice(voice);
     }
   }
 
-  // Put a clip back to its start. iOS Safari throws InvalidStateError when
-  // currentTime is set on a clip that has not loaded anything yet, so
-  // unloaded clips are skipped and errors swallowed.
-  function rewind(clip) {
-    if (clip.readyState === 0) return;
-    try { clip.currentTime = 0; } catch (_) { /* nothing to rewind */ }
-  }
-
+  // ---- Music (media elements) ----------------------------------------------
   // Get (creating on first use) the looping clip for one tune. Nothing plays
   // here; the clip sits silent at gain 0 until startWelcomeMusic fades it in.
   function musicEntry(track) {
     if (!track.entry) {
-      track.entry = getClip('music:' + track.id, './assets/sounds/' + track.file, 'music');
-      track.entry.clip.loop = true;
-      track.entry.gain.gain.value = 0;
+      const clip = new Audio('./assets/sounds/' + track.file);
+      clip.preload = 'auto';
+      clip.loop = true;
+      const source = context.createMediaElementSource(clip);
+      const gain = context.createGain();
+      gain.gain.value = 0;
+      source.connect(gain); gain.connect(channels.music.gain);
+      track.entry = { clip, gain };
+      clips.set('music:' + track.id, track.entry);
     }
     return track.entry;
   }
@@ -202,6 +257,11 @@
         return musicTracks.map(track => musicEntry(track).clip);
       } catch (_) { return []; }
     },
+    // startWelcomeMusic(): ask the current tune to play and fade in. Call it
+    // INSIDE A TAP: a phone only starts a media element for a tap, and a
+    // request made before the file is ready can stall (iOS then shows the
+    // tune as "paused" in Now Playing). retryMusic() picks such a stall up
+    // at the next tap.
     startWelcomeMusic() {
       if (!enabled || !channels.music.enabled) return;
       let entry;
@@ -225,6 +285,15 @@
         if (clip.paused) clip.play().then(fadeIn).catch(() => {});
         else fadeIn();
       } catch (_) { /* Autoplay rejection never prevents starting the game. */ }
+    },
+    // retryMusic(): call inside any tap. Does nothing unless the music is
+    // wanted right now (a dialog with music is open, Always mode is on, or
+    // the game-over tune was asked for) and the tune is not playing.
+    retryMusic() {
+      if (!welcomeMusicWanted || !enabled || !channels.music.enabled) return;
+      const entry = currentTrack.entry;
+      if (!entry || !entry.clip.paused) return;
+      this.startWelcomeMusic();
     },
     fadeOutWelcomeMusic() {
       // In continuous mode the dialog closing changes nothing: keep playing.
@@ -250,15 +319,30 @@
       currentTrack = track;
       if (wanted) this.startWelcomeMusic();
     },
+    // prepareAssets(): start decoding every UI clip and "goes first" speech
+    // (twelve short files). The victory speeches (36 plus the tie) are not
+    // decoded here: only one is ever needed per game, so scheduleVictory
+    // decodes that one on demand (see prepareSpeech). Returns
+    // [{ url, ready }] so preload.js can wait and record failures;
+    // `ready` resolves to true (decoded) or false.
     prepareAssets() {
       try { prepareContext(false); prepareTickBuffer(); } catch (_) { return []; }
-
       const prepared = [];
       for (const [key, url] of assetMap()) {
-        try { prepared.push(getClip(key, url).clip); } catch (_) { /* Playback can retry later. */ }
+        if (key.startsWith('victory:')) continue;
+        prepared.push({ url, ready: decode(key).then(buffer => buffer !== null) });
       }
       return prepared;
     },
+    // prepareSpeech(sound): decode one sound (normally a victory speech) ahead
+    // of time; resolves to its AudioBuffer, or null if it could not be
+    // decoded. Harmless to call for a sound that is already decoded.
+    prepareSpeech(sound) {
+      try { prepareContext(false); } catch (_) { return Promise.resolve(null); }
+      return decode(sound);
+    },
+    // The keys of the sounds decoded so far (diagnostics and checks).
+    get decodedSounds() { return [...buffers.keys()]; },
     playSetFanfare(player) {
       if (player === 'human') return this.play('winsSet-player');
       if (player === 'wendy') return this.play('winsSet-opponent');
@@ -298,6 +382,13 @@
     unlock() {
       try { prepareContext(); } catch (_) { /* no audio on this device; nothing to wake */ }
     },
+    // userTapped(): the one call for "a tap happened": wake the engine and
+    // give a stalled soundtrack another chance. candy-go-fish.js calls it
+    // for every click on the page.
+    userTapped() {
+      this.unlock();
+      this.retryMusic();
+    },
     // ---- Diagnostics (used by the ?debug=sound panel only) -----------------
     // engineState: 'none' before the engine exists, else the AudioContext's
     // own word: 'suspended', 'running', 'interrupted' (iOS) or 'closed'.
@@ -316,11 +407,15 @@
     get hasVictorySpeech() { return Boolean(victorySound); },
     replayVictory() {
       cancelVictory();
-      if (victorySound) this.play(victorySound);
+      if (!victorySound) return;
+      const token = victoryToken;
+      this.prepareSpeech(victorySound).then(() => { if (token === victoryToken) this.play(victorySound); });
     },
     // scheduleVictory(winner, loser, margin): margin 0 is a tie and plays the
     // tie voiceover; otherwise the winner's BIGWIN (margin of three or more) or
-    // CLOSE speech against this loser.
+    // CLOSE speech against this loser. The speech is decoded now and played
+    // two seconds after the result shows (or as soon as the decode finishes,
+    // if that takes longer on a slow connection).
     scheduleVictory(winner, loser, margin) {
       cancelVictory();
       victorySound = null;
@@ -333,14 +428,18 @@
       }
       if (enabled && channels.ui.enabled) {
         victorySpeechPending = true;
+        const token = victoryToken;
+        const decoding = this.prepareSpeech(victorySound);
         victoryTimer = setTimeout(() => {
-          const clip = this.play(victorySound)?.clip;
-          if (!clip) { victoryMusicAfter(4000); return; }
-          // The soundtrack follows a second after the speech ends. A fallback
-          // timer covers a phone that silently refuses to play the clip.
-          const length = Number.isFinite(clip.duration) && clip.duration > 0 ? clip.duration * 1000 : 5000;
-          victoryMusicAfter(length + 1000);
-          clip.onended = () => victoryMusicAfter(1000);
+          decoding.then(() => {
+            if (token !== victoryToken) return; // cancelled while decoding
+            const voice = this.play(victorySound);
+            if (!voice) { victoryMusicAfter(4000); return; }
+            // The soundtrack follows a second after the speech ends. A fallback
+            // timer covers a phone that silently refuses to play the voice.
+            victoryMusicAfter(voice.duration * 1000 + 1000);
+            voice.onended = () => victoryMusicAfter(1000);
+          });
         }, 2000);
       }
     },
@@ -385,21 +484,22 @@
       };
       spinnerFrame = requestAnimationFrame(sample);
     },
+    // play(sound): play one UI sound or speech from its decoded buffer, at
+    // once. Returns the voice ({ sound, duration, gain, onended }) or
+    // undefined when nothing played: sound off, UI channel off, unknown
+    // key, or the buffer not decoded yet (then the decode is started so a
+    // later call can play it).
     play(sound) {
-      const url = assetMap().get(sound);
-      if (!enabled || !channels.ui.enabled || !url) return;
+      if (!enabled || !channels.ui.enabled || !assetMap().has(sound)) return;
       // Rapid switching replaces the previous cue, including across selectors.
       stopAll('ui');
       // Called directly from the selector click for phone audio activation.
       // Unavailable/blocked audio must never interrupt character selection.
       try {
         prepareContext();
-        const entry = getClip(sound, url);
-        entry.gain.gain.value = soundVolumes[sound] ?? defaultVolume;
-        rewind(entry.clip); // a clip paused mid-way by the OFF switch starts over
-        const playback = entry.clip.play();
-        if (playback) playback.catch(() => {});
-        return entry;
+        const buffer = buffers.get(sound);
+        if (!buffer) { decode(sound); return; }
+        return playBuffer(sound, buffer);
       } catch (_) { /* Audio failure must not block the selector. */ }
     }
   };

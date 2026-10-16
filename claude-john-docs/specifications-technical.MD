@@ -852,6 +852,90 @@ also quote it.
   stacking, clickability, drain, two screenshots), `debug_panel_check.cjs`,
   `endings_shot.cjs` (now expects `cannon` for the loss demos).
 
+**What today's phone tests add, 2026-10-16 morning (read of `sound.js`,
+`preload.js`, `candy-go-fish.js`; no code changed).**
+
+- **Where the music is asked to play.** `CandySound.startWelcomeMusic()`
+  is called from: the welcome `pointerdown` on the overlay (artwork);
+  `CandyPreload.whenReady().then(...)` (no user gesture, iOS always
+  rejects this one, and it may leave the element registered-but-paused in
+  Now Playing); the Rules button; the New game button (Deal again?);
+  `applyMusicSettings` when MUSIC is switched on. Nothing during play
+  calls it. `fadeOutWelcomeMusic()` returns at once in continuous mode.
+- **How a clip plays today.** `play(sound)` -> `prepareContext()`,
+  `getClip()` (one `<audio>` per sound through `createMediaElementSource`
+  into the channel gain), `rewind`, `clip.play()`; the promise rejection
+  is swallowed. So a refused `play()` on the phone is silent in both
+  senses. Ticks bypass all this (AudioBufferSourceNode from
+  `prepareTickBuffer()`), which is why they are the one reliable sound.
+- **Readiness.** `preload.js` `loadAudio` resolves on `canplaythrough`
+  or a 6 s / 20 s timer and only records a failure when `readyState < 4`.
+  iPhone Safari reports `canplaythrough` before the bytes are resident,
+  so the panel's "0 failures" and a fast "Loading assets" do not mean
+  the music is downloaded. On cellular the Wonderful tune (5.4 MB) was
+  very likely not there when the artwork tap asked for it.
+- **Option C, as it will be built** (see the plan file and the 10-16
+  ToBeContinued for the step list): UI clips fetched with `fetch` and
+  `decodeAudioData` into a Map of AudioBuffers at startup; `play()`
+  returns `{ clip }` shaped like today's so `scheduleVictory` keeps
+  working; victory speech decoded on demand and cached; music elements
+  kept, started only inside taps, retried on every tap while wanted and
+  paused; welcome gets a `click` listener next to `pointerdown`. Checks
+  to rewrite: `verify-sound-layout.cjs`, `verify-victory-sounds.cjs`.
+- **Fallback.** Git tag `before-iphone-speech-buffers` = 300675c, on
+  GitHub (the repo's first tag). Restoring only the game:
+  `git checkout before-iphone-speech-buffers -- games/candy-go-fish`.
+
+**Option C as built, 2026-10-16 (Claude; stamp `2026-1016-sound-buffers`).**
+
+- **`sound.js`, two kinds of sound.** UI clips and speech are decoded
+  buffers; the three soundtracks stay media elements. `decode(sound)`
+  fetches the MP3, decodes it (callback form of `decodeAudioData`, which
+  older iOS also has; the context may stay suspended) and caches the
+  AudioBuffer in `buffers`; an in-flight promise sits in `decodes`; a
+  failure is forgotten so the next call retries. `playBuffer` makes an
+  `AudioBufferSourceNode` with a per-play gain into the UI channel and
+  returns a voice `{ sound, duration, gain, onended, source, stopped }`;
+  `voices` holds the live ones; `stopVoice` marks `stopped` first so a
+  stop never counts as an end (the game-over music must not be re-armed
+  by a cancelled speech). `play(sound)` returns the voice, or undefined
+  when the buffer is not there yet (and starts its decode). `stopAll('ui')`
+  stops ticks and voices; `stopAll('music')` pauses a playing tune.
+- **Startup vs on demand.** `prepareAssets()` decodes the twelve
+  non-victory sounds and returns `[{ url, ready }]`; `preload.js`
+  `loadBuffer` waits on `ready` with the six-second bound and records a
+  failure (the decode keeps going past the bound). `prepareSpeech(sound)`
+  decodes one victory speech; `scheduleVictory` calls it immediately, and
+  the 2 s timer then waits on that promise, checks `victoryToken` (bumped
+  by `cancelVictory`) and plays; `replayVictory` reuses the cached buffer.
+  Memory: twelve short clips, under 10 MB of PCM; one victory speech more.
+- **Music rules.** `startWelcomeMusic()` is no longer called from
+  `whenReady().then(...)`. `retryMusic()` restarts the current tune when
+  `welcomeMusicWanted` is true, the channel is on and `clip.paused`;
+  `userTapped()` = `unlock()` + `retryMusic()`. `candy-go-fish.js` calls
+  it from a `click` listener on `document` (bubbling, so it runs after the
+  tapped element's own handler: closing a dialog in Paused mode sets
+  wanted=false first, and the retry does nothing). The welcome artwork has
+  a `click` listener beside `pointerdown` that calls `unlock()` and
+  `startWelcomeMusic()`.
+- **file://.** Chrome refuses `fetch()` over file://, so a page opened
+  from disk records twelve preload failures and has no UI sounds or
+  speech; music still plays. HTTP (the server, Pages) is the real case.
+- **Checks.** `serve-game.cjs` (new) is a 30-line `node:http` static
+  server on an ephemeral port; `verify-sound-layout` uses it, counts
+  `AudioBufferSourceNode.start` calls under reduced motion (no ticks, so
+  every start is a voice) and sees the goes-first speech start from the
+  spinner's timer. `verify-victory-sounds` runs its assertions inside an
+  async function with a `setImmediate` settle after each fired timer.
+  `verify-welcome-music` taps the title in all three modes. All twelve
+  non-stale checks pass; the four stale ones (item 10) were not run.
+- **Line endings, a trap.** This Git Bash's `sed -i` strips CR from CRLF
+  files. Git (`core.autocrlf=true`) stores LF either way, so the commits
+  were unaffected, but the working files were converted back by hand.
+  Per-file endings differ (`sound.js`, `candy-go-fish.js`, both
+  `index.html` and `app.js` are CRLF; `preload.js`, the checks and the
+  docs are LF); edit scripts must detect the file's own ending.
+
 ## 5. iPhone "app" mode
 
 - Tags: `apple-mobile-web-app-capable`, `mobile-web-app-capable`,

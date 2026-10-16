@@ -30,6 +30,25 @@
     return task;
   }
 
+  // loadBuffer({ url, ready }): wait for one decoded UI clip (sound.js
+  // fetches and decodes it; `ready` resolves to true or false). A decode
+  // that is still running after the bound is counted as a failure here but
+  // keeps going, so the sound can still play later.
+  function loadBuffer(entry, timeoutMs = 6000) {
+    return new Promise(resolve => {
+      let done = false;
+      const finish = ok => {
+        if (done) return;
+        done = true; clearTimeout(timer);
+        if (!ok) failures.push(entry.url);
+        resolve();
+      };
+      const timer = setTimeout(() => finish(false), timeoutMs);
+      entry.ready.then(finish, () => finish(false));
+    });
+  }
+
+  // loadAudio(clip): wait for one media element (the soundtracks).
   function loadAudio(clip, timeoutMs = 6000) {
     return new Promise(resolve => {
       const finish = () => {
@@ -62,9 +81,10 @@
       for (const candy of config.candies) paths.add('candybar-images/' + candy.image);
       // Nothing is played or unlocked here; playback remains gesture-owned.
       // All three soundtrack tunes are prepared up front (John wants to see
-      // what that does to startup time before loading them lazily).
+      // what that does to startup time before loading them lazily). The
+      // short UI clips are fetched and decoded into buffers (2026-10-16).
       const music = CandySound.prepareWelcomeMusic();
-      ready = Promise.all([...paths].map(path => loadImage('./assets/' + path)).concat(CandySound.prepareAssets().map(clip => loadAudio(clip)), music.map(clip => loadAudio(clip, 20000))))
+      ready = Promise.all([...paths].map(path => loadImage('./assets/' + path)).concat(CandySound.prepareAssets().map(entry => loadBuffer(entry)), music.map(clip => loadAudio(clip, 20000))))
         .then(() => { settled = true; });
       return ready;
     },

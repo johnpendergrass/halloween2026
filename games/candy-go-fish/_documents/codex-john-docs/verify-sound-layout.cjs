@@ -1,70 +1,86 @@
+// UI sounds and speech play from decoded buffers (2026-10-16, Option C of
+// claude-john-docs/claudePlans/iphone-speech-buffers-plan.md). This check
+// serves the game over http (fetch() is refused over file://) and listens
+// for AudioBufferSourceNode starts instead of media elements.
 const assert = require('node:assert/strict');
-const fs = require('node:fs');
-const path = require('node:path');
 const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
-const root = path.resolve(__dirname, '../..');
+const { serveGame } = require('./serve-game.cjs');
+// The twelve sounds decoded at startup: confirm, two set fanfares, three
+// character arrows, six "goes first" speeches.
+const startupSounds = ['confirmText', 'winsSet-player', 'winsSet-opponent',
+  'switch-to-ron-or-boo', 'switch-to-harry-or-mike', 'switch-to-hermione-or-sully',
+  ...['ron', 'boo', 'harry', 'mike', 'hermione', 'sully'].map(name => 'goes-first:' + name)];
 (async () => {
+  const server = await serveGame();
   const browser = await chromium.launch({ headless: true, executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe' });
   try {
+    // Reduced motion: the spinner does not tick, so every buffer start
+    // counted below is a voice (a UI sound or a speech).
     const page = await browser.newPage({ viewport: { width: 338, height: 526 }, reducedMotion: 'reduce' });
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
-    await page.addInitScript(() => { Math.random = () => .25; });
-    await page.goto('file:///' + path.join(root, 'index.html').replaceAll('\\', '/'));
+    await page.addInitScript(() => {
+      Math.random = () => .25;
+      window.voiceStarts = 0;
+      const start = AudioBufferSourceNode.prototype.start;
+      AudioBufferSourceNode.prototype.start = function(...args) { voiceStarts++; return start.apply(this, args); };
+    });
+    await page.goto(server.url + '/index.html');
     await page.evaluate(() => CandyPreload.whenReady());
     assert.deepEqual(await page.evaluate(() => CandyPreload.failures), [], 'Preloaded assets load successfully');
-    // 48 clips plus the tie voiceover added 2026-10-15 (assets/sounds/speech/tie).
-    assert.equal(await page.evaluate(() => CandySound.prepareAssets().filter(clip => clip.readyState >= 4).length), 49);
+    // Startup decodes the twelve short sounds and none of the victory speeches.
+    assert.deepEqual(await page.evaluate(() => CandySound.decodedSounds.sort()), [...startupSounds].sort());
     await page.locator('#overlay.welcoming #dialogAction').click();
-    const urls = await page.evaluate(() => {
-      const results = [];
-      for (const name of ['Ron', 'Boo', 'Harry', 'Mike', 'Hermione', 'Sully']) {
-        results.push(CandySound.play('goes-first:' + name.toLowerCase()).clip.src);
+    // Each plays at once from its buffer: a voice with a real length at 50% gain.
+    const voices = await page.evaluate(keys => keys.map(key => {
+      const voice = CandySound.play(key);
+      return voice && { sound: voice.sound, duration: voice.duration, gain: voice.gain };
+    }), startupSounds);
+    for (const [index, voice] of voices.entries()) {
+      assert(voice, startupSounds[index] + ' plays');
+      assert.equal(voice.sound, startupSounds[index]);
+      assert(voice.duration > 0 && voice.duration < 10, startupSounds[index] + ' has a sensible length');
+      assert.equal(voice.gain, .5);
+    }
+    assert.equal(await page.evaluate(() => voiceStarts), 12);
+    assert.equal(await page.evaluate(() => CandySound.play('no-such-sound')), undefined);
+    // Every victory speech (36) and the tie decode on demand.
+    const victoryLengths = await page.evaluate(async () => {
+      const lengths = [];
+      for (const key of [...Object.values(CandyVictorySounds).map(file => 'victory:' + file), 'victory:tie']) {
+        const buffer = await CandySound.prepareSpeech(key);
+        lengths.push(buffer ? buffer.duration : 0);
       }
-      for (const key of ['switch-to-ron-or-boo', 'switch-to-harry-or-mike', 'switch-to-hermione-or-sully', 'confirmText']) {
-        results.push(CandySound.play(key).clip.src);
-      }
-      results.push(CandySound.playSetFanfare('human').clip.src);
-      results.push(CandySound.playSetFanfare('wendy').clip.src);
-      for (const file of Object.values(CandyVictorySounds)) results.push(CandySound.play('victory:' + file).clip.src);
-      results.push(CandySound.play('victory:tie').clip.src);
-      return results;
+      return lengths;
     });
-    assert.equal(urls.length, 49);
-    for (const url of urls) assert(fs.existsSync(require('node:url').fileURLToPath(url)), url);
-    const audioData = urls.map(url => fs.readFileSync(require('node:url').fileURLToPath(url)).toString('base64'));
-    await page.evaluate(async recordings => {
-      const context = new AudioContext();
-      try {
-        for (const recording of recordings) {
-          const bytes = Uint8Array.from(atob(recording), character => character.charCodeAt(0)).buffer;
-          const audio = await context.decodeAudioData(bytes);
-          if (!(audio.duration > 0)) throw new Error('Empty audio');
-        }
-      } finally { await context.close(); }
-    }, audioData);
+    assert.equal(victoryLengths.length, 37);
+    for (const length of victoryLengths) assert(length > 0, 'victory speech decodes');
+    assert.equal(await page.evaluate(() => CandySound.decodedSounds.length), 49);
+    // The spinner lands and the "goes first" speech starts from a timer, not a tap.
     await page.evaluate(() => {
       window.starterCalls = [];
       const original = CandySound.playGoesFirst;
       CandySound.playGoesFirst = function(name) { starterCalls.push(name); return original.call(this, name); };
     });
+    const before = await page.evaluate(() => voiceStarts);
     await page.locator('.opening-action').click();
     await page.waitForFunction(() => document.getElementById('message').textContent.includes('goes first'));
     assert.deepEqual(await page.evaluate(() => starterCalls), ['Boo']);
+    assert.equal(await page.evaluate(() => voiceStarts), before + 1, 'the goes-first speech played from its buffer');
     await page.locator('.opening-action').click();
     await page.waitForFunction(() => !document.getElementById('message').textContent.includes('click to start'));
-    for (const [role, filename] of [['human', 'winsSet-player.mp3'], ['wendy', 'winsSet-opponent.mp3']]) {
+    for (const [role, key] of [['human', 'winsSet-player'], ['wendy', 'winsSet-opponent']]) {
       const fanfare = await page.evaluate(role => {
-        const entry = CandySound.playSetFanfare(role);
-        return { url: entry.clip.src, gain: entry.gain.gain.value };
+        const voice = CandySound.playSetFanfare(role);
+        return { sound: voice.sound, gain: voice.gain };
       }, role);
-      assert(fanfare.url.endsWith('/assets/sounds/' + filename));
+      assert.equal(fanfare.sound, key);
       assert.equal(fanfare.gain, .5);
     }
     await page.evaluate(() => CandySound.setEnabled(false));
     assert.equal(await page.evaluate(() => CandySound.playSetFanfare('human')), undefined);
     assert.equal(await page.evaluate(() => CandySound.playSetFanfare('wendy')), undefined);
     assert.deepEqual(errors, []);
-    console.log('PASS: 49 sounds preload and decode; separate player/opponent set clips use 50% gain and respect mute; spinner/deal work over file opening.');
-  } finally { await browser.close(); }
+    console.log('PASS: 12 sounds decode at startup and play from buffers at 50% gain; 37 victory speeches decode on demand; timer-started goes-first speech plays; mute respected.');
+  } finally { await browser.close(); server.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });
