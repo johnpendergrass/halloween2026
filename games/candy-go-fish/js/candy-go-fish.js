@@ -3,7 +3,7 @@
   // The generated companion keeps direct file:// opening functional.
   let config = window.CandyConfig;
   if (location.protocol !== 'file:') {
-    try { const response = await fetch('./assets/json/game-config.json?v=2026-1016-small-portraits'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
+    try { const response = await fetch('./assets/json/game-config.json?v=2026-1016-sound-fix-worked'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
     catch (error) { console.warn('Using bundled candy configuration.', error); }
   }
   const piles = CandyPiles();
@@ -892,46 +892,6 @@
     const difference = state.sets.human.length - state.sets.wendy.length;
     state.winner = difference > 0 ? 'human' : difference < 0 ? 'wendy' : 'tie';
     finishGame();
-  }
-  // ---- Sound diagnostic (a developer aid) -----------------------------------
-  // Open the page with ?debug=sound for a small panel over the game: the audio
-  // engine's state, the two channel switches, preload failures, and four test
-  // buttons. Built 2026-10-15 when John's iPhone went silent while desktop
-  // Chrome played everything; it tells the device's mute apart from a sleeping
-  // engine or a broken clip. Remove when no longer needed.
-  if (new URLSearchParams(location.search).get('debug') === 'sound') {
-    const panel = document.createElement('div');
-    panel.id = 'soundDebug';
-    Object.assign(panel.style, { position: 'fixed', left: '2vw', right: '2vw', bottom: '2vw', zIndex: '100', padding: '2vw', borderRadius: '2vw',
-      background: '#000000d0', color: '#fff', font: '12px/1.4 monospace', pointerEvents: 'auto' });
-    const readout = document.createElement('pre'); readout.style.whiteSpace = 'pre-wrap'; readout.style.margin = '0 0 1vw';
-    const log = [];
-    const note = text => { log.unshift(new Date().toLocaleTimeString() + ' ' + text); log.length = Math.min(log.length, 6); };
-    const buttons = document.createElement('div'); buttons.style.display = 'flex'; buttons.style.gap = '1vw'; buttons.style.flexWrap = 'wrap';
-    const addButton = (label, action) => {
-      const button = document.createElement('button'); button.textContent = label;
-      Object.assign(button.style, { padding: '2vw', background: '#2f8f4e', color: '#fff', borderRadius: '1.5vw', fontSize: '12px' });
-      button.addEventListener('click', () => { try { action(); note(label + ': ok'); } catch (error) { note(label + ': ' + error.message); } });
-      buttons.append(button);
-    };
-    addButton('Wake engine', () => CandySound.unlock());
-    addButton('Engine beep', () => CandySound.testTone());
-    addButton('UI clip', () => { if (!CandySound.play('confirmText')) throw new Error('play() returned nothing (UI off?)'); });
-    // A plain clip is NOT routed through the engine. If this one plays while
-    // the engine beep is silent, the device is muting the engine.
-    addButton('Plain clip', () => { const clip = new Audio('./assets/sounds/confirmText.mp3'); clip.play().then(() => note('plain: playing')).catch(error => note('plain: ' + error.message)); });
-    panel.append(readout, buttons); document.body.append(panel);
-    const refresh = () => {
-      const ui = CandySound.getChannel('ui'), music = CandySound.getChannel('music');
-      readout.textContent = [
-        'engine: ' + CandySound.engineState + '   sound: ' + (CandySound.enabled ? 'on' : 'OFF'),
-        'ui: ' + (ui.enabled ? 'on' : 'OFF') + ' vol ' + ui.volume + '   music: ' + (music.enabled ? 'on' : 'OFF') + ' vol ' + music.volume,
-        'preload: ' + (CandyPreload.settled ? 'done' : 'loading') + ', failures ' + CandyPreload.failures.length + (CandyPreload.failures.length ? ' (' + CandyPreload.failures.map(url => decodeURIComponent(url.split('/').pop())).join(', ') + ')' : ''),
-        navigator.userAgent.replace(/^.*\((.*?)\).*$/, '$1').slice(0, 60),
-        ...log
-      ].join('\n');
-    };
-    refresh(); setInterval(refresh, 500);
   }
   startGame();
   showDialog('GO FISH!', el('dialogBody').innerHTML, "Let's play", demoEnding ? playDemoEnding : startGame);

@@ -394,20 +394,6 @@
       this.unlock();
       this.retryMusic();
     },
-    // ---- Diagnostics (used by the ?debug=sound panel only) -----------------
-    // engineState: 'none' before the engine exists, else the AudioContext's
-    // own word: 'suspended', 'running', 'interrupted' (iOS) or 'closed'.
-    get engineState() { return context ? context.state : 'none'; },
-    // testTone(): a half-second beep made by the engine itself, bypassing
-    // every clip and channel. Silence here with state 'running' means the
-    // device is muting the engine (the iPhone's silent switch does that).
-    testTone() {
-      prepareContext();
-      const oscillator = context.createOscillator(), gain = context.createGain();
-      gain.gain.value = .2; oscillator.frequency.value = 660;
-      oscillator.connect(gain); gain.connect(context.destination);
-      oscillator.start(); oscillator.stop(context.currentTime + .5);
-    },
     cancelVictory,
     get hasVictorySpeech() { return Boolean(victorySound); },
     replayVictory() {

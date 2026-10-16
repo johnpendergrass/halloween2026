@@ -1,6 +1,6 @@
 # Halloween 2026 — Specifications (design decisions)
 
-Last updated: 2026-10-01 12:39 (fourth day, third stretch: discussion only, how the Sound switch could reach a game; two options, not chosen; see 6j. Before that: high scores and switches, see 6i)
+Last updated: 2026-10-16 11:33 (iPhone sound closed: Option C decoded buffers heard on the phone, fast start, 512 px WebP portraits, debug panel removed; see 6k. Before that: 2026-10-01 12:39, Sound switch discussion, 6j)
 
 This file records WHAT the app looks like and WHY. Technical "how" lives in
 `specifications-technical.MD`. Companion notes in this folder:
@@ -975,9 +975,12 @@ problem is wider, and the fix is chosen.**
   "character portraits" with a note, as John asked. The candies (500 px,
   1.8 MB, already at their drawn size) are left for a possible later
   WebP-only pass.
-- **Still to do.** Remove the `?debug=sound` panel; item 13 (the
-  opponent's set appearing before the candy arrives); a real cold start
-  on the phone (private tab or cleared site data) on cellular.
+- **Sound closed (evening).** John: "the sound seems to be working fine
+  now. we know where to look if we still have problems later." The
+  `?debug=sound` panel and its two diagnostics were removed; the candies
+  stay PNG (not a problem). Still to do: item 13 (the opponent's set
+  appearing before the candy arrives); a real cold start on the phone
+  (private tab or cleared site data) on cellular.
 
 ## 6e. games.json v2: the first proposal (2026-09-29, superseded)
 

@@ -20,7 +20,7 @@
 
 // Bump this (and the ?v= tags in index.html) whenever code changes, so
 // phones fetch fresh copies instead of old cached ones.
-const APP_VERSION = "2026-1016-small-portraits";
+const APP_VERSION = "2026-1016-sound-fix-worked";
 
 /* ------------------------------------------------------------------------
    1. Settings and the games list

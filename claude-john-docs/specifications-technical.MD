@@ -1,6 +1,6 @@
 # Halloween 2026 — Technical Specifications
 
-Last updated: 2026-10-01 12:39 (fourth day, third stretch: discussion only, the two sound options sketched in section 7; nothing built. Before that: high scores, switches and `games/game-helper.js`, see 4j)
+Last updated: 2026-10-16 11:33 (Option C as built, fast start, cold-start measurements, portraits, line-ending trap; see 4k. Before that: 2026-10-01 12:39, the two sound options in section 7)
 
 ## 1. Stack and hosting
 
@@ -831,15 +831,17 @@ also quote it.
   candies draw behind the panel and over the table.
 - **Audio wake-up.** `CandySound.unlock()` = `prepareContext()` (create +
   resume) and is called first thing in the dialogs' confirm handler.
-- **`?debug=sound`.** A block at the bottom of `js/candy-go-fish.js`
-  builds a fixed panel (`#soundDebug`, z-index 100) refreshed twice a
-  second: `CandySound.engineState` ('none' or the AudioContext state),
-  `CandySound.enabled`, both channels' enabled/volume, `CandyPreload.settled`
-  and `failures`, the device string, and a six-line log. Buttons: Wake
-  engine (`unlock`), Engine beep (`CandySound.testTone()`, an oscillator
-  straight into the context destination), UI clip (`play('confirmText')`),
-  Plain clip (a `new Audio` NOT routed through the context). Absent without
-  the parameter; remove when no longer needed.
+- **`?debug=sound` (REMOVED 2026-10-16 evening, once the fix was heard on
+  the phone).** It was a block at the bottom of `js/candy-go-fish.js`
+  building a fixed panel (`#soundDebug`) refreshed twice a second with
+  the AudioContext state, both channels, preload state and failures, the
+  device string and a short log, plus four buttons: Wake engine, Engine
+  beep (an oscillator straight into the destination), UI clip, Plain clip
+  (a `new Audio` NOT routed through the context). The two diagnostics it
+  used in `sound.js` (`engineState`, `testTone`) went with it. To get it
+  back: commit 729d132 has the panel, 300675c the last version with the
+  media-element clips. `CandySound.decodedSounds` and `CandyPreload.failures`
+  remain and are what a console check would use.
 - **Finding and plan.** See `claudePlans/iphone-speech-buffers-plan.md`.
   Short form: iOS lets an `HTMLMediaElement` start only inside a user tap
   or shortly after; every clip here is its own element routed through the
