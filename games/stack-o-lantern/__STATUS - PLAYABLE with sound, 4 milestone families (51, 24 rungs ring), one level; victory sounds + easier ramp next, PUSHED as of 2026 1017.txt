@@ -1,0 +1,24 @@
+Stack o' Lantern (folder stack-o-lantern, slot 2) - status
+
+2026 1017 1441  PUSHED by Claude at John's request. SOUND: a speaker switch top left (Go Fish's woofer, slash when
+              muted, remembered on the device); sound.js with eight sounds made in code (tick, perfect, wider, soft,
+              thunk, miss, start, milestone), every one on the frame of the landing, no lead-in; every milestone has
+              sound yes/no + pitch in the table and milestones.md, only the 24 HEIGHT rungs ring (a rising arpeggio,
+              a semitone higher per rung) and a rung jumps the banner queue; the base is pumpkin 1 (the first drop
+              reads 2; the under-5 words moved up one); WebKit audio woken on the finger lift. Stamp 2026-1017-stack-sound.
+2026 1017 1332  PUSHED. Height ladder grown to 24 rungs (51 milestones), milestones.md replaced three working papers.
+2026 1017 1221  PUSHED. Four milestone families; ONE level; no info bar; High score corner; the minute; bestScore().
+2026 1016 2045  PUSHED. The moon fixed at one spot, the end screen rebuilt around it, count pops, Best glow.
+2026 1016 1715  PUSHED. EASY / HARD toggle (gone 1017), 19 milestones with banners, end-screen names.
+2026 0929-1001 Claude designed and built the game; moved from game4 to this folder; reports its score.
+
+NOT YET
+ - victory sounds (the end screen, a new high score) - John's next
+ - an easier difficulty ramp ("it gets hard at around 25 or so"; 50 and 75 should be reachable) - to talk through
+ - the MP3 voice per rung (later); move the scratch sound checks into _documents/checks/
+ - more moon faces; "almost made the high scores" feedback (needs a third helper read)
+ - check-moonspot.cjs and check-endgrid.cjs still describe the old layout (rewrite or retire)
+ - John's phone check once Pages serves 2026-1017-stack-sound
+
+DETAIL  _documents/claude-john-docs/Claude-ToBe-Continued-2026-1017-1441.MD (and 1332, 1221), specifications.MD (5, 6),
+        specifications-technical.MD (6, 7, 8); _documents/milestones.md for every milestone; README - STACK-O-LANTERN.md

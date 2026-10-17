@@ -1,6 +1,6 @@
 # Halloween 2026 — Technical Specifications
 
-Last updated: 2026-10-16 20:45 (stamp 2026-1016-stack-endscreen, 26 places now: Stack's index has 3; nothing else in the shell; 17:15: 4: touch-action on the shell page; 4g moved to the game's folder; stamp 2026-1016-stack-milestones; before that: 15:34 top title, 15:45 one control point)
+Last updated: 2026-10-17 14:41 (4m: #settingsButton, pressTopButton, currentTab, afterDrawerSettles gone; stamp 2026-1017-stack-sound, 27 places; before that 2026-10-16 20:45: stamp 2026-1016-stack-endscreen, 26 places now: Stack's index has 3; nothing else in the shell; 17:15: 4: touch-action on the shell page; 4g moved to the game's folder; stamp 2026-1016-stack-milestones; before that: 15:34 top title, 15:45 one control point)
 
 ## 1. Stack and hosting
 
@@ -21,7 +21,7 @@ index.html                 the app: 9:16 frame, top panel, game panel with <ifra
 games.json                 THE LIST OF GAMES: "games" array (v2 entries, see 4a) then an "_about" block documenting every field
 manifest.json              Android/desktop full-screen ("standalone", portrait); icons: [] (TODO)
 app/styles.css             app CSS (frame, panels, drawer) - moved from the mockup
-app/app.js                 reads games.json at start-up; picker buttons, THIS GAME tab (text, high scores, switches), drawer (Home toggles it, a tap on #gameCover closes it), loadGame/startGame. Never edited by designers
+app/app.js                 reads games.json at start-up; picker buttons, THIS GAME tab (text, high scores, switches), drawer (Home → GAMES, Settings → THIS GAME, a tap on #gameCover closes it), loadGame/startGame. Never edited by designers
 games/game-helper.js       THE HELPER a game includes to talk to the app: Halloween.reportScore() and, since 2026-10-17, Halloween.bestScore() (see 4j, 4l)
 app/default-icon.svg       the ghost shown on a button that has neither a usable icon nor a title
 games/pumpkin-patch/       slot 1, shown at start (was game0, then the "home" game until 2026-10-16): index.html, pumpkin-patch.css/.js, assets/ (2025 art, patch.svg icon)
@@ -65,7 +65,7 @@ Body: `display:grid; place-items:center;` padding `max(5dvh, safe-area)`
 top/bottom, `max(4px, safe-area)` sides. `viewport-fit=cover` in the viewport
 meta is required for the `env(safe-area-inset-*)` values.
 
-## 4. Three-panel layout (index.html + app/styles.css; one control point since 2026-10-16)
+## 4. Three-panel layout (index.html + app/styles.css; one control point 2026-10-16; Home + Settings since 2026-10-17, see 4m)
 
 - **`--bar-h: 11.111cqw`** — the key number. Frame height = 16/9 × width, so
   1/16 of the height = 1/9 of the width = 11.111cqw: the top panel's
@@ -76,8 +76,9 @@ meta is required for the `env(safe-area-inset-*)` values.
   `.play-area` (flex 1, `position:relative`, overflow hidden).
 - The top panel: `#homeButton` (`.top-icon`, a square as tall as the bar;
   `aria-expanded` follows the drawer), `.top-title` (flex 1, centred) and
-  an empty `span.top-icon` on the right, so the title is centred in the
-  bar rather than pushed off-centre by the one button.
+  `#settingsButton` (another `.top-icon`, ☰) on the right, so the title
+  is centred between two equal squares (until 2026-10-17 the right one
+  was an empty spacer span).
 - Inside `.play-area`:
   - `.game-panel`: absolute, `top/left/right/bottom: 0` → 15/16 of the
     frame = exactly 9:15 (was `bottom: var(--bar-h)` → 9:14).
@@ -99,8 +100,10 @@ meta is required for the `env(safe-area-inset-*)` values.
 - **`inert`** is set on `.drawer-content` while closed so its off-screen
   buttons cannot be reached by keyboard.
 - JS (`app/app.js`) is small named functions: `openDrawer` / `closeDrawer`
-  (they also show/hide the cover and set `aria-expanded`), `toggleDrawer`
-  (Home: close if open, else `showTab("game")` then open), `showTab`,
+  (they also show/hide the cover and set `aria-expanded` on both buttons),
+  `pressTopButton(tabName)` (Home "app" / Settings "game": close if open
+  on that tab, else `showTab` and open if closed; `toggleDrawer` until
+  2026-10-17), `showTab` (also keeps `currentTab`),
   `loadGame(game)`, `startGame(game)`, `makeGameButtons()`. `#gameCover`
   click → `closeDrawer`. Gone on 2026-10-16: `goHome()`, the strip and
   ☰ listeners, the `homeGame` variable.
@@ -154,8 +157,8 @@ meta is required for the `env(safe-area-inset-*)` values.
   why that hint exists; tested.
 - **`loadGame(game)`** now also sets the top title to `short_title ||
   title`, calls `fillThisGameTab(game)` and `markCurrentButton(game)`.
-  `startGame()` closes the drawer and then `showTab("game")` once the
-  slide is over (`afterDrawerSettles`).
+  `startGame()` closes the drawer (until 2026-10-17 it then switched the
+  tab once the slide was over, via `afterDrawerSettles`, now gone).
 - app.js contains no game names. Nothing in `app/` changes when a game is
   added, renamed or removed; verified by `git status` after the two test
   games were written (only `games/game2/`, `games/game3/` and games.json
@@ -388,9 +391,9 @@ and its `index.html` links carry the shared cache stamp since 2026-10-16
   carries `look-<folder_name>` (set in `fillThisGameTab`), and styles.css
   section 5b holds `.look-candy-go-fish` (centred text, uppercase heading,
   accent in the welcome gold with `-webkit-text-stroke`, plain icon at
-  18.2cqw). `startGame` closes the drawer first and switches the tab in
-  `afterDrawerSettles()` (transitionend on the drawer's own `transform`,
-  600 ms fallback), because a visible tab switch flashed during the slide.
+  18.2cqw). (`startGame` used to switch the tab in `afterDrawerSettles()`
+  after the slide, because a visible switch flashed; both went on
+  2026-10-17 when the two top buttons took over choosing the tab, 4m.)
 - **Storage** (as first built): `localStorage`, JSON text, two kinds of key:
   `halloween2026:app` = `{ "sound": true }` and
   `halloween2026:<folder_name>` = `{ "scores": [...], "settings": [0, 1] }`.
@@ -572,3 +575,27 @@ and the game's resources must match; see 6 below).
   Playwright taps), reads the bar, the THIS GAME text, plays a round in
   the iframe, reads the saved note, reloads, reads the corner (7), clears
   (list empty, corner 0, game on its start screen).
+
+## 4m. The Settings button (2026-10-17 14:41)
+
+- **`index.html`**: the top panel is `#homeButton` 🏠 (aria-label
+  "Games"), `.top-title`, `#settingsButton` ☰ (aria-label "This game"),
+  both `button.top-icon`; the spacer span is gone.
+- **`app/app.js`** section 2: `settingsButton`; `openDrawer` /
+  `closeDrawer` set `aria-expanded` on both; `pressTopButton(tabName)`
+  replaces `toggleDrawer`: `isOpen && currentTab === tabName` → close,
+  else `showTab(tabName)` and open if closed. Section 3: `let currentTab
+  = "app"`, kept by `showTab`. `startGame` = `loadGame` + `closeDrawer`;
+  `afterDrawerSettles` deleted (unused). Section map line 2 reworded.
+- **`app/styles.css`**: only the comment over `.top-icon`.
+- **Check**: scratchpad `check-topbar.cjs` drove the eight states
+  (start open on GAMES; pick Stack closes; Settings → THIS GAME; Home →
+  GAMES; Home closes; Home opens GAMES; Settings switches; Settings
+  closes) and screenshotted the bar. Worth adding to `check-shell.cjs`.
+- **`games.json`**: Stack's `credits` "v 0.19.2 10/2026 claude/jp".
+- **The stamp**: `2026-1017-stack-sound`, 27 places now (Stack's index
+  gained `sound.js`): app.js 1, Candy Go Fish index 19 + script 1,
+  Stack index 4, root index 2.
+- **Line endings**: app.js, styles.css and index.html were all LF by
+  this session (`grep -c $'\r'` = 0); the earlier mixed-endings trap
+  may be history, but check before a big edit.

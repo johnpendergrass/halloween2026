@@ -165,8 +165,8 @@ body {
   color: #fff;
 }
 
-/* The Home button, and the empty spacer of the same size on the right
-   that keeps the title centred. */
+/* The Home and Settings buttons, the same size either side of the title,
+   which keeps the title centred. */
 .top-icon {
   height: 100%;
   aspect-ratio: 1;

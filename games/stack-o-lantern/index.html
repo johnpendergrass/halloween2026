@@ -6,7 +6,7 @@
     <title>Stack o' Lantern</title>
     <!-- Shown inside the app's game panel (an iframe), but also works on its
      own: open games/stack-o-lantern/index.html directly to test it. -->
-    <link rel="stylesheet" href="./stack-o-lantern.css?v=2026-1017-stack-heights" />
+    <link rel="stylesheet" href="./stack-o-lantern.css?v=2026-1017-stack-sound" />
   </head>
 
   <body>
@@ -31,6 +31,14 @@
         <p class="new-best" id="newBest" hidden>NEW HIGH SCORE!</p>
         <span class="best-label">High score</span> <b id="best">0</b>
       </div>
+
+      <!-- The top left corner: the sound switch, mirroring the high score.
+           aria-pressed="false" (set by the script) draws the red slash
+           for muted. The switch and the sounds are in sound.js. -->
+      <button class="sound-corner" id="soundButton" type="button"
+              aria-pressed="true" aria-label="Sound on: tap to mute">
+        <img src="./assets/speaker.png" alt="" draggable="false">
+      </button>
 
       <!-- The moon watches. Its mouth changes with the quality of a drop. -->
       <div class="moon is-happy" id="moon" aria-hidden="true">
@@ -103,7 +111,8 @@
 
     <!-- The helper comes first: it gives the game Halloween.reportScore(),
          which hands the score to the app (see games/game-helper.js). -->
-    <script src="../game-helper.js?v=2026-1017-stack-heights"></script>
-    <script src="./stack-o-lantern.js?v=2026-1017-stack-heights"></script>
+    <script src="../game-helper.js?v=2026-1017-stack-sound"></script>
+    <script src="./sound.js?v=2026-1017-stack-sound"></script>
+    <script src="./stack-o-lantern.js?v=2026-1017-stack-sound"></script>
   </body>
 </html>

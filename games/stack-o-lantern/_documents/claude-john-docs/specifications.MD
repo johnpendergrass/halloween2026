@@ -1,6 +1,6 @@
 # Stack o' Lantern — Specifications (design decisions)
 
-Last updated: 2026-10-17 12:21 (/update; SECTION 5 IS THE CURRENT DESIGN: milestone families, the level as the title, one level, no info bar, the corner, the staircase, the minute, the shell reading back scores. Sections 1 to 4 are the 2026-09-29 and 2026-10-16 record; section 2 (EASY / HARD) and the 3x3 grid in section 3 are history now. Earlier: 2026-10-16 20:45 /update; 20:20 no Stacked count in the bar, Best glows on a new best; 19:55 count pops off each pumpkin; 19:10 the moon fixed at one spot; 18:30 the end screen laid out around the moon; 17:15 first file in the game's own folder)
+Last updated: 2026-10-17 14:41 (/update; SECTION 6: sound, the base is pumpkin 1, a rung jumps the banner queue, the shell's Settings button. 12:21: SECTION 5 IS THE CURRENT DESIGN: milestone families, the level as the title, one level, no info bar, the corner, the staircase, the minute, the shell reading back scores. Sections 1 to 4 are the 2026-09-29 and 2026-10-16 record; section 2 (EASY / HARD) and the 3x3 grid in section 3 are history now. Earlier: 2026-10-16 20:45 /update; 20:20 no Stacked count in the bar, Best glows on a new best; 19:55 count pops off each pumpkin; 19:10 the moon fixed at one spot; 18:30 the end screen laid out around the moon; 17:15 first file in the game's own folder)
 
 The game is called **Stack o' Lantern** since 2026-10-17 (it was
 "Stack-o'-Lantern"; the folder stays `stack-o-lantern`).
@@ -328,3 +328,112 @@ theirs).
   ("too wordy ... shorter, lighter"), with bold words, TIMBER! in the
   milestone gold, and "The moon is judging you." as a shaded line.
 - The Home icon is larger inside the unchanged bar.
+
+---
+
+## 6. 2026-10-17 afternoon: sound, the base is pumpkin 1, the rung jumps the queue (John and Claude)
+
+### 6.1 The speaker switch
+
+"a simple sound on/off switch ... on the top left (mirroring the high
+score) ... a speaker icon like that used in the go fish game ... and
+have a slash when muted. default will be on." So: Go Fish's woofer
+photo, shrunk to 160px (`assets/speaker.png`), 8.5vw across, 2.5vw from
+the top (1vw "crowded the top edge") and 3vw from the left, with "a
+small whiteish glow ... just enough to set it off" from the dark sky.
+Muted is Go Fish's red slash, drawn by CSS. A tap on it never reaches
+the stage, so it cannot drop a pumpkin. The choice is remembered on the
+device under the game's own key; the shell's Clear scores leaves it.
+
+### 6.2 Calculated sounds, and the rule
+
+John chose tones made in code over MP3 files ("i like your idea of just
+using calculated sounds"), keeping open "an mp3 voice sound that would
+play every time a new height is reached" for later. His rule: "the
+sounds must be carefully calibrated to sound when the event occurs. so
+not real lead in or ramping up." Every sound starts at full strength on
+the frame of its event and fades from there.
+
+Which event? "the tap on the phone for dropping a pumpkin is not the
+same as when the pumpkin hits the stack. which should activate the
+sound?" The landing. In this game the two are the same frame, because
+the slab does not fall: the tap decides, the slab is placed, the squash
+plays. John kept it that way ("keep it as it is now. it plays well"),
+so the calls sit in the landing code and would move with a fall if one
+is ever added.
+
+### 6.3 The set
+
+- **tick** off a wall: 25 ms, the quietest sound; it fires often late
+  in a round.
+- **perfect**: a bright tink, a high pure note with a fainter octave
+  that dies first; **wider**: that tink and a higher one behind it.
+- **soft** ("nice", "close one"): the duller tink, lower, wooden edge.
+- **thunk** ("yikes", "oof"): a low falling note with a scrape of dull
+  noise. The REACTIONS table names its sound beside its word.
+- **miss** (TIMBER): two falling notes, "dee-dup", the second an
+  octave down and hard on the first's heels (a crack-and-thud first
+  draft "does not register well"; then "lower the pitch of the first,
+  and shorten the delay of the 2nd note").
+- **milestone**: a fast rising three-note arpeggio (root, major third,
+  fifth, 70 ms apart, the last ringing on). Drafts: a two-note da-ding
+  ("too much"), a single ding ("a bright cheery you did it sound"),
+  then "a more celebratory 3 pitch fast arpeggio". It waits a tenth of
+  a second so the landing's tink is heard first.
+- **start**: one bright ding on the tap that starts a round, from the
+  welcome screen or Stack again; the speaker plays the same ding when
+  it flips on.
+
+### 6.4 Only the rungs ring, each at its own pitch
+
+"the pitch could increase as the level increases" became two fields on
+every milestone, John's idea ("assign a celebratory pitch level in the
+milestone table"; then "a sound yes/no column, and its pitch ... play
+the sound if yes and be silent if no"): `sound` and `pitch`. Only the
+24 HEIGHT rungs ring ("not as much sound clutter"); pitch is in
+semitones above the lowest, 0 for a family's commonest milestone and 23
+for its rarest, spread by rank, so the arpeggio climbs a semitone per
+rung from Scarecrow to the Moon. The other families keep a pitch in
+case. Both fields are in `_documents/milestones.md` too.
+
+### 6.5 The base is pumpkin 1
+
+John saw the rungs "off by one ... they show the height when 6, 11, etc
+not 5, 10". Two things were true. The count did not include the base
+and John's does ("in my mind it is already 1"): now the base is pumpkin
+1, the first drop reads 2, Scarecrow comes on the fourth drop. The
+under-5 words and lines moved up by one (a miss on the first drop is a
+count of 1: WHIFF and friends; 2 to 4: SPLAT and friends; the lines run
+1 to 4, "Two pumpkins. The patch is not impressed."). Old saved scores
+are one lower than the same round scores now.
+
+And the banner queue delayed rungs: a rung earned while another banner
+was up waited its 1.8 s, or was pushed out unshown. Now a HEIGHT
+milestone jumps the queue: its banner replaces whatever is showing and
+its arpeggio plays on the frame of the landing; the others wait behind
+it as before.
+
+### 6.6 Waking the phone's audio
+
+Generated sounds play on the first tap with no unlock step, because the
+first sound is always asked for inside a tap. One WebKit rule showed on
+John's phone: Safari counts the finger LIFTING as the tap that may start
+audio, not the touch-down the game acts on, so the start ding came out
+at the first wall tick. Every lift now wakes the audio clock too, and
+the ding plays a blink after the tap. The phone's ring/silent switch
+still mutes everything; nothing can change that.
+
+### 6.7 The shell, for this game (afternoon)
+
+- The credits line in the THIS GAME tab reads "Credits: v 0.19.2
+  10/2026 claude/jp" (games.json).
+- The top bar has a second button, ☰ on the right mirroring Home: Home
+  opens the panel on GAMES, Settings on THIS GAME, the button whose tab
+  is showing closes it. Recorded in the shell's own specs (3, 4, 6m).
+
+### 6.8 Next (John, 2026-10-17 14:40)
+
+1. Victory sounds (the end screen, a new high score).
+2. The difficulty ramp: "it would be nice if the difficulty ramp was
+   easier, so players could get to 50, 75 easily... it gets hard at
+   around 25 or so". To talk through first.

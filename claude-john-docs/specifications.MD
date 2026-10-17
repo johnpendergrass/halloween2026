@@ -1,6 +1,6 @@
 # Halloween 2026 — Specifications (design decisions)
 
-Last updated: 2026-10-16 17:15 (2: no zoom on the shell page; 6f moved to the game's folder; 6i: Stack's switch dropped; before that: 15:34 names, 15:45 one control point, 15:00 tabled games removed)
+Last updated: 2026-10-17 14:41 (6m: a Settings button on the right of the top bar, Home → GAMES, Settings → THIS GAME; before that 2026-10-16 17:15: 2: no zoom on the shell page; 6f moved to the game's folder; 6i: Stack's switch dropped; before that: 15:34 names, 15:45 one control point, 15:00 tabled games removed)
 
 This file records WHAT the app looks like and WHY. Technical "how" lives in
 `specifications-technical.MD`. Companion notes in this folder:
@@ -71,21 +71,24 @@ zoom inside their own panels; the shell now does too (`touch-action:
 pan-y` on html and body: vertical panning only, so the THIS GAME tab
 still scrolls). The iframe cannot move the shell by itself.
 
-## 3. The panels (decided, mockup v6; ONE CONTROL POINT since 2026-10-16)
+## 3. The panels (decided, mockup v6; ONE CONTROL POINT 2026-10-16; TWO BUTTONS since 2026-10-17, see 6m)
 
 ```text
 ┌─────────────────────┐
 │ TOP PANEL           │  1/16 of frame height. Always visible. Never moves.
-├─────────────────────┤  Home button on the left, game name centred.
+├─────────────────────┤  Home on the left, game name centred, ☰ Settings on the right (2026-10-17).
 │                     │
 │    GAME PANEL       │  Everything below the top panel -> exactly 9:15.
 │                     │  The game's iframe lives here. Nothing covers
 │                     │  it unless the player opens the bottom panel.
 │                     │
-└─────────────────────┘  BOTTOM PANEL: out of sight until Home is tapped.
+└─────────────────────┘  BOTTOM PANEL: out of sight until Home or Settings is tapped.
 ```
 
-- **One control point (John, 2026-10-16).** The top panel holds a Home
+- **Two buttons (John, 2026-10-17; see 6m).** Home opens the bottom panel
+  on GAMES, ☰ Settings opens it on THIS GAME; the button whose tab is
+  showing closes it, the other just switches the tab.
+- **One control point (John, 2026-10-16; superseded 2026-10-17).** The top panel holds a Home
   button and the game's name, nothing else. Home opens the bottom panel
   on the THIS GAME tab; Home again, or a tap on the game above the open
   panel, closes it. Picking a game from the GAMES tab closes it too. Gone
@@ -210,9 +213,10 @@ was opened from disk (`file:`), since that is the only time it applies.
   No slot 1 at all → the lowest slot stands in; no slots at all is a
   start-up error in the GAMES tab.
 - Tap a game's icon → its page loads in the game panel, the bottom panel
-  **closes**, the top panel shows the game's `short_title`, the drawer's
-  tab switches to **THIS GAME** once the slide is over (so the next open
-  is about that game), and that game's icon button looks **pressed in**.
+  **closes**, the top panel shows the game's `short_title`, and that
+  game's icon button looks **pressed in**. (Until 2026-10-17 the drawer's
+  tab also switched to THIS GAME once the slide was over; now Home and
+  Settings each choose the tab when they open the panel, see 6m.)
 - **🏠** (top panel) → opens the bottom panel on **THIS GAME** for the
   current game; the player may switch to the GAMES tab from there. 🏠
   again, or a tap on the game above the panel, closes it. Home no longer
@@ -601,3 +605,26 @@ marks, in Go Fish's manner ("too wordy ... shorter, lighter"), with a
 small per-game look in `styles.css`; its scores carry the level reached
 as the note ("16 (10-17-2026) Giraffe"); and the Home icon is larger
 within the unchanged bar ("I do not want to change the shell's top bar").
+
+## 6m. A Settings button on the right of the top bar (John, 2026-10-17)
+
+"currently when a game is playing it has the top bar of HOME, game
+name, nothing. Lets put a settings icon in the top right corner
+(mirroring the home icon) - the one with three lines. The new
+behaviors will be HOME takes you back to the shell GAMES tab, SETTINGS
+takes you to the shell this game tab."
+
+So the top bar is 🏠, the game's name, ☰, the two buttons the same
+size so the name stays centred (the empty spacer that did that job is
+gone). Home opens the bottom panel on GAMES; Settings opens it on THIS
+GAME; if the panel is open on the other tab, the button switches the
+tab; the button whose tab is showing closes the panel. A tap on the
+game above the open panel still closes it, and picking a game still
+closes it. Picking a game no longer switches the panel to THIS GAME
+behind the scenes, since each button now chooses its own tab. The
+2026-10-16 "one control point" is history: the ☰ came back, with a
+different job from the old one (which opened the same panel as Home).
+
+Also that afternoon: Stack o' Lantern's credits line in the THIS GAME
+tab became "Credits: v 0.19.2 10/2026 claude/jp" (games.json), in Go
+Fish's format.

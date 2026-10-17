@@ -1,10 +1,11 @@
 # Stack o' Lantern — Technical Specifications
 
-Last updated: 2026-10-17 12:21 (/update; SECTION 6 IS CURRENT and overrides sections 2 and 3 where they differ: families and bestEarned, no MODES, no info bar, .score-corner, the staircase, the minute, Halloween.bestScore; stamp 2026-1017-stack-families. Earlier: 2026-10-16 20:45 /update, the checks under _documents/checks/, stamp 2026-1016-stack-endscreen; 20:20 #count gone, state.newBest; 19:55 popCount; 19:25 the moon at 26vw; 18:30 GRID_PATTERNS / fillMilestoneGrid; 17:15 first file in the game's own folder)
+Last updated: 2026-10-17 14:41 (/update; SECTION 8: sound.js, the switch, sound/pitch in the table, stackedCount counts the base, the rung jumps the queue, stamp 2026-1017-stack-sound in 27 places. 12:21: SECTION 6 IS CURRENT and overrides sections 2 and 3 where they differ: families and bestEarned, no MODES, no info bar, .score-corner, the staircase, the minute, Halloween.bestScore; stamp 2026-1017-stack-families. Earlier: 2026-10-16 20:45 /update, the checks under _documents/checks/, stamp 2026-1016-stack-endscreen; 20:20 #count gone, state.newBest; 19:55 popCount; 19:25 the moon at 26vw; 18:30 GRID_PATTERNS / fillMilestoneGrid; 17:15 first file in the game's own folder)
 
 How the game is built, for whoever edits it next. The design and the
 reasons are in `specifications.MD` beside this. Files: `index.html`,
-`stack-o-lantern.css`, `stack-o-lantern.js`, `assets/stack.svg`, all LF.
+`stack-o-lantern.css`, `stack-o-lantern.js`, `sound.js` (since 14:41),
+`assets/stack.svg`, `assets/speaker.png`; the text files all LF.
 
 ## 1. The 2026-09-29 build
 
@@ -330,3 +331,71 @@ reasons are in `specifications.MD` beside this. Files: `index.html`,
   generated into the script and the file by one scratch script with a
   ROWS list; regenerate both rather than editing one.
 - **Stamp**: `2026-1017-stack-heights`, 26 places.
+
+## 8. Sound (2026-10-17 14:41)
+
+- **`sound.js`**, loaded by `index.html` BEFORE `stack-o-lantern.js`
+  (same stamp), three sections: (1) the speaker switch (`SOUND_KEY =
+  "stack-o-lantern-sound"`, `sound.enabled`, `loadSoundSetting` /
+  `saveSoundSetting` / `showSoundSwitch` / `toggleSound`,
+  `audioContext()` which makes the Web Audio context on first use and
+  resumes a suspended one, a `pointerdown` stopPropagation on
+  `#soundButton` so the stage never sees the tap, and a document
+  `pointerup` listener that resumes a suspended context: WebKit counts
+  the lift, not the touch-down); (2) two building blocks, `tone(context,
+  {wave, from, to, volume, length, delay})` and `noiseBurst(context,
+  {volume, length, cutoff, delay})`, both scheduled at `currentTime +
+  delay` with the gain set in a 1 ms linear ramp (a zero-time jump
+  clicks) then an exponential fade, oscillators stopped 20 ms after the
+  fade; the noise buffer (half a second, made once) through a lowpass;
+  (3) the `SOUNDS` table of name → function(context, detail) and
+  `playSound(name, detail)`, which returns at once when the switch is
+  off and warns on an unknown name.
+- **The numbers** (Hz, volume 0..1, seconds): tick 1500 / 0.08 / 0.025;
+  perfect 1320 / 0.30 / 0.18 + 2640 / 0.10 / 0.08; wider 1320 / 0.30 /
+  0.15 then 1760 / 0.30 / 0.25 at +0.09; soft triangle 660 / 0.25 /
+  0.14; thunk 160→70 / 0.50 / 0.25 + noise 0.25 / 0.08 / cutoff 900;
+  miss triangle 440 / 0.40 / 0.16 then 220→185 / 0.40 / 0.45 at +0.13;
+  start 523 / 0.30 / 0.30 + 1046 / 0.10 / 0.15; milestone root = 659 ×
+  2^(pitch/12), root / third (×1.26) / fifth (×1.5) at +0.10 / +0.17 /
+  +0.24, 0.12 / 0.12 / 0.40 long, plus fifth×2 faintly on the last.
+- **The calls** in `stack-o-lantern.js`: `playSound("tick")` in
+  `moveSlab` where the direction flips at a wall (only when the slab was
+  heading into it, as `bounced` already required); in `drop()`
+  `playSound(word === "WIDER!" ? "wider" : "perfect")` after `settle`,
+  `playSound("miss")` before `gameOver()`, `playSound(feeling.sound)`
+  after the clipped `settle` (REACTIONS gained `sound: "soft" |
+  "thunk"`); `playSound("start")` in `start()`; `if (entry.sound)
+  playSound("milestone", entry.pitch)` in `celebrateNext`.
+- **The table**: every `MILESTONES` entry ends `sound: true|false,
+  pitch: N` (height true, the 27 others false). Pitches by rank within a
+  family: `round((n-1-i) * 23 / (n-1))`, rarest 23, commonest 0: height
+  23..0 one per rung; accuracy 23 20 18 15 13 10 8 5 3 0; growth 23 15
+  8 0; bounce 23 21 19 17 15 13 12 10 8 6 4 2 0. `milestones.md` has
+  Sound and Pitch columns with the same values (added by scratch script
+  `add-pitch.py`; the 13:30 `heights.py` generator predates the two
+  fields and would drop them: extend it or edit by hand).
+- **`stackedCount()`** returns `state.slabs.length` (was length − 1):
+  the base is pumpkin 1. `END_WORDS` bands from 5 / 2 / 1 (were 5 / 1 /
+  0); `COMPARISONS` at 1 / 2 / 3 / 4 (were 0 / 1 / 2 / 4, the 1 line
+  reworded "Two pumpkins..."). Nothing else reads the count differently;
+  `check-families.cjs` passes unchanged.
+- **The queue jump**: `checkMilestones` collects `newlyEarned`; if one
+  is `family === "height"` it clears `milestoneTimer`, sets
+  `state.toCelebrate = [rung, ...waiting, ...others]` and calls
+  `celebrateNext()` at once (which plays the arpeggio, then sets the
+  name: a spy that reads the banner at the sound sees the OLD name);
+  otherwise the old path. `celebrateNext` keeps its timer in
+  `milestoneTimer`; `reset()` clears it.
+- **The switch's CSS** (`.sound-corner`): absolute, top 2.5vw, left 3vw,
+  z-index 12 (the score corner's layer, above the overlays), 8.5vw
+  square, the img rounded with `box-shadow: 0 0 2vw 0.5vw rgb(255 255
+  255 / 55%)`; `::after` the slash (10vw × 1vw, #d93a2b, −45°) shown by
+  `[aria-pressed="false"]`.
+- **Checks** (scratchpad, not yet in `_documents/checks/`):
+  `check-speaker.cjs` (flip, no round started, survives reload),
+  `check-sounds.cjs` and `check-milestone-sound.cjs` (a `playSound` spy
+  records names and the count; Chrome launched with
+  `--autoplay-policy=no-user-gesture-required`). Worth moving in.
+- **Stamp**: `2026-1017-stack-sound`, 27 places (Stack's index has 4:
+  the CSS, the helper, sound.js, the script).

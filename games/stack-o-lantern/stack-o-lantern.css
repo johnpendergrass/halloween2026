@@ -125,6 +125,52 @@ body {
   50%      { transform: scale(1.06); box-shadow: 0 0 4vw #ffd34d, 0 0 9vw rgb(255 211 77 / 70%); }
 }
 
+/* The sound switch in the stage's top left corner, mirroring the high
+   score (John, 2026-10-17). The picture is Go Fish's woofer shrunk to
+   160px, with "a small whiteish glow ... just enough to set it off" from
+   the dark sky. Muted wears Go Fish's red slash, drawn here, so one
+   picture does both. The script stops taps on it reaching the stage, so
+   flipping the switch never drops a pumpkin. */
+.sound-corner {
+  position: absolute;
+  top: 2.5vw;                /* John: a bit lower, it crowded the top edge */
+  left: 3vw;
+  z-index: 12;
+  width: 8.5vw;
+  height: 8.5vw;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sound-corner img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  box-shadow: 0 0 2vw 0.5vw rgb(255 255 255 / 55%);
+}
+
+/* The slash: a red bar across the middle, tilted like a "no" sign. */
+.sound-corner::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: none;
+  width: 10vw;
+  height: 1vw;
+  background: #d93a2b;
+  border-radius: 0.5vw;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  box-shadow: 0 0 0.4vw rgb(0 0 0 / 60%);
+  pointer-events: none;
+}
+
+.sound-corner[aria-pressed="false"]::after { display: block; }
+
 /* Night sky: near black with an ember-red horizon, like a town glowing
    below it. (This was HARD's sky; EASY had a plum one. One level since
    2026-10-17.) */

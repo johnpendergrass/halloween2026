@@ -14,7 +14,8 @@ three best milestones under it.
   2026-10-16 and 2026-10-17.
 - **Name:** "Stack o' Lantern" since 2026-10-17 (it was Stack-o'-Lantern);
   the folder stays `stack-o-lantern`.
-- **Status:** playable and checked; sound is the next step.
+- **Status:** playable and checked, with sound (2026-10-17); victory sounds
+  and an easier difficulty ramp are next.
 - **The rules** every game follows are in
   [`../README - game design requirements.md`](../README%20-%20game%20design%20requirements.md).
 
@@ -24,7 +25,9 @@ three best milestones under it.
 index.html                 the stage (the high score corner, stars, moon, ground, tower), start and end screens
 stack-o-lantern.css        page setup and text classes (copied from the requirements), then the game's own styles
 stack-o-lantern.js         the game: settings, the milestone table, state, slabs, taps, camera, end screen
+sound.js                   the speaker switch and every sound, made in code (Web Audio); loaded before the game script
 assets/stack.svg           the icon for the app's picker (256 x 256, square viewBox)
+assets/speaker.png         the speaker switch's picture (Go Fish's woofer at 160px)
 _documents/milestones.md            every milestone, its height or count and its words, as tables (a reading copy of the script's table)
 _documents/claude-john-docs/        the design and technical records
 _documents/checks/                  Playwright checks (see the technical spec, section 6)
@@ -121,7 +124,14 @@ README - STACK-O-LANTERN.md  this file
   inset shadows, a `::before` stem), stars are two repeating radial
   gradients, the moon is a circle.
 - The milestone table in the script is the source; `_documents/milestones.md`
-  lists the same 37 as tables. The order within a family is the rank.
+  lists the same 51 as tables. The order within a family is the rank. Each
+  entry says whether its banner rings (`sound`) and at which note (`pitch`).
+- Sounds are tones made in code in `sound.js`, named in a table: tick,
+  perfect, wider, soft, thunk, miss, start, milestone. The game script only
+  calls `playSound("name")` at the landing. Every sound starts at full
+  strength on the frame of its event and fades from there. The speaker in
+  the top left corner mutes them; the choice is remembered on the device.
+- The base is pumpkin 1: the first drop reads 2.
 
 ## Where this game breaks the requirements, and why
 

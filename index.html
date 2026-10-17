@@ -31,7 +31,7 @@
 
     <!-- The ?v= tag forces phones to fetch fresh code after a publish.
      Change it (and APP_VERSION in app.js) whenever the code changes. -->
-    <link rel="stylesheet" href="./app/styles.css?v=2026-1017-stack-heights" />
+    <link rel="stylesheet" href="./app/styles.css?v=2026-1017-stack-sound" />
   </head>
 
   <body>
@@ -46,13 +46,14 @@
      ====================================================================== -->
     <div class="app-shell">
 
-      <!-- 1. TOP PANEL: the ONE control. Home opens the bottom panel on the
-       THIS GAME tab and closes it again. The spacer on the right is as
-       wide as the Home button, so the title is centred in the bar. -->
+      <!-- 1. TOP PANEL: two controls, the same size, so the title is
+       centred between them. Home opens the bottom panel on the GAMES tab;
+       Settings (three lines) opens it on THIS GAME; the button whose tab
+       is showing closes it again (John, 2026-10-17). -->
       <header class="top-panel">
-        <button class="top-icon" id="homeButton" aria-label="Open or close the panel">🏠</button>
+        <button class="top-icon" id="homeButton" aria-label="Games">🏠</button>
         <div class="top-title" id="topTitle">Halloween 2026</div>
-        <span class="top-icon" aria-hidden="true"></span>
+        <button class="top-icon" id="settingsButton" aria-label="This game">☰</button>
       </header>
 
       <div class="play-area">
@@ -70,7 +71,8 @@
         <div class="game-cover" id="gameCover" hidden></div>
 
         <!-- 3. BOTTOM PANEL: the content only; there is no strip. Starts OPEN
-         on the GAMES tab. Home (top panel) toggles it; picking a game closes it. -->
+         on the GAMES tab. Home and Settings (top panel) open it on their
+         tabs and close it; picking a game closes it. -->
         <section class="drawer is-open" id="drawer">
 
           <!-- `inert` is added while the panel is closed, so its hidden
@@ -130,6 +132,6 @@
       </div>
     </div>
 
-    <script src="./app/app.js?v=2026-1017-stack-heights"></script>
+    <script src="./app/app.js?v=2026-1017-stack-sound"></script>
   </body>
 </html>

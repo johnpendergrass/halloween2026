@@ -46,6 +46,13 @@ const SPEED_GROWTH = 1.035;     // speed is multiplied by this for every slab pl
 // WITHIN A FAMILY THE ORDER HERE IS THE RANK, rarest first: of a family's
 // earned entries, the first one in this list is the one shown.
 //
+// `sound` says whether the banner rings (sound.js: the milestone ding)
+// and `pitch` which note, in semitones above the lowest: 0 for a
+// family's commonest milestone, 23 (nearly two octaves up) for its
+// rarest, spread evenly by rank. Only the HEIGHT family rings for now,
+// so the ding climbs as the tower does (John, 2026-10-17: "no other
+// milestones carry a sound"); the others keep a pitch in case.
+//
 // `kind` names the counter that earns it and `at` the count:
 //   "height"   = pumpkins stacked
 //   "perfect"  = perfect drops in a row (a bounce does not break it)
@@ -79,165 +86,216 @@ const MILESTONES = [
   // pumpkin tower. Widest title that fits: SHANGHAI TOWER.
   { family: "height", kind: "height", at: 200, name: "Moon Landing", what: "200 pumpkins high",
     line: "Houston, we have a tower. Please come down now.",
-    hint: "two hundred pumpkins high" },
+    hint: "two hundred pumpkins high",
+    sound: true, pitch: 23 },
   { family: "height", kind: "height", at: 175, name: "Hubble", what: "175 pumpkins high",
     line: "The Hubble Space Telescope turned around to get a better look at a stack of pumpkins.",
-    hint: "a hundred and seventy-five pumpkins high" },
+    hint: "a hundred and seventy-five pumpkins high",
+    sound: true, pitch: 22 },
   { family: "height", kind: "height", at: 150, name: "Space Station", what: "150 pumpkins high",
     line: "The International Space Station just drifted past. The astronauts waved at the pumpkins.",
-    hint: "a hundred and fifty pumpkins high" },
+    hint: "a hundred and fifty pumpkins high",
+    sound: true, pitch: 21 },
   { family: "height", kind: "height", at: 125, name: "Stratosphere", what: "125 pumpkins high",
     line: "Airliners cruise far below your pumpkins now. The captain has turned on the seatbelt sign.",
-    hint: "a hundred and twenty-five pumpkins high" },
+    hint: "a hundred and twenty-five pumpkins high",
+    sound: true, pitch: 20 },
   { family: "height", kind: "height", at: 100, name: "Everest", what: "100 pumpkins high",
     line: "Mount Everest, top of the world. The Sherpas would like a word about carrying pumpkins.",
-    hint: "a hundred pumpkins high" },
+    hint: "a hundred pumpkins high",
+    sound: true, pitch: 19 },
   { family: "height", kind: "height", at: 95, name: "Kilimanjaro", what: "95 pumpkins high",
     line: "Mount Kilimanjaro, the roof of Africa. Hemingway would have written a short, sad book about your pumpkins.",
-    hint: "ninety-five pumpkins high" },
+    hint: "ninety-five pumpkins high",
+    sound: true, pitch: 18 },
   { family: "height", kind: "height", at: 90, name: "Fuji", what: "90 pumpkins high",
     line: "Mount Fuji has a snowy cap and a thousand paintings. Your peak is orange and wobbling.",
-    hint: "ninety pumpkins high" },
+    hint: "ninety pumpkins high",
+    sound: true, pitch: 17 },
   { family: "height", kind: "height", at: 85, name: "Vesuvius", what: "85 pumpkins high",
     line: "Mount Vesuvius buried Pompeii. Your pumpkin tower buried the skyline.",
-    hint: "eighty-five pumpkins high" },
+    hint: "eighty-five pumpkins high",
+    sound: true, pitch: 16 },
   { family: "height", kind: "height", at: 80, name: "Burj Khalifa", what: "80 pumpkins high",
     line: "Dubai called. They want their skyline back.",
-    hint: "eighty pumpkins high" },
+    hint: "eighty pumpkins high",
+    sound: true, pitch: 15 },
   { family: "height", kind: "height", at: 75, name: "Shanghai Tower", what: "75 pumpkins high",
     line: "Tourists on the top floor are staring at a pumpkin.",
-    hint: "seventy-five pumpkins high" },
+    hint: "seventy-five pumpkins high",
+    sound: true, pitch: 14 },
   { family: "height", kind: "height", at: 70, name: "Empire State", what: "70 pumpkins high",
     line: "King Kong wants to climb your pumpkins. Tell him the Empire State Building is around the corner.",
-    hint: "seventy pumpkins high" },
+    hint: "seventy pumpkins high",
+    sound: true, pitch: 13 },
   { family: "height", kind: "height", at: 65, name: "Eiffel Tower", what: "65 pumpkins high",
     line: "Paris looked at your pumpkins and shrugged. For Paris, that is a standing ovation.",
-    hint: "sixty-five pumpkins high" },
+    hint: "sixty-five pumpkins high",
+    sound: true, pitch: 12 },
   { family: "height", kind: "height", at: 60, name: "Chrysler", what: "60 pumpkins high",
     line: "The Chrysler Building: steel eagles, a chrome crown, and still shorter than a pile of gourds.",
-    hint: "sixty pumpkins high" },
+    hint: "sixty pumpkins high",
+    sound: true, pitch: 11 },
   { family: "height", kind: "height", at: 55, name: "Space Needle", what: "55 pumpkins high",
     line: "Seattle's saucer on a stick, out-stacked by squash. Rain expected anyway.",
-    hint: "fifty-five pumpkins high" },
+    hint: "fifty-five pumpkins high",
+    sound: true, pitch: 10 },
   { family: "height", kind: "height", at: 50, name: "Big Ben", what: "50 pumpkins high",
     line: "The clock stopped to count your pumpkins. London will be late for everything.",
-    hint: "fifty pumpkins high" },
+    hint: "fifty pumpkins high",
+    sound: true, pitch: 9 },
   { family: "height", kind: "height", at: 45, name: "Liberty", what: "45 pumpkins high",
     line: "The Statue of Liberty, torch up, eyes on your tower. She has seen a lot. Never a pumpkin stack.",
-    hint: "forty-five pumpkins high" },
+    hint: "forty-five pumpkins high",
+    sound: true, pitch: 8 },
   { family: "height", kind: "height", at: 40, name: "Sequoia", what: "40 pumpkins high",
     line: "Three thousand years to grow one of these. Your pumpkin pile took a coffee break.",
-    hint: "forty pumpkins high" },
+    hint: "forty pumpkins high",
+    sound: true, pitch: 7 },
   { family: "height", kind: "height", at: 35, name: "Notre Dame", what: "35 pumpkins high",
     line: "The gargoyles are worried. The hunchback is impressed.",
-    hint: "thirty-five pumpkins high" },
+    hint: "thirty-five pumpkins high",
+    sound: true, pitch: 6 },
   { family: "height", kind: "height", at: 30, name: "Tower of Pisa", what: "30 pumpkins high",
     line: "The Leaning Tower of Pisa has tourists pretending to hold it up. Your pumpkins could use a few.",
-    hint: "thirty pumpkins high" },
+    hint: "thirty pumpkins high",
+    sound: true, pitch: 5 },
   { family: "height", kind: "height", at: 25, name: "Treetops", what: "25 pumpkins high",
     line: "The owls have a question. Who? You, apparently.",
-    hint: "twenty-five pumpkins high" },
+    hint: "twenty-five pumpkins high",
+    sound: true, pitch: 4 },
   { family: "height", kind: "height", at: 20, name: "Haunted House", what: "20 pumpkins high",
     line: "Two storeys up. The ghosts have to look up at you for once.",
-    hint: "twenty pumpkins high" },
+    hint: "twenty pumpkins high",
+    sound: true, pitch: 3 },
   { family: "height", kind: "height", at: 15, name: "Giraffe", what: "15 pumpkins high",
     line: "Eye to eye with the tallest animal alive. It blinked first.",
-    hint: "fifteen pumpkins high" },
+    hint: "fifteen pumpkins high",
+    sound: true, pitch: 2 },
   { family: "height", kind: "height", at: 10, name: "Hoop Height", what: "10 pumpkins high",
     line: "Wembanyama can barely reach the top. Nothing but net.",
-    hint: "ten pumpkins high" },
+    hint: "ten pumpkins high",
+    sound: true, pitch: 1 },
   { family: "height", kind: "height", at: 5, name: "Scarecrow", what: "5 pumpkins high",
     line: "The crows are watching. Nobody is scared yet.",
-    hint: "five pumpkins high" },
+    hint: "five pumpkins high",
+    sound: true, pitch: 0 },
 
   // ACCURACY: where the tap lands.
   { family: "accuracy", kind: "perfect", at: 20, name: "Machine", what: "20 *perfects* in a row",
     tip: "Twenty *perfect* drops in a row. Are you even a person?",
-    hint: "twenty *perfects* in a row" },
+    hint: "twenty *perfects* in a row",
+    sound: false, pitch: 23 },
   { family: "accuracy", kind: "pencil", at: 3, name: "Toothpick", what: "3 in a row on a pencil pumpkin",
     tip: "Three landings in a row on pencil pumpkins, an eighth of the starting width or less. Who are you?",
-    hint: "three in a row on pencil-thin pumpkins" },
+    hint: "three in a row on pencil-thin pumpkins",
+    sound: false, pitch: 20 },
   { family: "accuracy", kind: "tiny", at: 6, name: "Eye of the Needle", what: "6 in a row on a tiny pumpkin",
     tip: "Six landings in a row on a tiny pumpkin, a quarter of the starting width or less. How?",
-    hint: "six in a row on a tiny pumpkin" },
+    hint: "six in a row on a tiny pumpkin",
+    sound: false, pitch: 18 },
   { family: "accuracy", kind: "perfect", at: 10, name: "Laser", what: "10 *perfects* in a row",
     tip: "Ten *perfect* drops in a row. The moon stopped blinking somewhere around seven.",
-    hint: "ten *perfects* in a row" },
+    hint: "ten *perfects* in a row",
+    sound: false, pitch: 15 },
   { family: "accuracy", kind: "small", at: 10, name: "High Wire", what: "10 in a row on a small pumpkin",
     tip: "Ten landings in a row on a small pumpkin. No net.",
-    hint: "ten in a row on a small pumpkin" },
+    hint: "ten in a row on a small pumpkin",
+    sound: false, pitch: 13 },
   { family: "accuracy", kind: "tiny", at: 3, name: "Needle", what: "3 in a row on a tiny pumpkin",
     tip: "Three landings in a row on a tiny pumpkin, a quarter of the starting width or less. Threading it.",
-    hint: "three in a row on a tiny pumpkin" },
+    hint: "three in a row on a tiny pumpkin",
+    sound: false, pitch: 10 },
   { family: "accuracy", kind: "pencil", at: 1, name: "Pencil Pusher", what: "landed on a pencil pumpkin",
     tip: "A landing on a pencil pumpkin. Stacking those is hard.",
-    hint: "land one on a pencil pumpkin" },
+    hint: "land one on a pencil pumpkin",
+    sound: false, pitch: 8 },
   { family: "accuracy", kind: "perfect", at: 5, name: "Sharp Eye", what: "5 *perfects* in a row",
     tip: "Five *perfect* drops in a row. Every edge lined up within a hair.",
-    hint: "five *perfects* in a row" },
+    hint: "five *perfects* in a row",
+    sound: false, pitch: 5 },
   { family: "accuracy", kind: "small", at: 5, name: "Tightrope", what: "5 in a row on a small pumpkin",
     tip: "Five landings in a row on a small pumpkin. Steady.",
-    hint: "five in a row on a small pumpkin" },
+    hint: "five in a row on a small pumpkin",
+    sound: false, pitch: 3 },
   { family: "accuracy", kind: "ghost", at: 1, name: "Ghost Whisperer", what: "a *perfect* on a ghost pumpkin",
     tip: "A *perfect* drop on a ghost pumpkin, the pale one. When does it come? Watch.",
-    hint: "a *perfect* drop on the pale ghost pumpkin" },
+    hint: "a *perfect* drop on the pale ghost pumpkin",
+    sound: false, pitch: 0 },
 
   // GROWTH: WIDERs in a row.
   { family: "growth", kind: "growth", at: 5, name: "Bumper Crop", what: "5 WIDERs in a row",
     tip: "Five WIDERs in a row. Fifteen *perfects*, and the tower is nearly whole again.",
-    hint: "five WIDERs in a row" },
+    hint: "five WIDERs in a row",
+    sound: false, pitch: 23 },
   { family: "growth", kind: "growth", at: 3, name: "Pumpkin Farmer", what: "3 WIDERs in a row",
     tip: "Three WIDERs in a row. That is nine *perfects*.",
-    hint: "three WIDERs in a row" },
+    hint: "three WIDERs in a row",
+    sound: false, pitch: 15 },
   { family: "growth", kind: "growth", at: 2, name: "Green Thumb", what: "2 WIDERs in a row",
     tip: "Two WIDERs in a row. The pumpkin is coming back.",
-    hint: "two WIDERs in a row" },
+    hint: "two WIDERs in a row",
+    sound: false, pitch: 8 },
   { family: "growth", kind: "growth", at: 1, name: "Sprout", what: "grew back WIDER",
     tip: "Three *perfects* in a row grew the pumpkin back a little. It all starts somewhere.",
-    hint: "grow the pumpkin back with three *perfects* in a row" },
+    hint: "grow the pumpkin back with three *perfects* in a row",
+    sound: false, pitch: 0 },
 
   // BOUNCE: tapped on the first pass, before the pumpkin touched a wall.
   // (John, 2026-10-17: 20 or 30 without a bounce is common, so the ladder
   // climbs to 100, and the no-bounce perfects to 20.)
   { family: "bounce", kind: "cleanPerfect", at: 20, name: "Desperado", what: "20 *perfects*, no bounce",
     tip: "Twenty *perfect* drops in a row and not one of them bounced. There is a poster with your face on it.",
-    hint: "twenty *perfects* in a row with no bounce" },
+    hint: "twenty *perfects* in a row with no bounce",
+    sound: false, pitch: 23 },
   { family: "bounce", kind: "clean", at: 100, name: "Supersonic", what: "100 drops, no bounce",
     tip: "A hundred drops in a row without a bounce. The walls have filed a complaint about being ignored.",
-    hint: "a hundred drops in a row with no bounce" },
+    hint: "a hundred drops in a row with no bounce",
+    sound: false, pitch: 21 },
   { family: "bounce", kind: "clean", at: 50, name: "Tornado", what: "50 drops, no bounce",
     tip: "Fifty drops in a row without a bounce. Things are getting picked up and put down very fast.",
-    hint: "fifty drops in a row with no bounce" },
+    hint: "fifty drops in a row with no bounce",
+    sound: false, pitch: 19 },
   { family: "bounce", kind: "cleanPerfect", at: 10, name: "Outlaw", what: "10 *perfects*, no bounce",
     tip: "Ten *perfect* drops in a row, every one tapped before the pumpkin bounced off a wall. Wanted in three counties.",
-    hint: "ten *perfects* in a row with no bounce" },
+    hint: "ten *perfects* in a row with no bounce",
+    sound: false, pitch: 17 },
   { family: "bounce", kind: "clean", at: 30, name: "Wildfire", what: "30 drops, no bounce",
     tip: "Thirty drops in a row without a bounce. Spreading fast, no sign of stopping.",
-    hint: "thirty drops in a row with no bounce" },
+    hint: "thirty drops in a row with no bounce",
+    sound: false, pitch: 15 },
   { family: "bounce", kind: "clean", at: 20, name: "Lightning", what: "20 drops, no bounce",
     tip: "Twenty drops in a row without a bounce. The pumpkins never saw the walls.",
-    hint: "twenty drops in a row with no bounce" },
+    hint: "twenty drops in a row with no bounce",
+    sound: false, pitch: 13 },
   { family: "bounce", kind: "cleanTiny", at: 3, name: "No Look", what: "3 tiny landings, no bounce",
     tip: "Three landings in a row on tiny pumpkins, with no wall bouncing. You were not even looking, were you?",
-    hint: "three in a row on tiny pumpkins with no bounce" },
+    hint: "three in a row on tiny pumpkins with no bounce",
+    sound: false, pitch: 12 },
   { family: "bounce", kind: "cleanPerfect", at: 6, name: "Dead Eye", what: "6 *perfects*, no bounce",
     tip: "Six *perfect* drops in a row with no bounce. First pass, every time.",
-    hint: "six *perfects* in a row with no bounce" },
+    hint: "six *perfects* in a row with no bounce",
+    sound: false, pitch: 10 },
   { family: "bounce", kind: "clean", at: 10, name: "Gunslinger", what: "10 drops, no bounce",
     tip: "Ten drops in a row without a single bounce off a wall. Fastest thumb in the patch.",
-    hint: "ten drops in a row with no bounce" },
+    hint: "ten drops in a row with no bounce",
+    sound: false, pitch: 8 },
   { family: "bounce", kind: "cleanSmallPerfect", at: 3, name: "Trick Shot", what: "3 small *perfects*, no bounce",
     tip: "Three *perfect* drops in a row on small pumpkins, none of them bounced. Hold the applause.",
-    hint: "three *perfects* on small pumpkins with no bounce" },
+    hint: "three *perfects* on small pumpkins with no bounce",
+    sound: false, pitch: 6 },
   { family: "bounce", kind: "cleanTiny", at: 1, name: "Blindfold", what: "a no-bounce landing",
     tip: "A landing on a tiny pumpkin, tapped before it bounced off a wall. Blindfolded, presumably.",
-    hint: "land on a tiny pumpkin with no bounce" },
+    hint: "land on a tiny pumpkin with no bounce",
+    sound: false, pitch: 4 },
   { family: "bounce", kind: "cleanPerfect", at: 3, name: "Sharpshooter", what: "3 *perfects*, no bounce",
     tip: "Three *perfect* drops in a row, each with no bounce. Quick and right.",
-    hint: "three *perfects* in a row with no bounce" },
+    hint: "three *perfects* in a row with no bounce",
+    sound: false, pitch: 2 },
   { family: "bounce", kind: "clean", at: 5, name: "Quick Draw", what: "5 drops, no bounce",
     tip: "Five drops in a row made before the pumpkin ever touched a wall. No dithering.",
-    hint: "five drops in a row before the pumpkin touches a wall" },
+    hint: "five drops in a row before the pumpkin touches a wall",
+    sound: false, pitch: 0 },
 ];
 
 // The end screen's three named slots, left to right.
@@ -267,13 +325,15 @@ const END_SCREEN_MS = 60000;    // the end screen gives way to the welcome scree
 const TONES = ["#f0862a", "#e8741c", "#f59a3c", "#d9631a", "#ee7f22", "#fb9a48"];
 const GHOST_TONE = "#efe6d3";   // every 7th slab is a pale "ghost pumpkin"
 
-// What the game says about a drop, by how much of the slab survived.
-// Perfect drops and misses have their own words (see drop()).
+// What the game says about a drop, by how much of the slab survived,
+// and which sound the landing makes (sound.js: "soft" is the duller
+// tink, "thunk" the poor landing). Perfect drops and misses have their
+// own words and sounds (see drop()).
 const REACTIONS = [
-  { atLeast: 0.9,  word: "nice",      moon: "is-happy" },
-  { atLeast: 0.7,  word: "close one", moon: "is-happy" },
-  { atLeast: 0.45, word: "yikes",     moon: "is-meh" },
-  { atLeast: 0,    word: "oof",       moon: "is-meh" },
+  { atLeast: 0.9,  word: "nice",      moon: "is-happy", sound: "soft" },
+  { atLeast: 0.7,  word: "close one", moon: "is-happy", sound: "soft" },
+  { atLeast: 0.45, word: "yikes",     moon: "is-meh",   sound: "thunk" },
+  { atLeast: 0,    word: "oof",       moon: "is-meh",   sound: "thunk" },
 ];
 
 // The big word that flashes at the miss: a band by count, a random pick
@@ -282,10 +342,11 @@ const REACTIONS = [
 // words. On the end screen the title is the HEIGHT level's name instead
 // (GIRAFFE, HAUNTED HOUSE); under 5 there is no level, so the miss word
 // stays as the title. Short words only: the end screen shows them at 9vw.
+// The base is pumpkin 1, so a miss on the very first drop is a count of 1.
 const END_WORDS = [
   { from: 5, words: ["TIMBER!"] },
-  { from: 1, words: ["SPLAT", "THUD", "OOF", "CRUNCH", "WELL THEN"] },
-  { from: 0, words: ["WHIFF", "NOPE", "AIR BALL", "OOPS", "NOTHING"] },
+  { from: 2, words: ["SPLAT", "THUD", "OOF", "CRUNCH", "WELL THEN"] },
+  { from: 1, words: ["WHIFF", "NOPE", "AIR BALL", "OOPS", "NOTHING"] },
 ];
 
 // The italic line under the count on the end screen. From 5 pumpkins up
@@ -294,9 +355,9 @@ const END_WORDS = [
 // HARD set of 2026-10-16; EASY's kinder set went with the toggle). The
 // last line whose count is not above the player's count is used.
 const COMPARISONS = [
-  [0, "The pumpkin patch remains undefeated."],
-  [1, "One pumpkin. The patch is not impressed."],
-  [2, "Taller than a cauldron. The cauldron is not worried."],
+  [1, "The pumpkin patch remains undefeated."],
+  [2, "Two pumpkins. The patch is not impressed."],
+  [3, "Taller than a cauldron. The cauldron is not worried."],
   [4, "Taller than a tombstone. Yours is being carved."],
 ];
 
@@ -402,9 +463,11 @@ function towerTop() {
   return GROUND_H + state.slabs.length * SLAB_H;
 }
 
-/** How many pumpkins the player has stacked (the base does not count). */
+/** How many pumpkins are in the tower. The base is pumpkin 1 (John,
+    2026-10-17: "in my mind it is already 1"; until then it did not
+    count), so the first drop reads 2 and Scarecrow comes on the fourth. */
 function stackedCount() {
-  return Math.max(0, state.slabs.length - 1);
+  return state.slabs.length;
 }
 
 /** The colour of slab number `index` (0 = the base). */
@@ -453,7 +516,13 @@ function showReaction(word, extraClass) {
     a pile at once, the older waiting ones are dropped and only the most
     recent is shown next (John, 2026-10-17: "a set of four or five showed
     when the pumpkin was just bouncing back and forth"). Everything earned
-    still counts for the end screen. */
+    still counts for the end screen.
+
+    EXCEPT a HEIGHT milestone, which jumps the queue: its banner replaces
+    whatever is showing the instant the pumpkin lands, and its arpeggio
+    plays then (John, 2026-10-17: the rung must be seen and heard on the
+    pumpkin that earned it, not a pumpkin later). The others wait behind
+    it as usual. */
 function checkMilestones(flags) {
   const counts = {
     perfect: state.streak,
@@ -468,26 +537,41 @@ function checkMilestones(flags) {
     cleanSmallPerfect: state.cleanSmallPerfectStreak,
     cleanTiny: state.cleanTinyStreak,
   };
+  const newlyEarned = [];
   MILESTONES.forEach((entry) => {
     if (state.earned.includes(entry)) return;
     if (counts[entry.kind] >= entry.at) {
       state.earned.push(entry);
-      state.toCelebrate.push(entry);
+      newlyEarned.push(entry);
     }
   });
-  if (!state.celebrating) celebrateNext();
+  const rung = newlyEarned.find((entry) => entry.family === "height");
+  if (rung) {
+    // The rung goes first, now; everything else lines up behind it.
+    clearTimeout(milestoneTimer);
+    const others = newlyEarned.filter((entry) => entry !== rung);
+    state.toCelebrate = [rung, ...state.toCelebrate, ...others];
+    celebrateNext();
+  } else {
+    state.toCelebrate.push(...newlyEarned);
+    if (!state.celebrating) celebrateNext();
+  }
   // Keep only the newest of those still waiting; the rest expire unshown.
   if (state.toCelebrate.length > MILESTONES_WAITING) {
     state.toCelebrate = state.toCelebrate.slice(-MILESTONES_WAITING);
   }
 }
 
+let milestoneTimer = null;   // takes the banner down after MILESTONE_MS; a rung cancels it
+
 /** Show the next waiting milestone: the banner pops in, stars burst, the
-    moon goes wide-eyed. SOUND: the celebratory ding belongs here. */
+    moon goes wide-eyed, and (for a rung) the arpeggio plays at the entry's
+    pitch. */
 function celebrateNext() {
   const entry = state.toCelebrate.shift();
   if (!entry) { state.celebrating = false; return; }
   state.celebrating = true;
+  if (entry.sound) playSound("milestone", entry.pitch);
   milestoneName.textContent = entry.name;
   fillMarked(milestoneWhat, entry.what);
   milestone.hidden = false;
@@ -496,7 +580,8 @@ function celebrateNext() {
   milestone.classList.add("is-shown");
   burstStars();
   moonReacts("is-wow");
-  setTimeout(() => {
+  clearTimeout(milestoneTimer);
+  milestoneTimer = setTimeout(() => {
     milestone.hidden = true;
     celebrateNext();
   }, MILESTONE_MS);
@@ -754,8 +839,16 @@ function moveMover(dt) {
   // A bounce is only a bounce when the slab was heading INTO that wall: a
   // new slab starts beyond the limit and is pulled to it on its first
   // frame, and that must not count (it broke the no-bounce streak once).
-  if (mover.x < leftLimit) { mover.x = leftLimit; if (mover.direction < 0) mover.bounced = true; mover.direction = 1; }
-  if (mover.x > rightLimit) { mover.x = rightLimit; if (mover.direction > 0) mover.bounced = true; mover.direction = -1; }
+  if (mover.x < leftLimit) {
+    mover.x = leftLimit;
+    if (mover.direction < 0) { mover.bounced = true; playSound("tick"); }
+    mover.direction = 1;
+  }
+  if (mover.x > rightLimit) {
+    mover.x = rightLimit;
+    if (mover.direction > 0) { mover.bounced = true; playSound("tick"); }
+    mover.direction = -1;
+  }
   mover.element.style.left = mover.x + "vw";
 }
 
@@ -827,6 +920,7 @@ function drop() {
       state.growthStreak += 1;   // a plain perfect leaves it; a clip resets it
     }
     settle(mover.element, x, width, landing);
+    playSound(word === "WIDER!" ? "wider" : "perfect");   // the landing's sound
     showReaction(word, "is-perfect");
     moonReacts("is-wow");
     checkMilestones({ ghost: isGhost });
@@ -842,6 +936,7 @@ function drop() {
   if (overlap < MIN_OVERLAP) {
     const fellLeft = mover.x < top.x;
     addFallingPiece(mover.element, mover.x, landing + HOVER, mover.width, fellLeft ? -25 : 25);
+    playSound("miss");
     gameOver();
     return;
   }
@@ -867,6 +962,7 @@ function drop() {
 
   const kept = overlap / mover.width;
   const feeling = REACTIONS.find((entry) => kept >= entry.atLeast);
+  playSound(feeling.sound);                                // the landing's sound
   showReaction(feeling.word);
   moonReacts(feeling.moon);
   checkMilestones({});
@@ -929,6 +1025,7 @@ function reset() {
   state.earned = [];
   state.toCelebrate = [];
   state.celebrating = false;
+  clearTimeout(milestoneTimer);
   milestone.hidden = true;
   stage.querySelectorAll(".spark").forEach((spark) => spark.remove());
   moveCamera(1);
@@ -949,6 +1046,7 @@ function start() {
   state.phase = "playing";
   startScreen.hidden = true;
   endScreen.hidden = true;
+  playSound("start");             // the "go" ding, and the phone's audio wake-up (see sound.js)
   spawnMover();
 }
 

@@ -11,7 +11,7 @@
 
    Section map:
      1. Settings and the games list
-     2. Bottom panel: open, close, toggle (Home is the one control)
+     2. Bottom panel: open, close (Home and Settings in the top panel)
      3. Bottom panel tabs: GAMES / THIS GAME (and filling THIS GAME)
      4. High scores and switches (the two columns in the THIS GAME tab)
      5. Switching games
@@ -20,7 +20,7 @@
 
 // Bump this (and the ?v= tags in index.html) whenever code changes, so
 // phones fetch fresh copies instead of old cached ones.
-const APP_VERSION = "2026-1017-stack-heights";
+const APP_VERSION = "2026-1017-stack-sound";
 
 /* ------------------------------------------------------------------------
    1. Settings and the games list
@@ -67,14 +67,17 @@ let games = [];        // the entries with a button, sorted by slot
 let currentGame = null;   // the entry of the game now in the game panel
 
 /* ------------------------------------------------------------------------
-   2. Bottom panel: open, close, toggle
+   2. Bottom panel: open, close
 
    The panel has no handle of its own: closed, it is out of sight. The
-   Home button in the top panel is the one control (John, 2026-10-16):
-   it opens the panel on the THIS GAME tab and closes it again. While
-   the panel is open an invisible sheet (#gameCover) lies over the game,
-   so a tap on the game closes the panel too, and the game never sees
-   that tap. Picking a game from the GAMES tab closes the panel as well
+   top panel's two buttons work it (John, 2026-10-17; from 2026-10-16 to
+   then Home was the one control and opened THIS GAME): Home opens the
+   panel on the GAMES tab, Settings (the three lines) on THIS GAME. A
+   tap on the button whose tab is already showing closes the panel; a
+   tap on the other button just switches the tab. While the panel is
+   open an invisible sheet (#gameCover) lies over the game, so a tap on
+   the game closes the panel too, and the game never sees that tap.
+   Picking a game from the GAMES tab closes the panel as well
    (startGame, section 5).
    --------------------------------------------------------------------- */
 
@@ -82,12 +85,14 @@ const drawer = document.getElementById("drawer");
 const drawerContent = document.getElementById("drawerContent");
 const gameCover = document.getElementById("gameCover");
 const homeButton = document.getElementById("homeButton");
+const settingsButton = document.getElementById("settingsButton");
 
 function openDrawer() {
   drawer.classList.add("is-open");
   drawerContent.inert = false;
   gameCover.hidden = false;
   homeButton.setAttribute("aria-expanded", "true");
+  settingsButton.setAttribute("aria-expanded", "true");
 }
 
 function closeDrawer() {
@@ -96,27 +101,34 @@ function closeDrawer() {
   drawerContent.inert = true;
   gameCover.hidden = true;
   homeButton.setAttribute("aria-expanded", "false");
+  settingsButton.setAttribute("aria-expanded", "false");
 }
 
-/** Home: open the panel about the current game, or close it if it is open. */
-function toggleDrawer() {
-  if (drawer.classList.contains("is-open")) {
+/** What Home ("app") and Settings ("game") do: show the panel on that
+    tab, or close it when that tab is the one already showing. */
+function pressTopButton(tabName) {
+  const isOpen = drawer.classList.contains("is-open");
+  if (isOpen && currentTab === tabName) {
     closeDrawer();
   } else {
-    showTab("game");
-    openDrawer();
+    showTab(tabName);
+    if (!isOpen) openDrawer();
   }
 }
 
-homeButton.addEventListener("click", toggleDrawer);
+homeButton.addEventListener("click", () => pressTopButton("app"));
+settingsButton.addEventListener("click", () => pressTopButton("game"));
 gameCover.addEventListener("click", closeDrawer);
 
 /* ------------------------------------------------------------------------
    3. Bottom panel tabs: GAMES / THIS GAME
    --------------------------------------------------------------------- */
 
+let currentTab = "app";   // "app" (GAMES) or "game" (THIS GAME): the tab showing
+
 function showTab(tabName) {
   showClearQuestion(false);   // as in closeDrawer()
+  currentTab = tabName;
   document.querySelectorAll("[data-tab]").forEach((button) => {
     button.classList.toggle("is-active", button.dataset.tab === tabName);
   });
@@ -594,31 +606,13 @@ function markCurrentButton(game) {
   });
 }
 
-/** Run fn once the panel has finished sliding, or at once when it does not
-    slide (reduced motion). A fallback timer covers a browser that never
-    sends transitionend; the slide itself takes 300 ms (styles.css). */
-function afterDrawerSettles(fn) {
-  let done = false;
-  const finish = (event) => {
-    // Only the panel's own slide counts, not a child's or its shadow's.
-    if (event && (event.target !== drawer || event.propertyName !== "transform")) return;
-    if (done) return;
-    done = true;
-    drawer.removeEventListener("transitionend", finish);
-    fn();
-  };
-  drawer.addEventListener("transitionend", finish);
-  setTimeout(finish, 600);
-}
-
 /** Start one of the real games and get the bottom panel out of the way.
-    The tab switch waits until the panel is out of sight: switching first
-    flashed the THIS GAME tab while the panel slid down, which showed once
-    that tab had a light look of its own (2026-10-15). */
+    The panel stays on the GAMES tab: Home and Settings each choose the
+    tab when they open it (until 2026-10-17 the tab switched to THIS GAME
+    here, after the panel had slid out of sight). */
 function startGame(game) {
   loadGame(game);
   closeDrawer();
-  afterDrawerSettles(() => showTab("game"));   // next time the drawer opens, it is about this game
 }
 
 /** The icon's URL: the games.json path is relative to the game's folder. */
