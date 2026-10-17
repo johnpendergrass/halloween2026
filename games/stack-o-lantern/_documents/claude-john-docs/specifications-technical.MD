@@ -202,7 +202,7 @@ reasons are in `specifications.MD` beside this. Files: `index.html`,
 
 ## 6. The 2026-10-17 build (families, one level, the whole screen)
 
-- **MILESTONES** (37 entries): `{ family, kind, at, name, what, tip |
+- **MILESTONES** (37 entries on 2026-10-17 12:21; 51 from 13:30, when the height ladder grew to 24 rungs, see milestones.md): `{ family, kind, at, name, what, tip |
   line, hint }`. `family` is "height" | "accuracy" | "growth" | "bounce";
   the order within a family is the rank (rarest first), and
   `bestEarned(family)` is `MILESTONES.find(entry => entry.family ===
@@ -215,7 +215,8 @@ reasons are in `specifications.MD` beside this. Files: `index.html`,
   `drop()` the perfect branch adds to all three when `clean` (and
   `small` / `tiny`); the clip branch zeroes the two perfect ones and
   keeps `cleanTinyStreak` going when `clean && tiny`. `comeback` is
-  gone. The words are transcribed from `_documents/milestone list.md`.
+  gone. The words were transcribed from John's `milestone list.md`; since
+  12:40 the table is the source and `_documents/milestones.md` its reading copy.
 - **Italics**: `fillMarked(element, text)` / `appendMarked` split the
   text on `*` and wrap the odd pieces in `<i>`; used for the banner's
   `what`, the tip bubble, the goal line's hint and the comparison line.
@@ -307,3 +308,25 @@ reasons are in `specifications.MD` beside this. Files: `index.html`,
   `checks/obsolete/` holds check-bestglow, check-milestones,
   check-modehint, check-modenote (toggle or `#count`). `check-moonspot`
   and `check-endgrid` are stale (the old numbers) and were not run.
+
+## 7. The height ladder (2026-10-17 13:30)
+
+- **24 HEIGHT entries** at the top of `MILESTONES`, rarest first: 200
+  Moon Landing, 175 Hubble, 150 Space Station, 125 Stratosphere, 100
+  Everest, 95 Kilimanjaro, 90 Fuji, 85 Vesuvius, 80 Burj Khalifa, 75
+  Shanghai Tower, 70 Empire State, 65 Eiffel Tower, 60 Chrysler, 55
+  Space Needle, 50 Big Ben, 45 Liberty, 40 Sequoia, 35 Notre Dame, 30
+  Tower of Pisa, 25 Treetops, 20 Haunted House, 15 Giraffe, 10 Hoop
+  Height, 5 Scarecrow. `what` is always "N pumpkins high"; `hint` the
+  count in words. Nothing else in the script changed: `bestEarned`,
+  `gameOver` and the hints already walk the table.
+- **The one-line rule**: the end title is 9vw capitals in `.end-word-box`
+  (`max-width: 94vw`, inline-block). Measured with Playwright at 390px:
+  one line is 48px tall, SHANGHAI TOWER 90.8vw; anything wider wraps to
+  84px and would sit on the count. Measure a new name before adding it
+  (set `#endWord`'s text and read its bounding box).
+- **`_documents/milestones.md`** is the reading copy: counters, the four
+  families as tables, the under-5 words and lines. The ladder was
+  generated into the script and the file by one scratch script with a
+  ROWS list; regenerate both rather than editing one.
+- **Stamp**: `2026-1017-stack-heights`, 26 places.

@@ -211,9 +211,18 @@ John's list of 2026-10-16 20:40, in his order, comes first:
 
 Items 1 and 2 of John's list of 2026-10-16 (fewer, larger milestones on
 the end screen; the moon faces) turned into a day's rework. Sound is
-still next. The words of every milestone live in
-`_documents/milestone list.md`, John's working copy; the script's table
-is a transcription of it.
+still next. The height ladder grew from 10 to 24 rungs at 13:30 (every five pumpkins
+to 100 with Pisa, Sequoia, Liberty, Big Ben, Space Needle, Chrysler and
+Eiffel among the buildings, then the mountains Vesuvius, Fuji,
+Kilimanjaro and Everest at 85 to 100; Stratosphere, Space Station and
+Hubble at 125 / 150 / 175; the Moon at 200 (Canton Tower, Taipei 101
+and Petronas were in for an hour and cut as "eliminate these");
+John's rules: taller things later, a shortened title carries its full
+name in its line, most lines mention the pumpkin tower, and a title
+must fit the 9vw frame on one line, SHANGHAI TOWER being the widest).
+The words of every milestone live in
+the script's `MILESTONES` table; `_documents/milestones.md` lists them as
+tables (John's three working papers of the morning were deleted at 12:40).
 
 ### 5.1 Four families, and a fixed rank
 

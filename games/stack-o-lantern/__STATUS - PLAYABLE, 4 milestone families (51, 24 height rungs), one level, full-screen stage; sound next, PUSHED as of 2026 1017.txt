@@ -1,9 +1,12 @@
 Stack o' Lantern (folder stack-o-lantern, slot 2) - status
 
+2026 1017 1332  PUSHED by Claude at John's request. Height ladder grown to 24 rungs (51 milestones; every five to 100, Everest
+              at 100, Stratosphere / Space Station / Hubble above, the Moon at 200) in the script and _documents/milestones.md (the reading
+              copy that replaced John's three working papers). Stamp 2026-1017-stack-heights.
 2026 1017 1221  PUSHED by Claude at John's request. A full day of rework with John play-testing:
               37 milestones in four families (HEIGHT = the framed end title + the line under the count;
               ACCURACY / GROWTH / BOUNCE = three best names on a staircase under "You earned...");
-              the words in _documents/milestone list.md (John's copy; the script transcribes it);
+              the words in the script's MILESTONES table, listed in _documents/milestones.md;
               ONE level (HARD rules and look); the info bar GONE, "High score" in the top right corner
               with a NEW HIGH SCORE! balloon; the moon higher (34.75vw) and everything laid out
               against it; the end screen returns to the welcome screen after a minute with no tap;
@@ -20,5 +23,5 @@ NOT YET
  - check-moonspot.cjs and check-endgrid.cjs still describe the old layout (rewrite or retire)
  - John's phone check once Pages serves the new stamp
 
-DETAIL  _documents/claude-john-docs/Claude-ToBe-Continued-2026-1017-1221.MD, specifications.MD (5),
-        specifications-technical.MD (6); README - STACK-O-LANTERN.md for the player's view
+DETAIL  _documents/claude-john-docs/Claude-ToBe-Continued-2026-1017-1332.MD (and 1221), specifications.MD (5),
+        specifications-technical.MD (6, 7); _documents/milestones.md for every milestone; README - STACK-O-LANTERN.md for the player's view

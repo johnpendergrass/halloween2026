@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Go Fish Candy Edition</title>
-  <link rel="stylesheet" href="./candy-go-fish.css?v=2026-1017-stack-families">
+  <link rel="stylesheet" href="./candy-go-fish.css?v=2026-1017-stack-heights">
 </head>
 <body>
   <main id="table">
@@ -35,23 +35,23 @@
        tallest one, Rules) and closes back to it with Cancel or Done. -->
   <div id="musicOverlay" class="overlay music-options" hidden><section class="dialog" aria-modal="true" role="dialog" aria-labelledby="musicTitle"><h1 id="musicTitle">SOUNDS</h1><div class="music-body"><div class="toggle-row"><span class="toggle-item"><span class="toggle-label">UI</span><button id="uiEnabled" class="audio-toggle" aria-pressed="true" aria-label="UI sounds"><img src="./assets/buttons/speaker-grill.png" alt="" draggable="false"></button></span></div><hr class="music-rule"><div class="toggle-row"><span class="toggle-item"><span class="toggle-label">MUSIC</span><button id="musicEnabled" class="audio-toggle" aria-pressed="true" aria-label="Music"><img src="./assets/buttons/speaker-grill.png" alt="" draggable="false"></button></span></div><div class="music-field"><div class="track-picker" role="group" aria-label="Soundtrack"><button id="trackPrevious" class="opponent-arrow previous" aria-label="Previous soundtrack"><svg viewBox="0 0 60 90" aria-hidden="true"><path d="M48 3 Q34 18 35 31 Q20 38 5 45 Q20 52 35 59 Q34 72 48 87 Q42 65 45 45 Q42 25 48 3Z"/></svg></button><strong id="trackName">Wonderful</strong><button id="trackNext" class="opponent-arrow next" aria-label="Next soundtrack"><svg viewBox="0 0 60 90" aria-hidden="true"><path d="M12 3 Q26 18 25 31 Q40 38 55 45 Q40 52 25 59 Q26 72 12 87 Q18 65 15 45 Q18 25 12 3Z"/></svg></button></div></div><div class="music-field"><div id="modeChoice" class="two-way mode-switch" role="group" aria-label="When music plays"><span class="two-way-thumb" aria-hidden="true"></span><button id="modeContinuous" aria-pressed="false"><span class="mode-when">play</span><span class="mode-word">Always</span></button><button id="modePaused" aria-pressed="true"><span class="mode-when">only when</span><span class="mode-word">Paused</span></button></div></div><div class="music-field volume-field"><input id="musicVolume" type="range" min="0" max="100" step="20" value="80" aria-label="Music volume"><div class="volume-ticks" aria-hidden="true"><span>0</span><span>20</span><span>40</span><span>60</span><span>80</span><span>100</span></div></div></div><div class="music-actions"><button id="musicCancel" class="secondary">CANCEL</button><button id="musicDone" class="primary">OK</button></div></section></div>
   <script src="../game-helper.js"></script>
-  <script src="./assets/json/config-data.js?v=2026-1017-stack-families"></script>
-  <script src="./js/game-engine.js?v=2026-1017-stack-families"></script>
-  <script src="./js/computer-player.js?v=2026-1017-stack-families"></script>
-  <script src="./js/shared/knowledge.js?v=2026-1017-stack-families"></script>
-  <script src="./js/shared/temporal-memory.js?v=2026-1017-stack-families"></script>
-  <script src="./js/shared/temporal-beliefs.js?v=2026-1017-stack-families"></script>
-  <script src="./js/strategies/beginner.js?v=2026-1017-stack-families"></script>
-  <script src="./js/strategies/medium.js?v=2026-1017-stack-families"></script>
-  <script src="./js/strategies/temporal.js?v=2026-1017-stack-families"></script>
-  <script src="./js/strategies/calibrated-medium.js?v=2026-1017-stack-families"></script>
-  <script src="./js/strategies/calibrated-expert.js?v=2026-1017-stack-families"></script>
-  <script src="./js/strategies.js?v=2026-1017-stack-families"></script>
-  <script src="./js/candy-rain.js?v=2026-1017-stack-families"></script>
-  <script src="./js/candy-piles.js?v=2026-1017-stack-families"></script>
-  <script src="./assets/sounds/victory-sounds.js?v=2026-1017-stack-families"></script>
-  <script src="./js/preload.js?v=2026-1017-stack-families"></script>
-  <script src="./js/sound.js?v=2026-1017-stack-families"></script>
-  <script src="./js/candy-go-fish.js?v=2026-1017-stack-families"></script>
+  <script src="./assets/json/config-data.js?v=2026-1017-stack-heights"></script>
+  <script src="./js/game-engine.js?v=2026-1017-stack-heights"></script>
+  <script src="./js/computer-player.js?v=2026-1017-stack-heights"></script>
+  <script src="./js/shared/knowledge.js?v=2026-1017-stack-heights"></script>
+  <script src="./js/shared/temporal-memory.js?v=2026-1017-stack-heights"></script>
+  <script src="./js/shared/temporal-beliefs.js?v=2026-1017-stack-heights"></script>
+  <script src="./js/strategies/beginner.js?v=2026-1017-stack-heights"></script>
+  <script src="./js/strategies/medium.js?v=2026-1017-stack-heights"></script>
+  <script src="./js/strategies/temporal.js?v=2026-1017-stack-heights"></script>
+  <script src="./js/strategies/calibrated-medium.js?v=2026-1017-stack-heights"></script>
+  <script src="./js/strategies/calibrated-expert.js?v=2026-1017-stack-heights"></script>
+  <script src="./js/strategies.js?v=2026-1017-stack-heights"></script>
+  <script src="./js/candy-rain.js?v=2026-1017-stack-heights"></script>
+  <script src="./js/candy-piles.js?v=2026-1017-stack-heights"></script>
+  <script src="./assets/sounds/victory-sounds.js?v=2026-1017-stack-heights"></script>
+  <script src="./js/preload.js?v=2026-1017-stack-heights"></script>
+  <script src="./js/sound.js?v=2026-1017-stack-heights"></script>
+  <script src="./js/candy-go-fish.js?v=2026-1017-stack-heights"></script>
 </body>
 </html>

@@ -35,8 +35,9 @@ const MAX_SPEED = 110;
 const SPEED_GROWTH = 1.035;     // speed is multiplied by this for every slab placed
 
 // Milestones: little achievements inside one round (John, 2026-10-16;
-// reworked into four families on 2026-10-17 from his list in
-// _documents/milestone list.md, which is the place to edit the words).
+// reworked into four families on 2026-10-17 from his list). THIS TABLE
+// IS THE PLACE TO EDIT THE WORDS; _documents/milestones.md is a reading
+// copy of it, so change both.
 //
 // `family` is how the end screen groups them. "height" is the level the
 // round reached: its name is the end screen's big title and its `line`
@@ -69,27 +70,75 @@ const SPEED_GROWTH = 1.035;     // speed is multiplied by this for every slab pl
 // line. In all of those a word between asterisks (*perfect*) is shown in
 // italics (John, 2026-10-17; see fillMarked).
 const MILESTONES = [
-  // HEIGHT: one per band; the line puns on the title without repeating it.
+  // HEIGHT: one per band, every five pumpkins to 100 (buildings in real
+  // height order, then the mountains, Everest at 100), the sky at 125 /
+  // 150 / 175 and the Moon at 200 (John, 2026-10-17). The line puns on
+  // the title without repeating it, EXCEPT that a title shortened to fit
+  // the 9vw one-line frame (Liberty, Chrysler, Everest, Hubble...)
+  // carries its full name in the line; and most lines mention the
+  // pumpkin tower. Widest title that fits: SHANGHAI TOWER.
   { family: "height", kind: "height", at: 200, name: "Moon Landing", what: "200 pumpkins high",
     line: "Houston, we have a tower. Please come down now.",
     hint: "two hundred pumpkins high" },
-  { family: "height", kind: "height", at: 100, name: "Burj Khalifa", what: "100 pumpkins high",
-    line: "Dubai called. They want their skyline back.",
+  { family: "height", kind: "height", at: 175, name: "Hubble", what: "175 pumpkins high",
+    line: "The Hubble Space Telescope turned around to get a better look at a stack of pumpkins.",
+    hint: "a hundred and seventy-five pumpkins high" },
+  { family: "height", kind: "height", at: 150, name: "Space Station", what: "150 pumpkins high",
+    line: "The International Space Station just drifted past. The astronauts waved at the pumpkins.",
+    hint: "a hundred and fifty pumpkins high" },
+  { family: "height", kind: "height", at: 125, name: "Stratosphere", what: "125 pumpkins high",
+    line: "Airliners cruise far below your pumpkins now. The captain has turned on the seatbelt sign.",
+    hint: "a hundred and twenty-five pumpkins high" },
+  { family: "height", kind: "height", at: 100, name: "Everest", what: "100 pumpkins high",
+    line: "Mount Everest, top of the world. The Sherpas would like a word about carrying pumpkins.",
     hint: "a hundred pumpkins high" },
+  { family: "height", kind: "height", at: 95, name: "Kilimanjaro", what: "95 pumpkins high",
+    line: "Mount Kilimanjaro, the roof of Africa. Hemingway would have written a short, sad book about your pumpkins.",
+    hint: "ninety-five pumpkins high" },
+  { family: "height", kind: "height", at: 90, name: "Fuji", what: "90 pumpkins high",
+    line: "Mount Fuji has a snowy cap and a thousand paintings. Your peak is orange and wobbling.",
+    hint: "ninety pumpkins high" },
+  { family: "height", kind: "height", at: 85, name: "Vesuvius", what: "85 pumpkins high",
+    line: "Mount Vesuvius buried Pompeii. Your pumpkin tower buried the skyline.",
+    hint: "eighty-five pumpkins high" },
+  { family: "height", kind: "height", at: 80, name: "Burj Khalifa", what: "80 pumpkins high",
+    line: "Dubai called. They want their skyline back.",
+    hint: "eighty pumpkins high" },
   { family: "height", kind: "height", at: 75, name: "Shanghai Tower", what: "75 pumpkins high",
     line: "Tourists on the top floor are staring at a pumpkin.",
     hint: "seventy-five pumpkins high" },
-  { family: "height", kind: "height", at: 50, name: "Empire State", what: "50 pumpkins high",
-    line: "King Kong wants to climb it. Tell him to get in line.",
+  { family: "height", kind: "height", at: 70, name: "Empire State", what: "70 pumpkins high",
+    line: "King Kong wants to climb your pumpkins. Tell him the Empire State Building is around the corner.",
+    hint: "seventy pumpkins high" },
+  { family: "height", kind: "height", at: 65, name: "Eiffel Tower", what: "65 pumpkins high",
+    line: "Paris looked at your pumpkins and shrugged. For Paris, that is a standing ovation.",
+    hint: "sixty-five pumpkins high" },
+  { family: "height", kind: "height", at: 60, name: "Chrysler", what: "60 pumpkins high",
+    line: "The Chrysler Building: steel eagles, a chrome crown, and still shorter than a pile of gourds.",
+    hint: "sixty pumpkins high" },
+  { family: "height", kind: "height", at: 55, name: "Space Needle", what: "55 pumpkins high",
+    line: "Seattle's saucer on a stick, out-stacked by squash. Rain expected anyway.",
+    hint: "fifty-five pumpkins high" },
+  { family: "height", kind: "height", at: 50, name: "Big Ben", what: "50 pumpkins high",
+    line: "The clock stopped to count your pumpkins. London will be late for everything.",
     hint: "fifty pumpkins high" },
+  { family: "height", kind: "height", at: 45, name: "Liberty", what: "45 pumpkins high",
+    line: "The Statue of Liberty, torch up, eyes on your tower. She has seen a lot. Never a pumpkin stack.",
+    hint: "forty-five pumpkins high" },
+  { family: "height", kind: "height", at: 40, name: "Sequoia", what: "40 pumpkins high",
+    line: "Three thousand years to grow one of these. Your pumpkin pile took a coffee break.",
+    hint: "forty pumpkins high" },
   { family: "height", kind: "height", at: 35, name: "Notre Dame", what: "35 pumpkins high",
     line: "The gargoyles are worried. The hunchback is impressed.",
     hint: "thirty-five pumpkins high" },
-  { family: "height", kind: "height", at: 25, name: "Haunted House", what: "25 pumpkins high",
-    line: "Two storeys up. The ghosts have to look up at you for once.",
-    hint: "twenty-five pumpkins high" },
-  { family: "height", kind: "height", at: 20, name: "Treetops", what: "20 pumpkins high",
+  { family: "height", kind: "height", at: 30, name: "Tower of Pisa", what: "30 pumpkins high",
+    line: "The Leaning Tower of Pisa has tourists pretending to hold it up. Your pumpkins could use a few.",
+    hint: "thirty pumpkins high" },
+  { family: "height", kind: "height", at: 25, name: "Treetops", what: "25 pumpkins high",
     line: "The owls have a question. Who? You, apparently.",
+    hint: "twenty-five pumpkins high" },
+  { family: "height", kind: "height", at: 20, name: "Haunted House", what: "20 pumpkins high",
+    line: "Two storeys up. The ghosts have to look up at you for once.",
     hint: "twenty pumpkins high" },
   { family: "height", kind: "height", at: 15, name: "Giraffe", what: "15 pumpkins high",
     line: "Eye to eye with the tallest animal alive. It blinked first.",

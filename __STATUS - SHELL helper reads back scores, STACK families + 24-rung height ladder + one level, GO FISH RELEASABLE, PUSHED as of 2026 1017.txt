@@ -1,5 +1,9 @@
 Halloween 2026 - project status (the glance; the SHELL's details in claude-john-docs/, each game's in its own folder)
 
+2026 1017 1332  PUSHED by Claude at John's request. SHELL: stamp only, 2026-1017-stack-heights (26 places).
+              STACK: the height ladder grown to 24 rungs (every five to Everest at 100; Stratosphere,
+              Space Station, Hubble; the Moon at 200), 51 milestones; _documents/milestones.md replaces
+              the three working papers. Root handoff 2026-1016-1715 removed (three most recent + baseline).
 2026 1017 1221  PUSHED by Claude at John's request. SHELL: the helper's second call Halloween.bestScore()
               (a game reads the app's top saved score); Clear scores reloads the game panel; the Home icon
               larger; a per-game look for Stack; games.json: "Stack o' Lantern", six-line description.
@@ -16,7 +20,7 @@ Halloween 2026 - project status (the glance; the SHELL's details in claude-john-
 2026 1007-14   John + Codex built Go Fish, slot 8.   2026 0927-1001 Claude built the shell.
 
 NOT YET
- - John's iPhone look from the home-screen icon once Pages serves 2026-1017-stack-families
+ - John's iPhone look from the home-screen icon once Pages serves 2026-1017-stack-heights
  - Stack: sound; more moon faces; two stale checks (moonspot, endgrid)
  - shell: switches that do something (or drop the column); icons for the other games; placeholder slots;
    requirements gaps; contribution workflow; a third helper read if a game wants the whole list

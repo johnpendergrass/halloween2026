@@ -3,10 +3,11 @@
 Read: this, then `specifications.MD` (section 5 is today) and
 `specifications-technical.MD` (section 6 is today) beside it, then
 `../../README - STACK-O-LANTERN.md`. The 2026-10-16 17:15 file beside
-this one is the folder's baseline and stays. The milestone words live in
-`../milestone list.md` (the file to edit); `../milestones-asof-10-17-2026.md`
-and `../milestones-proposal-10-17-2026.md` are the morning's working
-papers.
+this one is the folder's baseline and stays. The milestones are listed in
+`../milestones.md` (a reading copy of the script's table, written at
+12:40 when the morning's three working papers, `milestone list.md`,
+`milestones-asof-10-17-2026.md` and `milestones-proposal-10-17-2026.md`,
+were deleted at John's request).
 
 ## State in one paragraph
 
@@ -34,7 +35,7 @@ name as the note. Cache stamp `2026-1017-stack-families` (26 places).
 1. Morning: `milestones-asof-10-17-2026.md` (the nineteen as they were),
    the rarity-list idea discussed and dropped for fixed ranks, the
    four-family proposal, John's edits, `milestone list.md` as the
-   source of truth (NAME / CRITERIA / BANNER / LINE or TIP / HINT per
+   source of truth for the day (NAME / CRITERIA / BANNER / LINE or TIP / HINT per
    block; order within a family = rank; *perfect* in italics).
 2. Built: 33 then 37 milestones with `family`; three new no-bounce
    counters; `bestEarned(family)`; the HEIGHT level as title and line;

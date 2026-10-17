@@ -25,7 +25,7 @@ index.html                 the stage (the high score corner, stars, moon, ground
 stack-o-lantern.css        page setup and text classes (copied from the requirements), then the game's own styles
 stack-o-lantern.js         the game: settings, the milestone table, state, slabs, taps, camera, end screen
 assets/stack.svg           the icon for the app's picker (256 x 256, square viewBox)
-_documents/milestone list.md        every milestone's words, John's working copy (the script transcribes it)
+_documents/milestones.md            every milestone, its height or count and its words, as tables (a reading copy of the script's table)
 _documents/claude-john-docs/        the design and technical records
 _documents/checks/                  Playwright checks (see the technical spec, section 6)
 README - STACK-O-LANTERN.md  this file
@@ -120,8 +120,8 @@ README - STACK-O-LANTERN.md  this file
 - No images: slabs are CSS (colour variable, repeating-gradient ribs,
   inset shadows, a `::before` stem), stars are two repeating radial
   gradients, the moon is a circle.
-- The milestone table in the script is a transcription of
-  `_documents/milestone list.md`; the order within a family is the rank.
+- The milestone table in the script is the source; `_documents/milestones.md`
+  lists the same 37 as tables. The order within a family is the rank.
 
 ## Where this game breaks the requirements, and why
 
