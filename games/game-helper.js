@@ -19,7 +19,7 @@
    of notes is optional too: up to two short strings (about 16 characters
    each) shown after the date, for things like the opponent or the game
    variant. A score of 0 or less is not recorded. The app adds the date
-   itself and shows the five in the This Game tab, e.g.
+   itself and shows the five in the THIS GAME tab, e.g.
        1.  3-2 (10-15-2026)  vs. Ron  3 set game
 
    That is all a game has to do. It must not use window.parent itself;
@@ -39,7 +39,7 @@
    browser console, so the game still runs and can be tested alone.
 
    THAT IS ALL THERE IS. reportScore is the helper's only call. A game
-   cannot read its own switches in the This Game tab, and the app has no
+   cannot read its own switches in the THIS GAME tab, and the app has no
    sound switch of its own (since 2026-10-15): sound is the game's job.
 
    NOT HERE, ON PURPOSE: pausing. The player can open the app's bottom

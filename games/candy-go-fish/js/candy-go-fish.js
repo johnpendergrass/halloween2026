@@ -3,7 +3,7 @@
   // The generated companion keeps direct file:// opening functional.
   let config = window.CandyConfig;
   if (location.protocol !== 'file:') {
-    try { const response = await fetch('./assets/json/game-config.json?v=2026-1016-releasable'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
+    try { const response = await fetch('./assets/json/game-config.json?v=2026-1016-stack-milestones'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
     catch (error) { console.warn('Using bundled candy configuration.', error); }
   }
   const piles = CandyPiles();
@@ -469,8 +469,9 @@
   }
   function finishGame() {
     phase = 'finished'; selected = null; render();
-    // The shell lists the result with the opponent and the set size (John, 2026-10-15).
-    if (!reported) { Halloween.reportScore(state.sets.human.length, state.sets.human.length + '–' + state.sets.wendy.length, ['vs. ' + opponentName, state.copies + ' set game']); reported = true; }
+    // The shell lists the result as "<player> vs <opponent>" (John, 2026-10-16; until then
+    // "vs. <opponent>" plus the set size, which he dropped as not worth a note).
+    if (!reported) { Halloween.reportScore(state.sets.human.length, state.sets.human.length + '–' + state.sets.wendy.length, [humanName + ' vs ' + opponentName]); reported = true; }
     // The player's win is announced with " (you)", as on the table (John, 2026-10-15).
     const title = state.winner === 'human' ? humanName + ' (you) wins!' : state.winner === 'wendy' ? opponentName + ' wins!' : 'A sweet tie!';
     const remaining = state.pile.length + (state.pile.length === 1 ? ' candy' : ' candies');
@@ -921,7 +922,7 @@
   startGame();
   showDialog('GO FISH!', el('dialogBody').innerHTML, "Let's play", demoEnding ? playDemoEnding : startGame);
   const welcomeSubtitle = document.createElement('span');
-  welcomeSubtitle.className = 'welcome-subtitle'; welcomeSubtitle.textContent = 'Candy Edition!';
+  welcomeSubtitle.className = 'welcome-subtitle'; welcomeSubtitle.textContent = 'Candy Edition';
   el('dialogTitle').append(welcomeSubtitle);
   el('overlay').classList.add('welcoming');
   el('dialogAction').disabled = true;

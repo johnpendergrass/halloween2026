@@ -1,6 +1,6 @@
 # Candy Go Fish — Specifications (design decisions)
 
-Last updated: 2026-10-16 14:15 (RELEASABLE; this file was section 6k of the root `claude-john-docs/specifications.MD` until 2026-10-16, when John had the game's docs consolidated here. Its sub-headings keep their 6k numbering. For the shell's design see the root file; for how this game was built see `../codex-john-docs/`, whose CURRENT-STATE and NEXT-TODOS remain the long-form state record. Read `_START-HERE.md` one level up for the reading order.)
+Last updated: 2026-10-16 15:34 (name in the shell, score note, welcome subtitle; the shell around the game has one control point and a 9:15 panel, see the root claude-john-docs). Before: 14:15 RELEASABLE, consolidated here from section 6k of the root spec; sub-headings keep their 6k numbering.
 
 ## 6k. Candy Go Fish (slot 8; John + Codex, 2026-10-07 to 10-14; Claude from 10-14)
 
@@ -179,8 +179,10 @@ the Sound popup's second sketch:
   in its gap; they follow the switch.
 - **The shell.** John: "delete the SOUND option in the halloween2026 shell,
   as it is now in the game." Done; a game with no switches gets the full
-  width for its scores. The score list shows `<score> <date> vs. <opponent>
-  <#> set game`; ten lines were tried ("too long a display") and it went
+  width for its scores. The score list shows `<score> <date> <player> vs
+  <opponent>` (John, 2026-10-16: "Sully vs Hermione"; before that `vs.
+  <opponent> <#> set game`, the set-size note dropped as not needed);
+  ten lines were tried ("too long a display") and it went
   back to five. The text is John's own, from `design ideas/Text for THIS
   GAME.txt`, laid out like the Rules box: centred, GO FISH in the welcome's
   gold with the dark outline (title and text), "candy rainfall" with a
@@ -475,3 +477,23 @@ problem is wider, and the fix is chosen.**
   as complete; later work on it is maintenance. The next project is the
   shell: John is weighing one control point (the Home button opening the
   sliding game panel) instead of the top buttons plus the bottom panel.
+
+
+**2026-10-16 later afternoon (Claude; stamp `2026-1016-one-control`,
+shared with the shell).** The shell changed around the game: one control
+point (Home opens the panel, a tap on the game closes it, no strip) and a
+**9:15 game panel**. The board's 154vw grid is centred, so it gained
+about 5.5vw of felt above and below and nothing moved; checked at phone
+size and by `verify-shell.cjs`. John's four asks on the game's side:
+
+- **Score note**: "Sully vs Hermione", the player's chosen name, vs, the
+  opponent; the "<n> set game" note dropped ("no need").
+- **Name in the tab**: GO FISH! big in the gold, "Candy Edition" smaller
+  under it, like the welcome heading; more air between the candy plate
+  and the title ("cramped together"). Built with a `\n` in the games.json
+  title and two size rules in the shell's 5b block.
+- **Name in the top bar**: `GO FISH! - Candy Edition`, GO FISH! in the
+  shell's orange at the bar's size, the rest white and smaller.
+- **No exclamation mark on "Candy Edition"**, in the tab and now on the
+  welcome screen too (GO FISH! keeps its own).
+

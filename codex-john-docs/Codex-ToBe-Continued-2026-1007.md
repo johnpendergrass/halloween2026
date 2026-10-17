@@ -13,7 +13,7 @@ This session reviewed the root README, Tristan's short introduction, the latest 
 - Plain HTML/CSS/JavaScript, no framework or build step. `index.html` and `app/` provide the container; `games.json` registers games and supplies their metadata and switches.
 - The outer frame is 9:16. Its game iframe is 9:14, designed on a 1296 × 2016 artwork canvas. App sizing uses `cqw`; games use width-relative sizing (`vw` or equivalent JavaScript).
 - The drawer covers the lower 55% of the game without resizing, pausing, or notifying it. Games own their pause controls.
-- Pumpkin Patch is home. Stack-o'-Lantern occupies slot 1; game2–game8 occupy slots 2–8. game1 has no slot. `_TABLED GAMES/` contains inactive games and deliberately incorrect examples.
+- Pumpkin Patch is home. Stack-o'-Lantern occupies slot 1; game2–game8 occupy slots 2–8. game1 has no slot.
 - `games/game-helper.js` exposes score reporting through `Halloween.reportScore(value, optionalText)`. It calls the same-origin parent's `window.halloweenApp.reportScore`. Standalone reporting logs a note without saving.
 - The app stores the five best positive numerical scores per game, with dates and optional display text, in device-local browser storage. Stack-o'-Lantern reports its final count.
 - The app displays and saves a global Sound switch and up to three binary switches per game. The helper exposes no sound or settings API; the switches currently do not affect games.

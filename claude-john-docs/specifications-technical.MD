@@ -1,6 +1,6 @@
 # Halloween 2026 — Technical Specifications
 
-Last updated: 2026-10-16 14:15 (section 4k, Candy Go Fish, MOVED to games/candy-go-fish/_documents/claude-john-docs/specifications-technical.MD; this file is the shell's. Before that: 2026-10-16 13:28, game work in 4k)
+Last updated: 2026-10-16 17:15 (4: touch-action on the shell page; 4g moved to the game's folder; stamp 2026-1016-stack-milestones; before that: 15:34 top title, 15:45 one control point)
 
 ## 1. Stack and hosting
 
@@ -21,17 +21,13 @@ index.html                 the app: 9:16 frame, top panel, game panel with <ifra
 games.json                 THE LIST OF GAMES: "games" array (v2 entries, see 4a) then an "_about" block documenting every field
 manifest.json              Android/desktop full-screen ("standalone", portrait); icons: [] (TODO)
 app/styles.css             app CSS (frame, panels, drawer) - moved from the mockup
-app/app.js                 reads games.json at start-up; picker buttons, This Game tab (text, high scores, switches), drawer, loadGame/startGame/goHome. Never edited by designers
+app/app.js                 reads games.json at start-up; picker buttons, THIS GAME tab (text, high scores, switches), drawer (Home toggles it, a tap on #gameCover closes it), loadGame/startGame. Never edited by designers
 games/game-helper.js       THE HELPER a game includes to talk to the app: Halloween.reportScore() and nothing else (see 4j)
 app/default-icon.svg       the ghost shown on a button that has neither a usable icon nor a title
-games/pumpkin-patch/       the home game (was game0): index.html, pumpkin-patch.css/.js, assets/ (2025 art, patch.svg icon)
+games/pumpkin-patch/       slot 1, shown at start (was game0, then the "home" game until 2026-10-16): index.html, pumpkin-patch.css/.js, assets/ (2025 art, patch.svg icon)
 games/stack-o-lantern/     STACK-O'-LANTERN (Claude's stacker, was game4): index.html, stack-o-lantern.css/.js, assets/stack.svg
 games/game1..game8/        NEUTRAL PLACEHOLDERS (see 4i): index.html, gameN.css/.js, empty assets/, README - GAME N.md
-games/_TABLED GAMES/wrong-desktop/    TEST GAME, deliberately wrong (was game2): fixed 1280 x 720 desktop stage in px; wrong-desktop.css/.js
-games/_TABLED GAMES/wrong-phone/      TEST GAME, deliberately wrong (was game3): fixed px for a 390-wide phone, small text, scrolls; wrong-phone.css/.js
-games/_TABLED GAMES/       written + tested games that are NOT used in the app (John, 2026-10-01); nothing in the app points here
-games/_TABLED GAMES/pie-maker/        PIE MAKER, TABLED 2026-10-01 (no games.json entry; was game1): index.html, pie-maker.css/.js, assets/pumpkin.svg, pie.svg (also its icon)
-games/_TABLED GAMES/hollow-hill-cc/   HOLLOW HILL, TABLED (no games.json entry): index.html, hollow-hill.css, hollow-hill.js (story + engine), hollow-hill-art.js (SVG art), assets/hill.svg
+games/candy-go-fish/       CANDY GO FISH (John + Codex, slot 8): its own _documents/ folder holds its docs and checks
 games/README - game design requirements.md   THE RULES (one copy; each game README links to it)
 games/*/README - <NAME>.md                   how each game was made + "Where this game breaks the requirements"
 start-local/start-halloween.bat   double-click launcher, port 8091 (confirmed by John 2026-09-30), prints LAN URL for iPhone
@@ -69,38 +65,58 @@ Body: `display:grid; place-items:center;` padding `max(5dvh, safe-area)`
 top/bottom, `max(4px, safe-area)` sides. `viewport-fit=cover` in the viewport
 meta is required for the `env(safe-area-inset-*)` values.
 
-## 4. Three-panel layout (index.html + app/styles.css)
+## 4. Three-panel layout (index.html + app/styles.css; one control point since 2026-10-16)
 
 - **`--bar-h: 11.111cqw`** — the key number. Frame height = 16/9 × width, so
-  1/16 of the height = 1/9 of the width = 11.111cqw. Both bars use it, which
-  is what makes them identical. (cqw is used because the shell is an
-  `inline-size` container; there is no cqh.)
+  1/16 of the height = 1/9 of the width = 11.111cqw: the top panel's
+  height. (cqw is used because the shell is an `inline-size` container;
+  there is no cqh.) Until 2026-10-16 the bottom strip used it too, which
+  made the two bars identical; the strip is gone.
 - Structure: `.app-shell` (flex column) → `.top-panel` (height `--bar-h`) +
   `.play-area` (flex 1, `position:relative`, overflow hidden).
+- The top panel: `#homeButton` (`.top-icon`, a square as tall as the bar;
+  `aria-expanded` follows the drawer), `.top-title` (flex 1, centred) and
+  an empty `span.top-icon` on the right, so the title is centred in the
+  bar rather than pushed off-centre by the one button.
 - Inside `.play-area`:
-  - `.game-panel`: absolute, `top:0; left:0; right:0; bottom: var(--bar-h)`
-    → exactly 9:14.
-  - `.drawer`: absolute, `bottom:0`, height
-    `calc(var(--bar-h) + (100% - var(--bar-h)) * var(--drawer-open-share))`
-    with `--drawer-open-share: 0.55`.
-    Closed: `transform: translateY(calc(100% - var(--bar-h)))` → only the strip
-    shows. Open (`.is-open`): `translateY(0)`. Slides with a 300ms transition.
-- **Edges are drawn INSIDE the bar heights** (border-box): top panel
-  `border-bottom: 2px`, drawer `border-top: 2px`, strip
-  `flex: 0 0 calc(var(--bar-h) - 2px)`. Measured: both bars 42.44px on a
-  390px viewport.
+  - `.game-panel`: absolute, `top/left/right/bottom: 0` → 15/16 of the
+    frame = exactly 9:15 (was `bottom: var(--bar-h)` → 9:14).
+  - `.game-cover` (`#gameCover`): absolute, `inset: 0`, `z-index: 4`, no
+    background; `hidden` while the drawer is closed. Its one job is to
+    catch the tap that closes the drawer, so the game never sees it.
+  - `.drawer`: absolute, `bottom:0`, `z-index: 5`, height
+    `calc(100% * var(--drawer-open-share))` with `--drawer-open-share: 0.55`.
+    Closed: `transform: translateY(100%)` → entirely below `.play-area`,
+    which clips it. Open (`.is-open`): `translateY(0)`. Slides with a
+    300ms transition.
+- **Edges are drawn INSIDE the heights** (border-box): top panel
+  `border-bottom: 2px`, drawer `border-top: 2px`. Measured: the top bar
+  42.44px on a 390px viewport.
 - Frame edge is an `outline` (takes no space, follows border-radius).
 - `--frame-radius: clamp(8px, 2.6cqw, 16px)` on the shell; top panel uses
   `radius radius 0 0`, drawer `0 0 radius radius`.
 - Drawer shadow only when open (when closed it leaked up as a grey smudge).
 - **`inert`** is set on `.drawer-content` while closed so its off-screen
-  buttons cannot be reached by keyboard; strip `aria-label` flips
-  "Open panel"/"Close panel".
-- The "gentle arrow" is a CSS chevron (two borders rotated 45°), 60% opacity,
-  rotating to 225° when open.
-- JS (`app/app.js`) is small named functions: `openDrawer`, `closeDrawer`,
-  `toggleDrawer`, `showTab`, `loadGame(game)`, `startGame(game)`, `goHome()`,
-  `makeGameButtons()`.
+  buttons cannot be reached by keyboard.
+- JS (`app/app.js`) is small named functions: `openDrawer` / `closeDrawer`
+  (they also show/hide the cover and set `aria-expanded`), `toggleDrawer`
+  (Home: close if open, else `showTab("game")` then open), `showTab`,
+  `loadGame(game)`, `startGame(game)`, `makeGameButtons()`. `#gameCover`
+  click → `closeDrawer`. Gone on 2026-10-16: `goHome()`, the strip and
+  ☰ listeners, the `homeGame` variable.
+- **Fast taps during the slide**: the cover appears the moment the drawer
+  starts opening, so a tap that lands where the panel will be, before it
+  arrives, closes the panel again. Seen in a scripted test (clicks 0 ms
+  apart, 2026-10-16); a finger is slower. Accepted.
+- Checked 2026-10-16 at a 430 × 930 window: panel ratio 1.6668, drawer
+  height 55% of the panel, all three games load and lay out; the game's
+  own `verify-shell.cjs` (port 8098) passes unchanged.
+
+- **`html, body { touch-action: pan-y }`** (2026-10-16): no double-tap or
+  pinch zoom on the shell page; the drawer's `overflow-y: auto` content
+  still pans. Each game page sets `touch-action: none` on its own body.
+  Before this a double tap on the top bar magnified the game panel to the
+  screen's edges on John's iPhone.
 
 ## 4a. Games in iframes, and games.json v2 (2026-09-29)
 
@@ -117,12 +133,15 @@ meta is required for the `env(safe-area-inset-*)` values.
   copes with blanks (text fallbacks, hidden lines).
 - **app.js section 6, `startUp()`** (async): `readGamesFile()` fetches
   `./games.json?v=APP_VERSION` (same cache-busting as the scripts), checks
-  `response.ok` and that `data.games` is an array. Then `homeGame` = the
-  entry with `goes_in_slot === "home"`, `games = pickButtonGames(all)`:
+  `response.ok` and that `data.games` is an array. Then
+  `games = pickButtonGames(all)`:
   keeps entries whose slot is an integer 1..`LAST_SLOT` (8), first entry
   wins a duplicate slot (`console.warn`), anything else is skipped with a
-  `console.info`; result sorted by slot. Then `makeGameButtons()` and
-  `goHome()`. `readGamesFile()` reads the body as text and runs
+  `console.info`; result sorted by slot. No button at all is a start-up
+  error. Then `makeGameButtons()`, `loadGame(games[0])` (slot 1, or the
+  lowest slot there is), `showTab("app")`, `openDrawer()` (since
+  2026-10-16; before, `goHome()` loaded the "home" entry).
+  `readGamesFile()` reads the body as text and runs
   `JSON.parse` itself inside try/catch so a punctuation mistake becomes
   one plain sentence ("... has some invalid JSON in it. You need to fix
   that file. (A JSON checker such as jsonlint.com will point at the
@@ -135,7 +154,8 @@ meta is required for the `env(safe-area-inset-*)` values.
   why that hint exists; tested.
 - **`loadGame(game)`** now also sets the top title to `short_title ||
   title`, calls `fillThisGameTab(game)` and `markCurrentButton(game)`.
-  `startGame()` additionally `showTab("game")` before closing the drawer.
+  `startGame()` closes the drawer and then `showTab("game")` once the
+  slide is over (`afterDrawerSettles`).
 - app.js contains no game names. Nothing in `app/` changes when a game is
   added, renamed or removed; verified by `git status` after the two test
   games were written (only `games/game2/`, `games/game3/` and games.json
@@ -160,30 +180,15 @@ meta is required for the `env(safe-area-inset-*)` values.
 Emulation has no safe-area insets, but in home-screen mode the insets are
 smaller than the 5dvh padding on these phones, so the numbers match.
 
-| Viewport | Frame | Game panel | Pie Maker info bar / field |
+| Viewport | Frame | Game panel (9:15 since 2026-10-16) | was (9:14) |
 |---|---|---|---|
-| 375×667 ×2 (SE) | 337.8 × 600.6 | 337.8 × 525.5 | 41.6 / 338 × 483.7 |
-| 390×844 ×3 (15/16) | 382 × 679.1 | 382 × 594.2 | 46.9 / 382 × 547.1 |
-| 440×956 ×3 (16 Pro Max) | 432 × 768 | 432 × 672 | 52.6 / 432 × 619.4 |
+| 375×667 ×2 (SE) | 337.8 × 600.6 | 337.8 × 563.1 | 337.8 × 525.5 |
+| 390×844 ×3 (15/16) | 382 × 679.1 | 382 × 636.7 | 382 × 594.2 |
+| 440×956 ×3 (16 Pro Max) | 432 × 768 | 432 × 720 | 432 × 672 |
 
 SE is height-limited (frame fits the height); the others are width-limited.
-Pro Max panel ×3 = 1296 × 2016 → the design canvas. PC/Mac figures in the
+Pro Max panel ×3 = 1296 × 2160 → the design canvas (1296 × 2016 before 2026-10-16). PC/Mac figures in the
 requirements doc are estimates (browser toolbars vary).
-
-## 4c. Pie Maker (folder `_TABLED GAMES/pie-maker`, tabled 2026-10-01, was game1) implementation notes
-
-- All positions/sizes/speeds in "field widths"; pixels computed every frame
-  from `field.clientWidth`, so it survives resizes.
-- `requestAnimationFrame` loop, time step capped at 0.1 s.
-- Wrap-around: a pumpkin jumps to the opposite edge only once fully off.
-- `pointerdown` per pumpkin image (instant on touch). Pies get
-  `z-index: 1`, pumpkins `2`, so pies never block taps.
-- Settings constants at the top of pie-maker.js (count 10, size 0.13–0.24,
-  speed 0.08–0.22 widths/s with small = fast, spin ±60°/s).
-- Text via `.text-medium` / `.text-large` classes in the HTML. The
-  `.play-again` button uses `font-family: inherit`, not `font: inherit`:
-  the shorthand would reset `font-size` and beat the `.text-medium` class
-  (same specificity, later rule wins).
 
 ## 4d. The Pumpkin Patch (home, folder `pumpkin-patch`, was game0) implementation notes
 
@@ -209,7 +214,7 @@ requirements doc are estimates (browser toolbars vary).
 - Measured 2026-09-27 at 390×844 in the app: panel 382 × 594, scene 790
   wide, left −102. The 404 in the console is `/favicon.ico` (no icon yet).
 
-## 4b2. The picker, icons and This Game (app.js sections 3–4, styles.css section 5)
+## 4b2. The picker, icons and THIS GAME (app.js sections 3–4, styles.css section 5)
 
 - **`makeIconButton(game)`**: `<button class="game-button" aria-label=title
   title=title data-folder=folder_name>` holding one `<img>`. Listeners are
@@ -223,17 +228,19 @@ requirements doc are estimates (browser toolbars vary).
 - **`showTextInstead(button, game)`**: `short_title || title` as text with
   class `is-text` (`clamp(11px, 3.4cqw, 18px)`, bold, two lines, `overflow:
   hidden`); if no text, an `<img src=DEFAULT_ICON>` (`./app/default-icon.svg`).
-- **`makeGameButtons()`** (board version, 2026-09-29 evening): the home
-  button straight into `#gameButtons`, then a `div.game-board` holding up
+- **`makeGameButtons()`** (board version, 2026-09-29 evening; the home
+  button that used to come first went on 2026-10-16): a `div.game-board`
+  into `#gameButtons`, holding up
   to two `div.board-row`s: `upperRow = games.filter(slot <= SLOTS_PER_ROW)`,
   `lowerRow = games.filter(slot > SLOTS_PER_ROW)`; a row with no games is
   not created. Each button gets `style.gridColumn = ((slot - 1) %
   SLOTS_PER_ROW) + 1` (slots 1 and 5 → column 1, and so on). Constants:
   `LAST_SLOT = 8`, `SLOTS_PER_ROW = 4`.
 - **CSS**: `.game-buttons { display:flex; flex-direction:column;
-  align-items:center; gap:4.5cqw; --game-button-size:18cqw }` (the gap is
-  wider than the board's 3cqw because the pressed home button sinks 1.2cqw
-  and its mint ring was touching the row below); `.game-board {
+  align-items:center; justify-content:center; min-height:100%;
+  --game-button-size:18cqw }` (centres the board in the tab since
+  2026-10-16; before, a 4.5cqw gap held the home button off the board);
+  `.game-board {
   display:flex; flex-direction:column; justify-content:center; gap:3cqw;
   height: calc(2 * var(--game-button-size) + 3cqw) }` — a fixed two-row
   space, so a lone row lands in the middle; `.board-row { display:grid;
@@ -267,15 +274,27 @@ requirements doc are estimates (browser toolbars vary).
   2026-10-01 it first calls `fillScores(game)` and `fillSwitches(game)`
   (4j), and `.this-game-head` is centred with a 1px rule under it.
 
-## 4e. The two wrong test games (wrong-desktop, wrong-phone; were game2, game3; tabled 2026-10-01)
-
-Plain pages with no page-setup block, so the iframe's default scrolling
-shows. (Below, "game2" = wrong-desktop and "game3" = wrong-phone.) game2: `#stage { width: 1280px; height: 720px }`, `click`
-handlers, a `:hover` colour. game3: `.page { width: 390px }`, an 8-column
-grid of 40 px `.square`s (12 random ghosts via a `Set` of indices), 16 px
-body text. Each README lists the rule numbers it breaks. Verified with
-chrome-devtools at 390×844×3 mobile and 1920×1080: panel 547 × 851 on the
-PC; game3 sits in the top-left with a blank strip on the right.
+- **The top title (2026-10-16)**: `loadGame()` sets
+  `topTitle.className = "top-title look-" + folder_name`, empties it and
+  `appendMarkedText(topTitle, short_title || title)` (it was
+  `textContent = plainText(...)`). CSS: `.top-title { min-width:0;
+  overflow:hidden; text-overflow:ellipsis }` so a long name is cut, not
+  the bar; `.top-title .accent { color: var(--pumpkin) }`. Section 5b:
+  `.top-title.look-candy-go-fish { font-size: clamp(11px, 3.8cqw, 20px) }`
+  and `.top-title.look-candy-go-fish .accent { font-size: clamp(14px,
+  5cqw, 26px) }` (the bar's own size), so GO FISH! stays full size and
+  "- Candy Edition" shrinks. Tab side, also 5b:
+  `.look-candy-go-fish .this-game-title { font-size: clamp(13px, 4.2cqw,
+  22px) }`, `... .accent { font-size: 1.4em }` (the `\n` in the title is a
+  `<br>` from `appendMarkedText`), `.look-candy-go-fish .this-game-head {
+  gap: 6cqw }` (3cqw for the others). Measured at a 334 px shell: top
+  title fits with air both sides; at 26px/20px on a wide window.
+  Note the selector shapes: the look class is ON the top title but a
+  PARENT of the tab's title.
+- **games.json escapes**: a bash heredoc turned `\\n` into a real line
+  break inside the title string once (JSON then fails with "invalid
+  control character"); write edit scripts to a file. The `_about` note
+  for `title` shows the two characters as `\"\\n\"` in the file.
 
 ## 4f. games.json v2: implemented 2026-09-29
 
@@ -283,14 +302,12 @@ Built as described in 4a and 4b2 (the plan that used to sit here was
 superseded by John's `goes_in_slot` / snake_case shape). Not built: an
 icon in the top bar next to `short_title`; only if John asks.
 - **Renames** were done with `git mv` so history follows: `game0` →
-  `pumpkin-patch` (+ `pumpkin-patch.css/.js`, `README - PUMPKIN PATCH.md`),
-  `game1` → `pie-maker` (+ `pie-maker.css/.js`). Every old reference was
-  replaced (their own files, game2–4 READMEs and CSS comments, the
-  requirements doc, the root README).
+  `pumpkin-patch` (+ `pumpkin-patch.css/.js`, `README - PUMPKIN PATCH.md`).
+  Every old reference was replaced (its own files, the other game READMEs
+  and CSS comments, the requirements doc, the root README).
 - **Icons**: `games/pumpkin-patch/assets/patch.svg` (100×100 viewBox, all
   shapes inside a `<clipPath>` rounded square so the ground doesn't poke
-  out of the corners); Pie Maker points its `icon` at the existing
-  `assets/pie.svg` sprite. `app/default-icon.svg` is a ghost on
+  out of the corners). `app/default-icon.svg` is a ghost on
   transparent.
 - **Test method** for the icon check: three throwaway PNGs made with
   Pillow (256×250 ok, 150×150 too small, 256×230 lopsided) plus a missing
@@ -298,78 +315,19 @@ icon in the top bar next to `short_title`; only if John asks.
   chrome-devtools `evaluate_script`; results and console warnings matched
   the spec. The PNGs were deleted afterwards.
 
-## 4g. Stack-o'-Lantern implementation notes (games/stack-o-lantern/)
+## 4g. Stack-o'-Lantern implementation notes — MOVED 2026-10-16
 
-- **Every number in stack-o-lantern.js is in vw**; positions are written as `"Nvw"`
-  strings into `style.left/bottom/width`, so the browser does the pixel
-  maths and resizing is free. `--slab-h` (9vw) and `--ground-h` (10vw) are
-  CSS variables read once by JS (`readVw`), so CSS and JS cannot disagree.
-- **World vs camera**: slab positions are world coordinates (y up from the
-  stage bottom). The camera is ONE `translateY` on the `.tower` container
-  (stars ×0.25 and moon ×0.12 for parallax), so placed slabs are set once.
-  The ground element is created inside `.tower` by `reset()` so it scrolls
-  away too.
-- `drop()`: perfect if `|mover.x - top.x| <= PERFECT_TOLERANCE`; else
-  overlap = `min(rights) - max(lefts)`; `< MIN_OVERLAP` = miss (the whole
-  slab becomes a falling piece); else the overhang becomes a piece
-  (`addFallingPiece`, gravity 320vw/s², spin) and the mover settles
-  (`settle()` → `placeSlab`, `updateLabels`, `spawnMover`).
-- Reaction word restarts its CSS animation via `void el.offsetWidth`
-  between removing and adding `.is-shown`. The moon's mouth is one element
-  restyled by class (`is-happy/is-wow/is-meh/is-sad`).
-- `requestAnimationFrame` loop, dt capped at 0.05 s. `pointerdown` on the
-  stage; Space/Enter as a keyboard extra.
-- Tested with `evaluate_script` driving `pointerdown` events and waiting
-  for alignment; the reaction word was screenshotted by pausing its
-  animation (`animationPlayState = "paused"`) since a screenshot call
-  arrives after 800 ms.
-
-## 4h. Hollow Hill implementation notes (games/_TABLED GAMES/hollow-hill-cc/, tabled)
-
-- **Three files**: `hollow-hill-art.js` (an `ART` object: `scenes.{square,
-  gate, graveyard, crypt, chapel, bog, hilltop}(flags)` returning SVG
-  markup for a `viewBox="0 0 1000 1120"`, plus `ITEM_ICONS`), and
-  `hollow-hill.js` in three parts: STORY (data), ENGINE, START/END.
-- **STORY shape**: `STORY[sceneId] = { name, art, exits: [{to, side,
-  label, when?, blocked?}], hotspots: [{id, label, x, y, w, h, when?,
-  tap(item)}] }`. `tap` returns `[[who, text], ...]` or `{ lines, then }`.
-  Story helpers: `flags()`, `set(flag, value)`, `has/give/take(item)`.
-  `FRESH_FLAGS` is deep-copied on `start()`. Lines with `who === ""` are
-  narration (italic). `hintFor(flags)` is an ordered if-chain.
-- **ENGINE**: `showScene(id, glow)` draws art, builds hotspot buttons
-  (picture units → %: `x/10`, `y/11.2`; min 140 units) and exit buttons;
-  `tapHotspot` runs `tap(held)`, then `say()`, then redraws ONLY if the
-  flags changed (a JSON compare), so the SVG animations are not restarted
-  by every tap; `say/advance` run the queue, and `then` fires when the
-  LAST line is shown so an item pops in while the line mentioning it is
-  on screen; `hold(item)` toggles `.is-holding` on the scene (rings).
-  Taps anywhere on the scene or box advance dialogue; hotspots/exits
-  `stopPropagation`.
-- **Crypt door**: `pressSymbol()` appends to `flags.doorCode`; a wrong
-  symbol resets; complete → `doorOpen` and `showScene("crypt")` in `then`.
-  Door symbol hotspots have `when: () => !doorOpen`; the skull hotspot
-  `when: doorOpen && !skullTaken`.
-- **SVG gotcha**: a CSS `transform` animation on an SVG element REPLACES
-  its `transform` attribute, so every animated group (`.bob`, `.sway`,
-  `.drift-*`) sits inside a plain positioned `<g transform=...>`.
-  `stars(seed, ...)` uses a tiny LCG so the sky is stable across redraws.
-- Layout: `body` flex column; `.scene` flex 1 (≈112vw on 9:14), `.dialogue`
-  26vw, `.inventory` 17.6vw. The SVG uses `preserveAspectRatio="xMidYMid
-  slice"`; the hotspot percentages assume the 1000:1120 shape, so on
-  9:13–9:15 panels they drift slightly (accepted by rule 3's SHOULD).
-- **Test method**: `evaluate_script` playthrough using the REAL buttons by
-  `aria-label` ("Go to Bog", "Two crows", "Shiny spoon"), reading dialogue
-  by tapping the box, including wrong turns; a debug `<style>` injected
-  into the page outlined the hotspots for the screenshots (not in code).
-  Sizes 382×594, 338×526 (three-line dialogue fits, no overflow),
-  547×850; picker + This Game in the app.
+Now `games/stack-o-lantern/_documents/claude-john-docs/specifications-technical.MD`
+(the 2026-09-29 notes that were here, plus modes, milestones, the end screen
+and how the game is tested). Shell-side: slot 2 in `games.json`, `settings: []`,
+the game's own localStorage key `halloween2026:stack-o-lantern:mode` (rule 21),
+and its `index.html` links carry the shared cache stamp since 2026-10-16.
 
 ## 4i. Placeholder folders and the 2026-09-30 reshuffle
 
 - **Where a neutral placeholder comes from**: the original game4
   placeholder in git, commit `c44f4de` (the last commit before
-  Stack-o'-Lantern overwrote it). game2 and game3 cannot be the source,
-  they are the wrong-on-purpose tests. Recipe for game N: `git show
+  Stack-o'-Lantern overwrote it). Recipe for game N: `git show
   "c44f4de:games/game4/<file>"` piped through `sed` swapping `game4`,
   `Game 4` and `GAME 4` for the new number, for `index.html`,
   `game4.css`, `game4.js`, `README - GAME 4.md` (file names renamed the
@@ -377,42 +335,21 @@ icon in the top bar next to `short_title`; only if John asks.
   game4, game5, game6, game7, game8; identical apart from the number.
 - **A placeholder page**: `<h1>` name, "Placeholder page for Game N.",
   and `#sizeReadout` filled by `showSize()` ("Game panel: 382 × 594 px
-  (9:14 = 1.556, this = 1.555)"), refreshed on `resize`. CSS = the 2.2
+  (9:15 = 1.667, this = 1.667)"), refreshed on `resize`. CSS = the 2.2
   page-setup block + the 2.3 text classes + a lilac page (`#efdcef`).
 - **Stack-o'-Lantern's move**: `git mv games/game4 games/stack-o-lantern`,
   then `git mv` of `game4.css/.js` to `stack-o-lantern.css/.js`, then the
   `<link>`/`<script>` tags and the comments and README inside the folder.
   The old placeholder's `assets/.gitkeep` travelled with it (harmless).
-- **Hollow Hill**: John renamed the folder in Explorer (git sees delete +
-  add and pairs them as a rename when staged). Only two things in the app
-  named it: the games.json entry and the version tag `2026-0929-hollow`.
-  Its own files still say `hollow-hill` and `games/hollow-hill/` in
-  comments; left alone on purpose until it is brought back. Its old
-  games.json entry is in git, commit `c979de7`. On 2026-10-01 John moved
-  the folder again, to `games/_TABLED GAMES/hollow-hill-cc/` (the first
-  name was `games/_NOT-USED-hollow-hill-cc/`).
-- **Pie Maker tabled (2026-10-01)**: `git mv games/pie-maker
-  "games/_TABLED GAMES/pie-maker"`, entry deleted from games.json,
-  `stack-o-lantern` changed from slot 2 to slot 1, version tag bumped to
-  `2026-1001-tabled`. Every "see Pie Maker for an example" pointer now
-  names `games/stack-o-lantern/`: the requirements doc (four places), the
-  root README, the six placeholder READMEs, and game2/game3's READMEs and
-  CSS comments. Pie Maker's own files are untouched; its README's
-  relative link to the requirements doc no longer resolves from the
-  tabled location (same policy as Hollow Hill: fix when brought back).
-  To bring it back: move the folder up to `games/` and restore its entry
-  from git (commit `a5bdbf7`). Tested at 390×844: seven board buttons
-  all load, Stack-o'-Lantern sits in column 1, cell 2 is empty,
-  `games/pie-maker/index.html` answers 404.
-- **The wrong test games tabled (2026-10-01)**: `git mv games/game2
-  "games/_TABLED GAMES/wrong-desktop"` and `game3` → `wrong-phone`, then
-  `git mv` of the inner files (`wrong-desktop.css/.js`, `README - WRONG
-  DESKTOP.md`, same for wrong-phone), the `<link>`/`<script>` tags, the
-  first comment line of each css/js ("wrong-desktop (was game2) - ..."),
-  and each README's title, status line and link to the requirements doc
-  (now `../../README...`, so it resolves from the tabled location). Both
-  still run when opened directly (tested in an iframe: click scores 1 on
-  the 1280px stage; 48 squares on the 390px page).
+- **The 2026-10-01 reshuffle**: `stack-o-lantern` changed from slot 2 to
+  slot 1 and the version tag was bumped to `2026-1001-tabled`. Every
+  "see ... for an example" pointer names `games/stack-o-lantern/`: the
+  requirements doc (four places), the root README, the placeholder
+  READMEs. Tested at 390×844: seven board buttons all load,
+  Stack-o'-Lantern sits in column 1, cell 2 is empty.
+- **2026-10-16**: the games that had been parked in a tabled folder since
+  the reshuffle were deleted for good (`git rm`, 22 files); nothing in the
+  code or the docs refers to them any more.
 - **New `game2` and `game3` placeholders**: copied from `game5` with
   `sed` swapping `game5`, `Game 5`, `GAME 5` for the new number (simpler
   than the `c44f4de` recipe above, same result; `diff` against game4 with

@@ -1,6 +1,6 @@
 # Halloween 2026 — Specifications (design decisions)
 
-Last updated: 2026-10-16 14:15 (section 6k, Candy Go Fish, MOVED to games/candy-go-fish/_documents/claude-john-docs/specifications.MD; this file is the shell's. Before that: 2026-10-16 13:28, game work in 6k)
+Last updated: 2026-10-16 17:15 (2: no zoom on the shell page; 6f moved to the game's folder; 6i: Stack's switch dropped; before that: 15:34 names, 15:45 one control point, 15:00 tabled games removed)
 
 This file records WHAT the app looks like and WHY. Technical "how" lives in
 `specifications-technical.MD`. Companion notes in this folder:
@@ -33,10 +33,10 @@ checkable, and backed by a working example game.
 ### What the app is right now (John, 2026-09-27, after the audit)
 
 **A template for others to insert mini games into.** The frame and the docs
-are the product. The Pumpkin Patch and Pie Maker (first named game0 and game1) are **demos**:
-not part of the final package, they may change or go. (Update
-2026-10-01: Pie Maker is tabled; John now counts the Pumpkin Patch and
-Stack-o'-Lantern as "the game". See 6h.) Consequences:
+are the product. The Pumpkin Patch (first named game0) is a **demo**:
+not part of the final package, it may change or go. (Update 2026-10-01:
+John counts the Pumpkin Patch and Stack-o'-Lantern as "the game". See
+6h.) Consequences:
 
 - **The requirements doc is the source of truth; the demos follow it**, not
   the other way round. Where a demo departs from a rule, its own README
@@ -63,42 +63,69 @@ Stack-o'-Lantern as "the game". See 6h.) Consequences:
   device. Using it would mean designing per device — explicitly rejected.
   Colouring that space is allowed (decoration only).
 
-## 3. The three panels (decided, mockup v6)
+**No zoom on the shell page (John's phone, 2026-10-16).** The game panel
+appeared magnified edge to edge with the top bar scrolled out of view: a
+double tap on the top bar or the frame's margins, or two thumbs down at
+once, had triggered the browser's zoom on the shell page. The games block
+zoom inside their own panels; the shell now does too (`touch-action:
+pan-y` on html and body: vertical panning only, so the THIS GAME tab
+still scrolls). The iframe cannot move the shell by itself.
+
+## 3. The panels (decided, mockup v6; ONE CONTROL POINT since 2026-10-16)
 
 ```text
 ┌─────────────────────┐
 │ TOP PANEL           │  1/16 of frame height. Always visible. Never moves.
-├─────────────────────┤  Game name, Home icon, ☰ (quick navigation).
+├─────────────────────┤  Home button on the left, game name centred.
 │                     │
-│    GAME PANEL       │  Everything between the bars -> exactly 9:14.
-│                     │  The game's iframe will live here. Nothing covers
+│    GAME PANEL       │  Everything below the top panel -> exactly 9:15.
+│                     │  The game's iframe lives here. Nothing covers
 │                     │  it unless the player opens the bottom panel.
-├─────────────────────┤
-│ BOTTOM PANEL strip  │  1/16 of frame height, full width, gentle up arrow.
-└─────────────────────┘
+│                     │
+└─────────────────────┘  BOTTOM PANEL: out of sight until Home is tapped.
 ```
 
-- **Top panel and closed bottom strip are the same height** (symmetric).
-  Measured 42.44px each on a 390px-wide phone.
-- **Game panel = exactly 9:14.** Measured sizes: iPhone SE (smallest phone)
-  338 × 526, iPhone Pro Max 432 × 672, 1080p PC about 547 × 850. Full-
-  sharpness art = 1296 × 2016 (the Pro Max panel at ×3 = the design canvas).
-  (Was 3:5 while the bottom panel was a pull tab poking into the game area;
-  John rejected the tab so game designers never work around it.)
-- **Bottom panel = a drawer.** Closed: just the strip, in its own space.
-  Open: slides UP over the lower 55% of the game panel. **The game panel
-  never changes size** — same as Halloween2025's right panel, which (checked
-  in its code) slid OVER the fixed 950 × 720 game area rather than resizing it.
-- The bottom panel has two tabs:
-  - **App** — game selection, overall high scores, sound, about/credits.
-  - **This Game** — that game's high scores, settings, how to play.
-- Rounded corners: top panel's two TOP corners and bottom panel's two BOTTOM
-  corners follow the frame. The game panel's edges stay square and crisp.
+- **One control point (John, 2026-10-16).** The top panel holds a Home
+  button and the game's name, nothing else. Home opens the bottom panel
+  on the THIS GAME tab; Home again, or a tap on the game above the open
+  panel, closes it. Picking a game from the GAMES tab closes it too. Gone
+  that day: the ☰ button, the bottom strip with its arrow, and the
+  "home" slot (see 4). John's reason: two ways to reach the same panel
+  (the top buttons and the strip) were one too many, and the strip took
+  a row of the frame for nothing.
+- **Game panel = exactly 9:15** (15/16 of the frame). Measured: iPhone SE
+  338 × 563, iPhone 15/16 382 × 637, Pro Max 432 × 720, 1080p PC about
+  547 × 912. Full-sharpness art = 1296 × 2160 (the Pro Max panel at ×3 =
+  the design canvas). History: 9:14 from 2026-09-27 to 2026-10-16, while
+  the strip sat below the game; 3:5 before that, while the bottom panel
+  was a pull tab poking into the game area (John rejected the tab so game
+  designers never work around it). The three games of 2026-10-16 were
+  checked at 9:15 before the change and after it: Candy Go Fish centres
+  its 154vw board in the taller panel (a little more felt above and
+  below), Stack-o'-Lantern re-reads the panel's shape, the Pumpkin Patch
+  crops a little more of its painting's sides.
+- **Bottom panel = a drawer.** Closed: slid fully below the frame,
+  invisible. Open: slides UP over the lower 55% of the game panel. **The
+  game panel never changes size** — same as Halloween2025's right panel,
+  which (checked in its code) slid OVER the fixed 950 × 720 game area
+  rather than resizing it. While the panel is open an invisible sheet
+  lies over the game: a tap there closes the panel and never reaches the
+  game (which is not paused either way, see 6i). John: "it would be
+  fine if the tap was not registered by the actual game."
+- The bottom panel has two tabs (labelled GAMES and THIS GAME since
+  2026-10-16, John's rename; App and THIS GAME before that):
+  - **GAMES** — game selection: the board (3a).
+  - **THIS GAME** — that game's high scores, switches, how to play.
+- Rounded corners: top panel's two TOP corners and the drawer's two
+  BOTTOM corners follow the frame. The game panel's edges stay square;
+  its two bottom corners are now clipped by the frame's rounding (a few
+  pixels of the game, decoration only; see the rules doc's size table).
 
-## 3a. The App tab: an icon picker with an eight-cell board (John, 2026-09-29)
+## 3a. The GAMES tab: an icon picker with an eight-cell board (John, 2026-09-29)
 
-- **Layout (v2, evening of 2026-09-29)**: the home game's button alone and
-  centred at the top, then a **board of two rows by four fixed cells**.
+- **Layout (v2, evening of 2026-09-29)**: a **board of two rows by four
+  fixed cells**, centred in the tab. (Until 2026-10-16 the home game's
+  button sat alone above the board; it went with the "home" slot, see 4.)
   `goes_in_slot` 1–4 are the upper row left to right, 5–8 the lower row.
   A game always sits in its own cell (slot 1 is always top far left),
   empty cells stay empty, so the designer decides the picture. **One
@@ -135,7 +162,7 @@ Stack-o'-Lantern as "the game". See 6h.) Consequences:
   folder and names it in games.json. (The picker itself was the app's own
   one-time change; John first read it as designers editing app files.)
 
-## 3b. The This Game tab (2026-09-29)
+## 3b. The THIS GAME tab (2026-09-29)
 
 Filled from the current game's games.json entry every time a game loads:
 icon (same spec/check, in a small orange tile), title, "designer, date",
@@ -144,9 +171,25 @@ Blank fields hide together with their headings. Since 2026-10-01 the
 icon/title block is centred with a thin rule under it, and between it and
 the description sit two columns: High Scores and the switches (see 6i).
 
+**A game's name, two ways (John, 2026-10-16).** The title and the short
+title may carry the text marks (6i). In the tab, a `\n` in the title makes
+a second line, and a game's own look (styles.css 5b) may size the lines:
+Candy Go Fish's title is `__GO FISH!__\nCandy Edition`, GO FISH! big in
+the gold over a smaller "Candy Edition" (no exclamation mark on the
+subtitle, John's call; the welcome screen lost its mark to match), with
+a wider gap to the candy plate ("cramped together"). In the top bar the
+short title is rendered with its marks too: an `__accent__` is the
+shell's pumpkin orange, the rest white; Candy Go Fish's
+`__GO FISH!__ - Candy Edition` shows the name at the bar's size and
+"- Candy Edition" at about three quarters (its 5b rule). The bar cuts a
+name that is still too long with an ellipsis rather than pushing Home
+aside; about 24 characters fit on the smallest phone. Tabs are labelled
+GAMES and THIS GAME (renamed this day from App / This Game; CURRENT GAME
+was tried for a minute).
+
 ## 3c. When games.json will not parse (John, 2026-09-29)
 
-One plain message in the App tab: "games.json has some invalid JSON in it.
+One plain message in the GAMES tab: "games.json has some invalid JSON in it.
 You need to fix that file. (A JSON checker such as jsonlint.com will point
 at the line.)" Claude built and tested line-number detection from the
 browsers' own error messages; John had it removed: "chasing errors is not
@@ -155,22 +198,30 @@ line number belongs in the future checker script, not in the app. The
 hint about opening through the .bat file appears only when the page really
 was opened from disk (`file:`), since that is the only time it applies.
 
-## 4. The flow (real app, 2026-09-27; icons and tabs 2026-09-29)
+## 4. The flow (real app, 2026-09-27; icons and tabs 2026-09-29; one control point 2026-10-16)
 
-- App starts on the **home game** (the games.json entry with
-  `goes_in_slot: "home"`, currently `pumpkin-patch`), with the bottom panel
-  **open** on the App tab: the icon picker (see 3a). **The home game is a real game** (its own folder, html/css/js/assets),
-  special only because it is the default: shown at start and whenever no
-  other game is active. It will become the HOME screen with animations.
+- App starts on **the game in slot 1** (currently `pumpkin-patch`, the
+  watch-only patch; Stack-o'-Lantern moved from slot 1 to slot 2 for it
+  and the game2 placeholder is benched), with the bottom panel **open**
+  on the GAMES tab: the icon picker (see 3a). Until 2026-10-16 a separate
+  "home" entry (`goes_in_slot: "home"`, its own button above the board)
+  played this part and 🏠 returned to it; John folded it into slot 1:
+  "lets make game #1 the startup game, move pumpkin patch into that."
+  No slot 1 at all → the lowest slot stands in; no slots at all is a
+  start-up error in the GAMES tab.
 - Tap a game's icon → its page loads in the game panel, the bottom panel
   **closes**, the top panel shows the game's `short_title`, the drawer's
-  tab switches to **This Game** (so the next open is about that game), and
-  that game's icon button looks **pressed in**.
-- **🏠** (top panel) → back to the home game, bottom panel **opens** again
-  on the App tab.
-  (The mockup's in-game "Quit Game" button was dropped: it needs a message
-  from game to app, and messaging is postponed.)
-- ☰ or the strip opens/closes the bottom panel by hand.
+  tab switches to **THIS GAME** once the slide is over (so the next open
+  is about that game), and that game's icon button looks **pressed in**.
+- **🏠** (top panel) → opens the bottom panel on **THIS GAME** for the
+  current game; the player may switch to the GAMES tab from there. 🏠
+  again, or a tap on the game above the panel, closes it. Home no longer
+  changes the game: the Pumpkin Patch is reached through its slot 1
+  button like any other game.
+  (The mockup's in-game "Quit Game" button was dropped: it needs a
+  message from game to app, and messaging is postponed. The ☰ button and
+  the strip under the game, a second way to open and close the panel,
+  were dropped on 2026-10-16.)
 
 ## 5. Colours (placeholders for judging layers — not final)
 
@@ -193,7 +244,7 @@ clock. John may "nix it" → back to `#07040a` and `black`.
 
 - **Each game is its own mini website in an iframe** that fills
   the game panel. Reasons: total isolation (one friend's CSS/JS cannot break
-  another's), simplest rule for friends ("make a page that works in a 9:14
+  another's), simplest rule for friends ("make a page that works in a 9:15
   box"), each game testable alone. Halloween2025 proved it: its two iframe
   games dropped in with no changes.
 - **How games talk to the app (decided 2026-10-01, see 6i):** one helper
@@ -224,7 +275,7 @@ clock. John may "nix it" → back to `#07040a` and `black`.
   it is the app owner's file). High scores will follow the same principle
   later: the app stores them, keyed by `folder_name`.
 - **Entry shape v2** (John's field names, snake_case): `folder_name`
-  (lowercase, required), `goes_in_slot` (`"home"`, or a whole number 1–8
+  (lowercase, required), `goes_in_slot` (a whole number 1–8, slot 1 = shown at start; `"home"` existed until 2026-10-16
   = a fixed cell on the two-by-four board, see 3a; any other value, 9 or
   "" say, = listed but not shown, an easy way to bench a game; a duplicate
   slot goes to the first entry in the file),
@@ -235,8 +286,8 @@ clock. John may "nix it" → back to `#07040a` and `black`.
   (`goes_in_slot` does both jobs), button order (array order), per-game
   colours, translated titles (a second file if the Chinese switch happens).
 - Folders: `games/pumpkin-patch/` (home), `games/stack-o-lantern/`,
-  `games/game1..8/`, and `games/_TABLED GAMES/` for games not in use
-  (see 6h for which is what; any lowercase name works). Each
+  `games/game1..8/` (see 6h for which is what; any lowercase name
+  works). Each
   has a `README - <GAME NAME>.md` describing how it was made (John's
   naming). The rules live in **one** file,
   `games/README - game design requirements.md` (was five identical copies
@@ -250,7 +301,7 @@ clock. John may "nix it" → back to `#07040a` and `black`.
 Full text: `games/README - game design requirements.md` (the only copy).
 Key decisions (John):
 
-- **One design canvas: 1296 × 2016 real pixels** = the iPhone 16 Pro Max
+- **One design canvas: 1296 × 2160 real pixels (1296 × 2016 until 2026-10-16)** = the iPhone 16 Pro Max
   game panel at ×3. Designers draw, measure and export in canvas pixels
   only; CSS pixels appear only in the coder part. (John had been burned
   cropping art to CSS sizes → 3× too small on iPhone.)
@@ -271,32 +322,11 @@ Key decisions (John):
 - **`px` floors only, no ceilings** (v3): `max(14px, 4.5vw)` yes,
   `clamp(…, 28px)` no. The panel is never wider than ~730 CSS px, so a cap
   does nothing useful and hides the real size.
-- Sprites PNG (transparent) or SVG; backgrounds JPG at 1296 × 2016.
+- Sprites PNG (transparent) or SVG; backgrounds JPG at 1296 × 2160.
 - Colour table (1.7) lists only colours the app itself uses (v3).
 - Structure: Part 1 designers (canvas pixels only, never CSS px), Part 2
   coders + AI (18 MUST/SHOULD rules), appendix per-device sizes.
   Information stated once (John: repetition was confusing).
-
-## 6b. Demo game: Pie Maker (TABLED 2026-10-01; folder `_TABLED GAMES/pie-maker`, was game1)
-
-**Status (John, 2026-10-01):** moved out of the games root into
-`games/_TABLED GAMES/pie-maker/` and removed from games.json. Its files
-are untouched. Stack-o'-Lantern took over slot 1 and the role of "the
-example that follows the rules" in the requirements doc, the root README
-and the placeholder/test game READMEs. What follows describes the game as
-built.
-
-John's design: "asteroids but for pumpkins and without a gun, just tapping."
-10 pumpkins of varying size drift in straight lines, spin, and wrap around
-the edges; tap → pumpkin pie (stays put); timer from load to last pie;
-Play again. Sizes 13%–24% of width (was 12%; changed so the smallest is
-44px on iPhone SE). Timer not reported to the app yet (later comms test),
-and the number of pumpkins will later be a setting.
-
-After the audit (2026-09-27) it follows the requirements exactly: the 2.2
-page-setup block copied verbatim, the `.text-*` classes for all text, no px
-ceilings, button `min-height: 13vw`. Its README lists no exceptions. Its
-README no longer repeats the device tables from the requirements doc.
 
 ## 6c. Demo home game: The Pumpkin Patch (folder `pumpkin-patch`, was game0)
 
@@ -308,7 +338,7 @@ waits, sinks. Decisions:
   HEIGHT fills the game panel, sides cropped (`--crop-from-left: 0.25`
   keeps the moon + big pumpkins). Looks soft (enlarged ~2.5× on a ×3
   phone); accepted as a first try. Later options: painting in the lower
-  part with dark sky above, or new tall art at 1296 × 2016.
+  part with dark sky above, or new tall art at 1296 × 2160.
 - **Only the horizon popup.** A second popup behind the front pumpkins was
   tried and dropped: the open bottom panel on the home screen covers that
   area, so it was almost always hidden (likely why 2025 dropped it too).
@@ -320,155 +350,51 @@ waits, sinks. Decisions:
   home screen; some silhouettes have a light halo (2025 files).
 - **Declared exceptions** (in its README): uses `vh` and `%` of the
   painting instead of `vw` (must fill the panel's height; keeps the
-  character aligned with the layers); art is 950 × 714, not 1296 × 2016
+  character aligned with the layers); art is 950 × 714, not 1296 × 2160
   (reused). All 19 silhouettes are preloaded at start so none pops in late
   on a slow connection.
 
-## 6d. Test games: wrong-desktop and wrong-phone are deliberately wrong (2026-09-29; TABLED 2026-10-01)
+## 6f. Stack-o'-Lantern (slot 2) — MOVED 2026-10-16
 
-**Status (John, 2026-10-01):** "get rid of wrong desktop and wrong
-phone... rename those games to those names and put them into the _TABLED
-GAMES folder." They were the folders `game2` and `game3` (board slots 3
-and 4); they are now `games/_TABLED GAMES/wrong-desktop/` and
-`games/_TABLED GAMES/wrong-phone/`, with their files renamed to match,
-and they are out of games.json. `game2` and `game3` are neutral
-placeholders again. The text below was written while they were still
-called game2 and game3.
-
-John asked what a designer sees if they drop in a page that was not
-written for the panel. Answer, verified: **the app does nothing to it**.
-The iframe fills the panel and the page is shown as is, no scaling,
-cropping or repair. To make that visible, the two placeholders became
-permanent test games, labelled "wrong on purpose" in their titles, page
-comments and READMEs, with a "what you will see" section each:
-
-- **game2 "Wrong: desktop size"**: a fixed 1280 × 720 stage in px, the way
-  Halloween 2025's games were built. On a phone only the top-left corner
-  shows (score, one pumpkin); the page pans with a finger drag; the Reset
-  button is off-screen. On a 1080p PC the panel is still under half the
-  stage.
-- **game3 "Wrong: fixed phone px"**: written for one 390-wide phone in px,
-  ordinary 16 px web text, 40 px squares, a 32 px button, an underlined
-  link, a page that scrolls. Nearly right on an iPhone 15/16 (the trap),
-  clipped on the SE, huddled small in the top-left corner on a PC.
-
-They are the argument for the rules doc. Both must be replaced wholesale
-when a real game takes the slot. Since 2026-09-30 both are on the board
-again (slots 3 and 4; game3 had been benched for one night to make room
-for Hollow Hill).
-
-## 6f. Stack-o'-Lantern (folder `stack-o-lantern`, by Claude, 2026-09-29)
-
-Written in the `game4` folder; moved to its own named folder on 2026-09-30
-(John), which freed `game4` to be a placeholder again.
-
-John invited Claude to "design and write a good little game of your own...
-whimsical... meme-worthy... something folks will want to play over and
-over." Claude chose a one-tap stacker.
-
-- **Play**: pumpkin slabs slide across the sky above a tower; tap to drop.
-  The overlap with the slab below becomes the new slab; the overhang is
-  sliced off and tumbles away. Less than 0.8vw overlap = a miss = game
-  over. A drop within 1.6vw of the edge is **PERFECT**: snaps into line,
-  full width kept; every third perfect in a row grows the slab 3vw back
-  (up to the 46vw start). Speed 42vw/s × 1.035 per slab, capped at 110.
-- **Whimsy**: a giant reaction word per drop (PERFECT x5 in gold, nice,
-  close one, yikes, oof, SPLAT.), a moon with a face (wide-eyed "o" on
-  perfect, flat mouth on sloppy, frown at the end), every 7th slab a pale
-  ghost pumpkin, and an end screen that turns the count into a height
-  ("10 = a basketball hoop, 18 = a giraffe, 320 = Big Ben. Please go
-  outside."). John: "that was a fine little game."
-- **Decisions**: no images at all (slabs, stars, moon are CSS) so it loads
-  instantly; the camera keeps the tower top at 42% of the stage; the
-  ground is part of the scrolling world (a pinned ground made the lower
-  slabs look like they sank); Best is per visit (rule 18).
-
-## 6g. Hollow Hill (TABLED 2026-09-30; folder `_TABLED GAMES/hollow-hill-cc`)
-
-**Status (John, 2026-09-30):** "keep the game folder... remove all
-references to it in the actual game, game json and such. we will consider
-changes to it and using it later." John renamed the folder himself; the
-games.json entry is gone and nothing in the app points at it. The files
-inside are untouched. On 2026-10-01 John moved it from
-`games/_NOT-USED-hollow-hill-cc/` into the new `games/_TABLED GAMES/`
-folder (see 6h). What follows describes the game as built on 2026-09-29.
-
-John then asked for "a more complicated and involved adventure type game...
-10-15 minutes... Freddi Fish or Pajama Sam... d&d type games in caves...
-easy controls... tap friendly around the game edges... create the artwork
-yourself". Claude pitched and built a point-and-click adventure.
-
-- **Story**: the Great Pumpkin on Hollow Hill has gone dark; the vampire
-  mayor (in a bathrobe) sends you to relight it. Three things needed: a
-  way through the hill gate, a candle, and a true Halloween flame (a
-  will-o'-wisp).
-- **Map**: village square (hub) with exits to the hill gate (north), the
-  graveyard (east, then the crypt), the chapel (west) and the bog (south);
-  the hilltop beyond the gate. Seven scenes.
-- **Three chains, any order**: (1) scarecrow Stitch wants his hat; the
-  crows trade it for something shiny; a spoon is stuck in the bog mud
-  (three pulls; the frogs hint). (2) Ghost organist Madame Wail's pipes
-  are full of bats; bats love candy corn (you start with a bag); she gives
-  her last beeswax candle. (3) Skeleton Fibula has a spare jar but lost
-  his skull in the crypt; the crypt door opens by tapping its four
-  carvings moon, bat, pumpkin (order carved on his tombstone; a wrong tap
-  resets); return the skull, get the jar, catch a drifting wisp.
-- **Finale**: through the gate, up the hill, candle first, then the wisp;
-  the pumpkin blazes, the village windows light, the mayor: "THE CANDY
-  ECONOMY IS SAVED!" End screen: time + rank (<6 min Legend, <10 Night
-  Navigator, <15 Steady Lantern-Bearer, else Thorough Trick-or-Treater).
-- **Controls (all taps)**: hotspots in the picture (glow once on entering
-  a scene, ring while an item is held, never under 14vw); orange arrow
-  tabs on the scene edges labelled with the destination (16vw); an
-  inventory strip (14vw tiles: tap to hold, tap a target to use); a
-  dialogue box (three Medium lines; tap to continue); a **?** hint button
-  that names exactly the next step and pulses after a minute without
-  progress. Every character answers every item, usually with a joke. No
-  dead ends, nothing can be lost.
-- **Decisions Claude made while John was away**: first person (no player
-  sprite: halves the art, Myst-style), a hint button (yes), the wrong test
-  game `game3` benched (slot "") rather than deleted, Hollow Hill in its
-  own lowercase folder. Layout: scene 112vw tall + dialogue 26vw +
-  inventory 17.6vw = the 155.6vw panel. All art is flat SVG drawn in code
-  (no downloads, no licences). No saving (rule 18): one sitting.
+The game's design record (what was section 6f here since 2026-09-29, plus
+the 2026-10-16 afternoon of EASY / HARD, milestones, end words and the
+moon's verdict) now lives with the game:
+`games/stack-o-lantern/_documents/claude-john-docs/specifications.MD`. Shell
+facts: slot 2; it declares no switches since 2026-10-16 (its EASY / HARD
+toggle is its own, see 6i); it sends the mode as the score's note.
 
 ## 6h. The folders and the board (John, 2026-09-30)
 
 John wants a complete set of numbered placeholder folders next to the
 named games, so a designer always has a neutral folder to copy or take
-over. As of 2026-10-01 (Pie Maker and the two wrong test games tabled,
-Stack-o'-Lantern moved from slot 2 to slot 1):
+over. As of 2026-10-16 (Stack-o'-Lantern moved from slot 2 to slot 1
+on 2026-10-01; Candy Go Fish took slot 8 in October; every game that
+was ever tabled was deleted for good on 2026-10-16):
 
 | Folder | What it is | Slot |
 |---|---|---|
-| `pumpkin-patch` | the home game | home |
-| `stack-o-lantern` | Claude's stacker, the example that follows the rules | 1 (John) |
-| `game2`..`game8` | neutral placeholders | 2–8 (same number as the folder) |
-| `game1` | neutral placeholder | "" (benched: Stack-o'-Lantern has cell 1) |
-| `_TABLED GAMES/pie-maker` | tabled 2026-10-01, no entry | none |
-| `_TABLED GAMES/wrong-desktop` | was `game2`, wrong on purpose: desktop px; tabled 2026-10-01 | none |
-| `_TABLED GAMES/wrong-phone` | was `game3`, wrong on purpose: phone px; tabled 2026-10-01 | none |
-| `_TABLED GAMES/hollow-hill-cc` | tabled, no entry | none |
+| `pumpkin-patch` | the watch-only patch; slot 1 = shown at start (was the "home" game until 2026-10-16) | 1 |
+| `stack-o-lantern` | Claude's stacker, the example that follows the rules | 2 (John's slot 1 until 2026-10-16) |
+| `candy-go-fish` | GO FISH - Candy Edition (its title), John + Codex's card game; its own docs in its folder | 8 |
+| `game3`..`game7` | neutral placeholders | 3–7 (same number as the folder) |
+| `game1`, `game2`, `game8` | neutral placeholders | "" (benched: cells 1, 2 and 8 are taken) |
 
 John (2026-10-01): the game now consists of only `pumpkin-patch` (home)
 and `stack-o-lantern` (game 1); "keep default demo game folders 1-8 in
 the games folder". The placeholders' slots (gameN in cell N, `game1`
 benched) are Claude's choice, to be confirmed.
 
-- **`games/_TABLED GAMES/` (John, 2026-10-01)** holds games that were
-  written and tested and are worth keeping, but are not used in the app.
-  **Only a game that is actually used in the app has its own folder
-  directly under `games/`** (`stack-o-lantern`, `pumpkin-patch`, ...).
-  Tabling a game = move its folder in there and remove its games.json
-  entry; nothing in the app points into that folder, so its capitals and
-  the space in its name are harmless.
+- **Only a game that is actually used in the app has a folder under
+  `games/`** (John, 2026-10-01). A game that is dropped is deleted, folder
+  and games.json entry together; nothing is kept "for later" in the repo
+  (John, 2026-10-16: the games once parked in a tabled folder were all
+  abandoned and are gone, from the code and from these docs).
 - **A neutral placeholder** shows its name ("Game 5"), the line
   "Placeholder page for Game 5." and the measured size of the game panel.
   It follows the rules doc (page-setup block, text classes), so it is a
-  correct starting point, unlike the two wrong test games. Its games.json entry has a
+  correct starting point. Its games.json entry has a
   title and short title only; the button shows the text fallback.
-- **Slot 1 is John's** (on 2026-09-30 slots 1 and 2 were: Pie Maker and
-  Stack-o'-Lantern). The rest is Claude's choice, flagged to
+- **Slot 1 is John's.** The rest is Claude's choice, flagged to
   John and open: nine entries for eight cells means one sits out
   (`game1`, since Stack-o'-Lantern has cell 1). Changing it is one number
   per entry in games.json.
@@ -487,7 +413,7 @@ does little to a game; what it does not do is the game's own job.
   same day: pause hooks in the helper, a helper-run game loop, an
   app-drawn "tap anywhere to continue". Reason: they add complexity for
   every designer. Stack-o'-Lantern has no pause.
-- **High scores**: always shown for every game in the This Game tab, left
+- **High scores**: always shown for every game in the THIS GAME tab, left
   column: "High Scores" + a small **Clear scores** button, then five
   lines `1.  42  (10-01-2026)` (rank, score right-adjusted, date smaller
   and dimmer), `---` where empty. The table is as wide as its content and
@@ -512,8 +438,10 @@ does little to a game; what it does not do is the game's own job.
   **A game switch applies to the next newly started game**, never
   mid-game. Their purpose: a few simple options without building an
   options screen. Anything that changes mid-game, or more than three, is
-  the game's own job. Now declared: Pumpkin Patch "Slow / Fast",
-  Stack-o'-Lantern "Easy / Hard".
+  the game's own job. Now declared: Pumpkin Patch "Slow / Fast" only.
+  (Stack-o'-Lantern declared "Easy / Hard" until 2026-10-16, when the game
+  grew its own EASY / HARD toggle in its info bar and dropped the entry:
+  one control, not two that disagree.)
 - **Not connected yet**: no game can read Sound or its switches (the
   helper has only `reportScore`); the switches are shown and remembered.
   The hint line "Game options apply to your next game." under a game's

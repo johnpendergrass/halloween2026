@@ -1,7 +1,9 @@
-# The Pumpkin Patch (the home game, folder `pumpkin-patch`)
+# The Pumpkin Patch (slot 1, folder `pumpkin-patch`)
 
-The home game: loaded when the app starts, and shown again whenever no other
-game is active (🏠).
+The game in slot 1, which the app shows when it starts, under the open App
+tab. Until 2026-10-16 it was the "home" game that 🏠 returned to; now 🏠
+only opens the panel, and the patch is reached through its button like any
+other game.
 
 A painted pumpkin patch under a full moon. Every so often a character's
 silhouette slowly rises from behind the tree line, waits, and sinks back down.
@@ -34,8 +36,9 @@ Back to front:
 3. **Tree line and field**: hides the character until it rises.
 
 A second hiding place, behind the big front pumpkins, was tried on
-2026-09-27 and dropped: the app's bottom panel is open on the home screen and
-covers that part of the scene, so those characters were almost always hidden.
+2026-09-27 and dropped: the app's bottom panel is open over this game at
+start and covers that part of the scene, so those characters were almost
+always hidden.
 (Probably why 2025 dropped it too.)
 
 ## Where this game breaks the requirements, and why
@@ -43,7 +46,7 @@ covers that part of the scene, so those characters were almost always hidden.
 | Rule | What this game does instead | Why |
 |---|---|---|
 | 5: all sizes relative to the width (`vw`) | The scene is `100vh` tall; everything inside it is in `%` of the painting. | The paintings are wide (950 × 714) and must fill the panel's *height*, with the sides cropped. Placing the character in % of the painting keeps it lined up with the layers at any size. |
-| 16: full-panel backgrounds 1296 × 2016 | 950 × 714 paintings, enlarged about 2.5× on a phone. | Reused 2025 art. This is why it looks soft; new tall art may replace it. |
+| 16: full-panel backgrounds 1296 × 2160 | 950 × 714 paintings, enlarged about 2.5× on a phone. | Reused 2025 art. This is why it looks soft; new tall art may replace it. |
 | 7: tap targets at least 13vw | There is nothing to tap. | The home screen only animates. |
 
 ## Sizes and timing
@@ -73,9 +76,9 @@ face inward. All 19 images are fetched at start-up so none pops in late.
 
 ## Known issues
 
-- The app's bottom panel is open on the home screen and covers the lower 55%
-  of the panel, so only the upper part of a risen character shows until the
-  panel is closed.
+- The app's bottom panel is open over this game at start and covers the
+  lower 55% of the panel, so only the upper part of a risen character shows
+  until the panel is closed.
 - Some silhouettes (Totoro, for one) have a light halo, from the 2025 files.
 
 ## Talks to the app?
@@ -83,5 +86,5 @@ face inward. All 19 images are fetched at start-up so none pops in late.
 No. The app just loads the page; 🏠 in the top panel leaves it.
 
 Its `games.json` entry declares one switch, "Slow / Fast", which the app
-shows in the This Game tab. It does nothing yet: a game cannot read its
+shows in the THIS GAME tab. It does nothing yet: a game cannot read its
 switches so far.

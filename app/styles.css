@@ -52,6 +52,12 @@ html,
 body {
   height: 100%;
   overflow: hidden; /* the outer page never scrolls */
+  /* No double-tap zoom and no pinch zoom on the shell page itself: a
+     fast tapper's double tap on the top bar, or two thumbs down at once,
+     magnified the game panel edge to edge with the top bar scrolled out
+     of view (John's phone, 2026-10-16). Each game already blocks zoom
+     inside its own panel. pan-y keeps the THIS GAME tab scrolling. */
+  touch-action: pan-y;
 }
 
 /* The hidden attribute must always win, even over display: flex. */
@@ -115,10 +121,10 @@ body {
   outline: 2px solid var(--frame-edge);
   box-shadow: 0 24px 80px #000c;
 
-  /* THE key number: the top panel and the bottom strip are each 1/16 of
-     the frame's height. The frame is 16/9 of its width tall, so
-     1/16 of the height = 1/9 of the width = 11.111cqw.
-     Two bars of 1/16 leave the game panel 14/16 tall -> 9:14. */
+  /* THE key number: the top panel is 1/16 of the frame's height. The
+     frame is 16/9 of its width tall, so 1/16 of the height = 1/9 of the
+     width = 11.111cqw. The game panel gets the other 15/16 -> 9:15.
+     (Until 2026-10-16 the bottom strip took a second 1/16 -> 9:14.) */
   --bar-h: 11.111cqw;
 }
 
@@ -154,12 +160,13 @@ body {
   padding: 0 2cqw;
   border-radius: var(--frame-radius) var(--frame-radius) 0 0;
   background: var(--top-bg);
-  /* Drawn INSIDE the bar's height, so the bar stays exactly --bar-h tall -
-     the same as the bottom strip. */
+  /* Drawn INSIDE the bar's height, so the bar stays exactly --bar-h tall. */
   border-bottom: 2px solid var(--top-edge);
   color: #fff;
 }
 
+/* The Home button, and the empty spacer of the same size on the right
+   that keeps the title centred. */
 .top-icon {
   height: 100%;
   aspect-ratio: 1;
@@ -170,15 +177,24 @@ body {
 
 .top-title {
   flex: 1;
+  min-width: 0;                /* may shrink below its text ... */
+  overflow: hidden;            /* ... which is then cut with an ellipsis, so */
+  text-overflow: ellipsis;     /* a long name never pushes the bar apart */
   text-align: center;
   font-weight: 900;
   font-size: clamp(14px, 5cqw, 26px);
   white-space: nowrap;
 }
 
+/* An __accent__ mark in a game's name is orange in the top bar (the rest
+   stays white): "GO FISH! - Candy Edition" (John, 2026-10-16). */
+.top-title .accent {
+  color: var(--pumpkin);
+}
+
 /* ------------------------------------------------------------------------
-   4. GAME PANEL - everything below the top panel and above the bottom
-   strip. The bottom panel slides around inside .play-area.
+   4. GAME PANEL - everything below the top panel, down to the frame's
+   bottom edge. The bottom panel slides around inside .play-area, over it.
    --------------------------------------------------------------------- */
 
 .play-area {
@@ -187,13 +203,14 @@ body {
   overflow: hidden;
 }
 
-/* Stops exactly where the bottom strip begins -> 9:14. */
+/* Fills .play-area: 15/16 of the frame -> exactly 9:15 (it was 9:14 while
+   the bottom panel kept a strip of its own below the game; 2026-10-16). */
 .game-panel {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  bottom: var(--bar-h);
+  bottom: 0;
   overflow: hidden;
   background: var(--game-bg);
 }
@@ -208,11 +225,20 @@ body {
   border: 0;
 }
 
+/* The invisible sheet over the game while the bottom panel is open (see
+   index.html). Above the game, below the drawer. It has no look of its
+   own: the game stays fully visible and keeps running; only taps stop here. */
+.game-cover {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+}
+
 /* ------------------------------------------------------------------------
    5. BOTTOM PANEL (the drawer)
-   One piece: the full-width strip on top, the panel content below.
-   Its height = the strip + a share of the game panel.
-   CLOSED: slid down so only the strip shows, in its own space.
+   The tabs and their content; no strip of its own since 2026-10-16.
+   Its height = a share of the game panel (--drawer-open-share).
+   CLOSED: slid all the way down, out of sight (.play-area clips it).
    OPEN:   slid up, covering the lower part of the game panel.
    --------------------------------------------------------------------- */
 
@@ -221,17 +247,16 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  height: calc(var(--bar-h) + (100% - var(--bar-h)) * var(--drawer-open-share));
+  height: calc(100% * var(--drawer-open-share));
   z-index: 5;
   /* Rounded on its two BOTTOM corners to match the frame. */
   border-radius: 0 0 var(--frame-radius) var(--frame-radius);
   background: var(--drawer-bg);
-  /* Inside the height, so the visible closed strip is exactly --bar-h. */
   border-top: 2px solid var(--drawer-edge);
   color: #fff;
   display: flex;
   flex-direction: column;
-  transform: translateY(calc(100% - var(--bar-h)));
+  transform: translateY(100%);
   transition: transform 300ms ease, box-shadow 300ms ease;
 }
 
@@ -239,32 +264,6 @@ body {
 .drawer.is-open {
   transform: translateY(0);
   box-shadow: 0 -2cqw 6cqw #0006;
-}
-
-/* The strip: the whole width is one big button.
-   bar-h minus the 2px edge above it, so edge + strip = bar-h. */
-.drawer-strip {
-  flex: 0 0 calc(var(--bar-h) - 2px);
-  width: 100%;
-  display: grid;
-  place-items: center;
-}
-
-/* A gentle up arrow: a soft chevron drawn with two borders. It turns over
-   to point down when the panel is open. */
-.drawer-arrow {
-  width: 5cqw;
-  height: 5cqw;
-  border-left: 0.9cqw solid #fff;
-  border-top: 0.9cqw solid #fff;
-  border-radius: 0.4cqw;
-  opacity: 0.6;
-  transform: translateY(1.2cqw) rotate(45deg);
-  transition: transform 300ms ease;
-}
-
-.drawer.is-open .drawer-arrow {
-  transform: translateY(-1.2cqw) rotate(225deg);
 }
 
 .drawer-content {
@@ -304,9 +303,9 @@ body {
   margin-left: 5cqw;
 }
 
-/* The game picker: square icon-only buttons. The home game's button sits
-   alone and centred at the top. Below it is the board, a space exactly two
-   button rows tall. app.js fills it with an upper row (slots 1..4) and a
+/* The game picker: square icon-only buttons on the board, a space exactly
+   two button rows tall (the home game's lone button above it went with the
+   "home" slot on 2026-10-16). app.js fills it with an upper row (slots 1..4) and a
    lower row (slots 5..8). Each row is a grid of four fixed cells and every
    button is placed in the cell its slot names, so empty cells stay empty
    and a game never moves when another is added. When only one row has
@@ -314,14 +313,14 @@ body {
    Sizes are in cqw so the board scales with the frame. Four buttons plus
    three gaps are 81cqw wide, leaving about 9cqw of breathing room each
    side. On a phone a button is about 70 px: well over the 44 px fingertip
-   minimum. Three rows plus gaps fit inside the open drawer with a little
-   to spare. */
+   minimum. Two rows plus gaps fit inside the open drawer with room to
+   spare, so the board is centred in the tab's height. */
 .game-buttons {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4.5cqw;                   /* home to board: the pressed home button
-                                    sinks 1.2cqw, so it needs extra room */
+  justify-content: center;
+  min-height: 100%;
   --game-button-size: 18cqw;
 }
 
@@ -683,6 +682,36 @@ body {
   text-shadow: 0 0.3cqw 0.3cqw #0009;
 }
 
+/* The tab's title is two lines, like the welcome screen's heading: GO FISH!
+   big in the gold, "Candy Edition" smaller under it (John, 2026-10-16). The
+   line break is a 
+ mark in the games.json title; this only sets the sizes:
+   the title's own size is the subtitle's, and the accent is 1.4x that. */
+.look-candy-go-fish .this-game-title {
+  font-size: clamp(13px, 4.2cqw, 22px);
+}
+
+.look-candy-go-fish .this-game-title .accent {
+  font-size: 1.4em;
+}
+
+/* More air between the candy plate and the two-line title (John: they
+   were "cramped together"); the other games keep the 3cqw gap. */
+.look-candy-go-fish .this-game-head {
+  gap: 6cqw;
+}
+
+/* The top bar: GO FISH! at the bar's usual size, "- Candy Edition" smaller
+   (John, 2026-10-16). The bar's own size is clamp(14px, 5cqw, 26px); the
+   accent keeps it and the rest drops to about three quarters. */
+.top-title.look-candy-go-fish {
+  font-size: clamp(11px, 3.8cqw, 20px);
+}
+
+.top-title.look-candy-go-fish .accent {
+  font-size: clamp(14px, 5cqw, 26px);
+}
+
 /* The icon is a candy plate already: shown as it is, no orange frame, and
    about 30% larger than the other games' icons. */
 .look-candy-go-fish .this-game-icon {
@@ -710,7 +739,6 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .drawer,
-  .drawer-arrow,
   .setting-slider,
   .setting-slider::after {
     transition: none;

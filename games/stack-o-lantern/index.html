@@ -6,7 +6,7 @@
     <title>Stack-o'-Lantern</title>
     <!-- Shown inside the app's game panel (an iframe), but also works on its
      own: open games/stack-o-lantern/index.html directly to test it. -->
-    <link rel="stylesheet" href="./stack-o-lantern.css" />
+    <link rel="stylesheet" href="./stack-o-lantern.css?v=2026-1016-stack-milestones" />
   </head>
 
   <body>
@@ -17,6 +17,13 @@
 
     <header class="info-bar text-medium">
       <span>Stacked <b id="count">0</b></span>
+      <!-- The mode toggle: one tap swaps EASY and HARD. The lit word is the
+           current mode (stack-o-lantern.js sets data-mode). It is outside
+           the stage, so tapping it never drops a pumpkin. -->
+      <button class="mode-switch text-small" id="modeSwitch" type="button" data-mode="hard">
+        <span class="mode-word" data-mode="easy">EASY</span>
+        <span class="mode-word" data-mode="hard">HARD</span>
+      </button>
       <span>Best <b id="best">0</b></span>
     </header>
 
@@ -24,6 +31,10 @@
          the falling pieces and the camera; all numbers are in vw. -->
     <main class="stage" id="stage">
       <div class="stars" id="stars"></div>
+
+      <!-- A reminder of what the mode changes, just under the toggle. It
+           shows when the toggle is tapped and leaves when a round starts. -->
+      <p class="mode-hint text-small" id="modeHint" hidden></p>
 
       <!-- The moon watches. Its mouth changes with the quality of a drop. -->
       <div class="moon is-happy" id="moon" aria-hidden="true">
@@ -36,8 +47,18 @@
            pieces all live here, so one transform scrolls them together. -->
       <div class="tower" id="tower"></div>
 
-      <!-- Big reaction word after each drop: PERFECT!, nice, yikes... -->
-      <p class="reaction text-large text-on-art" id="reaction" aria-live="polite"></p>
+      <!-- Big reaction word after each drop: PERFECT!, nice, yikes... The
+           script adds streak badges after the word (a star x3, a bolt x4). -->
+      <p class="reaction text-large text-on-art" id="reaction" aria-live="polite">
+        <span class="reaction-word" id="reactionWord"></span>
+      </p>
+
+      <!-- Milestone banner: pops in with a burst of stars (see
+           celebrateNext in the script), then hides itself. -->
+      <div class="milestone" id="milestone" hidden aria-live="polite">
+        <p class="milestone-name text-large" id="milestoneName"></p>
+        <p class="milestone-what text-medium text-on-art" id="milestoneWhat"></p>
+      </div>
 
       <!-- Start screen: the first tap anywhere starts the game. -->
       <div class="overlay" id="startScreen">
@@ -47,6 +68,9 @@
           Line it up. Stack it high.<br />
           The moon is judging you.
         </p>
+        <p class="mode-note text-small text-on-art" id="modeNote"></p>
+        <!-- A milestone to go for; the script changes it every few seconds. -->
+        <p class="goal-line text-small text-on-art" id="goalLine"></p>
         <p class="hint text-medium text-on-art">Tap anywhere to start</p>
       </div>
 
@@ -55,13 +79,20 @@
         <p class="title text-large text-on-art" id="endWord">SPLAT.</p>
         <p class="text-medium text-on-art" id="endCount"></p>
         <p class="text-medium text-on-art compare" id="endCompare"></p>
+        <!-- The round's milestones as chips. Tap one (or hover, with a
+             mouse) and a bubble above it says what earned it. -->
+        <div class="end-milestones" id="endMilestones" hidden>
+          <p class="text-small text-on-art">Milestones this game</p>
+          <div class="milestone-list" id="endMilestoneList"></div>
+        </div>
         <button class="play-again text-medium" id="playAgain">Stack again</button>
+        <p class="milestone-tip text-small" id="milestoneTip" hidden></p>
       </div>
     </main>
 
     <!-- The helper comes first: it gives the game Halloween.reportScore(),
          which hands the score to the app (see games/game-helper.js). -->
-    <script src="../game-helper.js"></script>
-    <script src="./stack-o-lantern.js"></script>
+    <script src="../game-helper.js?v=2026-1016-stack-milestones"></script>
+    <script src="./stack-o-lantern.js?v=2026-1016-stack-milestones"></script>
   </body>
 </html>

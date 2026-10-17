@@ -22,7 +22,7 @@ file-size limits, naming rules, and how to test and submit.
 > finishing.
 
 **Demo games.** `games/stack-o-lantern/` (Stack-o'-Lantern) and
-`games/pumpkin-patch/` (the home screen) are demos, written to follow these
+`games/pumpkin-patch/` (the watch-only patch in slot 1) are demos, written to follow these
 rules. They may change. Where a demo departs from a rule, its own
 `README - <NAME>.md` has a section *"Where this game breaks the
 requirements, and why"*. If the demo and this document disagree and the
@@ -35,29 +35,32 @@ by the project owner. Don't copy it into your game folder: link to it.*
 
 # PART 1 — For designers
 
-## 1.1 Your canvas: 1296 × 2016 pixels
+## 1.1 Your canvas: 1296 × 2160 pixels
 
 Your game lives in the **game panel**, the big middle area of the app:
 
 ```text
 ┌─────────────────────┐
-│  app top panel      │  the app's: game name, Home, menu
+│  app top panel      │  the app's: Home button, game name
 ├─────────────────────┤  ← app's lavender line (not in your space)
 │                     │
 │                     │
 │    GAME PANEL       │  YOURS: every pixel, edge to edge
-│    1296 × 2016      │
+│    1296 × 2160      │
 │                     │
 │                     │
-├─────────────────────┤  ← app's mint line (not in your space)
-│  app bottom strip   │  the app's: slides up for menus
-└─────────────────────┘
+│                     │
+└─────────────────────┘  (the app's bottom panel slides up over the
+                          lower part, only while the player has it open)
 ```
 
-**Design everything on a canvas of 1296 × 2016 pixels.** That is the game
+**Design everything on a canvas of 1296 × 2160 pixels.** That is the game
 panel on the biggest iPhone (16 Pro Max), in its real screen pixels. On
 every other device the whole canvas is shrunk evenly to fit, never
-stretched or cropped. The shape (9 wide : 14 tall) is the same everywhere.
+stretched or cropped. The shape (9 wide : 15 tall) is the same everywhere.
+(It was 9 : 14, 1296 × 2016, until 2026-10-16, when the app's bottom strip
+went away and gave the game its row. A game drawn for the old canvas gets
+a little more height, nothing else.)
 
 - **The whole canvas is yours.** The lines around it belong to the app and
   take none of your space (see 1.7).
@@ -65,7 +68,7 @@ stretched or cropped. The shape (9 wide : 14 tall) is the same everywhere.
   inside your canvas. It uses up some of your space.
 - The corners are square.
 - **The app's bottom panel can slide up over the lower 55% of the canvas**
-  (about the bottom 1109 pixels). The player can open it at any time, also
+  (about the bottom 1188 pixels). The player can open it at any time, also
   in the middle of a game, and **the app does not pause your game** when
   they do. See 1.8.
 
@@ -74,7 +77,7 @@ stretched or cropped. The shape (9 wide : 14 tall) is the same everywhere.
 **Every size in Part 1 is in canvas pixels.** They are real pixels, the
 same pixels your drawing program uses, so:
 
-- Draw and measure on the 1296 × 2016 canvas.
+- Draw and measure on the 1296 × 2160 canvas.
 - **Export each image at the size it has on the canvas.** A pumpkin that is
   311 pixels wide on the canvas is exported 311 pixels wide (or up to 1.5×
   bigger, never smaller).
@@ -91,12 +94,12 @@ The "In code" column is for coders (see 2.1). Designers can ignore it.
 
 | Thing | Canvas pixels | In code |
 |---|---|---|
-| **The canvas** | **1296 × 2016** | 100vw × 100vh |
+| **The canvas** | **1296 × 2160** | 100vw × 100vh |
 | **Smallest tap target** (anything the player touches, still or moving) | **168 × 168** | 13vw |
 | Comfortable tap target | 200 to 260 | 15–20vw |
 | Space between tap targets (at least) | 26 | 2vw |
 | Main button (Start, Play again) | 170–210 tall, 520–1040 wide | 13–16vw × 40–80vw |
-| Keep important buttons out of the bottom strip of | 65 | 5vw |
+| Keep important buttons off the very bottom edge (the frame's corners are rounded there) | 65 | 5vw |
 | Info bar (score, timer), suggested height | about 160 (8% of the height) | 12.5vw |
 | Sprite, decoration only (too small to tap) | 104 | 8vw |
 | Sprite, small (smallest tappable) | 168 | 13vw |
@@ -174,7 +177,7 @@ Square cells filling the full width (1296):
 |---|---|
 | A sprite | its width on the canvas (e.g. 311 × 311 for a large sprite) |
 | A full-width strip or bar | 1296 wide |
-| **A background for the whole game** | **1296 × 2016** exactly (so it is never cropped or stretched) |
+| **A background for the whole game** | **1296 × 2160** exactly (so it is never cropped or stretched) |
 
 - **Sprites: PNG with a transparent background.**
 - **Backgrounds and photos: JPG** (much smaller files).
@@ -225,7 +228,7 @@ does very little to your game, so a few things are your game's own job.
 ### The bottom panel does not pause your game
 
 - **The player can call up the app's bottom panel at any time**, also in
-  the middle of a game (the ☰ button, or the strip under your canvas). It
+  the middle of a game (the Home button in the app's top panel). It
   slides up over **about the lower half of your canvas (55%)** and stays
   there until the player closes it. Taps on the panel do not reach your
   game.
@@ -239,13 +242,15 @@ does very little to your game, so a few things are your game's own job.
   game that only changes when the player taps needs nothing.
 - The same goes for starting and restarting: your own start screen, your
   own "play again".
-- When the player taps Home or picks another game, your page is simply
-  closed. Nothing of it is kept, except scores it has reported.
+- When the player picks another game, your page is simply closed.
+  Nothing of it is kept, except scores it has reported. (Home only opens
+  the panel; a tap on your game while the panel is open closes the panel
+  again, and that tap never reaches your game.)
 
 ### High scores
 
 - The app keeps **the five best scores of each game** and shows them in
-  the bottom panel's **This Game** tab, each with the date it was made,
+  the bottom panel's **THIS GAME** tab, each with the date it was made,
   for example `1.  42  (10-01-2026)`. The list is shown for every game,
   with `---` where there is no score yet. The player can clear a game's
   list there.
@@ -266,7 +271,7 @@ does very little to your game, so a few things are your game's own job.
   off, music and volume are **your game's own controls**, inside your
   canvas. Remember: an iPhone plays nothing until the player has tapped
   something on your page.
-- The This Game tab shows **up to three on/off switches of your game's
+- The THIS GAME tab shows **up to three on/off switches of your game's
   own**, if you name them in your `games.json` entry, for example
   "Easy / Hard" (the `_about` block in `games.json` says how). A game
   that names none gets no switch column, and its high scores use the
@@ -303,7 +308,7 @@ Your page runs inside the game panel, so **inside your page, `100vw` ×
 **In JavaScript**, convert with the page's current width:
 
 ```js
-/** Canvas pixels (on the 1296 x 2016 design canvas) -> CSS pixels right now. */
+/** Canvas pixels (on the 1296 x 2160 design canvas) -> CSS pixels right now. */
 function canvasToScreen(canvasPixels) {
   return (canvasPixels / 1296) * window.innerWidth;
 }
@@ -372,8 +377,8 @@ Sizes refer to the table in 1.3.
    exception is the app's helper file, `../game-helper.js` (2.5).
 2. MUST include the page setup in 2.2 (fills the panel, never scrolls,
    touch settings).
-3. MUST work at any size with a 9:14 shape, and SHOULD still look right at
-   slightly different shapes (9:13 to 9:15).
+3. MUST work at any size with a 9:15 shape, and SHOULD still look right at
+   slightly different shapes (9:14 to 9:16).
 4. MUST also run on its own when its `index.html` is opened directly.
 
 **Sizing**
@@ -411,7 +416,7 @@ Sizes refer to the table in 1.3.
 
 16. Raster images SHOULD be exported at their canvas size (their CSS width
     in vw × 12.96), up to 1.5× that, never smaller. Full-panel backgrounds:
-    1296 × 2016.
+    1296 × 2160.
 17. Sprites SHOULD be PNG with transparency (or SVG); backgrounds and
     photos SHOULD be JPG.
 
@@ -506,10 +511,10 @@ The canvas is shrunk to fit each device.
 
 | Device | Canvas shown at (CSS px) | Real screen pixels | Canvas scale |
 |---|---|---|---|
-| iPhone SE (smallest phone) | 338 × 526 | 676 × 1052 | 52% |
-| iPhone 15 / 16 (typical) | 382 × 594 | 1146 × 1783 | 88% |
-| **iPhone 16 Pro Max** | 432 × 672 | **1296 × 2016** | **100%** |
-| PC, 1080p monitor | up to 547 × 850 | up to 547 × 850 | up to 42% |
+| iPhone SE (smallest phone) | 338 × 563 | 676 × 1126 | 52% |
+| iPhone 15 / 16 (typical) | 382 × 637 | 1146 × 1911 | 88% |
+| **iPhone 16 Pro Max** | 432 × 720 | **1296 × 2160** | **100%** |
+| PC, 1080p monitor | up to 547 × 912 | up to 547 × 912 | up to 42% |
 | PC, 4K monitor | depends on Windows scaling | about 1030 wide | about 80% |
 | Mac, 5K screen | about 650 to 730 wide | about 1300 to 1460 wide | 100% to 113% |
 

@@ -57,19 +57,69 @@ body {
   flex: 0 0 auto;
   display: flex;
   justify-content: space-between;
-  padding: 2.5vw 5vw;
+  align-items: center;
+  padding: 1vw 5vw;
   background: #1d1233;
   border-bottom: 2px solid #9b7cc4;   /* echoes the app's lavender line */
 }
 
+/* The EASY / HARD toggle in the middle of the info bar: a dark pill with
+   both words in it; the lit word is the mode. 13vw tall is the smallest
+   tap target (requirements 1.7). */
+.mode-switch {
+  display: flex;
+  align-items: center;
+  gap: 0.6vw;
+  min-height: 13vw;
+  padding: 0 1vw;
+  border: none;
+  border-radius: 3vw;
+  background: transparent;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.mode-word {
+  padding: 1.6vw 2.4vw;
+  border-radius: 2.4vw;
+  background: #2b1d47;
+  color: rgb(255 255 255 / 40%);
+  transition: background 150ms ease-out, color 150ms ease-out;
+}
+
+.mode-switch[data-mode="easy"] .mode-word[data-mode="easy"],
+.mode-switch[data-mode="hard"] .mode-word[data-mode="hard"] {
+  background: #e8741c;
+  color: #fff;
+}
+
 /* Night sky. The gradient gets lighter towards the ground, like a town
-   glowing below the horizon. */
+   glowing below the horizon. EASY has this friendly plum sky; HARD's is
+   blacker with an ember-red horizon, so the two modes look different at a
+   glance (John, 2026-10-16). stack-o-lantern.js sets data-mode on <body>. */
 .stage {
   position: relative;
   flex: 1 1 auto;
   overflow: hidden;
   background: linear-gradient(#0f0822 0%, #2e1a44 55%, #5a2f6a 100%);
   cursor: pointer;
+  transition: background 400ms ease-out;
+}
+
+body[data-mode="hard"] .stage {
+  background: linear-gradient(#050309 0%, #1a0820 55%, #6b1d2a 100%);
+}
+
+body[data-mode="hard"] .ground {
+  background: #1b1a1f;
+  border-top-color: #d9631a;
+}
+
+body[data-mode="hard"] .moon {
+  background: #ead6a6;
 }
 
 /* Stars are three layers of tiny radial gradients, repeated at
@@ -103,6 +153,11 @@ body {
   background: #f6e7b0;
   box-shadow: 0 0 7vw rgb(246 231 176 / 45%), inset -2vw -2vw 0 rgb(0 0 0 / 8%);
   pointer-events: none;
+  /* Above the start and end overlays (z 10), so the moon stays bright
+     while they dim the rest; its face is the game's verdict. It keeps
+     exactly its in-game place and size there (John: "that is a feature";
+     a 1.3x grow at game over was tried and dropped the same day). */
+  z-index: 11;
 }
 
 .moon .eye {
@@ -219,13 +274,144 @@ body {
   left: 0;
   right: 0;
   top: 32%;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3vw;
   opacity: 0;
   pointer-events: none;
   letter-spacing: 0.1em;
 }
-.reaction.is-perfect { color: #ffd34d; }
-.reaction.is-miss    { color: #ff6b6b; }
+.reaction.is-perfect .reaction-word { color: #ffd34d; }
+.reaction.is-miss    .reaction-word { color: #ff6b6b; }
+.reaction.is-mode    .reaction-word { color: #e8741c; }   /* the flash when the toggle is tapped mid-round */
+
+/* Streak badges after the word: a shape and "x3". The shapes are
+   clip-path polygons, so they are just coloured boxes cut to a star or a
+   bolt; no images. */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 1vw;
+  font-size: 0.6em;
+  letter-spacing: 0;
+}
+
+.badge-icon {
+  width: 6vw;
+  height: 6vw;
+  background: #ffd34d;
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+
+.badge-bolt .badge-icon {
+  background: #7fd4ff;
+  clip-path: polygon(60% 0%, 20% 55%, 48% 55%, 40% 100%, 80% 42%, 52% 42%);
+}
+
+/* The milestone banner: the name in gold with a glow, what earned it
+   under it. It pops in, holds, and lifts away; the script hides it after
+   MILESTONE_MS. Above the reaction word, below the overlays. */
+.milestone {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 18%;
+  z-index: 5;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.milestone-name {
+  color: #ffd34d;
+  letter-spacing: 0.08em;
+  text-shadow: 0 0 2vw #ffb300, 0 0.3vw 0.6vw rgb(0 0 0 / 70%);
+}
+
+.milestone.is-shown {
+  animation: pop 1800ms ease-out forwards;
+}
+
+@keyframes pop {
+  0%   { opacity: 0; transform: scale(0.5); }
+  15%  { opacity: 1; transform: scale(1.15); }
+  25%  { transform: scale(1); }
+  80%  { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-5vw); }
+}
+
+/* One star of a burst. The script sets --dx, --dy (where it flies to),
+   --spin and --spark (its colour). It starts at the banner's centre, grows
+   for a moment, then flies out, spinning and fading. */
+.spark {
+  position: absolute;
+  left: 50%;
+  top: 26%;
+  width: 4vw;
+  height: 4vw;
+  background: var(--spark, #ffd34d);
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  pointer-events: none;
+  opacity: 0;
+  animation: spark 1000ms ease-out forwards;
+}
+
+@keyframes spark {
+  0%   { opacity: 1; transform: translate(-50%, -50%) scale(0.4) rotate(0deg); }
+  15%  { opacity: 1; transform: translate(-50%, -50%) scale(1.4) rotate(0deg); }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.5) rotate(var(--spin)); }
+}
+
+/* The end screen's milestone chips: the names flow across lines, each
+   one whole, each a button. The open one (tapped, or under the mouse) is
+   lit and its bubble sits above it (see showTip in the script). */
+.end-milestones {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.5vw;
+}
+
+.milestone-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2.2vw 2.5vw;
+}
+
+.milestone-chip {
+  min-height: 11vw;            /* a finger-sized target, but drawn as the word alone */
+  padding: 1.2vw 2vw;
+  border: none;
+  background: none;
+  color: #ffd34d;
+  font-family: inherit;
+  font-weight: 700;
+  white-space: nowrap;
+  text-shadow: 0 0.3vw 0.6vw rgb(0 0 0 / 70%);
+  cursor: pointer;
+}
+
+.milestone-chip.is-open {
+  color: #fff;
+  text-shadow: 0 0 2vw #ffd34d, 0 0.3vw 0.6vw rgb(0 0 0 / 70%);
+}
+
+.milestone-tip {
+  position: absolute;      /* placed by the script, in px, above its chip */
+  z-index: 12;
+  max-width: 80vw;
+  padding: 2vw 3.5vw;
+  border-radius: 2.5vw;
+  background: #f6e7b0;
+  color: #2a2230;
+  font-weight: 700;
+  text-align: center;
+  box-shadow: 0 1vw 3vw rgb(0 0 0 / 50%);
+  pointer-events: none;
+  animation: fade-in 150ms ease-out;
+}
 
 .reaction.is-shown {
   animation: rise 800ms ease-out forwards;
@@ -253,7 +439,57 @@ body {
   background: rgb(18 10 31 / 72%);
 }
 
+/* The end screen has more to show (the chips), so it is looser, and it
+   starts below the moon rather than behind it. */
+#endScreen {
+  gap: 4.5vw;
+  padding-top: 35vw;    /* the moon reaches down to 33vw; TIMBER! is wide */
+  justify-content: flex-start;
+}
+
 .overlay .title { line-height: 1.1; }
+
+/* The start screen names the mode in a quiet line above the hint. */
+.overlay .mode-note {
+  opacity: 0.85;
+}
+
+/* Under it, a milestone to go for: the name in gold, then what it takes.
+   It keeps its height while empty, so the screen does not jump; the
+   script fades it in and out with is-shown. */
+.overlay .goal-line {
+  min-height: 2.7em;
+  opacity: 0;
+  transition: opacity 400ms ease-out;
+}
+
+.overlay .goal-line b {
+  color: #ffd34d;
+}
+
+.overlay .goal-line.is-shown {
+  opacity: 1;
+}
+
+/* The reminder under the toggle: a quiet line at the top of the stage,
+   above the overlays so it reads on the start and end screens too. No
+   border, dimmed text (John: "more subdued"). */
+.mode-hint {
+  position: absolute;
+  left: 50%;
+  top: 2vw;
+  transform: translateX(-50%);
+  z-index: 12;
+  max-width: 90vw;
+  padding: 1.6vw 3.5vw;
+  border-radius: 3vw;
+  background: rgb(18 10 31 / 70%);
+  color: rgb(255 255 255 / 65%);
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: fade-in 200ms ease-out;
+}
 
 .overlay .hint {
   margin-top: 6vw;
@@ -294,4 +530,11 @@ body {
   .slab.is-new { animation: none; }
   .overlay .hint { animation: none; }
   .moon .mouth { transition: none; }
+  .spark { display: none; }
+  .milestone.is-shown { animation: fade-in 300ms ease-out forwards; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }

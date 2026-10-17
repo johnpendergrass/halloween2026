@@ -2,7 +2,7 @@
   "games": [
     {
       "folder_name": "pumpkin-patch",
-      "goes_in_slot": "home",
+      "goes_in_slot": 1,
       "title": "The Pumpkin Patch",
       "short_title": "Patch",
       "icon": "assets/patch.svg",
@@ -20,7 +20,7 @@
     },
     {
       "folder_name": "stack-o-lantern",
-      "goes_in_slot": 1,
+      "goes_in_slot": 2,
       "title": "Stack-o'-Lantern",
       "short_title": "Stack",
       "icon": "assets/stack.svg",
@@ -28,13 +28,8 @@
       "credits": "Designed and written by Claude Code at John's invitation",
       "date": "September 29, 2026",
       "description": "Pumpkin slabs slide across the night sky. Tap to drop each one on the tower. Whatever hangs over the edge gets sliced off, so sloppy drops make the tower narrower until one misses. The moon is judging you.",
-      "how_to_play": "Tap anywhere to drop the sliding pumpkin onto the one below. Line the edges up: a perfect drop keeps the full width, and three perfects in a row grow it back. Stack as many as you can before a slab misses.",
-      "settings": [
-        {
-          "label": "Easy / Hard",
-          "default": 0
-        }
-      ]
+      "how_to_play": "Tap anywhere to drop the sliding pumpkin onto the one below. Line the edges up: a perfect drop keeps the full width, and three perfects in a row grow it back. Stack as many as you can before a slab misses. EASY or HARD is the toggle at the top of the game; it changes how exact a drop must be.",
+      "settings": []
     },
     {
       "folder_name": "game1",
@@ -51,7 +46,7 @@
     },
     {
       "folder_name": "game2",
-      "goes_in_slot": 2,
+      "goes_in_slot": "",
       "title": "Game 2",
       "short_title": "Game 2",
       "icon": "",
@@ -143,8 +138,8 @@
     {
       "folder_name": "candy-go-fish",
       "goes_in_slot": 8,
-      "title": "__GO FISH__ - Candy Edition",
-      "short_title": "GO FISH",
+      "title": "__GO FISH!__\nCandy Edition",
+      "short_title": "__GO FISH!__ - Candy Edition",
       "icon": "assets/candy-dish/icon-candy-plate.png",
       "designer": "",
       "credits": "v 0.19.2 10/2026 jp/claude/chatty",
@@ -176,22 +171,22 @@
     ],
     "fields": {
       "folder_name": "The game's folder under games/. LOWERCASE ONLY (GitHub Pages is case-sensitive). Required.",
-      "goes_in_slot": "Where the game appears: \"home\" for the home game (shown at start, no button), or a whole number 1 to 8 for a fixed cell on the button board. The board is two rows of four: 1 2 3 4 across the upper row, 5 6 7 8 across the lower row. A game always sits in its own cell, so slot 1 is always top left and slot 8 always bottom right; cells nobody uses stay empty. If only one row has games, that row is drawn in the middle. 9 or above, or \"\", means the game is listed but not shown - an easy way to bench a game. If two entries claim the same slot, the first one in the file wins.",
-      "title": "The game's full name, shown on its button. May use the text marks described under description; the button's spoken name and the top bar use the plain words.",
-      "short_title": "A short name, about 12 characters at most: shown in the narrow top bar, and on the button when there is no usable icon (the button fits about ten characters per line, two lines). Leave it the same as title if the title is short.",
+      "goes_in_slot": "Where the game appears: a whole number 1 to 8 for a fixed cell on the button board. The game in slot 1 is also the one shown when the app starts (behind the open GAMES tab). The board is two rows of four: 1 2 3 4 across the upper row, 5 6 7 8 across the lower row. A game always sits in its own cell, so slot 1 is always top left and slot 8 always bottom right; cells nobody uses stay empty. If only one row has games, that row is drawn in the middle. 9 or above, or \"\", means the game is listed but not shown - an easy way to bench a game. If two entries claim the same slot, the first one in the file wins.",
+      "title": "The game's full name, shown in the THIS GAME tab (and on the button when there is no usable icon). May use the text marks described under description, including \"\\n\" for a second, smaller line in the tab when the game's own look asks for it; the button's spoken name uses the plain words.",
+      "short_title": "A short name shown in the narrow top bar, and on the button when there is no usable icon (the button fits about ten characters per line, two lines). About 12 characters is comfortable; the bar holds about 24 on the smallest phone and cuts anything longer with an ellipsis. May use the marks: an __accent__ is orange in the top bar, the rest white. Leave it the same as title if the title is short.",
       "icon": "Path to the game's icon, relative to the game's folder, e.g. assets/icon.png. SPEC: a square 256 x 256 real pixels, PNG with a transparent background (or an SVG with a square viewBox). Draw anything that fills the square; it is shown inside an orange rounded button with a small orange margin, so plan for orange around it. Wiggle room: each side may be 200 to 300 pixels and the two sides may differ by up to 10; the app scales it. Outside that, or missing, or a bad path: the button shows short_title as text instead (and says why in the browser console).",
       "designer": "Who made the game. Free text.",
       "credits": "Where art, sound or ideas came from. Free text, may be empty.",
       "date": "When the game was finished or last changed. Free text, for display only.",
-      "description": "One or two sentences about the game, shown in the This Game tab. One string, or a list of strings shown as separate paragraphs. Marks understood: **bold**, __accent__ (the game's accent style; bold unless styles.css section 5b says more), ~~rainbow~~ (a colour per letter), \"\\n\" for a new line inside a paragraph, and a paragraph starting with \"!! \" for a shaded emphasis line. No HTML.",
-      "how_to_play": "Short instructions, shown in the This Game tab. One string, or a list of strings shown as separate paragraphs, with the same marks as description. Keep it to a few sentences.",
-      "settings": "Optional: up to three on/off switches for your game, shown in the This Game tab next to the high scores. (There is no app-wide Sound switch any more; sound is your game's own job.) A list of { \"label\": \"Easy / Hard\", \"default\": 0 } entries. The switch's left position is 0 and its right position is 1, so a label written as \"Left / Right\" lines up with the switch. Keep a label to about 20 characters. default is where the switch starts (0 or 1); after that the app remembers each player's choice on their own device. [] or no settings field = no switches of your own. A fourth entry is ignored. AS THINGS STAND the switches are only shown and remembered: no game can read them, so they change nothing in a game. A setting your game really needs is your game's own job (its own options screen, say)."
+      "description": "One or two sentences about the game, shown in the THIS GAME tab. One string, or a list of strings shown as separate paragraphs. Marks understood: **bold**, __accent__ (the game's accent style; bold unless styles.css section 5b says more), ~~rainbow~~ (a colour per letter), \"\\n\" for a new line inside a paragraph, and a paragraph starting with \"!! \" for a shaded emphasis line. No HTML.",
+      "how_to_play": "Short instructions, shown in the THIS GAME tab. One string, or a list of strings shown as separate paragraphs, with the same marks as description. Keep it to a few sentences.",
+      "settings": "Optional: up to three on/off switches for your game, shown in the THIS GAME tab next to the high scores. (There is no app-wide Sound switch any more; sound is your game's own job.) A list of { \"label\": \"Easy / Hard\", \"default\": 0 } entries. The switch's left position is 0 and its right position is 1, so a label written as \"Left / Right\" lines up with the switch. Keep a label to about 20 characters. default is where the switch starts (0 or 1); after that the app remembers each player's choice on their own device. [] or no settings field = no switches of your own. A fourth entry is ignored. AS THINGS STAND the switches are only shown and remembered: no game can read them, so they change nothing in a game. A setting your game really needs is your game's own job (its own options screen, say)."
     },
     "good_to_know": [
-      "High scores need nothing in this file: a game includes games/game-helper.js and calls Halloween.reportScore(42) at game over; the app keeps the five best per game on the player's device and shows them in the This Game tab. A game may add up to two short notes to a score, such as the opponent or the variant: Halloween.reportScore(3, \"3-2\", [\"vs. Ron\", \"3 set game\"]). See the top of games/game-helper.js.",
-      "High scores need nothing in this file: a game includes games/game-helper.js and calls Halloween.reportScore(42) at game over; the app keeps the five best per game on the player's device and shows them in the This Game tab. See the top of games/game-helper.js.",
+      "High scores need nothing in this file: a game includes games/game-helper.js and calls Halloween.reportScore(42) at game over; the app keeps the five best per game on the player's device and shows them in the THIS GAME tab. A game may add up to two short notes to a score, such as the opponent or the variant: Halloween.reportScore(3, \"3-2\", [\"vs. Ron\", \"3 set game\"]). See the top of games/game-helper.js.",
+      "High scores need nothing in this file: a game includes games/game-helper.js and calls Halloween.reportScore(42) at game over; the app keeps the five best per game on the player's device and shows them in the THIS GAME tab. See the top of games/game-helper.js.",
       "The app never pauses a game. The player can open the bottom panel at any time, it covers about the lower half of the game, and the game is not paused or told. A game that needs a pause builds its own. See 1.8 in games/README - game design requirements.md.",
-      "A game may have its This Game tab drawn in its own style: app.js puts the class look-<folder_name> on the tab, and section 5b of app/styles.css may hold rules for it (Candy Go Fish does this). Ask before adding yours; a game without rules there looks like the others."
+      "A game may have its THIS GAME tab drawn in its own style: app.js puts the class look-<folder_name> on the tab, and section 5b of app/styles.css may hold rules for it (Candy Go Fish does this). Ask before adding yours; a game without rules there looks like the others."
     ]
   }
 }

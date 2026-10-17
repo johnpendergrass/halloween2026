@@ -31,26 +31,28 @@
 
     <!-- The ?v= tag forces phones to fetch fresh code after a publish.
      Change it (and APP_VERSION in app.js) whenever the code changes. -->
-    <link rel="stylesheet" href="./app/styles.css?v=2026-1016-releasable" />
+    <link rel="stylesheet" href="./app/styles.css?v=2026-1016-stack-milestones" />
   </head>
 
   <body>
     <!-- ======================================================================
      THE 9:16 FRAME. Everything lives inside it. Top to bottom:
        1. TOP PANEL     1/16 of the frame height, always visible
-       2. GAME PANEL    what is left -> 9:14. The current game's page is
+       2. GAME PANEL    what is left -> 9:15. The current game's page is
                         shown here in an <iframe>.
-       3. BOTTOM PANEL  a drawer. Closed = a full-width strip (1/16 tall).
+       3. BOTTOM PANEL  a drawer. Closed = out of sight below the frame.
                         Open = slides up OVER the lower part of the game
                         panel. The game panel never changes size.
      ====================================================================== -->
     <div class="app-shell">
 
-      <!-- 1. TOP PANEL -->
+      <!-- 1. TOP PANEL: the ONE control. Home opens the bottom panel on the
+       THIS GAME tab and closes it again. The spacer on the right is as
+       wide as the Home button, so the title is centred in the bar. -->
       <header class="top-panel">
-        <button class="top-icon" id="homeButton" aria-label="Home">🏠</button>
+        <button class="top-icon" id="homeButton" aria-label="Open or close the panel">🏠</button>
         <div class="top-title" id="topTitle">Halloween 2026</div>
-        <button class="top-icon" id="menuButton" aria-label="Open or close panel">☰</button>
+        <span class="top-icon" aria-hidden="true"></span>
       </header>
 
       <div class="play-area">
@@ -61,29 +63,33 @@
           <iframe class="game-frame" id="gameFrame" title="Game"></iframe>
         </main>
 
-        <!-- 3. BOTTOM PANEL: the strip + the content. Starts OPEN. -->
+        <!-- While the bottom panel is open, this invisible sheet lies over
+         the game. A tap on it closes the panel and goes no further: the
+         game never receives it (and keeps running; the app never pauses
+         a game). app.js shows and hides it together with the panel. -->
+        <div class="game-cover" id="gameCover" hidden></div>
+
+        <!-- 3. BOTTOM PANEL: the content only; there is no strip. Starts OPEN
+         on the GAMES tab. Home (top panel) toggles it; picking a game closes it. -->
         <section class="drawer is-open" id="drawer">
-          <button class="drawer-strip" id="drawerStrip" aria-label="Close panel">
-            <span class="drawer-arrow"></span>
-          </button>
 
           <!-- `inert` is added while the panel is closed, so its hidden
            buttons cannot be reached with the keyboard. -->
           <div class="drawer-content" id="drawerContent">
             <div class="drawer-tabs">
-              <button class="is-active" data-tab="app">App</button>
-              <button data-tab="game">This Game</button>
+              <button class="is-active" data-tab="app">GAMES</button>
+              <button data-tab="game">THIS GAME</button>
             </div>
 
-            <!-- App tab: app.js fills in one icon button per game in games.json:
-             the home game alone at the top, then a board of two rows by
-             four fixed cells; a game sits in the cell its goes_in_slot
-             names (1-4 upper row, 5-8 lower row). -->
+            <!-- GAMES tab: app.js fills in one icon button per game in games.json:
+             a board of two rows by four fixed cells; a game sits in the cell
+             its goes_in_slot names (1-4 upper row, 5-8 lower row). The game
+             in slot 1 is the one shown when the app starts. -->
             <div class="drawer-body" id="tab-app">
               <div class="game-buttons" id="gameButtons"></div>
             </div>
 
-            <!-- This Game tab: app.js fills every part from the current
+            <!-- THIS GAME tab: app.js fills every part from the current
              game's games.json entry (fillThisGameTab). Empty fields are
              hidden, so a half-filled entry still reads cleanly.
              Under the icon and name: the game's ten high scores, and,
@@ -124,6 +130,6 @@
       </div>
     </div>
 
-    <script src="./app/app.js?v=2026-1016-releasable"></script>
+    <script src="./app/app.js?v=2026-1016-stack-milestones"></script>
   </body>
 </html>

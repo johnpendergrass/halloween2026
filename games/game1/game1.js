@@ -8,7 +8,7 @@ function showSize() {
   const w = window.innerWidth;
   const h = window.innerHeight;
   sizeReadout.textContent =
-    "Game panel: " + w + " × " + h + " px (9:14 = 1.556, this = " +
+    "Game panel: " + w + " × " + h + " px (9:15 = 1.667, this = " +
     (h / w).toFixed(3) + ")";
 }
 

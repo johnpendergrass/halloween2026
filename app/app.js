@@ -11,36 +11,37 @@
 
    Section map:
      1. Settings and the games list
-     2. Bottom panel: open, close, toggle
-     3. Bottom panel tabs: App / This Game (and filling This Game)
-     4. High scores and switches (the two columns in the This Game tab)
+     2. Bottom panel: open, close, toggle (Home is the one control)
+     3. Bottom panel tabs: GAMES / THIS GAME (and filling THIS GAME)
+     4. High scores and switches (the two columns in the THIS GAME tab)
      5. Switching games
-     6. Start up: read games.json, build the buttons, show the home game
+     6. Start up: read games.json, build the buttons, show the slot 1 game
    ========================================================================= */
 
 // Bump this (and the ?v= tags in index.html) whenever code changes, so
 // phones fetch fresh copies instead of old cached ones.
-const APP_VERSION = "2026-1016-releasable";
+const APP_VERSION = "2026-1016-stack-milestones";
 
 /* ------------------------------------------------------------------------
    1. Settings and the games list
 
    games.json holds one entry per game. The fields the app uses here:
      folder_name  = the folder under games/ (lowercase)
-     goes_in_slot = "home" for the home game, or 1..LAST_SLOT for a button
-                    on the board (see makeGameButtons). Anything else (say
-                    9, or "") = listed but not shown.
+     goes_in_slot = 1..LAST_SLOT for a button on the board (see
+                    makeGameButtons); the game in slot 1 is shown when the
+                    app starts. Anything else (say 9, or "") = listed but
+                    not shown.
      title        = the button's spoken name (aria-label) and tooltip
      short_title  = in the top panel
      icon         = a square picture inside the button, relative to the
                     game's folder. Missing or not up to spec (see
                     iconQualifies) = the short_title as text instead.
-     settings     = up to three on/off switches for the This Game tab
+     settings     = up to three on/off switches for the THIS GAME tab
                     (section 4).
    The full field list is in the _about block at the bottom of games.json.
-   The home game is loaded at start and whenever no other game is active.
-   It gets no button. homeGame and games are filled in by startUp() once
-   games.json has been read; until then they are empty.
+   games is filled in by startUp() once games.json has been read; until
+   then it is empty. (Until 2026-10-16 a separate "home" game sat under
+   the open panel at start and had its own button above the board.)
    --------------------------------------------------------------------- */
 
 const GAMES_FILE = "./games.json";
@@ -62,44 +63,56 @@ const ICON_MIN = 200;
 const ICON_MAX = 300;
 const ICON_SQUARE_SLACK = 10;
 
-let homeGame = null;   // the entry whose goes_in_slot is "home"
 let games = [];        // the entries with a button, sorted by slot
 let currentGame = null;   // the entry of the game now in the game panel
 
 /* ------------------------------------------------------------------------
    2. Bottom panel: open, close, toggle
+
+   The panel has no handle of its own: closed, it is out of sight. The
+   Home button in the top panel is the one control (John, 2026-10-16):
+   it opens the panel on the THIS GAME tab and closes it again. While
+   the panel is open an invisible sheet (#gameCover) lies over the game,
+   so a tap on the game closes the panel too, and the game never sees
+   that tap. Picking a game from the GAMES tab closes the panel as well
+   (startGame, section 5).
    --------------------------------------------------------------------- */
 
 const drawer = document.getElementById("drawer");
-const drawerStrip = document.getElementById("drawerStrip");
 const drawerContent = document.getElementById("drawerContent");
+const gameCover = document.getElementById("gameCover");
+const homeButton = document.getElementById("homeButton");
 
 function openDrawer() {
   drawer.classList.add("is-open");
   drawerContent.inert = false;
-  drawerStrip.setAttribute("aria-label", "Close panel");
+  gameCover.hidden = false;
+  homeButton.setAttribute("aria-expanded", "true");
 }
 
 function closeDrawer() {
   showClearQuestion(false);   // an unanswered "You sure?" does not wait around
   drawer.classList.remove("is-open");
   drawerContent.inert = true;
-  drawerStrip.setAttribute("aria-label", "Open panel");
+  gameCover.hidden = true;
+  homeButton.setAttribute("aria-expanded", "false");
 }
 
+/** Home: open the panel about the current game, or close it if it is open. */
 function toggleDrawer() {
   if (drawer.classList.contains("is-open")) {
     closeDrawer();
   } else {
+    showTab("game");
     openDrawer();
   }
 }
 
-drawerStrip.addEventListener("click", toggleDrawer);
-document.getElementById("menuButton").addEventListener("click", toggleDrawer);
+homeButton.addEventListener("click", toggleDrawer);
+gameCover.addEventListener("click", closeDrawer);
 
 /* ------------------------------------------------------------------------
-   3. Bottom panel tabs: App / This Game
+   3. Bottom panel tabs: GAMES / THIS GAME
    --------------------------------------------------------------------- */
 
 function showTab(tabName) {
@@ -204,7 +217,7 @@ function setParagraphsOrHide(id, text) {
   element.hidden = lines.length === 0;
 }
 
-/** Fill the This Game tab from a games.json entry. Called whenever a game
+/** Fill the THIS GAME tab from a games.json entry. Called whenever a game
     is loaded, so the tab always describes what is in the game panel. The
     text comes straight from the file; the high scores and the switches
     are section 4. */
@@ -234,7 +247,7 @@ function fillThisGameTab(game) {
 }
 
 /* ------------------------------------------------------------------------
-   4. High scores and switches (the two columns in the This Game tab)
+   4. High scores and switches (the two columns in the THIS GAME tab)
 
    WHERE THESE ARE KEPT. A web page can read games.json but cannot write
    to it: a web server such as GitHub Pages only hands files out. What a
@@ -536,7 +549,14 @@ function loadGame(game) {
   currentGame = game;   // a score reported from now on belongs to this game
   gameFrame.src = "./games/" + game.folder_name + "/index.html?v=" + APP_VERSION;
   gameFrame.title = plainText(game.title);
-  topTitle.textContent = plainText(game.short_title || game.title);
+  // The top bar shows the text marks too (an __accent__ is orange there),
+  // so a game can colour part of its name: "GO FISH! - Candy Edition"
+  // (John, 2026-10-16). Plain words were used before. It also carries the
+  // game's look-<folder_name> class, like the tab, so section 5b of the
+  // stylesheet may size parts of the name (Candy Edition is smaller).
+  topTitle.className = "top-title look-" + game.folder_name;
+  topTitle.replaceChildren();
+  appendMarkedText(topTitle, game.short_title || game.title);
   fillThisGameTab(game);
   markCurrentButton(game);
 }
@@ -571,22 +591,13 @@ function afterDrawerSettles(fn) {
 
 /** Start one of the real games and get the bottom panel out of the way.
     The tab switch waits until the panel is out of sight: switching first
-    flashed the This Game tab while the panel slid down, which showed once
+    flashed the THIS GAME tab while the panel slid down, which showed once
     that tab had a light look of its own (2026-10-15). */
 function startGame(game) {
   loadGame(game);
   closeDrawer();
   afterDrawerSettles(() => showTab("game"));   // next time the drawer opens, it is about this game
 }
-
-/** Back to game0 (the home game) with the bottom panel open. */
-function goHome() {
-  loadGame(homeGame);
-  showTab("app");
-  openDrawer();
-}
-
-document.getElementById("homeButton").addEventListener("click", goHome);
 
 /** The icon's URL: the games.json path is relative to the game's folder. */
 function iconPathFor(game) {
@@ -664,16 +675,14 @@ function makeIconButton(game) {
   return button;
 }
 
-/** The App tab: the home game's button alone at the top, then the board:
-    an upper row for slots 1..4 and a lower row for slots 5..8. Each row is
+/** The GAMES tab: the board, an upper row for slots 1..4 and a lower row
+    for slots 5..8. Each row is
     a four-column CSS grid, and every button is told which column is its
     cell, so slot 1 is always far left and slot 4 always far right, however
     many games there are. A row with no games is not drawn at all, and the
     board's CSS then centres the remaining row in the two-row space. */
 function makeGameButtons() {
   const holder = document.getElementById("gameButtons");
-  holder.appendChild(makeIconButton(homeGame));
-
   const board = document.createElement("div");
   board.className = "game-board";
   const upperRow = games.filter((game) => game.goes_in_slot <= SLOTS_PER_ROW);
@@ -695,11 +704,12 @@ function makeGameButtons() {
 }
 
 /* ------------------------------------------------------------------------
-   6. Start up: read games.json, build the buttons, show the home game.
+   6. Start up: read games.json, build the buttons, show the slot 1 game
+   under the open GAMES tab.
 
    fetch() only works over http(s), not when index.html is opened straight
    from the disk (file://). Always test through start-local/ or a web
-   server. If games.json cannot be read, the app says so in the App tab
+   server. If games.json cannot be read, the app says so in the GAMES tab
    instead of showing a blank frame.
    --------------------------------------------------------------------- */
 
@@ -735,7 +745,6 @@ function pickButtonGames(allGames) {
   const bySlot = new Map();   // slot number -> the entry that won it
   allGames.forEach((game) => {
     const slot = game.goes_in_slot;
-    if (slot === "home") return;
     if (!Number.isInteger(slot) || slot < 1 || slot > LAST_SLOT) {
       console.info('games.json: "' + game.title + '" has goes_in_slot ' +
                    JSON.stringify(slot) + ", so it gets no button.");
@@ -774,16 +783,19 @@ async function startUp() {
     return;
   }
 
-  homeGame = allGames.find((game) => game.goes_in_slot === "home");
   games = pickButtonGames(allGames);
-
-  if (!homeGame) {
-    showStartupError(new Error('no entry with goes_in_slot "home" in ' + GAMES_FILE));
+  if (games.length === 0) {
+    showStartupError(new Error("no entry with goes_in_slot 1 to " + LAST_SLOT +
+                               " in " + GAMES_FILE));
     return;
   }
 
+  // The game in slot 1 is shown first; games is sorted by slot, so if
+  // nobody has slot 1 the lowest slot stands in.
   makeGameButtons();
-  goHome();
+  loadGame(games[0]);
+  showTab("app");
+  openDrawer();
 }
 
 startUp();

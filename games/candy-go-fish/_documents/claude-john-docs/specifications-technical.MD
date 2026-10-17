@@ -1,6 +1,6 @@
 # Candy Go Fish — Technical Specifications
 
-Last updated: 2026-10-16 14:15 (RELEASABLE; this file was section 4k of the root `claude-john-docs/specifications-technical.MD` until 2026-10-16, when John had the game's docs consolidated here. Its sub-headings keep their 4k numbering. The shell's technical notes stay in the root file; `../codex-john-docs/` holds the build history, ARCHITECTURE-AND-DATA, INTEGRATION-AND-VERIFICATION and the checks.)
+Last updated: 2026-10-16 15:34 (score note, welcome subtitle, 9:15 panel; the name rules live in the shell's app/styles.css 5b, see the root technical spec 4b2). Before: 14:15 RELEASABLE, consolidated here from section 4k of the root file; sub-headings keep their 4k numbering.
 
 ## 4k. Candy Go Fish implementation notes (games/candy-go-fish/, 2026-10-14 reading)
 
@@ -567,3 +567,22 @@ also quote it.
   although the 13:28 notes call them CRLF; Git's autocrlf warnings show
   on other files. The Python edit scripts detect the file's own ending, so
   it does not matter which; keep using them rather than `sed -i`.
+
+
+**2026-10-16 later afternoon (stamp `2026-1016-one-control`).**
+
+- **`finishGame()`** (`js/candy-go-fish.js`): `Halloween.reportScore(sets,
+  'h–w', [humanName + ' vs ' + opponentName])`; both names are `let`s of
+  the same start-up function. Was `['vs. ' + opponentName, copies + ' set
+  game']`.
+- **Welcome subtitle**: the baked `<span class="welcome-subtitle">` in
+  `index.html` and the rebuilt one in the script (`welcomeSubtitle.textContent`)
+  both say `Candy Edition`. The page `<title>` is unchanged.
+- **9:15 panel**: `#table { height:100%; grid-template-rows: 13vw 53vw
+  36vw 52vw; align-content:center }` needs nothing; on a 382-wide phone
+  the panel is 637 px tall against the grid's 588 px. Popups cap at 94vh
+  and just get room. `verify-shell.cjs` still asserts the three regions
+  in order and `human.bottom <= innerHeight`; it passed.
+- **Stamps**: the 19 `?v=` in `index.html` and the config fetch now say
+  `2026-1016-one-control`; the shell's APP_VERSION matches.
+
