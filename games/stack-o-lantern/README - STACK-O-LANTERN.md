@@ -1,26 +1,33 @@
-# Stack-o'-Lantern
+# Stack o' Lantern
 
 A one-tap stacking game. Pumpkin slabs slide across the night sky; tap to
 drop each one onto the tower. Whatever hangs over the edge is sliced off
 and tumbles away, so every sloppy drop makes the tower narrower, until a
 slab misses completely. A drop within a hair of perfect keeps the full
 width, and three perfects in a row grow the slab back a little. The moon
-watches and reacts. The end screen turns your height into "taller than a
-giraffe" comparisons.
+watches and reacts. Milestones pop up as you climb, and the end screen
+names the height you reached, from Scarecrow to Moon Landing, with your
+three best milestones under it.
 
 - **Made by:** Claude Code (Claude Fable 5.1), 2026-09-29, at John's
-  invitation to design a game of its own.
-- **Status:** playable and tested; awaiting John's verdict.
+  invitation to design a game of its own; reworked with John through
+  2026-10-16 and 2026-10-17.
+- **Name:** "Stack o' Lantern" since 2026-10-17 (it was Stack-o'-Lantern);
+  the folder stays `stack-o-lantern`.
+- **Status:** playable and checked; sound is the next step.
 - **The rules** every game follows are in
   [`../README - game design requirements.md`](../README%20-%20game%20design%20requirements.md).
 
 ## Files
 
 ```text
-index.html                 info bar, the stage (stars, moon, ground, tower), start and end screens
+index.html                 the stage (the high score corner, stars, moon, ground, tower), start and end screens
 stack-o-lantern.css        page setup and text classes (copied from the requirements), then the game's own styles
-stack-o-lantern.js         the game: settings, state, slabs, taps, camera, end screen
+stack-o-lantern.js         the game: settings, the milestone table, state, slabs, taps, camera, end screen
 assets/stack.svg           the icon for the app's picker (256 x 256, square viewBox)
+_documents/milestone list.md        every milestone's words, John's working copy (the script transcribes it)
+_documents/claude-john-docs/        the design and technical records
+_documents/checks/                  Playwright checks (see the technical spec, section 6)
 README - STACK-O-LANTERN.md  this file
 ```
 
@@ -30,74 +37,67 @@ README - STACK-O-LANTERN.md  this file
 2. A slab as wide as the top one slides in from alternate sides, 1.8 slab
    heights above the tower, bouncing between the edges. Tap to drop.
 3. **Perfect** (edges within 1.6vw): snaps into line, full width kept.
-   Streak counter; every third perfect in a row grows the slab 3vw wider,
-   up to the starting width ("WIDER!"). In EASY the 1.6 grows with the
-   count, reaching 3.2 at 20 pumpkins and staying there.
+   Every third perfect in a row grows the slab 3vw wider, up to the
+   starting width ("WIDER!"), and only while it is narrower than that.
 4. **Partial**: the overlap becomes the new slab, the overhang falls off
    the side it hung over. A word rates it by how much survived: nice
    (90%+), close one (70%+), yikes (45%+), oof.
-5. **Miss** (less than 0.8vw overlap): the whole slab tumbles and a big
-   word flashes, the same one the end screen then shows: one of five,
-   picked at random, from the band the count reached (`END_WORDS`: 0,
-   1–5, 6–10, 11–19, 20–34, 35+; WHIFF / SPLAT / TUMBLE! / TIMBER! /
-   SKY HIGH! / GO OUTSIDE are one from each; no full stops). John, 2026-10-16.
-6. Speed starts at 42vw/s and multiplies by 1.035 per slab (1.03 in EASY),
-   capped at 110.
-6b. As each pumpkin lands, its count ("12") pops off the top of it, flies
-   up and fades in under a second. The bar shows only the mode toggle and
-   Best (this visit's best); when a round beats an earlier best, that
-   number glows gold on the end screen until the next round starts.
-7. The camera keeps the tower top at 36% of the stage height, easing
-   there. Stars move less than the tower, for depth; the moon never moves.
-8. Every 7th slab is a pale "ghost pumpkin"; the others cycle six oranges.
-9. **Streaks and milestones** (John, 2026-10-16). The reaction word
-   carries badges: a gold star "x3" for perfects in a row (from 2) and a
-   blue bolt "x4" for drops in a row made before the slab touched a wall
-   (from 3). Nineteen milestones, each once per round: Sharp Eye / Laser /
-   Machine (5 / 10 / 20 perfects in a row), Quick Draw / Gunslinger /
-   Lightning (5 / 10 / 20 drops without a bounce), Hoop Height / Haunted
-   House / Skyscraper (10 / 25 / 50 high), Ghost Whisperer (a perfect on a
-   ghost pumpkin), Comeback (a WIDER from under half width), Tightrope /
-   High Wire (5 / 10 landings in a row on a slab half the starting width
-   or less), Needle / Eye of the Needle (3 / 6 in a row at a quarter or
-   less), Pencil Pusher / Toothpick (1 / 3 in a row on a "pencil pumpkin",
-   an eighth or less), Green Thumb / Pumpkin Farmer (2 / 3 WIDERs in a row with no
-   clipped drop between them; a plain perfect keeps the run). Each pops a
-   gold banner with a burst of 16 stars for 1.8 s (two on one drop are
-   shown one after the other) and the moon goes wide-eyed; the end screen
-   lists the round's milestones, the top one of each kind only (a 24
-   stack shows Haunted House, not Hoop Height too), as plain gold names:
-   tap one (hover, with a mouse)
-   and a bubble above it tells the fuller story (each milestone's `tip`,
-   a sentence or two). The moon keeps its in-game place and size on the
-   end screen (a feature; the words start below it). It winces at the
-   miss, then on the end
-   screen gives its verdict on the round: wide-eyed at 20+, a smile at
-   10+, a flat line at 4+, sad below that (John: sad only for a bad
-   performance). While the start screen waits, a **goal line** under the
-   title names a milestone to go for ("GUNSLINGER: ten drops in a row
-   with no bounce"), fading to another every few seconds (each entry's
-   `hint`). The first tap stops it. (A moon speech bubble was tried first
-   and dropped the same day: "does not really work".) The moon sits above the
-   overlays (always bright). Nothing is
-   remembered between rounds.
-   The celebration (`celebrateNext`) is where the ding will go.
-10. **EASY / HARD** is the toggle in the middle of the info bar (added
-   2026-10-16 at John's suggestion: 20+ was hard for everyone). The lit
-   word is the mode; the start screen says it in words, and a tap on the
-   toggle shows the same line in a pill just under it until the next round
-   starts (mid-round it leaves after 2.5 s); HARD's sky is
-   blacker with a red horizon so the two are told apart at a glance. HARD
-   is the game as first built. EASY starts identical and ramps: the
-   perfect tolerance widens with the count (step 3) and the speed climbs
-   a touch more gently (×1.03 a slab). A tap on the toggle takes effect at
-   once, mid-round too, with a flash of the word; a round that was EASY for
-   even a moment is an EASY round. The choice is remembered on the device
-   under the game's own localStorage key `halloween2026:stack-o-lantern:mode`
-   (rule 21). The round's mode goes to the app as the score's note, so the
-   high scores list reads "14 (10-16-2026) easy", and picks the set of end
-   lines: EASY's are kind, HARD's have an edge ("Taller than a tombstone.
-   Yours is being carved.").
+5. **Miss** (less than 0.8vw overlap): the whole slab tumbles and TIMBER!
+   flashes (from 5 pumpkins up; below that one of the little words:
+   SPLAT, THUD, OOF, CRUNCH, WELL THEN, or WHIFF, NOPE, AIR BALL, OOPS,
+   NOTHING at 0).
+6. Speed starts at 42vw/s and multiplies by 1.035 per slab, capped at 110.
+7. As each pumpkin lands, its count ("12") pops off the top of it, flies
+   up and fades in under a second. That is the only running count.
+8. The camera keeps the tower top at 36% of the stage height, easing
+   there. Stars move less than the tower, for depth; the moon never
+   moves: the same spot on every screen, the anchor of the layout.
+9. Every 7th slab is a pale "ghost pumpkin"; the others cycle six oranges.
+10. **Milestones** (John, 2026-10-16 and 2026-10-17), 37 of them in four
+    families, each earned once per round and celebrated with a gold
+    banner and a burst of 16 stars (one banner at a time; when a run
+    earns a pile, only the most recent waits, the rest expire unshown):
+    - **Height**, one per band: Scarecrow 5, Hoop Height 10, Giraffe 15,
+      Treetops 20, Haunted House 25, Notre Dame 35, Empire State 50,
+      Shanghai Tower 75, Burj Khalifa 100, Moon Landing 200.
+    - **Accuracy**: Machine / Laser / Sharp Eye (20 / 10 / 5 perfects in
+      a row), Toothpick / Pencil Pusher (3 in a row / 1 on a pencil
+      pumpkin, an eighth of the start width or less), Eye of the Needle
+      / Needle (6 / 3 in a row on a tiny one, a quarter or less), High
+      Wire / Tightrope (10 / 5 in a row on a small one, half or less),
+      Ghost Whisperer (a perfect on a ghost pumpkin).
+    - **Growth**: Bumper Crop / Pumpkin Farmer / Green Thumb / Sprout
+      (5 / 3 / 2 / 1 WIDERs in a row; a clip resets, a plain perfect
+      does not).
+    - **Bounce** (no-bounce = tapped before the pumpkin touched a wall):
+      Supersonic / Tornado / Wildfire / Lightning / Gunslinger / Quick
+      Draw (100 / 50 / 30 / 20 / 10 / 5 no-bounce drops in a row),
+      Desperado / Outlaw / Dead Eye / Sharpshooter (20 / 10 / 6 / 3
+      no-bounce perfects in a row), Trick Shot (3 no-bounce perfects on
+      small ones), No Look / Blindfold (3 in a row / 1 no-bounce landing
+      on a tiny one).
+    Within a family the list is ranked, rarest first. The word *perfect*
+    is in italics wherever a milestone shows it. While the start screen
+    waits, a quiet **goal line** names one to go for, changing every few
+    seconds.
+11. **The end screen**: the level reached as the framed title (GIRAFFE),
+    "You stacked / 17 / pumpkins!" beside the moon, the level's line in
+    italics ("Eye to eye with the tallest animal alive. It blinked
+    first."), then "You earned..." and up to three names, the best of
+    accuracy, growth and bounce, stepping down to the right like a
+    staircase. Tap a name (hover, with a mouse) for a sentence about it.
+    Under 5 pumpkins there is no level: a little word is the title and
+    one of four old lines sits under the count. The moon gives its
+    verdict (wide-eyed at 20+, a smile at 10+, flat at 4+, sad below)
+    and glows softly, as it does on the start screen. After a minute
+    with no tap the welcome screen comes back; any tap on the end
+    screen starts the minute over.
+12. **High score** sits in the top right corner. It starts from the
+    app's saved list for this game (see below), then follows this
+    visit's best. A round that beats it lights the number gold and shows
+    a NEW HIGH SCORE! balloon beside it until the next round starts.
+13. One level. (An EASY / HARD toggle in an info bar above the stage
+    lived for one day, 2026-10-16; these are its HARD rules and look.)
 
 ## How it is built
 
@@ -120,6 +120,8 @@ README - STACK-O-LANTERN.md  this file
 - No images: slabs are CSS (colour variable, repeating-gradient ribs,
   inset shadows, a `::before` stem), stars are two repeating radial
   gradients, the moon is a circle.
+- The milestone table in the script is a transcription of
+  `_documents/milestone list.md`; the order within a family is the rank.
 
 ## Where this game breaks the requirements, and why
 
@@ -129,25 +131,28 @@ lines); the whole stage is the tap target; the Stack again button is
 13vw tall; all text uses the three classes; Arial; colours contrast
 (white text with the `.text-on-art` shadow over the sky; ink face on the
 pale moon); no localStorage, no postMessage, nothing loaded from outside
-the folder except the app's own `../game-helper.js`. Tested at 382 x 594 (iPhone 16), 338 x 526 (SE) and 547 x 850
-(PC) through chrome-devtools, and standalone.
-
-**Best** in the info bar is this visit only. The lasting list, the five
-best counts on this device, is kept by the app and shown in the THIS GAME
-tab (see below).
+the folder except the app's own `../game-helper.js`. Checked with
+Playwright at 390 x 650 (about the shell's 9:15 panel) and inside the
+shell itself.
 
 ## Talks to the app?
 
-Yes, one thing (since 2026-10-01): at game over it reports the count.
-`index.html` includes `../game-helper.js` before the game's own script,
-and `gameOver()` calls `Halloween.reportScore(count)`. The app keeps the
-five best and shows them in the THIS GAME tab. A count of 0 is not
-recorded. Opened on its own, outside the app, the call does nothing, so
-the game still runs standalone.
+Yes, two things, both through `../game-helper.js` (included before the
+game's own script):
 
-The game declares no switches in games.json: the app's switches cannot be
-read by a game, so EASY / HARD is the game's own toggle (above). Its
-settings list there is `[]`.
+- At game over, `Halloween.reportScore(count, undefined, [level])`: the
+  count with the level's name as the note, so the app's list reads
+  "16 (10-17-2026) Giraffe". A count of 0 is not recorded. Under 5
+  there is no level and no note.
+- At start-up, `Halloween.bestScore()`: the app's top saved score for
+  this game, which seeds the High score corner, so the corner and the
+  THIS GAME list agree. When the app's list is cleared, the app loads
+  the game again, so the corner starts over too.
+
+Opened on its own, outside the app, both calls do nothing (the score is
+not saved; the high score starts at 0), so the game still runs standalone.
+
+The game declares no switches in games.json (`settings: []`).
 
 ## Pause
 

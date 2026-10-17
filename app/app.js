@@ -20,7 +20,7 @@
 
 // Bump this (and the ?v= tags in index.html) whenever code changes, so
 // phones fetch fresh copies instead of old cached ones.
-const APP_VERSION = "2026-1016-stack-endscreen";
+const APP_VERSION = "2026-1017-stack-families";
 
 /* ------------------------------------------------------------------------
    1. Settings and the games list
@@ -417,6 +417,19 @@ function reportScore(value, text, notes) {
   fillScores(currentGame);
 }
 
+/** The best saved score of the game now in the panel, as a number (0
+    when there is none). A game may ask for it through the helper
+    (Halloween.bestScore) to start its own "High score" from the app's
+    list instead of from 0, so the two agree (John, 2026-10-17: they had
+    got out of step). The list is kept sorted best first. */
+function bestScore() {
+  if (!currentGame) return 0;
+  const data = readSaved(storageKeyFor(currentGame));
+  const scores = Array.isArray(data.scores) ? data.scores : [];
+  const top = scores[0];
+  return top && typeof top.value === "number" ? top.value : 0;
+}
+
 /** Clearing takes two taps, so a stray touch cannot wipe the list. The
     Clear scores button only swaps the column's top line for the question
     "You sure?  Yes  No" (isAsking = true); No, or leaving the tab, swaps
@@ -428,13 +441,21 @@ function showClearQuestion(isAsking) {
 
 /** The Yes button: forget every saved score of the game now in the panel.
     There is no undo. The game's switch positions are kept, and so are the
-    other games' scores. */
+    other games' scores. The game itself is loaded again, so a "High
+    score" it shows starts over too (John, 2026-10-17); a round in
+    progress is lost, which is fair for a deliberate clear. */
 function clearScores() {
   if (!currentGame) return;
   const data = readSaved(storageKeyFor(currentGame));
   delete data.scores;
   writeSaved(storageKeyFor(currentGame), data);
   fillScores(currentGame);   // redraws the list and puts the top line back
+  try {
+    gameFrame.contentWindow.location.reload();
+  } catch (error) {
+    // Nothing loaded, or a browser that will not allow it: the list is
+    // clear anyway, and the game catches up when it is next loaded.
+  }
 }
 
 document.getElementById("clearScores").addEventListener("click", () => showClearQuestion(true));
@@ -445,7 +466,8 @@ document.getElementById("clearYes").addEventListener("click", clearScores);
 // there window.parent is this page; games/game-helper.js looks for this
 // object on it. Only what is listed here is meant for games.
 window.halloweenApp = {
-  reportScore: reportScore,
+  reportScore: reportScore,   // a game tells its result
+  bestScore: bestScore,       // a game asks the top saved score
 };
 
 /** The switches a game asks for in its games.json entry: a list of

@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Stack-o'-Lantern</title>
+    <title>Stack o' Lantern</title>
     <!-- Shown inside the app's game panel (an iframe), but also works on its
      own: open games/stack-o-lantern/index.html directly to test it. -->
-    <link rel="stylesheet" href="./stack-o-lantern.css?v=2026-1016-stack-endscreen" />
+    <link rel="stylesheet" href="./stack-o-lantern.css?v=2026-1017-stack-families" />
   </head>
 
   <body>
@@ -15,31 +15,22 @@
          so the tower gets narrower with every sloppy drop. A perfect drop
          keeps the full width. The moon has opinions. -->
 
-    <header class="info-bar text-medium">
-      <!-- An empty span balances "Best" so the toggle stays centred. The
-           running count used to be here; since 2026-10-16 it pops off
-           each landed pumpkin instead (popCount in the script). -->
-      <span class="info-side" aria-hidden="true"></span>
-      <!-- The mode toggle: one tap swaps EASY and HARD. The lit word is the
-           current mode (stack-o-lantern.js sets data-mode). It is outside
-           the stage, so tapping it never drops a pumpkin. -->
-      <button class="mode-switch text-small" id="modeSwitch" type="button" data-mode="hard">
-        <span class="mode-word" data-mode="easy">EASY</span>
-        <span class="mode-word" data-mode="hard">HARD</span>
-      </button>
-      <!-- is-new-best (set at game over, cleared at the next start) makes
-           the number glow gold: a new best this visit. -->
-      <span class="info-side best" id="bestBox">Best <b id="best">0</b></span>
-    </header>
-
-    <!-- Everything moves inside the stage. stack-o-lantern.js positions the slabs,
-         the falling pieces and the camera; all numbers are in vw. -->
-    <main class="stage" id="stage">
+    <!-- The whole screen is the stage (John, 2026-10-17; an info bar with
+         an EASY / HARD toggle sat above it for a day). stack-o-lantern.js
+         positions the slabs, the falling pieces and the camera; all
+         numbers are in vw. is-glowing: the moon's softer glow on the
+         start and end screens (the script takes it off when a round starts). -->
+    <main class="stage is-glowing" id="stage">
       <div class="stars" id="stars"></div>
 
-      <!-- A reminder of what the mode changes, just under the toggle. It
-           shows when the toggle is tapped and leaves when a round starts. -->
-      <p class="mode-hint text-small" id="modeHint" hidden></p>
+      <!-- The top right corner: "High score" small, then this visit's best
+           count (room for three digits). is-new-best (set at game over,
+           cleared at the next start) makes the number glow gold. The
+           balloon beside it shows then too: a new best this visit. -->
+      <div class="score-corner text-medium" id="bestBox">
+        <p class="new-best" id="newBest" hidden>NEW HIGH SCORE!</p>
+        <span class="best-label">High score</span> <b id="best">0</b>
+      </div>
 
       <!-- The moon watches. Its mouth changes with the quality of a drop. -->
       <div class="moon is-happy" id="moon" aria-hidden="true">
@@ -52,8 +43,9 @@
            pieces all live here, so one transform scrolls them together. -->
       <div class="tower" id="tower"></div>
 
-      <!-- Big reaction word after each drop: PERFECT!, nice, yikes... The
-           script adds streak badges after the word (a star x3, a bolt x4). -->
+      <!-- Big reaction word after each drop: PERFECT!, nice, yikes... (The
+           streak badges that followed it, a star x3 and a bolt x4, went on
+           2026-10-17: John read them as a second pumpkin count.) -->
       <p class="reaction text-large text-on-art" id="reaction" aria-live="polite">
         <span class="reaction-word" id="reactionWord"></span>
       </p>
@@ -67,7 +59,7 @@
 
       <!-- Start screen: the first tap anywhere starts the game. -->
       <div class="overlay" id="startScreen">
-        <p class="title text-large text-on-art">Stack-o'-Lantern</p>
+        <p class="title text-large text-on-art">Stack o' Lantern</p>
         <p class="text-medium text-on-art">
           Tap to drop the pumpkin.<br />
           Line it up. Stack it high.<br />
@@ -83,22 +75,26 @@
       <!-- End screen. -->
       <div class="overlay" id="endScreen" hidden>
         <!-- The moon keeps its in-game place (top right) on this screen, so
-             the big word is centred in the strip above it and the count
+             the title is centred in the strip above it and the count
              stands in three lines to its left; both are placed by the CSS,
-             outside the flow. The rest stacks below the moon. -->
-        <p class="title text-large text-on-art end-word" id="endWord">SPLAT</p>
+             outside the flow. The rest stacks below the moon. The title is
+             the level reached (GIRAFFE, HAUNTED HOUSE), or the miss word
+             (SPLAT) under 5 pumpkins; the italic line under the count is
+             the level's line. -->
+        <p class="title text-large text-on-art end-word"><span class="end-word-box" id="endWord">SPLAT</span></p>
         <p class="end-count text-on-art" id="endCount">
           <span class="text-medium">You stacked</span>
           <b class="text-large" id="endNumber">0</b>
           <span class="text-medium" id="endNoun">pumpkins!</span>
         </p>
         <p class="text-medium text-on-art compare" id="endCompare"></p>
-        <!-- The round's milestones on a 3x3 grid (the script fills the
-             cells; see fillMilestoneGrid). Tap a name (or hover, with a
+        <!-- "You earned": the round's best accuracy, growth and bounce
+             milestone, up to three names in a row (the script fills the
+             cells; see fillMilestoneRow). Tap a name (or hover, with a
              mouse) and a bubble above it says what earned it. -->
         <div class="end-milestones" id="endMilestones" hidden>
-          <p class="text-small text-on-art">Milestones</p>
-          <div class="milestone-grid" id="endMilestoneList"></div>
+          <p class="earned-heading text-small text-on-art">You earned...</p>
+          <div class="milestone-row" id="endMilestoneList"></div>
         </div>
         <button class="play-again text-medium" id="playAgain">Stack again</button>
         <p class="milestone-tip text-small" id="milestoneTip" hidden></p>
@@ -107,7 +103,7 @@
 
     <!-- The helper comes first: it gives the game Halloween.reportScore(),
          which hands the score to the app (see games/game-helper.js). -->
-    <script src="../game-helper.js?v=2026-1016-stack-endscreen"></script>
-    <script src="./stack-o-lantern.js?v=2026-1016-stack-endscreen"></script>
+    <script src="../game-helper.js?v=2026-1017-stack-families"></script>
+    <script src="./stack-o-lantern.js?v=2026-1017-stack-families"></script>
   </body>
 </html>

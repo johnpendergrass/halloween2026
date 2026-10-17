@@ -1,6 +1,9 @@
-# Stack-o'-Lantern — Specifications (design decisions)
+# Stack o' Lantern — Specifications (design decisions)
 
-Last updated: 2026-10-16 20:45 (/update; John's ToDo list in section 4; 20:20: no Stacked count in the bar; Best glows on a new best; big word, Milestones lower; 20:05: end words lose their full stops, exclamation marks stay; comparison lower, grid rows 9vw; 19:55: count pops off each landed pumpkin; goal line halfway down the start screen; 19:40: the start screen no longer names the mode; the reminder shows there instead; 19:10: the moon's spot is now 26vw down, from John's screenshot; the banner below it; 19:00: the moon never moves, not even with the camera; John's six layout notes on his screenshot; 18:30: end screen laid out around the moon, milestones on a 3x3 grid, slanted; 17:15: first file in the game's own folder: the 2026-09-29 design from the root spec's section 6f, then the 2026-10-16 afternoon of modes, milestones and banter)
+Last updated: 2026-10-17 12:21 (/update; SECTION 5 IS THE CURRENT DESIGN: milestone families, the level as the title, one level, no info bar, the corner, the staircase, the minute, the shell reading back scores. Sections 1 to 4 are the 2026-09-29 and 2026-10-16 record; section 2 (EASY / HARD) and the 3x3 grid in section 3 are history now. Earlier: 2026-10-16 20:45 /update; 20:20 no Stacked count in the bar, Best glows on a new best; 19:55 count pops off each pumpkin; 19:10 the moon fixed at one spot; 18:30 the end screen laid out around the moon; 17:15 first file in the game's own folder)
+
+The game is called **Stack o' Lantern** since 2026-10-17 (it was
+"Stack-o'-Lantern"; the folder stays `stack-o-lantern`).
 
 This file records WHAT the game is and WHY. The "how" is in
 `specifications-technical.MD` beside it. The shell around the game keeps
@@ -37,7 +40,7 @@ over." Claude chose a one-tap stacker.
   Reports its count to the shell at game over (`Halloween.reportScore`)
   since 2026-10-01; the shell shows the five best in THIS GAME.
 
-## 2. EASY / HARD (John, 2026-10-16)
+## 2. EASY / HARD (John, 2026-10-16) — GONE 2026-10-17 (see 5.4)
 
 John and friends found 20+ hard to reach; Claude had called the perfect
 tolerance "generous" and was corrected. The shell's Easy / Hard switch for
@@ -203,3 +206,116 @@ John's list of 2026-10-16 20:40, in his order, comes first:
   close calls (Cliffhanger), recovery (Shake It Off, Phoenix, Full Width),
   consistency (Steady Hand, Clean Sweep), speed (Top Gear, Hot Hands),
   Ghost Hunter, mode (Iron Will, Switch Hitter), Window Shopper.
+
+## 5. 2026-10-17: families, one level, the whole screen (John and Claude)
+
+Items 1 and 2 of John's list of 2026-10-16 (fewer, larger milestones on
+the end screen; the moon faces) turned into a day's rework. Sound is
+still next. The words of every milestone live in
+`_documents/milestone list.md`, John's working copy; the script's table
+is a transcription of it.
+
+### 5.1 Four families, and a fixed rank
+
+John's first idea was a rarity list kept in localStorage; Claude talked
+him out of it (cold start, noise, drift, and "no trophy cabinet") in
+favour of a FIXED RANK: within a family, the order of the table IS the
+rank, rarest first, and the end screen shows the first earned entry of
+each family. The families are John's: **HEIGHT** (ten levels, one per
+band: Scarecrow 5, Hoop Height 10, Giraffe 15, Treetops 20, Haunted
+House 25, Notre Dame 35, Empire State 50, Shanghai Tower 75, Burj
+Khalifa 100, Moon Landing 200; a round under 5 earns none), **ACCURACY**
+(where the tap lands: Machine, Toothpick, Eye of the Needle, Laser, High
+Wire, Needle, Pencil Pusher, Sharp Eye, Tightrope, Ghost Whisperer),
+**GROWTH** (WIDERs in a row, no width test: Bumper Crop 5, Pumpkin Farmer
+3, Green Thumb 2, Sprout 1; Comeback went) and **BOUNCE** (no-bounce
+drops: Desperado 20 no-bounce perfects, Supersonic 100, Tornado 50,
+Outlaw 10 no-bounce perfects, Wildfire 30, Lightning 20, No Look 3 on
+tiny, Dead Eye 6 no-bounce perfects, Gunslinger 10, Trick Shot 3
+no-bounce perfects on small, Blindfold 1 on tiny, Sharpshooter 3
+no-bounce perfects, Quick Draw 5). 37 in all. John's words: "clean" is
+"no-bounce"; a SMALL pumpkin is half the start width or less, TINY a
+quarter, PENCIL an eighth. The WIDER rule stays every third perfect
+("to make it a meaningful reward"). The four top bounce tiers came last
+("it is common to go 10.. 20.. 30 or more without allowing a bounce").
+The word *perfect* is in italics wherever a milestone shows it.
+
+### 5.2 The end screen
+
+- **The level is the title and the line.** "the main title on the
+  winning page should read the title of the height": GIRAFFE in a frame
+  (orange border, green ring, "to jazz it up a bit"), "You stacked / 17
+  / pumpkins!" beside the moon, and the level's LINE under it in
+  italics, a pun on the title that never repeats its words ("The owls
+  have a question. Who? You, apparently."). Under 5 pumpkins there is no
+  level: the title is one of the low words (WHIFF, SPLAT, THUD...) and
+  the line one of the four old HARD lines. The miss flash during play
+  is just TIMBER! from 5 up ("i like just TIMBER!").
+- **"You earned..."** at the left, then up to three names, the best of
+  ACCURACY, GROWTH and BOUNCE in that order, in the space down to the
+  button: one in the middle; two at a third and two thirds; three at
+  26, 50 and 74 percent, STEPPING DOWN TO THE RIGHT like a staircase at
+  the words' own 15 degrees ("Ghost Whisperer at the top left, Sprout in
+  the middle, Sharpshooter at the bottom right. Like three angled lines,
+  not one"). A third, a half and two thirds put long names on top of
+  each other, so the outer two sit further out. The names are 4.8vw and
+  as bold as Arial goes (John: "larger and bolder"; 5vw ran
+  "Sharpshooter" off the edge). A tap or hover opens the tip bubble
+  just above the letters.
+- **After a minute with no tap** the end screen gives way to the welcome
+  screen; any tap on it (a milestone name, anywhere) starts the minute
+  over. The high score stays; the glow and the balloon go.
+
+### 5.3 The whole screen, the corner, the moon
+
+- **The info bar is gone** ("have the entire screen devoted to the
+  game"). "High score 16" sits in the stage's top right corner, the
+  label smaller than the number, room for three digits. A new best this
+  visit lights the number gold and shows a **NEW HIGH SCORE!** balloon
+  beside it (to the left, tail pointing at the number; first built under
+  the number, then "a bit smaller ... the same text size as the High
+  Score text").
+- **The moon's spot**: with the bar gone, John wanted it "a bit higher
+  ... to be aesthetic with the screen frame": up about a quarter of the
+  bar's height, then the whole group (moon, title, count, line) up
+  another quarter of the title's size, then the title alone the same
+  again. The moon is at 34.75vw down, still the anchor for every screen.
+- **The moon glows** softly on the start and end screens ("a subtle
+  glow"), not during play.
+- **The start screen**: the goal line dimmed ("more subdued"), "Tap
+  anywhere to start" bigger and bold.
+- **One counter**: the number popping off each landed pumpkin. The
+  reaction word's streak badges (a star x3, a bolt x4, added the day
+  before) read to John as a second pumpkin count and went.
+- **The banner queue holds one**: a run of drops that earns a pile shows
+  the one up and then only the most recent; the rest expire unshown
+  ("a set of four or five showed when the pumpkin was just bouncing").
+
+### 5.4 One level
+
+"what do you think about just having one level ... the hard seems fine
+as the only level to me." Claude agreed: the milestones now give a
+beginner things to earn, and one level means scores that compare. HARD's
+rules (1.6vw tolerance, x1.035 speed) and HARD's look (the near-black sky
+with the ember horizon, the dark ground, the paler moon) are the game.
+Gone: the toggle, the reminder pill, the mid-round flash, the remembered
+mode, EASY's kinder end lines, the mode note on scores (old scores keep
+theirs).
+
+### 5.5 The shell, for this game
+
+- The name shows as **Stack o' Lantern** in the top bar (the shell shows
+  `short_title`, so it is the full name too), the THIS GAME tab, the
+  game's own title and page title.
+- Scores go to the shell as the count with **the level's name as the
+  note**: "16 (10-17-2026) Giraffe".
+- **The high score and the shell's list agree**: the game asks the shell
+  for its top saved score when it loads (`Halloween.bestScore()`, the
+  helper's second call, "one to tell, one to ask"), and Clear scores in
+  the shell reloads the game so its corner starts over. Before this the
+  corner started at 0 every load while the list kept last week's 23
+  ("the high scores get out of sync").
+- The THIS GAME text is six short centred lines in Go Fish's style
+  ("too wordy ... shorter, lighter"), with bold words, TIMBER! in the
+  milestone gold, and "The moon is judging you." as a shaded line.
+- The Home icon is larger inside the unchanged bar.

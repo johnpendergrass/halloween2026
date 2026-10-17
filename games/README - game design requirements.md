@@ -434,7 +434,9 @@ Sizes refer to the table in 1.3.
     `Halloween.reportScore(number, text)` or
     `Halloween.reportScore(number, text, [note, note])` from the helper
     file (2.5). The number is required and higher MUST mean better; the
-    notes are at most two short strings.
+    notes are at most two short strings. A game MAY ask the app for its
+    top saved score with `Halloween.bestScore()` (2.5), for instance to
+    show a "High score" that agrees with the app's list.
 20. **Sound and settings.** A game MAY declare up to three on/off switches
     in its `games.json` entry; the app shows them beside the high scores
     and remembers them. A game cannot read its own switches, and MUST NOT
@@ -477,6 +479,10 @@ Halloween.reportScore(42);
 
 // The same, but the list shows the text in place of the number.
 Halloween.reportScore(42, "Master Chef");
+
+// The top saved score for this game on this device, as a number, or 0
+// when there is none. Outside the app it is 0 too.
+const best = Halloween.bestScore();
 ```
 
 - A score that is not a number, or is 0 or less, is not recorded.
@@ -485,7 +491,11 @@ Halloween.reportScore(42, "Master Chef");
 - `games/stack-o-lantern/` is the worked example: one `<script>` line in
   its `index.html`, one call in `gameOver()`.
 
-**That is the helper's only call.** A game cannot read its own switches.
+**Those are the helper's only calls: one to tell, one to ask** (the
+second since 2026-10-17; `games/stack-o-lantern/` uses it to start its
+"High score" from the app's list, and the app loads the game again when
+its scores are cleared, so the two never disagree). A game cannot read
+its own switches.
 The switches can be declared (the `settings` field, see the `_about` block
 of `games.json`); the app shows and remembers them, and nothing more. The
 app has no sound switch of its own.

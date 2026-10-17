@@ -443,7 +443,7 @@ does little to a game; what it does not do is the game's own job.
   grew its own EASY / HARD toggle in its info bar and dropped the entry:
   one control, not two that disagree.)
 - **Not connected yet**: no game can read Sound or its switches (the
-  helper has only `reportScore`); the switches are shown and remembered.
+  helper had only `reportScore` until 2026-10-17, when `bestScore()` joined it, see 6l); the switches are shown and remembered.
   The hint line "Game options apply to your next game." under a game's
   switches is under discussion (John deferred it).
 - **Kept on the device**: scores and switch positions live in the
@@ -576,3 +576,28 @@ Desktop-only 1280 × 720, a host (`js/main.js`) with games exposing
   global CSS names and document listeners (→ iframes); iframe games could not
   report scores (→ message contract); unprefixed localStorage keys (→ prefix
   with game id).
+
+## 6l. The helper's second call, and Clear scores reloads the game (John, 2026-10-17)
+
+Stack o' Lantern shows a "High score" of its own in its top corner. It
+started at 0 on every load while the shell's list kept last week's best
+("the high scores get out of sync ... if i clear the high scores in the
+shell, it should clear the high score in the game"). Two decisions:
+
+- **`Halloween.bestScore()`**: a game MAY ask the app for its top saved
+  score (a number; 0 outside the app or with none saved) and seed its own
+  display from it. The helper's promise becomes "one call to tell, one
+  to ask" (requirements rule 19 and section 2.5 updated). No other read
+  yet: a game still cannot see the whole list or its switches.
+- **Clear scores loads the game again.** After emptying the list the app
+  reloads the game panel's iframe, so whatever the game shows starts
+  over. A round in progress is lost, which is fair for a deliberate,
+  two-tap clear.
+
+Also for Stack that day, in the shell: the game's name is "Stack o'
+Lantern" (title and `short_title`, so the top bar shows the full name,
+as Go Fish's does); its THIS GAME text is six short centred lines with
+marks, in Go Fish's manner ("too wordy ... shorter, lighter"), with a
+small per-game look in `styles.css`; its scores carry the level reached
+as the note ("16 (10-17-2026) Giraffe"); and the Home icon is larger
+within the unchanged bar ("I do not want to change the shell's top bar").

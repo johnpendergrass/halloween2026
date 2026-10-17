@@ -1,4 +1,4 @@
-/* Stack-o'-Lantern (folder stack-o-lantern) - its own styles. Nothing here can affect
+/* Stack o' Lantern (folder stack-o-lantern) - its own styles. Nothing here can affect
    the app or other games.
 
    Inside a game, 1vw = 1% of the GAME PANEL's width (the iframe is this
@@ -53,25 +53,35 @@ body {
   flex-direction: column;
 }
 
-.info-bar {
-  flex: 0 0 auto;
+/* The high score in the stage's top right corner (John, 2026-10-17: the
+   info bar went with the EASY / HARD toggle, "the entire screen devoted
+   to the game"). Above the overlays, so it reads on the start and end
+   screens too. The label is a bit smaller than the number, and there is
+   room for three digits. The NEW HIGH SCORE! balloon sits in the same
+   row, to the left of the number. */
+.score-corner {
+  position: absolute;
+  top: 2vw;
+  right: 3vw;
+  z-index: 12;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 1vw 5vw;
-  background: #1d1233;
-  border-bottom: 2px solid #9b7cc4;   /* echoes the app's lavender line */
+  gap: 2.5vw;
+  white-space: nowrap;
+  pointer-events: none;
+  color: #fff;
+  text-shadow: 0 0.3vw 0.6vw rgb(0 0 0 / 70%);
 }
 
-/* The two sides of the bar take equal room, so the toggle sits in the
-   middle whatever "Best" says. */
-.info-side { flex: 1 1 0; }
-.info-bar .best { text-align: right; }
+.best-label {
+  font-size: 0.7em;
+  margin-right: 0.8vw;
+}
 
 /* A new best this visit: the number glows gold and pulses from the end
    screen until the next round starts (John: "only after that round ...
    not forever!"). */
-.info-bar .best.is-new-best b {
+.score-corner.is-new-best b {
   color: #ffd34d;
   animation: best-glow 1.2s ease-in-out infinite;
 }
@@ -81,63 +91,49 @@ body {
   50%      { text-shadow: 0 0 2.5vw #ffd34d, 0 0 6vw rgb(255 211 77 / 80%); }
 }
 
-/* The EASY / HARD toggle in the middle of the info bar: a dark pill with
-   both words in it; the lit word is the mode. 13vw tall is the smallest
-   tap target (requirements 1.7). */
-.mode-switch {
-  display: flex;
-  align-items: center;
-  gap: 0.6vw;
-  min-height: 13vw;
-  padding: 0 1vw;
-  border: none;
-  border-radius: 3vw;
-  background: transparent;
-  color: #fff;
-  font-family: inherit;
+/* The balloon beside the high score after a round that set a new one
+   (John, 2026-10-17: "a little balloon ... that glows and pulses"). The
+   script shows it with the end screen and hides it at the next start.
+   Its tail points right, at the number. */
+.new-best {
+  position: relative;
+  font-size: 0.7em;        /* the same size as the "High score" label (John: "tone down") */
+  padding: 1vw 2.4vw;
+  border-radius: 2.5vw;
+  background: #ffd34d;
+  color: #2a2230;
   font-weight: 700;
   letter-spacing: 0.04em;
-  cursor: pointer;
+  text-shadow: none;
+  transform-origin: 100% 50%;
+  animation: new-best 1.2s ease-in-out infinite;
 }
 
-.mode-word {
-  padding: 1.6vw 2.4vw;
-  border-radius: 2.4vw;
-  background: #2b1d47;
-  color: rgb(255 255 255 / 40%);
-  transition: background 150ms ease-out, color 150ms ease-out;
+.new-best::after {
+  content: "";
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  border-top: 1.2vw solid transparent;
+  border-bottom: 1.2vw solid transparent;
+  border-left: 1.5vw solid #ffd34d;
 }
 
-.mode-switch[data-mode="easy"] .mode-word[data-mode="easy"],
-.mode-switch[data-mode="hard"] .mode-word[data-mode="hard"] {
-  background: #e8741c;
-  color: #fff;
+@keyframes new-best {
+  0%, 100% { transform: scale(1);    box-shadow: 0 0 1.5vw rgb(255 211 77 / 50%); }
+  50%      { transform: scale(1.06); box-shadow: 0 0 4vw #ffd34d, 0 0 9vw rgb(255 211 77 / 70%); }
 }
 
-/* Night sky. The gradient gets lighter towards the ground, like a town
-   glowing below the horizon. EASY has this friendly plum sky; HARD's is
-   blacker with an ember-red horizon, so the two modes look different at a
-   glance (John, 2026-10-16). stack-o-lantern.js sets data-mode on <body>. */
+/* Night sky: near black with an ember-red horizon, like a town glowing
+   below it. (This was HARD's sky; EASY had a plum one. One level since
+   2026-10-17.) */
 .stage {
   position: relative;
   flex: 1 1 auto;
   overflow: hidden;
-  background: linear-gradient(#0f0822 0%, #2e1a44 55%, #5a2f6a 100%);
-  cursor: pointer;
-  transition: background 400ms ease-out;
-}
-
-body[data-mode="hard"] .stage {
   background: linear-gradient(#050309 0%, #1a0820 55%, #6b1d2a 100%);
-}
-
-body[data-mode="hard"] .ground {
-  background: #1b1a1f;
-  border-top-color: #d9631a;
-}
-
-body[data-mode="hard"] .moon {
-  background: #ead6a6;
+  cursor: pointer;
 }
 
 /* Stars are three layers of tiny radial gradients, repeated at
@@ -164,11 +160,16 @@ body[data-mode="hard"] .moon {
 .moon {
   position: absolute;
   right: 8vw;
-  top: 26vw;          /* the spot John picked from a screenshot (2026-10-16) */
+  /* The spot John picked from a screenshot (2026-10-16) was 26vw under
+     the info bar; with the bar gone (15vw) he wanted the moon about a
+     quarter of that higher on the screen: 26 + 15 - 4 = 37vw (2026-10-17),
+     then the whole group (moon, title, count, comparison line) floated
+     up another quarter of the title's size, 2.25vw: 34.75vw. */
+  top: 34.75vw;
   width: 24vw;
   height: 24vw;
   border-radius: 50%;
-  background: #f6e7b0;
+  background: #ead6a6;
   box-shadow: 0 0 7vw rgb(246 231 176 / 45%), inset -2vw -2vw 0 rgb(0 0 0 / 8%);
   pointer-events: none;
   /* Above the start and end overlays (z 10), so the moon stays bright
@@ -177,8 +178,20 @@ body[data-mode="hard"] .moon {
      and on the end screen, "an anchor point of the game design" (John;
      a 1.3x grow at game over, and a slow drift down with the camera,
      were both dropped on 2026-10-16). The end screen is laid out
-     around this spot: 68..92vw across, 26..50vw down. */
+     around this spot: 68..92vw across, 34.75..58.75vw down. */
   z-index: 11;
+  transition: box-shadow 700ms ease-out;
+}
+
+/* On the start and end screens the moon glows a little more (John,
+   2026-10-17: "a subtle glow around it"). The stage carries is-glowing
+   while either screen is up: from the page's own markup at first, then
+   put back by the script at game over and taken off at each start. */
+.stage.is-glowing .moon {
+  box-shadow:
+    0 0 12vw 2vw rgb(246 231 176 / 50%),
+    0 0 30vw 8vw rgb(246 231 176 / 22%),
+    inset -2vw -2vw 0 rgb(0 0 0 / 8%);
 }
 
 .moon .eye {
@@ -235,8 +248,8 @@ body[data-mode="hard"] .moon {
   right: 0;
   bottom: 0;
   height: var(--ground-h);
-  background: #173229;
-  border-top: 2px solid #5fbf8f;      /* echoes the app's mint line */
+  background: #1b1a1f;
+  border-top: 2px solid #d9631a;      /* an orange line on the dark patch */
 }
 
 .tower {
@@ -320,7 +333,7 @@ body[data-mode="hard"] .moon {
   position: absolute;
   left: 0;
   right: 0;
-  top: 11vw;          /* the strip above the moon (which starts at 26vw); it rises 8vw as it fades */
+  top: 19.75vw;       /* the strip above the moon (which starts at 34.75vw); it rises 8vw as it fades */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -331,30 +344,6 @@ body[data-mode="hard"] .moon {
 }
 .reaction.is-perfect .reaction-word { color: #ffd34d; }
 .reaction.is-miss    .reaction-word { color: #ff6b6b; }
-.reaction.is-mode    .reaction-word { color: #e8741c; }   /* the flash when the toggle is tapped mid-round */
-
-/* Streak badges after the word: a shape and "x3". The shapes are
-   clip-path polygons, so they are just coloured boxes cut to a star or a
-   bolt; no images. */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 1vw;
-  font-size: 0.6em;
-  letter-spacing: 0;
-}
-
-.badge-icon {
-  width: 6vw;
-  height: 6vw;
-  background: #ffd34d;
-  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-}
-
-.badge-bolt .badge-icon {
-  background: #7fd4ff;
-  clip-path: polygon(60% 0%, 20% 55%, 48% 55%, 40% 100%, 80% 42%, 52% 42%);
-}
 
 /* The milestone banner: the name in gold with a glow, what earned it
    under it. It pops in, holds, and lifts away; the script hides it after
@@ -363,7 +352,9 @@ body[data-mode="hard"] .moon {
   position: absolute;
   left: 0;
   right: 0;
-  top: 35%;           /* under the moon (which ends at 50vw) and above the flying slab */
+  /* Under the moon (which ends at 58.75vw) and, on a taller panel, still
+     above the flying slab (which rides at a share of the height). */
+  top: max(60.75vw, 35%);
   z-index: 5;
   text-align: center;
   pointer-events: none;
@@ -394,7 +385,7 @@ body[data-mode="hard"] .moon {
 .spark {
   position: absolute;
   left: 50%;
-  top: 38%;           /* bursts from the banner's name */
+  top: max(63.75vw, 38%);   /* bursts from the banner's name */
   width: 4vw;
   height: 4vw;
   background: var(--spark, #ffd34d);
@@ -410,48 +401,64 @@ body[data-mode="hard"] .moon {
   100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.5) rotate(var(--spin)); }
 }
 
-/* The end screen's milestones: a fixed 3x3 grid of cells, the names
-   placed in them by John's table (fillMilestoneGrid in the script), so
-   one name sits dead centre, two sit top and bottom, and so on. Each
-   name is a button drawn as the word alone, slanted a little like a
-   sticker. The open one (tapped, or under the mouse) is lit and its
-   bubble sits above it (see showTip in the script). */
+/* The end screen's "You earned" space: the block fills whatever is left
+   between the comparison line and the button, the heading at its top,
+   and the names are placed in the space below the heading by the script
+   (fillMilestoneRow): one in the middle of it, two or three along one
+   line slanted like the words themselves. Each name is a button drawn as
+   the word alone, bigger and bolder than the old 3x3 grid's (John,
+   2026-10-17), slanted like a sticker, wrapping to a second line when it
+   must ("Eye of the Needle"). The open one (tapped, or under the mouse)
+   is lit and its bubble sits above it (see showTip in the script). */
 .end-milestones {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3vw;
-  margin-top: 3vw;    /* a little more air under the comparison line */
+  flex: 1 1 auto;        /* take all the room down to the button */
+  align-self: stretch;
+  position: relative;
+  margin-top: 3vw;       /* a little more air under the comparison line */
 }
 
-.milestone-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 30vw);   /* 90vw: the widest name is 27.4vw */
-  grid-auto-rows: 9vw;                      /* tight: slanted rows run parallel */
+/* "You earned..." at the left, with a little padding (John, 2026-10-17). */
+.earned-heading {
+  text-align: left;
+  padding-left: 4vw;
 }
 
-.grid-cell {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.milestone-row {
+  position: absolute;
+  left: -8vw;            /* the overlay's padding: the space is the screen's full width */
+  right: -8vw;
+  top: 7vw;              /* under the "You earned" line */
+  bottom: 0;
 }
 
 .milestone-chip {
-  min-height: 11vw;            /* a finger-sized target, but drawn as the word alone */
-  padding: 1.2vw 1vw;
+  position: absolute;    /* left and top are set by the script, in vw and % */
+  max-width: 31vw;       /* a long name wraps inside this... */
+  min-width: min-content; /* ...but one long word ("Sharpshooter", 34vw) widens the box
+                             instead of spilling out of it (min-width beats max-width) */
+  min-height: 11vw;      /* a finger-sized target, but drawn as the word alone */
+  padding: 1vw;
   border: none;
   background: none;
   color: #ffd34d;
   font-family: inherit;
-  /* A touch under text-small: "Eye of the Needle" must fit a 30vw cell
-     with air on both sides (measured 27.4vw at this size, 30vw at 3.6). */
-  font-size: max(12px, 3.3vw);
-  font-weight: 700;
-  white-space: nowrap;
+  /* Was 3.3vw on the 3x3 grid, then 4.6vw; John asked for a bit larger
+     again. The widest single word, "Sharpshooter", is about 36vw here
+     (at 5vw its slanted box reached the screen's edge). */
+  font-size: max(16px, 4.8vw);
+  font-weight: 900;      /* Arial has no black weight; browsers that lack it show bold */
+  line-height: 1.1;
   text-shadow: 0 0.3vw 0.6vw rgb(0 0 0 / 70%);
-  transform: rotate(-15deg);   /* John: "slant the milestone names by -15 degrees" */
+  /* Centred on its point, then slanted (John: "slant the milestone
+     names by -15 degrees"). */
+  transform: translate(-50%, -50%) rotate(-15deg);
   cursor: pointer;
 }
+
+/* The word inside the chip, measured by showTip to hang the bubble just
+   above the letters (the button is taller than the word: a finger
+   target). A block, so a wrapped name's box is the two lines together. */
+.milestone-word { display: block; }
 
 .milestone-chip.is-open {
   color: #fff;
@@ -503,18 +510,18 @@ body[data-mode="hard"] .moon {
    under it when the screen was centred). */
 #startScreen {
   gap: 4vw;
-  padding-top: 55vw;
+  padding-top: 63.75vw;
   justify-content: flex-start;
 }
 
-/* The end screen's flow (the comparison line, the Milestones heading
-   and grid, the button) starts a little below the moon, which reaches
-   down to 50vw. The big word and the count are placed around the moon
-   instead (below). The button is pushed to the bottom of the screen
-   (margin-top: auto), with the bottom padding as its breathing room. */
+/* The end screen's flow (the comparison line, the "You earned" space,
+   the button) starts a little below the moon, which reaches down to
+   58.75vw. The title and the count are placed around the moon instead
+   (below). The button is pushed to the bottom of the screen (margin-top:
+   auto), with the bottom padding as its breathing room. */
 #endScreen {
   gap: 5vw;
-  padding-top: 58vw;
+  padding-top: 66.75vw;
   padding-bottom: 12vw;
   justify-content: flex-start;
 }
@@ -525,15 +532,28 @@ body[data-mode="hard"] .moon {
 
 .overlay .title { line-height: 1.1; }
 
-/* The big word (TIMBER!, LEGENDARY) centred above the moon, midway
-   between the info bar's rule and the moon's top at 26vw (its box is
-   the font size, 9vw, and the capitals sit in the middle of it). */
+/* The title (GIRAFFE, HAUNTED HOUSE) centred in the strip above the
+   moon, under the high score corner (which ends about 8.5vw down); its
+   box is the font size, 9vw, and the capitals sit in the middle of it. */
 .overlay .end-word {
   position: absolute;
-  top: 11.5vw;        /* clear of the mode reminder, which can still show here (ends ~10vw) */
+  top: 18vw;          /* the title alone a quarter of its size higher again (John, 2026-10-17) */
   left: 0;
   right: 0;
   line-height: 1;
+}
+
+/* The title's frame: an orange border with a green ring outside it, the
+   app's two colours, "to jazz it up a bit" (John, 2026-10-17). A box
+   around the word alone, so it is an inline block inside the full-width
+   line. */
+.end-word-box {
+  display: inline-block;
+  max-width: 94vw;
+  padding: 1.2vw 3vw;
+  border: 0.6vw solid #e8741c;
+  border-radius: 3vw;
+  box-shadow: 0 0 0 0.5vw #5fbf8f;
 }
 
 /* "You stacked / 23 / pumpkins!" directly to the left of the moon: the
@@ -541,7 +561,7 @@ body[data-mode="hard"] .moon {
    little right of the middle of the space the moon leaves). */
 .overlay .end-count {
   position: absolute;
-  top: 26vw;
+  top: 34.75vw;
   left: 12vw;
   width: 56vw;
   height: 24vw;
@@ -568,33 +588,18 @@ body[data-mode="hard"] .moon {
 }
 
 .overlay .goal-line.is-shown {
-  opacity: 1;
+  opacity: 0.6;     /* subdued (John, 2026-10-17): a suggestion, not a headline */
 }
 
 /* On the start screen the goal line sits halfway between the three
    lines and "Tap anywhere to start" (John): equal margins either side,
-   and the hint's usual top margin dropped here. */
+   and the hint's usual top margin dropped here. The tap line is bigger
+   and bolder than text-medium (John, 2026-10-17). */
 #startScreen .goal-line { margin: 7vw 0; }
-#startScreen .hint { margin-top: 0; }
-
-/* The reminder under the toggle: a quiet line at the top of the stage,
-   above the overlays so it reads on the start and end screens too. No
-   border, dimmed text (John: "more subdued"). */
-.mode-hint {
-  position: absolute;
-  left: 50%;
-  top: 2vw;
-  transform: translateX(-50%);
-  z-index: 12;
-  max-width: 90vw;
-  padding: 1.6vw 3.5vw;
-  border-radius: 3vw;
-  background: rgb(18 10 31 / 70%);
-  color: rgb(255 255 255 / 65%);
-  text-align: center;
-  white-space: nowrap;
-  pointer-events: none;
-  animation: fade-in 200ms ease-out;
+#startScreen .hint {
+  margin-top: 0;
+  font-size: max(18px, 6vw);
+  font-weight: 700;
 }
 
 .overlay .hint {
@@ -636,7 +641,9 @@ body[data-mode="hard"] .moon {
   .slab.is-new { animation: none; }
   .overlay .hint { animation: none; }
   .count-pop { animation-name: count-fade; }
-  .info-bar .best.is-new-best b { animation: none; text-shadow: 0 0 2.5vw #ffd34d; }
+  .score-corner.is-new-best b { animation: none; text-shadow: 0 0 2.5vw #ffd34d; }
+  .new-best { animation: none; box-shadow: 0 0 3vw #ffd34d; }
+  .moon { transition: none; }
   .moon .mouth { transition: none; }
   .spark { display: none; }
   .milestone.is-shown { animation: fade-in 300ms ease-out forwards; }

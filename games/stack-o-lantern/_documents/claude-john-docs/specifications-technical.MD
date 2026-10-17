@@ -1,6 +1,6 @@
-# Stack-o'-Lantern — Technical Specifications
+# Stack o' Lantern — Technical Specifications
 
-Last updated: 2026-10-16 20:45 (/update; the checks are in the repo under _documents/checks/; stamp 2026-1016-stack-endscreen; 20:20: #count gone, .info-side, state.newBest + is-new-best on #bestBox; end-word top 11.5vw; .end-milestones margin-top; 20:05: end flow from 58vw, grid rows 9vw; 19:55: popCount / .count-pop; #startScreen .goal-line margins; 19:40: no #modeNote; applyMode at start-up is not quiet; 19:25: moon at top 26vw; reaction at 11vw, banner at 35%, sparks from 38%, CAMERA_LINE 0.36, start screen from 55vw, end flow from 55vw; 19:00: moon no longer drifts with the camera; end-screen flow: 38vw top, Milestones heading, 10.5vw rows, button at the bottom; 18:30: end screen: absolute word and count around the moon, GRID_PATTERNS / fillMilestoneGrid, slanted chips; 17:15: first file in the game's own folder: the 2026-09-29 notes from the root technical spec's section 4g, then the 2026-10-16 modes, milestones and end screen)
+Last updated: 2026-10-17 12:21 (/update; SECTION 6 IS CURRENT and overrides sections 2 and 3 where they differ: families and bestEarned, no MODES, no info bar, .score-corner, the staircase, the minute, Halloween.bestScore; stamp 2026-1017-stack-families. Earlier: 2026-10-16 20:45 /update, the checks under _documents/checks/, stamp 2026-1016-stack-endscreen; 20:20 #count gone, state.newBest; 19:55 popCount; 19:25 the moon at 26vw; 18:30 GRID_PATTERNS / fillMilestoneGrid; 17:15 first file in the game's own folder)
 
 How the game is built, for whoever edits it next. The design and the
 reasons are in `specifications.MD` beside this. Files: `index.html`,
@@ -188,9 +188,122 @@ reasons are in `specifications.MD` beside this. Files: `index.html`,
 
 ## 5. Shell-side facts
 
-- `games.json`: slot 2, `settings: []` (the shell's Easy / Hard entry was
-  dropped 2026-10-16), `how_to_play` mentions the toggle.
-- `index.html` links carry the shared cache stamp since 2026-10-16
-  (`?v=2026-1016-stack-milestones` on the stylesheet, the helper and the
-  script); bump them with the shell's.
-- The game's own localStorage key: `halloween2026:stack-o-lantern:mode`.
+- `games.json`: slot 2, `settings: []`; since 2026-10-17 `title` and
+  `short_title` are both "Stack o' Lantern", `description` is a list of
+  six marked lines and `how_to_play` is `[]`; `app/styles.css` has a
+  `.look-stack-o-lantern` block (centred, gold `.accent` with a dark
+  stroke, an orange-edged `p.emphasis`).
+- `index.html` links carry the shared cache stamp (`?v=2026-1017-stack-
+  families` on the stylesheet, the helper and the script); bump them
+  with the shell's (26 places: app.js 1, root index 2, Go Fish 20,
+  Stack 3).
+- The game writes nothing to localStorage any more (the mode key
+  `halloween2026:stack-o-lantern:mode` is stale on devices that had it).
+
+## 6. The 2026-10-17 build (families, one level, the whole screen)
+
+- **MILESTONES** (37 entries): `{ family, kind, at, name, what, tip |
+  line, hint }`. `family` is "height" | "accuracy" | "growth" | "bounce";
+  the order within a family is the rank (rarest first), and
+  `bestEarned(family)` is `MILESTONES.find(entry => entry.family ===
+  family && state.earned.includes(entry))`. Height entries carry `line`
+  (the comparison line) instead of `tip`. `END_FAMILIES = ["accuracy",
+  "growth", "bounce"]` is the slot order. New `kind`s and counters in
+  `state`: `cleanPerfectStreak` (no-bounce perfects in a row),
+  `cleanSmallPerfectStreak` (the same on a slab <= half width),
+  `cleanTinyStreak` (no-bounce landings in a row on <= a quarter). In
+  `drop()` the perfect branch adds to all three when `clean` (and
+  `small` / `tiny`); the clip branch zeroes the two perfect ones and
+  keeps `cleanTinyStreak` going when `clean && tiny`. `comeback` is
+  gone. The words are transcribed from `_documents/milestone list.md`.
+- **Italics**: `fillMarked(element, text)` / `appendMarked` split the
+  text on `*` and wrap the odd pieces in `<i>`; used for the banner's
+  `what`, the tip bubble, the goal line's hint and the comparison line.
+- **The banner queue**: `MILESTONES_WAITING` (1); after `celebrateNext()`
+  is kicked, `checkMilestones` trims `state.toCelebrate` to its last
+  entry, so older waiting banners expire. `state.earned` keeps them all.
+- **END_WORDS**: `{ from: 5, ["TIMBER!"] }`, then the 1..4 and 0 bands;
+  `endWordFor(count)` still picks the miss flash. `COMPARISONS` is one
+  list of four (0, 1, 2, 4), HARD's. In `gameOver()`: `level =
+  bestEarned("height")`; the title is `level.name.toUpperCase()` or the
+  miss word; the line is `fillMarked(endCompare, level.line)` or the
+  COMPARISONS pick; `Halloween.reportScore(count, undefined, level ?
+  [level.name] : undefined)`.
+- **The "You earned" space**: `#endMilestones` (`.end-milestones`,
+  `flex: 1 1 auto; align-self: stretch; position: relative`) fills from
+  the comparison line to the button; its `<p class="earned-heading">`
+  ("You earned...", left, 4vw padding); `#endMilestoneList`
+  (`.milestone-row`, absolute, `left/right: -8vw` so it spans the full
+  width, `top: 7vw; bottom: 0`). `ROW_PLACES = [[], [50], [33.3, 66.7],
+  [26, 50, 74]]` (centres in vw); `fillMilestoneRow(entries)` sets each
+  chip's `left: Xvw` and `top: calc(50% + (X - 50) * tan 15° vw)`: the
+  staircase falls to the right. `.milestone-chip` is `position:
+  absolute; transform: translate(-50%, -50%) rotate(-15deg); max-width:
+  31vw; min-width: min-content; font-size: max(16px, 4.8vw); font-weight:
+  900; line-height: 1.1`, and holds a `span.milestone-word` (display
+  block). `showTip(chip)` measures that span: bubble top = span rect top
+  + (span.offsetWidth x sin 15°) / 2 - bubble height - 4px (the rotated
+  rect's top is the raised right end; the middle of the word is lower by
+  half the slant). `GRID_PATTERNS` / `fillMilestoneGrid` are gone.
+- **The title**: `#endWord` is now a `span.end-word-box` inside the
+  `.end-word` line: `inline-block; max-width: 94vw; padding: 1.2vw 3vw;
+  border: 0.6vw solid #e8741c; border-radius: 3vw; box-shadow: 0 0 0
+  0.5vw #5fbf8f`. `.end-word` top 18vw.
+- **No MODES**: `SPEED_GROWTH` (1.035) and `PERFECT_TOLERANCE` (1.6) are
+  used directly; `perfectTolerance()`, `applyMode`, `showModeHint`,
+  `hideModeHint`, `savedMode`, `MODE_KEY`, `MODE_HINT_MS`, `state.modeName
+  / rules / usedEasy`, `#modeSwitch`, `#modeHint`, `.is-mode` are gone.
+  The sky is `.stage`'s own gradient (`#050309 / #1a0820 / #6b1d2a`),
+  `.ground` `#1b1a1f` with a `#d9631a` line, `.moon` `#ead6a6`.
+- **No info bar**: `<main class="stage is-glowing">` is the whole
+  `<body>` (flex column, the stage `flex: 1 1 auto`). `#bestBox` is
+  `div.score-corner.text-medium` (absolute, `top: 2vw; right: 3vw;
+  z-index: 12; display: flex; gap: 2.5vw; pointer-events: none`) holding
+  `p.new-best#newBest` (hidden; `font-size: 0.7em`; `::after` is the
+  rightward tail; `new-best` keyframes pulse scale and glow) then
+  `span.best-label` ("High score", 0.7em) and `b#best`. `is-new-best` on
+  the corner lights the number (`best-glow`). The stage clips at its top
+  edge, which is why the corner is inside it at 2vw.
+- **The moon's spot**: `top: 34.75vw` (26 under the bar + 15 for the bar
+  - 4 - 2.25). Everything tied to it: `.reaction` top 19.75vw,
+  `.milestone` `top: max(60.75vw, 35%)`, `.spark` `top: max(63.75vw,
+  38%)`, `#startScreen` padding-top 63.75vw, `#endScreen` padding-top
+  66.75vw, `.end-count` top 34.75vw, `.end-word` top 18vw. The end
+  screen's layout against the moon: 68..92vw across, 34.75..58.75vw
+  down.
+- **The glow**: `.stage.is-glowing .moon` adds two soft box-shadows
+  (`transition: box-shadow 700ms`); the class is in the markup, removed
+  by `start()`, added back in `gameOver()`'s timeout.
+- **The minute**: `END_SCREEN_MS` (60000), `endTimer`; `armEndTimer()`
+  (clear + set) is called when the end screen shows and on every
+  `pointerdown` on `#endScreen`; `backToStart()` (only when `state.phase
+  === "over"`): hides the tip, clears `is-new-best` and the balloon,
+  `reset()`, phase "ready", swaps the screens, `startHints()`. `start()`
+  clears the timer.
+- **Start screen**: `.overlay .goal-line.is-shown { opacity: 0.6 }`;
+  `#startScreen .hint { font-size: max(18px, 6vw); font-weight: 700 }`.
+- **No badges**: `showReaction(word, extraClass)` writes the word only;
+  `makeBadge`, `BADGE_FROM`, `.badge*` are gone.
+- **The high score from the shell**: at start-up `state.best =
+  Halloween.bestScore()` before `reset()`. The helper's new call returns
+  `window.parent.halloweenApp.bestScore()` (app.js: the first saved
+  score's `value`, the list being sorted best first) or 0; the shell's
+  `clearScores()` calls `gameFrame.contentWindow.location.reload()` in a
+  try/catch after emptying the list.
+- **Checks** (`_documents/checks/`, Playwright, server on 8098):
+  `check-families.cjs` (a 13-round of perfects: banners with `<i>`, the
+  title HOOP HEIGHT, the line, "You earned...", chips and their places,
+  the tip's italics, forced rows of 1 / 2 / 3 long names with box
+  measurements and screenshots, a 3-round with THUD and the old line, a
+  16-round with the glow, the balloon and the moon's shadow, then the
+  end timer re-armed by a tap and `backToStart()` called directly),
+  `check-startscreen.cjs` (glow, goal line opacity, hint font, glow off
+  after a tap), `check-shell.cjs` (the app: pick Stack with in-page
+  clicks because the drawer intercepts Playwright taps; the bar's title
+  and Home size; THIS GAME text and a scrolled screenshot; a round
+  inside the iframe and the saved note; reload and the corner reads 7;
+  Clear scores and the corner reads 0), `check-narrow.cjs` (updated:
+  `stackedCount()`, the streaks, `bestEarned` per family).
+  `checks/obsolete/` holds check-bestglow, check-milestones,
+  check-modehint, check-modenote (toggle or `#count`). `check-moonspot`
+  and `check-endgrid` are stale (the old numbers) and were not run.

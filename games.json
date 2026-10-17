@@ -21,14 +21,20 @@
     {
       "folder_name": "stack-o-lantern",
       "goes_in_slot": 2,
-      "title": "Stack-o'-Lantern",
-      "short_title": "Stack",
+      "title": "Stack o' Lantern",
+      "short_title": "Stack o' Lantern",
       "icon": "assets/stack.svg",
       "designer": "Claude",
       "credits": "Designed and written by Claude Code at John's invitation",
       "date": "September 29, 2026",
-      "description": "Pumpkin slabs slide across the night sky. Tap to drop each one on the tower. Whatever hangs over the edge gets sliced off, so sloppy drops make the tower narrower until one misses. The moon is judging you.",
-      "how_to_play": "Tap anywhere to drop the sliding pumpkin onto the one below. Line the edges up: a perfect drop keeps the full width, and three perfects in a row grow it back. Stack as many as you can before a slab misses. EASY or HARD is the toggle at the top of the game; it changes how exact a drop must be.",
+      "description": [
+        "**Tap** to drop the pumpkin.\n**Line it up.** Stack it high.",
+        "Sloppy drops get sliced.\nMiss, and it's __TIMBER!__",
+        "Earn **milestones** on the way up.\nSharp Eye. Quick Draw. Toothpick.",
+        "How high can you go?\n**Scarecrow**... or **Moon Landing**?",
+        "!! The moon is judging you."
+      ],
+      "how_to_play": [],
       "settings": []
     },
     {

@@ -38,7 +38,16 @@
    around it. reportScore then does nothing except leave a note in the
    browser console, so the game still runs and can be tested alone.
 
-   THAT IS ALL THERE IS. reportScore is the helper's only call. A game
+   ONE MORE CALL, TO ASK (since 2026-10-17):
+
+       Halloween.bestScore();     // the top saved score for this game, or 0
+
+   It returns the number at the top of the app's list for this game on
+   this device, so a game that shows a "High score" of its own can start
+   from it instead of from 0 and the two agree (Stack o' Lantern does
+   this). Outside the app, or with no score saved yet, it returns 0.
+
+   THAT IS ALL THERE IS: reportScore to tell, bestScore to ask. A game
    cannot read its own switches in the THIS GAME tab, and the app has no
    sound switch of its own (since 2026-10-15): sound is the game's job.
 
@@ -77,5 +86,12 @@ const Halloween = {
       console.info("Halloween.reportScore: not inside the app, so the score " +
                    value + " was not saved.");
     }
+  },
+
+  /** The app's top saved score for this game, as a number; 0 when there
+      is none, or when this page is not inside the app. */
+  bestScore() {
+    const app = Halloween.findApp();
+    return app ? app.bestScore() : 0;
   },
 };

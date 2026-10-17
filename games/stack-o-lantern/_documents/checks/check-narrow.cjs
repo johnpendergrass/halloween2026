@@ -1,6 +1,9 @@
 /* Narrow and growth milestones: clip the slab down to under half, then
    land several in a row (perfects), expecting Tightrope and Needle paths,
-   and WIDERs in a row for Green Thumb. Reads the banner queue. */
+   and WIDERs in a row for Sprout and Green Thumb (the growth family
+   since 2026-10-17), plus the no-bounce ones on tiny slabs (Blindfold,
+   No Look) when the taps happen to land on the first pass. Reads the
+   banner queue and the end screen's three families. */
 const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 (async () => {
   const browser = await chromium.launch({ headless: true, executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe' });
@@ -30,7 +33,9 @@ const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary
     await page.evaluate(() => window.__dropWhen((d) => d > 9.8 && d < 10.4)); await page.waitForTimeout(120);
     for (let i = 0; i < 3; i++) { await page.evaluate(() => window.__dropWhen((d) => d <= 0.7)); await page.waitForTimeout(120); }
     await page.waitForTimeout(24000);
-    const out = await page.evaluate(() => ({ banners: window.__banners, count: document.getElementById('count').textContent, topWidth: window.__slabs()[1].width }));
+    const out = await page.evaluate(() => ({ banners: window.__banners, count: stackedCount(), topWidth: window.__slabs()[1].width,
+      streaks: { growth: state.growthStreak, tiny: state.tinyStreak, pencil: state.pencilStreak, cleanTiny: state.cleanTinyStreak, cleanSmallPerfect: state.cleanSmallPerfectStreak },
+      bestPerFamily: ['height', 'accuracy', 'growth', 'bounce'].map(f => f + ': ' + (bestEarned(f) ? bestEarned(f).name : '-')) }));
     out.widthAfterClips = widthAfterClips;
     out.errors = errors;
     console.log(JSON.stringify(out, null, 1));

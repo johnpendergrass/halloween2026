@@ -22,7 +22,7 @@ games.json                 THE LIST OF GAMES: "games" array (v2 entries, see 4a)
 manifest.json              Android/desktop full-screen ("standalone", portrait); icons: [] (TODO)
 app/styles.css             app CSS (frame, panels, drawer) - moved from the mockup
 app/app.js                 reads games.json at start-up; picker buttons, THIS GAME tab (text, high scores, switches), drawer (Home toggles it, a tap on #gameCover closes it), loadGame/startGame. Never edited by designers
-games/game-helper.js       THE HELPER a game includes to talk to the app: Halloween.reportScore() and nothing else (see 4j)
+games/game-helper.js       THE HELPER a game includes to talk to the app: Halloween.reportScore() and, since 2026-10-17, Halloween.bestScore() (see 4j, 4l)
 app/default-icon.svg       the ghost shown on a button that has neither a usable icon nor a title
 games/pumpkin-patch/       slot 1, shown at start (was game0, then the "home" game until 2026-10-16): index.html, pumpkin-patch.css/.js, assets/ (2025 art, patch.svg icon)
 games/stack-o-lantern/     STACK-O'-LANTERN (Claude's stacker, was game4): index.html, stack-o-lantern.css/.js, assets/stack.svg
@@ -539,3 +539,36 @@ and the game's resources must match; see 6 below).
   (lowercase names, relative paths, size limits, no external URLs).
 - Sound: iPhone plays nothing until a tap; the mute switch silences some web
   audio. Needs one shared rule.
+
+## 4l. bestScore, the Clear-scores reload, the Home icon, Stack's look (2026-10-17)
+
+- **`games/game-helper.js`**: `Halloween.bestScore()` returns
+  `findApp().bestScore()` or 0. The header comment lists it under "ONE
+  MORE CALL, TO ASK".
+- **`app/app.js`**: `bestScore()` (section 4, before `showClearQuestion`)
+  reads the current game's saved note and returns `scores[0].value`
+  (the list is kept sorted best first) or 0; `window.halloweenApp = {
+  reportScore, bestScore }`. `clearScores()` ends with
+  `gameFrame.contentWindow.location.reload()` in a try/catch.
+- **`app/styles.css`**: `.top-icon` font-size `clamp(22px, 8.5cqw, 42px)`
+  (was 16/6/30; the bar is 11.111cqw). Section 5b gains
+  `.look-stack-o-lantern` (text-align center), `.look-stack-o-lantern
+  .accent` (#ffd34d, 0.6px dark stroke, shadow) and
+  `.look-stack-o-lantern p.emphasis` (orange left edge, centred, italic).
+- **`games.json`** (Stack): `title` and `short_title` "Stack o' Lantern";
+  `description` a six-item list using `**bold**`, `__accent__`, `\n` and
+  a leading `!! ` emphasis line; `how_to_play: []`.
+- **`games/README - game design requirements.md`**: rule 19 mentions
+  `bestScore()`; section 2.5 shows it and says "those are the helper's
+  only calls: one to tell, one to ask".
+- **The stamp**: `2026-1017-stack-families`, 26 places.
+- **Line endings**: app.js, styles.css, the helper and the requirements
+  doc are mixed or CRLF; the day's edits used a scratch Python script
+  that tries each passage with LF then CRLF and writes back with
+  `newline=""`. `git diff --numstat` confirmed 1-line, 25/3-line,
+  17/1-line and 12/2-line diffs.
+- **Check**: `games/stack-o-lantern/_documents/checks/check-shell.cjs`
+  drives the app on 8098 (in-page clicks: the drawer intercepts
+  Playwright taps), reads the bar, the THIS GAME text, plays a round in
+  the iframe, reads the saved note, reloads, reads the corner (7), clears
+  (list empty, corner 0, game on its start screen).
