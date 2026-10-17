@@ -1,6 +1,6 @@
 # Halloween 2026 — Technical Specifications
 
-Last updated: 2026-10-16 17:15 (4: touch-action on the shell page; 4g moved to the game's folder; stamp 2026-1016-stack-milestones; before that: 15:34 top title, 15:45 one control point)
+Last updated: 2026-10-16 20:45 (stamp 2026-1016-stack-endscreen, 26 places now: Stack's index has 3; nothing else in the shell; 17:15: 4: touch-action on the shell page; 4g moved to the game's folder; stamp 2026-1016-stack-milestones; before that: 15:34 top title, 15:45 one control point)
 
 ## 1. Stack and hosting
 
@@ -321,7 +321,8 @@ Now `games/stack-o-lantern/_documents/claude-john-docs/specifications-technical.
 (the 2026-09-29 notes that were here, plus modes, milestones, the end screen
 and how the game is tested). Shell-side: slot 2 in `games.json`, `settings: []`,
 the game's own localStorage key `halloween2026:stack-o-lantern:mode` (rule 21),
-and its `index.html` links carry the shared cache stamp since 2026-10-16.
+and its `index.html` links carry the shared cache stamp since 2026-10-16
+(`2026-1016-stack-endscreen` at 20:45).
 
 ## 4i. Placeholder folders and the 2026-09-30 reshuffle
 

@@ -6,7 +6,7 @@
     <title>Stack-o'-Lantern</title>
     <!-- Shown inside the app's game panel (an iframe), but also works on its
      own: open games/stack-o-lantern/index.html directly to test it. -->
-    <link rel="stylesheet" href="./stack-o-lantern.css?v=2026-1016-stack-milestones" />
+    <link rel="stylesheet" href="./stack-o-lantern.css?v=2026-1016-stack-endscreen" />
   </head>
 
   <body>
@@ -16,7 +16,10 @@
          keeps the full width. The moon has opinions. -->
 
     <header class="info-bar text-medium">
-      <span>Stacked <b id="count">0</b></span>
+      <!-- An empty span balances "Best" so the toggle stays centred. The
+           running count used to be here; since 2026-10-16 it pops off
+           each landed pumpkin instead (popCount in the script). -->
+      <span class="info-side" aria-hidden="true"></span>
       <!-- The mode toggle: one tap swaps EASY and HARD. The lit word is the
            current mode (stack-o-lantern.js sets data-mode). It is outside
            the stage, so tapping it never drops a pumpkin. -->
@@ -24,7 +27,9 @@
         <span class="mode-word" data-mode="easy">EASY</span>
         <span class="mode-word" data-mode="hard">HARD</span>
       </button>
-      <span>Best <b id="best">0</b></span>
+      <!-- is-new-best (set at game over, cleared at the next start) makes
+           the number glow gold: a new best this visit. -->
+      <span class="info-side best" id="bestBox">Best <b id="best">0</b></span>
     </header>
 
     <!-- Everything moves inside the stage. stack-o-lantern.js positions the slabs,
@@ -68,22 +73,32 @@
           Line it up. Stack it high.<br />
           The moon is judging you.
         </p>
-        <p class="mode-note text-small text-on-art" id="modeNote"></p>
-        <!-- A milestone to go for; the script changes it every few seconds. -->
+        <!-- A milestone to go for; the script changes it every few seconds.
+             (The mode is not named here: the reminder under the toggle
+             shows on this screen instead.) -->
         <p class="goal-line text-small text-on-art" id="goalLine"></p>
         <p class="hint text-medium text-on-art">Tap anywhere to start</p>
       </div>
 
       <!-- End screen. -->
       <div class="overlay" id="endScreen" hidden>
-        <p class="title text-large text-on-art" id="endWord">SPLAT.</p>
-        <p class="text-medium text-on-art" id="endCount"></p>
+        <!-- The moon keeps its in-game place (top right) on this screen, so
+             the big word is centred in the strip above it and the count
+             stands in three lines to its left; both are placed by the CSS,
+             outside the flow. The rest stacks below the moon. -->
+        <p class="title text-large text-on-art end-word" id="endWord">SPLAT</p>
+        <p class="end-count text-on-art" id="endCount">
+          <span class="text-medium">You stacked</span>
+          <b class="text-large" id="endNumber">0</b>
+          <span class="text-medium" id="endNoun">pumpkins!</span>
+        </p>
         <p class="text-medium text-on-art compare" id="endCompare"></p>
-        <!-- The round's milestones as chips. Tap one (or hover, with a
+        <!-- The round's milestones on a 3x3 grid (the script fills the
+             cells; see fillMilestoneGrid). Tap a name (or hover, with a
              mouse) and a bubble above it says what earned it. -->
         <div class="end-milestones" id="endMilestones" hidden>
-          <p class="text-small text-on-art">Milestones this game</p>
-          <div class="milestone-list" id="endMilestoneList"></div>
+          <p class="text-small text-on-art">Milestones</p>
+          <div class="milestone-grid" id="endMilestoneList"></div>
         </div>
         <button class="play-again text-medium" id="playAgain">Stack again</button>
         <p class="milestone-tip text-small" id="milestoneTip" hidden></p>
@@ -92,7 +107,7 @@
 
     <!-- The helper comes first: it gives the game Halloween.reportScore(),
          which hands the score to the app (see games/game-helper.js). -->
-    <script src="../game-helper.js?v=2026-1016-stack-milestones"></script>
-    <script src="./stack-o-lantern.js?v=2026-1016-stack-milestones"></script>
+    <script src="../game-helper.js?v=2026-1016-stack-endscreen"></script>
+    <script src="./stack-o-lantern.js?v=2026-1016-stack-endscreen"></script>
   </body>
 </html>

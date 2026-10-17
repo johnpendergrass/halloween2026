@@ -39,12 +39,16 @@ README - STACK-O-LANTERN.md  this file
 5. **Miss** (less than 0.8vw overlap): the whole slab tumbles and a big
    word flashes, the same one the end screen then shows: one of five,
    picked at random, from the band the count reached (`END_WORDS`: 0,
-   1–5, 6–10, 11–19, 20–34, 35+; WHIFF. / SPLAT. / TUMBLE! / TIMBER! /
-   SKY HIGH! / GO OUTSIDE. are one from each). John, 2026-10-16.
+   1–5, 6–10, 11–19, 20–34, 35+; WHIFF / SPLAT / TUMBLE! / TIMBER! /
+   SKY HIGH! / GO OUTSIDE are one from each; no full stops). John, 2026-10-16.
 6. Speed starts at 42vw/s and multiplies by 1.035 per slab (1.03 in EASY),
    capped at 110.
-7. The camera keeps the tower top at 42% of the stage height, easing
-   there. Stars and moon move less than the tower, for depth.
+6b. As each pumpkin lands, its count ("12") pops off the top of it, flies
+   up and fades in under a second. The bar shows only the mode toggle and
+   Best (this visit's best); when a round beats an earlier best, that
+   number glows gold on the end screen until the next round starts.
+7. The camera keeps the tower top at 36% of the stage height, easing
+   there. Stars move less than the tower, for depth; the moon never moves.
 8. Every 7th slab is a pale "ghost pumpkin"; the others cycle six oranges.
 9. **Streaks and milestones** (John, 2026-10-16). The reaction word
    carries badges: a gold star "x3" for perfects in a row (from 2) and a
@@ -71,7 +75,7 @@ README - STACK-O-LANTERN.md  this file
    screen gives its verdict on the round: wide-eyed at 20+, a smile at
    10+, a flat line at 4+, sad below that (John: sad only for a bad
    performance). While the start screen waits, a **goal line** under the
-   mode note names a milestone to go for ("GUNSLINGER: ten drops in a row
+   title names a milestone to go for ("GUNSLINGER: ten drops in a row
    with no bounce"), fading to another every few seconds (each entry's
    `hint`). The first tap stops it. (A moon speech bubble was tried first
    and dropped the same day: "does not really work".) The moon sits above the

@@ -1,6 +1,6 @@
 # Stack-o'-Lantern — Specifications (design decisions)
 
-Last updated: 2026-10-16 17:15 (first file in the game's own folder: the 2026-09-29 design from the root spec's section 6f, then the 2026-10-16 afternoon of modes, milestones and banter)
+Last updated: 2026-10-16 20:45 (/update; John's ToDo list in section 4; 20:20: no Stacked count in the bar; Best glows on a new best; big word, Milestones lower; 20:05: end words lose their full stops, exclamation marks stay; comparison lower, grid rows 9vw; 19:55: count pops off each landed pumpkin; goal line halfway down the start screen; 19:40: the start screen no longer names the mode; the reminder shows there instead; 19:10: the moon's spot is now 26vw down, from John's screenshot; the banner below it; 19:00: the moon never moves, not even with the camera; John's six layout notes on his screenshot; 18:30: end screen laid out around the moon, milestones on a 3x3 grid, slanted; 17:15: first file in the game's own folder: the 2026-09-29 design from the root spec's section 6f, then the 2026-10-16 afternoon of modes, milestones and banter)
 
 This file records WHAT the game is and WHY. The "how" is in
 `specifications-technical.MD` beside it. The shell around the game keeps
@@ -28,7 +28,8 @@ over." Claude chose a one-tap stacker.
   basketball hoop, 18 = a giraffe, 320 = Big Ben. Please go outside.").
   John: "that was a fine little game."
 - **Decisions**: no images at all (slabs, stars, moon are CSS) so it loads
-  instantly; the camera keeps the tower top at 42% of the stage; the
+  instantly; the camera keeps the tower top at 36% of the stage (42%
+  until 2026-10-16, see the moon below); the
   ground is part of the scrolling world (a pinned ground made the lower
   slabs look like they sank); Best is per visit (rule 18). No pause
   (John, 2026-10-01): a round is short.
@@ -64,10 +65,13 @@ this game could not be read by the game (shell rule), so:
   over the tower. A round that was EASY for even a moment is an EASY
   round: its end lines and its score note ("14 (10-16-2026) easy" in the
   shell's list) say so, so a last-second flip cannot launder a HARD score.
-- **The reminder**: the start screen names the mode in a line; a tap on
-  the toggle shows the same line in a quiet pill just under it until the
-  round starts (mid-round it leaves after 2.5 s). No border, dimmed text
-  ("more subdued").
+- **The reminder**: a quiet line just under the toggle says what the
+  mode in force means ("HARD mode: line the edges up within a hair"). It
+  shows on the start screen for the remembered or default mode, and on
+  every tap of the toggle, and goes when the round starts (tapped
+  mid-round it leaves after 2.5 s). No border, dimmed text ("more
+  subdued"). The start screen itself does not name the mode any more
+  (19:40; it did, and the two said the same thing twice).
 - The choice is remembered on the device under the game's own key
   (rule 21). Default HARD, so old scores stay comparable.
 
@@ -81,7 +85,7 @@ play-tested by John on his phone between steps.
   in a row (from 2), a blue lightning bolt "×4" for drops in a row made
   before the slab touched a wall (from 3). The old "PERFECT x3" text "was
   just not as obvious to me as a player".
-- **Nineteen milestones**, each once per round, in eight classes:
+- **Nineteen milestones**, each once per round, in nine classes:
   perfects in a row (Sharp Eye 5, Laser 10, Machine 20); no-bounce drops
   in a row (Quick Draw 5, Gunslinger 10, Lightning 20); height (Hoop
   Height 10, Haunted House 25, Skyscraper 50); a perfect on a ghost
@@ -105,27 +109,84 @@ play-tested by John on his phone between steps.
   ("you have a lot of room ... to actually describe the milestone");
   Ghost Whisperer's does not give away "every seventh": "let them figure
   that out".
-- **A goal line on the start screen** under the mode note: "SHARP EYE:
+- **The names sit on a fixed 3×3 grid** (John, 18:30), placed by a table
+  so the same number of milestones always lands in the same spots: one
+  in the centre, two top and bottom of the middle column, three on the
+  diagonal, four in the corners, five an X, six the two outer columns,
+  seven adds the centre, eight all but the centre, nine all. Each name
+  is slanted 15° anticlockwise ("that would look fine i think"), and
+  the font is a touch under text-small so the widest name (Eye of the
+  Needle) sits in a 30vw cell with air on both sides. No star before
+  the name any more; the gold and the slant do that job.
+- **The end screen's top is laid out around the moon** (John, 18:30):
+  the big word (LEGENDARY, OOF) centred in the strip above the moon;
+  "You stacked / 23 / pumpkins!" in three lines, the number large, to the
+  moon's left; the comparison line, the grid and Stack again below.
+  John's notes on the first try (his "bad layout.png" in `design ideas/`,
+  taken while the moon still drifted): the word midway between the top
+  rule and the moon; the count directly left of the moon; the comparison
+  centred a bit below the moon; the heading just "Milestones", with
+  space above; tighter grid rows, moved down; the button moved down
+  "but have plenty of breathing room above the bottom" (it sits at the
+  bottom of the screen above 12vw of padding).
+- **No running count in the bar** (John, 20:20: "now that we have that
+  counter we no longer need the Stacked 56 up in the title bar"). The
+  bar is toggle and Best. **A new best glows**: when a round passes an
+  earlier best this visit, the Best number turns gold and pulses from
+  the end screen until the next round starts ("only after that round i
+  mean - not forever!"). The first round of a visit sets the best
+  without beating one, so it does not glow.
+- **The count pops off every landed pumpkin** (John, 19:55: "a # STACKED
+  badge to the top of the current pumpkin that flys up and away, and
+  fades away ... quickly gets out of the way"): the new count in bold
+  white on the slab's top edge, a quick swell, then up 18vw and gone in
+  0.7 s. It rides the camera with the slab. Reduced motion: it fades in
+  place.
+- **A goal line on the start screen** halfway between the three lines
+  and "Tap anywhere to start" (John, 19:55): "SHARP EYE:
   five perfects in a row", a random milestone every few seconds, stopped
   by the first tap. John's idea was the moon saying these in a speech
   bubble; built, tried on the phone, and dropped the same hour ("that
   does not really work"). The hints became the quiet line instead.
 - **The end word** is one of five from the band the count reached (0,
-  1–5, 6–10, 11–19, 20–34, 35+: WHIFF. / SPLAT. / TUMBLE! / TIMBER! / SKY
+  1–5, 6–10, 11–19, 20–34, 35+: WHIFF / SPLAT / TUMBLE! / TIMBER! / SKY
   HIGH! / GO OUTSIDE. are one from each), the same word flashing at the
   miss; "what is wrong with a longer list ... players love that sort of
   thing". It was WHIFF / SPLAT / TIMBER before.
-- **The moon** stays exactly where and how big it is during play ("that
-  is a feature"; a 1.3× grow at game over was tried and dropped), sits
-  above the dimmed overlays so it is always bright, and on the end screen
+- **The moon never moves**: "it should be in the same spot in the game,
+  the starting screen, and the finish screen. it is an anchor point of
+  the game design." A 1.3× grow at game over was tried and dropped, and
+  the original slow drift down with the camera (12% of the tower's
+  scroll, for depth) went the same day, once John's screenshot showed
+  the end screen laid out against a moon that was somewhere else. It
+  Its spot, since 19:10, is the one John liked in that screenshot: 24vw
+  across, 8vw from the right, 26vw down (it was 9vw down). Everything
+  else made room: during play the reaction word (PERFECT! and its
+  badges) now flashes in the strip above the moon and the milestone
+  banner pops just under it, with the tower held a little lower (36%)
+  so the flying slab passes beneath the banner; the start screen's text
+  begins below the moon, as the end screen's does. It
+  sits above the dimmed overlays so it is always bright, and on the end screen
   gives a verdict on the whole round: wide-eyed at 20+, a smile at 10+, a
   flat line at 4+, sad only below that. "It really has to be a bad
-  performance for the moon to be sad." The end screen's words start
-  below it.
+  performance for the moon to be sad." The big word and the count keep
+  it company either side; the rest of the end screen starts below it.
 - Nothing is remembered between rounds: "a light and fun game, not a
   technology demo." No trophy cabinet.
 
 ## 4. Not built, and why
+
+John's list of 2026-10-16 20:40, in his order, comes first:
+
+1. **Fewer milestones on the end screen, larger**: "reduce it to show
+   five at the max, and the milestone grid text needs to be larger". The
+   3×3 grid and its placement table want a five-slot rethink (perhaps a
+   2 + 3 or 3 + 2 arrangement, or the placement table cut at five); the
+   set of nineteen "may adjust" too.
+2. **More variety in the moon's face, "especially at the end screen"**:
+   today it has four faces (wow, happy, meh, sad) and the end screen
+   picks one by the count.
+3. **Sound** (below).
 
 - **Sound** (John's suggestion 3 of the afternoon: a bass click on the
   wall, a kerthunk on landing, a celebratory ding): the next step. The

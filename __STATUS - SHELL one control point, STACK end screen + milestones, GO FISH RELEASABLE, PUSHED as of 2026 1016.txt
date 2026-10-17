@@ -1,5 +1,9 @@
 Halloween 2026 - project status (the glance; the SHELL's details in claude-john-docs/, each game's in its own folder)
 
+2026 1016 2045  PUSHED by Claude at John's request. SHELL untouched; stamp 2026-1016-stack-endscreen (26 places).
+              STACK-O'-LANTERN: the moon fixed at one spot, the end screen rebuilt around it (John's screenshots),
+              count pops off each pumpkin, Best glows on a new best. Next for Stack (John's list): five milestones
+              at most on the end screen with larger text, more moon faces, sound.
 2026 1016 1715  PUSHED by Claude at John's request (one commit: everything below). SHELL: a no-zoom rule
               (touch-action pan-y on the page; a double tap had magnified the game panel on John's phone);
               Stack's shell switch dropped (the game has its own toggle). Stamp 2026-1016-stack-milestones.
@@ -17,7 +21,7 @@ Halloween 2026 - project status (the glance; the SHELL's details in claude-john-
 
 NOT YET
  - John's iPhone look from the home-screen icon once Pages serves the new stamp: no zoom on a double tap,
-   the 9:15 panel, Home / tap-to-close, GO FISH! in the bar, Stack's new bits
+   the 9:15 panel, Home / tap-to-close, GO FISH! in the bar, Stack's new end screen
  - Stack: sound; "almost made the high scores" feedback (needs a helper call to read the shell's list)
  - shell: switches that do something (or drop the column); icons for the other games; placeholder slots;
    requirements gaps; contribution workflow; the two-note example in the helper/rules doc

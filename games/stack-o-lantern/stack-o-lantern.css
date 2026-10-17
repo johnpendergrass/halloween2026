@@ -63,6 +63,24 @@ body {
   border-bottom: 2px solid #9b7cc4;   /* echoes the app's lavender line */
 }
 
+/* The two sides of the bar take equal room, so the toggle sits in the
+   middle whatever "Best" says. */
+.info-side { flex: 1 1 0; }
+.info-bar .best { text-align: right; }
+
+/* A new best this visit: the number glows gold and pulses from the end
+   screen until the next round starts (John: "only after that round ...
+   not forever!"). */
+.info-bar .best.is-new-best b {
+  color: #ffd34d;
+  animation: best-glow 1.2s ease-in-out infinite;
+}
+
+@keyframes best-glow {
+  0%, 100% { text-shadow: 0 0 1vw rgb(255 211 77 / 40%); }
+  50%      { text-shadow: 0 0 2.5vw #ffd34d, 0 0 6vw rgb(255 211 77 / 80%); }
+}
+
 /* The EASY / HARD toggle in the middle of the info bar: a dark pill with
    both words in it; the lit word is the mode. 13vw tall is the smallest
    tap target (requirements 1.7). */
@@ -146,7 +164,7 @@ body[data-mode="hard"] .moon {
 .moon {
   position: absolute;
   right: 8vw;
-  top: 9vw;
+  top: 26vw;          /* the spot John picked from a screenshot (2026-10-16) */
   width: 24vw;
   height: 24vw;
   border-radius: 50%;
@@ -154,9 +172,12 @@ body[data-mode="hard"] .moon {
   box-shadow: 0 0 7vw rgb(246 231 176 / 45%), inset -2vw -2vw 0 rgb(0 0 0 / 8%);
   pointer-events: none;
   /* Above the start and end overlays (z 10), so the moon stays bright
-     while they dim the rest; its face is the game's verdict. It keeps
-     exactly its in-game place and size there (John: "that is a feature";
-     a 1.3x grow at game over was tried and dropped the same day). */
+     while they dim the rest; its face is the game's verdict. It never
+     moves or changes size: the same spot in play, on the start screen
+     and on the end screen, "an anchor point of the game design" (John;
+     a 1.3x grow at game over, and a slow drift down with the camera,
+     were both dropped on 2026-10-16). The end screen is laid out
+     around this spot: 68..92vw across, 26..50vw down. */
   z-index: 11;
 }
 
@@ -267,13 +288,39 @@ body[data-mode="hard"] .moon {
   100% { transform: none; }
 }
 
+/* The count that pops off each landed pumpkin: the number sits on the
+   new slab, flies up and fades, then removes itself (popCount in the
+   script). It lives in .tower, so it scrolls with the slab it came
+   from. John: "a # STACKED badge ... that quickly gets out of the way". */
+.count-pop {
+  position: absolute;
+  z-index: 4;
+  font-size: max(16px, 5.5vw);
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 0.3vw 0.6vw rgb(0 0 0 / 70%);
+  pointer-events: none;
+  animation: count-pop 700ms ease-out forwards;
+}
+
+@keyframes count-pop {
+  0%   { opacity: 0; transform: translate(-50%, 2vw) scale(0.6); }
+  20%  { opacity: 1; transform: translate(-50%, -2vw) scale(1.15); }
+  100% { opacity: 0; transform: translate(-50%, -18vw) scale(1); }
+}
+
+@keyframes count-fade {
+  0%   { opacity: 1; transform: translate(-50%, -2vw); }
+  100% { opacity: 0; transform: translate(-50%, -2vw); }
+}
+
 /* The reaction word rises and fades. The class is re-applied for every
    drop; stack-o-lantern.js restarts the animation (see showReaction). */
 .reaction {
   position: absolute;
   left: 0;
   right: 0;
-  top: 32%;
+  top: 11vw;          /* the strip above the moon (which starts at 26vw); it rises 8vw as it fades */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -316,7 +363,7 @@ body[data-mode="hard"] .moon {
   position: absolute;
   left: 0;
   right: 0;
-  top: 18%;
+  top: 35%;           /* under the moon (which ends at 50vw) and above the flying slab */
   z-index: 5;
   text-align: center;
   pointer-events: none;
@@ -347,7 +394,7 @@ body[data-mode="hard"] .moon {
 .spark {
   position: absolute;
   left: 50%;
-  top: 26%;
+  top: 38%;           /* bursts from the banner's name */
   width: 4vw;
   height: 4vw;
   background: var(--spark, #ffd34d);
@@ -363,33 +410,46 @@ body[data-mode="hard"] .moon {
   100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.5) rotate(var(--spin)); }
 }
 
-/* The end screen's milestone chips: the names flow across lines, each
-   one whole, each a button. The open one (tapped, or under the mouse) is
-   lit and its bubble sits above it (see showTip in the script). */
+/* The end screen's milestones: a fixed 3x3 grid of cells, the names
+   placed in them by John's table (fillMilestoneGrid in the script), so
+   one name sits dead centre, two sit top and bottom, and so on. Each
+   name is a button drawn as the word alone, slanted a little like a
+   sticker. The open one (tapped, or under the mouse) is lit and its
+   bubble sits above it (see showTip in the script). */
 .end-milestones {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2.5vw;
+  gap: 3vw;
+  margin-top: 3vw;    /* a little more air under the comparison line */
 }
 
-.milestone-list {
+.milestone-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 30vw);   /* 90vw: the widest name is 27.4vw */
+  grid-auto-rows: 9vw;                      /* tight: slanted rows run parallel */
+}
+
+.grid-cell {
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
   justify-content: center;
-  gap: 2.2vw 2.5vw;
 }
 
 .milestone-chip {
   min-height: 11vw;            /* a finger-sized target, but drawn as the word alone */
-  padding: 1.2vw 2vw;
+  padding: 1.2vw 1vw;
   border: none;
   background: none;
   color: #ffd34d;
   font-family: inherit;
+  /* A touch under text-small: "Eye of the Needle" must fit a 30vw cell
+     with air on both sides (measured 27.4vw at this size, 30vw at 3.6). */
+  font-size: max(12px, 3.3vw);
   font-weight: 700;
   white-space: nowrap;
   text-shadow: 0 0.3vw 0.6vw rgb(0 0 0 / 70%);
+  transform: rotate(-15deg);   /* John: "slant the milestone names by -15 degrees" */
   cursor: pointer;
 }
 
@@ -439,22 +499,62 @@ body[data-mode="hard"] .moon {
   background: rgb(18 10 31 / 72%);
 }
 
-/* The end screen has more to show (the chips), so it is looser, and it
-   starts below the moon rather than behind it. */
-#endScreen {
-  gap: 4.5vw;
-  padding-top: 35vw;    /* the moon reaches down to 33vw; TIMBER! is wide */
+/* The start screen's text begins below the moon too (the title ran
+   under it when the screen was centred). */
+#startScreen {
+  gap: 4vw;
+  padding-top: 55vw;
   justify-content: flex-start;
+}
+
+/* The end screen's flow (the comparison line, the Milestones heading
+   and grid, the button) starts a little below the moon, which reaches
+   down to 50vw. The big word and the count are placed around the moon
+   instead (below). The button is pushed to the bottom of the screen
+   (margin-top: auto), with the bottom padding as its breathing room. */
+#endScreen {
+  gap: 5vw;
+  padding-top: 58vw;
+  padding-bottom: 12vw;
+  justify-content: flex-start;
+}
+
+#endScreen .play-again {
+  margin-top: auto;
 }
 
 .overlay .title { line-height: 1.1; }
 
-/* The start screen names the mode in a quiet line above the hint. */
-.overlay .mode-note {
-  opacity: 0.85;
+/* The big word (TIMBER!, LEGENDARY) centred above the moon, midway
+   between the info bar's rule and the moon's top at 26vw (its box is
+   the font size, 9vw, and the capitals sit in the middle of it). */
+.overlay .end-word {
+  position: absolute;
+  top: 11.5vw;        /* clear of the mode reminder, which can still show here (ends ~10vw) */
+  left: 0;
+  right: 0;
+  line-height: 1;
 }
 
-/* Under it, a milestone to go for: the name in gold, then what it takes.
+/* "You stacked / 23 / pumpkins!" directly to the left of the moon: the
+   moon's own top and height, so the two line up, centred on 40vw (a
+   little right of the middle of the space the moon leaves). */
+.overlay .end-count {
+  position: absolute;
+  top: 26vw;
+  left: 12vw;
+  width: 56vw;
+  height: 24vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.2;
+}
+
+.overlay .end-count b { line-height: 1; }
+
+/* A milestone to go for: the name in gold, then what it takes.
    It keeps its height while empty, so the screen does not jump; the
    script fades it in and out with is-shown. */
 .overlay .goal-line {
@@ -470,6 +570,12 @@ body[data-mode="hard"] .moon {
 .overlay .goal-line.is-shown {
   opacity: 1;
 }
+
+/* On the start screen the goal line sits halfway between the three
+   lines and "Tap anywhere to start" (John): equal margins either side,
+   and the hint's usual top margin dropped here. */
+#startScreen .goal-line { margin: 7vw 0; }
+#startScreen .hint { margin-top: 0; }
 
 /* The reminder under the toggle: a quiet line at the top of the stage,
    above the overlays so it reads on the start and end screens too. No
@@ -529,6 +635,8 @@ body[data-mode="hard"] .moon {
 @media (prefers-reduced-motion: reduce) {
   .slab.is-new { animation: none; }
   .overlay .hint { animation: none; }
+  .count-pop { animation-name: count-fade; }
+  .info-bar .best.is-new-best b { animation: none; text-shadow: 0 0 2.5vw #ffd34d; }
   .moon .mouth { transition: none; }
   .spark { display: none; }
   .milestone.is-shown { animation: fade-in 300ms ease-out forwards; }

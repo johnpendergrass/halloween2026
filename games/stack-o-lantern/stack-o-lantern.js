@@ -130,7 +130,7 @@ const MILESTONES = [
     hint: "three WIDERs in a row with no clip between them" },
 ];
 
-// While the start screen waits, one quiet line under the mode note names
+// While the start screen waits, one quiet line under the title names
 // a milestone to go for ("SHARP EYE: five perfects in a row"), fading to
 // the next every few seconds (John's idea, 2026-10-16; first tried as the
 // moon talking in a speech bubble, which "does not really work").
@@ -147,7 +147,10 @@ const BADGE_FROM = { perfect: 2, clean: 3 };   // a streak badge shows from this
 const MODE_KEY = "halloween2026:stack-o-lantern:mode";
 const HOVER = SLAB_H * 1.8;     // how far above the tower the moving slab flies
 const GRAVITY = 320;            // vw per second squared, for falling pieces
-const CAMERA_LINE = 0.42;       // keep the tower top at this share of the stage height
+const CAMERA_LINE = 0.36;       // keep the tower top at this share of the stage height
+                                // (0.42 until 2026-10-16: lowered so the flying slab
+                                // stays under the milestone banner, which sits under
+                                // the moon)
 const END_DELAY_MS = 900;       // time to watch the miss before the end screen
 
 const TONES = ["#f0862a", "#e8741c", "#f59a3c", "#d9631a", "#ee7f22", "#fb9a48"];
@@ -167,12 +170,12 @@ const REACTIONS = [
 // thing"; it was WHIFF / SPLAT / TIMBER before). Short words only: the
 // end screen shows them at 9vw.
 const END_WORDS = [
-  { from: 35, words: ["UNREAL.", "GO OUTSIDE.", "PUMPKIN GOD.", "WHAT?!", "STARSTRUCK."] },
-  { from: 20, words: ["TIMBER!!", "SKY HIGH!", "MONSTER!", "LEGENDARY.", "BIG TIMBER!"] },
-  { from: 11, words: ["TIMBER!", "LOOK OUT!", "AVALANCHE!", "A TOWER.", "RESPECT."] },
-  { from: 6,  words: ["TUMBLE!", "KERPLUNK!", "WOBBLE.", "SO CLOSE.", "IT'S DOWN."] },
-  { from: 1,  words: ["SPLAT.", "THUD.", "OOF.", "CRUNCH.", "WELL THEN."] },
-  { from: 0,  words: ["WHIFF.", "NOPE.", "AIR BALL.", "OOPS.", "NOTHING."] },
+  { from: 35, words: ["UNREAL", "GO OUTSIDE", "PUMPKIN GOD", "WHAT?!", "STARSTRUCK"] },
+  { from: 20, words: ["TIMBER!!", "SKY HIGH!", "MONSTER!", "LEGENDARY", "BIG TIMBER!"] },
+  { from: 11, words: ["TIMBER!", "LOOK OUT!", "AVALANCHE!", "A TOWER", "RESPECT"] },
+  { from: 6,  words: ["TUMBLE!", "KERPLUNK!", "WOBBLE", "SO CLOSE", "IT'S DOWN"] },
+  { from: 1,  words: ["SPLAT", "THUD", "OOF", "CRUNCH", "WELL THEN"] },
+  { from: 0,  words: ["WHIFF", "NOPE", "AIR BALL", "OOPS", "NOTHING"] },
 ];
 
 // The end screen turns the count into a height. A pumpkin slab is about
@@ -245,12 +248,12 @@ let lastHint = null;      // so the same milestone is never named twice running
 const startScreen = document.getElementById("startScreen");
 const endScreen = document.getElementById("endScreen");
 const endWord = document.getElementById("endWord");
-const endCount = document.getElementById("endCount");
+const endNumber = document.getElementById("endNumber");
+const endNoun = document.getElementById("endNoun");
 const endCompare = document.getElementById("endCompare");
-const countLabel = document.getElementById("count");
+const bestBox = document.getElementById("bestBox");
 const bestLabel = document.getElementById("best");
 const modeSwitch = document.getElementById("modeSwitch");
-const modeNote = document.getElementById("modeNote");
 const modeHint = document.getElementById("modeHint");
 let modeHintTimer = 0;   // the mid-round reminder's timeout, so a second tap restarts it
 
@@ -277,6 +280,8 @@ const state = {
   toCelebrate: [],     // earned but not yet shown (two can land on one drop)
   celebrating: false,  // is the banner up?
   best: 0,             // best count this visit (the app keeps the lasting list)
+  bestBefore: 0,       // the best when this round started
+  newBest: false,      // this round beat an earlier best (so "Best" glows at the end)
   lastTime: 0,         // timestamp of the previous animation frame (ms)
 };
 
@@ -448,7 +453,11 @@ function moodForCount(count) {
 
 /** Slide the view so the tower top stays around CAMERA_LINE. The tower
     container moves DOWN by `camera`, which shows a higher part of the
-    world. The stars and the moon move less, for a little depth. */
+    world. The stars move less, for a little depth. The moon does not
+    move at all: it is in the same spot during play, on the start screen
+    and on the end screen, "an anchor point of the game design" (John,
+    2026-10-16; it drifted down at 0.12x the camera before, which put it
+    in a different place on every end screen). */
 function moveCamera(dt) {
   const target = Math.max(0, towerTop() - stageHeight() * CAMERA_LINE);
   // Ease towards the target: cover a share of the remaining distance each
@@ -456,7 +465,6 @@ function moveCamera(dt) {
   state.camera += (target - state.camera) * Math.min(1, dt * 6);
   tower.style.transform = "translateY(" + state.camera + "vw)";
   stars.style.transform = "translateY(" + state.camera * 0.25 + "vw)";
-  moon.style.transform = "translateY(" + state.camera * 0.12 + "vw)";
 }
 
 /** Start the goal line cycling (the start screen). */
@@ -489,10 +497,15 @@ function showHint() {
   }, HINT_SHOW_MS);
 }
 
+/** Keep "Best" in the bar up to date. (The running count is not in the
+    bar any more: it pops off each landed pumpkin, see popCount.) A round
+    that passes an earlier best is remembered, so the end screen can make
+    the number glow; the first round of a visit sets the best without
+    beating one, so no glow then. */
 function updateLabels() {
   const count = stackedCount();
-  countLabel.textContent = count;
   if (count > state.best) state.best = count;
+  if (state.bestBefore > 0 && count > state.bestBefore) state.newBest = true;
   bestLabel.textContent = state.best;
 }
 
@@ -508,14 +521,47 @@ function topMilestones(earned) {
   return best;
 }
 
+/** Where 1 to 9 names go on the end screen's 3x3 grid, as nine cells
+    read left to right, top to bottom (1 = a name goes here). John's
+    table (2026-10-16): one name sits in the middle, two take the top and
+    bottom of the middle column, three run the diagonal, four the
+    corners... so the names always land in the same tidy places. More
+    than nine (impossible today: nine kinds) would show the first nine. */
+const GRID_PATTERNS = [
+  "",           // 0: the block is hidden
+  "000010000",  // 1
+  "010000010",  // 2
+  "100010001",  // 3
+  "110000011",  // 4
+  "101010101",  // 5
+  "110110011",  // 6
+  "110111011",  // 7
+  "111101111",  // 8
+  "111111111",  // 9
+];
+
+/** Fill the grid: a cell for each digit of the pattern, a chip in the
+    cells marked 1, in the order the milestones were given. */
+function fillMilestoneGrid(entries) {
+  endMilestoneList.replaceChildren();
+  const shown = entries.slice(0, 9);
+  let next = 0;
+  for (const place of GRID_PATTERNS[shown.length]) {
+    const cell = document.createElement("div");
+    cell.className = "grid-cell";
+    if (place === "1") cell.appendChild(makeChip(shown[next++]));
+    endMilestoneList.appendChild(cell);
+  }
+}
+
 /** A chip for the end screen: the milestone's name; a tap toggles its
     bubble, a mouse hovering shows it (pointerType tells a finger from a
     mouse, and a finger's tap must not show-then-hide). */
 function makeChip(entry) {
   const chip = document.createElement("button");
   chip.type = "button";
-  chip.className = "milestone-chip text-small";
-  chip.textContent = "\u2605 " + entry.name;
+  chip.className = "milestone-chip";
+  chip.textContent = entry.name;
   chip.dataset.tip = entry.tip;
   chip.addEventListener("click", () => {
     if (chip.classList.contains("is-open")) hideTip(); else showTip(chip);
@@ -712,7 +758,23 @@ function settle(element, x, width, bottom) {
   element.classList.add("is-new");
   placeSlab(element, x, width);
   updateLabels();
+  popCount(x, width, bottom);
   spawnMover();
+}
+
+/** The count pops off the slab just landed: "12" on top of it, flying
+    up and fading (John: "a # STACKED badge ... a number that counts the
+    stacked pumpkins, and quickly gets out of the way"). It goes in the
+    tower at the slab's own world position, so the camera carries it,
+    and it removes itself when its animation ends. */
+function popCount(x, width, bottom) {
+  const pop = document.createElement("div");
+  pop.className = "count-pop";
+  pop.textContent = stackedCount();
+  pop.style.left = x + width / 2 + "vw";      // centred on the slab (the CSS translates -50%)
+  pop.style.bottom = bottom + SLAB_H + "vw";  // sitting on its top edge
+  pop.addEventListener("animationend", () => pop.remove());
+  tower.appendChild(pop);
 }
 
 /* ------------------------------------------------------------------------
@@ -722,6 +784,8 @@ function settle(element, x, width, bottom) {
 /** Clear the tower and put the base slab on the ground. */
 function reset() {
   state.usedEasy = state.modeName === "easy";
+  state.bestBefore = state.best;
+  state.newBest = false;
   tower.innerHTML = "";
   // The ground is part of the world, so it scrolls away with the base.
   const ground = document.createElement("div");
@@ -754,6 +818,7 @@ function start() {
   reset();
   hideModeHint();
   stopHints();
+  bestBox.classList.remove("is-new-best");   // the glow was for the last round only
   state.phase = "playing";
   startScreen.hidden = true;
   endScreen.hidden = true;
@@ -780,8 +845,8 @@ function gameOver() {
   showReaction(word, "is-miss");
 
   endWord.textContent = word;
-  endCount.textContent = count === 1 ? "You stacked 1 pumpkin."
-                                     : "You stacked " + count + " pumpkins.";
+  endNumber.textContent = count;                        // "You stacked / 23 / pumpkins!"
+  endNoun.textContent = count === 1 ? "pumpkin!" : "pumpkins!";
   // A round is EASY if EASY was on at any moment of it, however briefly.
   const roundMode = state.usedEasy ? "easy" : "hard";
   const line = COMPARISONS[roundMode].filter((entry) => entry[0] <= count).pop();
@@ -791,8 +856,7 @@ function gameOver() {
   // kinds were first earned. The block is hidden when there were none.
   const shown = topMilestones(state.earned);
   endMilestones.hidden = shown.length === 0;
-  endMilestoneList.replaceChildren();
-  shown.forEach((entry) => endMilestoneList.appendChild(makeChip(entry)));
+  fillMilestoneGrid(shown);
   hideTip();
 
   // Tell the app, which keeps this game's five best counts and shows them
@@ -805,6 +869,7 @@ function gameOver() {
   setTimeout(() => {
     endScreen.hidden = false;
     moonReacts(moodForCount(count));
+    if (state.newBest) bestBox.classList.add("is-new-best");   // "Best" glows until the next start
   }, END_DELAY_MS);
 }
 
@@ -841,7 +906,6 @@ function applyMode(modeName, quiet) {
   if (state.modeName === "easy") state.usedEasy = true;
   modeSwitch.dataset.mode = state.modeName;
   modeSwitch.setAttribute("aria-label", "Mode: " + state.modeName + ". Tap to change.");
-  modeNote.textContent = MODES[state.modeName].note;
   document.body.dataset.mode = state.modeName;
   try {
     localStorage.setItem(MODE_KEY, state.modeName);
@@ -854,7 +918,11 @@ function applyMode(modeName, quiet) {
 }
 
 /** The reminder under the toggle (John: "what makes it easy/hard"). It
-    stays until a round starts; tapped mid-round, it leaves by itself. */
+    shows on the start screen for whatever mode is in force, and on every
+    tap of the toggle; it stays until a round starts (tapped mid-round,
+    it leaves by itself). The start screen itself does not name the
+    mode (John, 2026-10-16: "whatever default is used ... should just
+    show up in the top where the message displays"). */
 function showModeHint() {
   modeHint.textContent = MODES[state.modeName].note;
   modeHint.hidden = false;
@@ -893,6 +961,6 @@ document.addEventListener("keydown", (event) => {
 });
 
 reset();
-applyMode(savedMode(), true);   // quiet: no reminder until the toggle is tapped
+applyMode(savedMode());         // and the reminder shows under the toggle
 startHints();                   // the goal line cycles while the start screen waits
 requestAnimationFrame(frame);
