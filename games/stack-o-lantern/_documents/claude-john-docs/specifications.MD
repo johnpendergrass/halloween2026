@@ -1,6 +1,6 @@
 # Stack o' Lantern — Specifications (design decisions)
 
-Last updated: 2026-10-17 14:41 (/update; SECTION 6: sound, the base is pumpkin 1, a rung jumps the banner queue, the shell's Settings button. 12:21: SECTION 5 IS THE CURRENT DESIGN: milestone families, the level as the title, one level, no info bar, the corner, the staircase, the minute, the shell reading back scores. Sections 1 to 4 are the 2026-09-29 and 2026-10-16 record; section 2 (EASY / HARD) and the 3x3 grid in section 3 are history now. Earlier: 2026-10-16 20:45 /update; 20:20 no Stacked count in the bar, Best glows on a new best; 19:55 count pops off each pumpkin; 19:10 the moon fixed at one spot; 18:30 the end screen laid out around the moon; 17:15 first file in the game's own folder)
+Last updated: 2026-10-17 16:27 (/update; SECTION 7: the end screen's three tiers, the green balloon, three fanfares, fireworks from behind the moon, no byline. 14:41: SECTION 6: sound, the base is pumpkin 1, a rung jumps the banner queue, the shell's Settings button. 12:21: SECTION 5 IS THE CURRENT DESIGN: milestone families, the level as the title, one level, no info bar, the corner, the staircase, the minute, the shell reading back scores. Sections 1 to 4 are the 2026-09-29 and 2026-10-16 record; section 2 (EASY / HARD) and the 3x3 grid in section 3 are history now. Earlier: 2026-10-16 20:45 /update; 20:20 no Stacked count in the bar, Best glows on a new best; 19:55 count pops off each pumpkin; 19:10 the moon fixed at one spot; 18:30 the end screen laid out around the moon; 17:15 first file in the game's own folder)
 
 The game is called **Stack o' Lantern** since 2026-10-17 (it was
 "Stack-o'-Lantern"; the folder stays `stack-o-lantern`).
@@ -437,3 +437,97 @@ still mutes everything; nothing can change that.
 2. The difficulty ramp: "it would be nice if the difficulty ramp was
    easier, so players could get to 50, 75 easily... it gets hard at
    around 25 or so". To talk through first.
+
+## 7. 2026-10-17 late afternoon: the end screen celebrates (John and Claude)
+
+### 7.1 Three kinds of ending
+
+John (2026-10-17): "the most celebratory would be a new high score. the
+next would be a score in the top 5? and finally a good job for everything
+else? they could each have their own fanfare sound, and i was thinking
+about a celebratory moon - perhaps fireworks coming out from behind the
+moon that would be above everything else (text, etc) but from behind the
+moon? there could be different levels of fireworks?"
+
+So the round that just ended is ranked into a TIER when the end screen
+appears, after the miss has had its say:
+
+| Tier | When | Corner | Fanfare | Fireworks |
+|---|---|---|---|---|
+| best | the round beat the saved best | gold NEW HIGH SCORE! balloon, the number pulses gold | three sets of climbing arpeggios | 16 bursts over 5 s, then a random trickle |
+| topFive | it made the shell's five-line list without topping it | green TOP 5 SCORE! balloon, the number glows green, nothing pulses | four notes, "ta-da-da-DAA" | 12 bursts over 4 s, the same trickle |
+| good | every other round of 5 pumpkins or more | nothing | two notes, "ta-daa" | 6 bursts over 3 s, a sparser trickle |
+| none | under 5 pumpkins | nothing | nothing (the miss was the last word) | nothing |
+
+Under 5 is decided first: with an empty list a tower of 3 would be
+"number one", which would be silly. A tie with the best counts as top
+five, not best (the shell ranks the earlier score higher). Early on, with
+fewer than five scores saved, nearly every round is a top-five score;
+John let that stand: it is a welcome, and it stops once the list fills.
+
+### 7.2 How the game knows "top five"
+
+The shell keeps the list and the game cannot see it. The smallest change
+was for the shell's `reportScore` to hand back the score's place, 1 to
+5, or 0 when it fell off the list. The game already calls it at game
+over, so it keeps the answer. One line in the shell, one in the helper,
+and every game gets the same ability.
+
+### 7.3 The green balloon
+
+John: "maybe if we can read the top five score from the scorecard we
+could add a (similar to the new high score text) a greenish 'top 5
+score!' thingie?" The same balloon as NEW HIGH SCORE!, green, in the
+same spot. Then: "lets drop the pulsing of the top 5 score" → the green
+balloon and the green number sit still with a steady glow; only the gold
+new best pulses. Only one balloon ever shows (a new best is also a top
+five, and gold wins).
+
+### 7.4 The fanfares
+
+All made in code, starting at full strength on the frame the end screen
+appears. Each is longer than the last and ends on a held note, which is
+what makes a fanfare feel like an ending rather than a milestone (those
+are short and climb away). The good and top five fanfares passed on the
+first hearing. The best one went from "three quick notes, a held note,
+two more climbing, a chord" to John's spec: "three sets of climbing
+arpeggios, da da da ding, da da da ding, da da da ding ding ding!" —
+three sets in C, D and E, each a step higher and a little louder, the
+last set ending on three dings, the last one long with the chord under
+it and a shimmer on top.
+
+### 7.5 The fireworks
+
+Rockets rise from the moon's centre and burst into rings of dots. The
+layer sits at the moon's level and BEFORE the moon in the page, so the
+sparks paint over every word and the button, and the moon paints over
+the sparks: a rocket leaving the moon's centre appears from behind its
+edge, exactly John's picture. The burst point is random within a REACH
+of the moon (left, right, up, down in vw, per show), kept inside the
+stage and at least 8vw from the moon's centre so no burst hides behind
+it. Each burst pops (a crack of noise, a low thump, three faint
+crackles) at the moment the rocket arrives.
+
+Tuned on John's phone in five rounds. "very small and blurry. there
+should be more of them and they should be bright and colorful. we should
+try them in front of the text?" → dots of 3.2vw with only a thin glow (a
+wide blur was what read as fuzzy), 36 a burst thrown 10 to 22vw, six
+saturated colours with every fourth dot white, the layer raised to the
+moon's level. "more fireworks still, and they should go out further from
+the moon" → 16 bursts and a reach over the whole screen for the best
+round. "after the initial flurry ... it settles down into a regular
+rhythm. after the flurry it should slow down, but still fire off
+randomly... sometimes with a couple, sometimes with just one, but not on
+a regular clock" → the TRICKLE: a random pause between a shortest and a
+longest, then usually one rocket, sometimes two close together, now and
+then three; then another random pause; until the next tap. The top five
+is "about 3/4" of the best (12 bursts) with the same rhythm; the good
+"about half of the top five" (6) and "reduced amounts" after (pauses of
+2 to 6 s, at most two a salvo).
+
+### 7.6 No byline
+
+The THIS GAME tab showed "Claude, September 29, 2026" under Stack's
+title and a credits line at the bottom. John: "remove that. it is
+already at the bottom." Stack's `designer` and `date` in `games.json`
+are blank, so the shell hides the byline; the credits line stays.

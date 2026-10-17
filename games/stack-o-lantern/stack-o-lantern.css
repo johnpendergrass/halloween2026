@@ -91,6 +91,14 @@ body {
   50%      { text-shadow: 0 0 2.5vw #ffd34d, 0 0 6vw rgb(255 211 77 / 80%); }
 }
 
+/* A top-five score that is not a new best: green, and still (John,
+   2026-10-17: "a greenish 'top 5 score!' thingie", then "drop the
+   pulsing"; only the gold new best pulses). */
+.score-corner.is-top-five b {
+  color: #8ee69a;
+  text-shadow: 0 0 2vw rgb(142 230 154 / 70%);
+}
+
 /* The balloon beside the high score after a round that set a new one
    (John, 2026-10-17: "a little balloon ... that glows and pulses"). The
    script shows it with the end screen and hides it at the next start.
@@ -124,6 +132,16 @@ body {
   0%, 100% { transform: scale(1);    box-shadow: 0 0 1.5vw rgb(255 211 77 / 50%); }
   50%      { transform: scale(1.06); box-shadow: 0 0 4vw #ffd34d, 0 0 9vw rgb(255 211 77 / 70%); }
 }
+
+/* The green balloon: the same shape, a green fill and a steady glow, no
+   pulse. */
+.new-best.is-top-five {
+  background: #8ee69a;
+  animation: none;
+  box-shadow: 0 0 2.5vw rgb(142 230 154 / 60%);
+}
+
+.new-best.is-top-five::after { border-left-color: #8ee69a; }
 
 /* The sound switch in the stage's top left corner, mirroring the high
    score (John, 2026-10-17). The picture is Go Fish's woofer shrunk to
@@ -447,6 +465,59 @@ body {
   100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.5) rotate(var(--spin)); }
 }
 
+/* FIREWORKS on the end screen (John, 2026-10-17: "fireworks coming out
+   from behind the moon that would be above everything else (text, etc)
+   but from behind the moon"). The layer covers the stage at the end
+   screen's own level (10) and comes after it in the page, so it paints
+   over the screen's words and button; the moon (11) stays on top, so a
+   rocket leaving the moon's centre appears from behind its edge. The
+   script (startFireworks) adds a .rocket that rises from the moon to a
+   point, and at that point a ring of .firework dots that fly out, sag
+   and fade. Positions are set by the script in px; the flights in vw.
+   The layer shares the moon's level (11) and comes before it in the
+   page, so it is over every word of the end screen and still under the
+   moon. The dots are big and crisp with only a thin glow (John: the
+   first try was "very small and blurry"). */
+.fireworks {
+  position: absolute;
+  inset: 0;
+  z-index: 11;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.rocket {
+  position: absolute;
+  width: 2.4vw;
+  height: 2.4vw;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 1vw 0.3vw var(--colour, #fff);
+  animation: rocket 550ms ease-out forwards;
+}
+
+@keyframes rocket {
+  from { transform: translate(-50%, -50%); }
+  to   { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))); }
+}
+
+.firework {
+  position: absolute;
+  width: 3.2vw;
+  height: 3.2vw;
+  border-radius: 50%;
+  background: var(--colour, #fff);
+  box-shadow: 0 0 0.6vw var(--colour, #fff);
+  animation: firework 1100ms cubic-bezier(0.1, 0.6, 0.3, 1) forwards;
+}
+
+/* Out fast, then slowing, dropping 6vw by the end (gravity) as it fades. */
+@keyframes firework {
+  0%   { opacity: 1; transform: translate(-50%, -50%) scale(1.3); }
+  65%  { opacity: 1; }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy) + 6vw)) scale(0.4); }
+}
+
 /* The end screen's "You earned" space: the block fills whatever is left
    between the comparison line and the button, the heading at its top,
    and the names are placed in the space below the heading by the script
@@ -689,9 +760,11 @@ body {
   .count-pop { animation-name: count-fade; }
   .score-corner.is-new-best b { animation: none; text-shadow: 0 0 2.5vw #ffd34d; }
   .new-best { animation: none; box-shadow: 0 0 3vw #ffd34d; }
+  .new-best.is-top-five { box-shadow: 0 0 2.5vw rgb(142 230 154 / 60%); }
   .moon { transition: none; }
   .moon .mouth { transition: none; }
   .spark { display: none; }
+  .rocket, .firework { display: none; }   /* no rockets, so no bursts and no pops */
   .milestone.is-shown { animation: fade-in 300ms ease-out forwards; }
 }
 

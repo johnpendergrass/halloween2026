@@ -1,6 +1,6 @@
 # Stack o' Lantern — Technical Specifications
 
-Last updated: 2026-10-17 14:41 (/update; SECTION 8: sound.js, the switch, sound/pitch in the table, stackedCount counts the base, the rung jumps the queue, stamp 2026-1017-stack-sound in 27 places. 12:21: SECTION 6 IS CURRENT and overrides sections 2 and 3 where they differ: families and bestEarned, no MODES, no info bar, .score-corner, the staircase, the minute, Halloween.bestScore; stamp 2026-1017-stack-families. Earlier: 2026-10-16 20:45 /update, the checks under _documents/checks/, stamp 2026-1016-stack-endscreen; 20:20 #count gone, state.newBest; 19:55 popCount; 19:25 the moon at 26vw; 18:30 GRID_PATTERNS / fillMilestoneGrid; 17:15 first file in the game's own folder)
+Last updated: 2026-10-17 16:27 (/update; SECTION 9: reportScore's place, endTier, the balloons, FANFARES, the fireworks layer and shows, check-topfive, stamp 2026-1017-stack-victory in 29 places. 14:41: SECTION 8: sound.js, the switch, sound/pitch in the table, stackedCount counts the base, the rung jumps the queue, stamp 2026-1017-stack-sound in 27 places. 12:21: SECTION 6 IS CURRENT and overrides sections 2 and 3 where they differ: families and bestEarned, no MODES, no info bar, .score-corner, the staircase, the minute, Halloween.bestScore; stamp 2026-1017-stack-families. Earlier: 2026-10-16 20:45 /update, the checks under _documents/checks/, stamp 2026-1016-stack-endscreen; 20:20 #count gone, state.newBest; 19:55 popCount; 19:25 the moon at 26vw; 18:30 GRID_PATTERNS / fillMilestoneGrid; 17:15 first file in the game's own folder)
 
 How the game is built, for whoever edits it next. The design and the
 reasons are in `specifications.MD` beside this. Files: `index.html`,
@@ -399,3 +399,121 @@ reasons are in `specifications.MD` beside this. Files: `index.html`,
   `--autoplay-policy=no-user-gesture-required`). Worth moving in.
 - **Stamp**: `2026-1017-stack-sound`, 27 places (Stack's index has 4:
   the CSS, the helper, sound.js, the script).
+
+## 9. The end screen's celebration (2026-10-17 16:27)
+
+### 9.1 The place, from the shell
+
+`app.js` `reportScore(value, text, notes)` now RETURNS the score's place
+in the five-line list: after the sort and the cut to five,
+`data.scores.indexOf(score) + 1` (the very object it pushed; -1 → 0). The
+early returns (no game, a bad value) return 0. The helper's
+`Halloween.reportScore` returns what the app returns, 0 outside the app.
+In `gameOver()`: `state.place = Halloween.reportScore(count, undefined,
+level ? [level.name] : undefined)`.
+
+### 9.2 The tier and the corner
+
+```js
+function endTier(count) {
+  if (count < 5) return "none";
+  if (state.newBest) return "best";
+  if (state.place > 0) return "topFive";
+  return "good";
+}
+```
+Read inside the `END_DELAY_MS` timeout, after the end screen shows:
+`FANFARES[tier]` → `playSound`, `startFireworks(tier)`, then the corner:
+"best" adds `is-new-best` to `#bestBox` and shows `#newBest`; "topFive"
+adds `is-top-five` and shows `#topFive` (new `<p class="new-best
+is-top-five" id="topFive" hidden>TOP 5 SCORE!</p>` beside the gold one).
+`clearCornerGlow()` removes both classes and hides both balloons; it is
+called from `start()` and `backToStart()` (which also call
+`stopFireworks()`). CSS: `.score-corner.is-top-five b` (colour `#8ee69a`,
+a steady text-shadow, no animation), `.new-best.is-top-five`
+(`animation: none`, a steady box-shadow, the pointer's
+`border-left-color`), and the reduced-motion lines.
+
+### 9.3 The fanfares (sound.js)
+
+`FANFARES = { best: "fanfareBest", topFive: "fanfareTopFive", good:
+"fanfareGood" }` in the game script. In `SOUNDS`:
+- `fanfareGood`: G 392 (0.15 s), D 587 held 0.90 s at +0.18 with its
+  octave 1174 faint.
+- `fanfareTopFive`: C E G at 0 / 0.15 / 0.30 (sine 0.28 + triangle 0.08
+  each, 0.14 s), then C 1046 held 1.10 s at +0.45 with G 784 under it.
+- `fanfareBest`: `brass(pitch, at, length, volume)` = sine + triangle at
+  30%; `semitones(root, n)`; `set(root, at, volume)` = root, +4, +7
+  semitones 0.11 s apart (0.10 s each), the octave at +0.33 (0.30 s,
+  volume +0.04). `set(523, 0, 0.24)`, `set(587, 0.62, 0.27)`, `set(659,
+  1.24, 0.30)`, then 1318 at 1.76 (0.30 s) and 1318 at 1.96 held 1.80 s
+  with E 659, G# 830, B 988 under it (0.14 each) and the shimmer 2637 +
+  2643 (0.06 each, 1.40 s). About 3.8 s in all.
+- `pop`: noise 0.30 / 0.07 s / cutoff 2500, a tone 500→120 0.25 / 0.08 s,
+  and three noise ticks 0.10 / 0.02 s / cutoff 5000 at 0.10, 0.17, 0.26.
+
+### 9.4 The fireworks
+
+`index.html`: `<div class="fireworks" id="fireworks" aria-hidden="true">`
+BEFORE the moon in the stage. CSS: `.fireworks` absolute, inset 0,
+`z-index: 11` (the moon's level; before it in the page, so under it),
+`overflow: hidden`, `pointer-events: none`. `.rocket`: 2.4vw white dot,
+`box-shadow: 0 0 1vw 0.3vw var(--colour)`, `animation: rocket 550ms
+ease-out forwards` from `translate(-50%,-50%)` to `translate(calc(-50% +
+var(--tx)), calc(-50% + var(--ty)))` (px, set by the script).
+`.firework`: 3.2vw dot in `var(--colour)`, `box-shadow: 0 0 0.6vw`,
+`animation: firework 1100ms cubic-bezier(0.1, 0.6, 0.3, 1) forwards`:
+scale 1.3 → opacity 1 at 65% → opacity 0 at `calc(-50% + var(--dx)),
+calc(-50% + var(--dy) + 6vw)` scale 0.4 (the +6vw is the sag).
+Reduced motion hides `.rocket, .firework` (no bursts, so no pops).
+
+The script, after `clearCornerGlow`:
+```js
+const FIREWORK_COLOURS = ["#ff5e3a", "#ffd23f", "#3dff7a", "#4dc9ff", "#ff4fd8", "#ff9a1f"];
+const FIREWORK_SHOWS = {
+  good:    { bursts: 6,  over: 3000, colours: 6, trickle: { shortest: 2000, longest: 6000, most: 2 }, reach: { left: 75, right: 10, up: 36, down: 50 } },
+  topFive: { bursts: 12, over: 4000, colours: 6, trickle: { shortest: 800,  longest: 4000, most: 3 }, reach: { left: 75, right: 10, up: 36, down: 50 } },
+  best:    { bursts: 16, over: 5000, colours: 6, trickle: { shortest: 800,  longest: 4000, most: 3 }, reach: { left: 75, right: 10, up: 36, down: 50 } },
+};
+```
+- `startFireworks(tier)`: `FIREWORK_SHOWS[tier]` or nothing; `pick()` a
+  colour from the first `colours`; burst i at `(i / (bursts - 1)) * over
+  + random 250 ms` (a single burst at 0); then, if `trickle`,
+  `setTimeout(() => trickle(show, pick), over + 1200)`.
+- `trickle(show, pick)`: a pause of `shortest + random × (longest −
+  shortest)`; then `rockets = min(most, roll < 0.55 ? 1 : roll < 0.85 ?
+  2 : 3)` launched `i × (150 + random 300)` ms apart; then `trickle`
+  again. Every timer goes in `fireworkTimers`.
+- `stopFireworks()`: clears every timer, empties `#fireworks`.
+- `launchRocket(colour, reach)`: measures the stage and the moon
+  (`getBoundingClientRect`), `vw = stage width / 100`; `dx` in
+  `[-left, +right] × vw`, `dy` in `[-up, +down] × vw`; a point within 8vw
+  of the moon's centre is pushed 12vw up; clamped to x 8..92vw, y 6vw ..
+  stage height − 10vw. A `.rocket` at the moon's centre with `--tx`,
+  `--ty`, `--colour`; on `animationend` it is removed and `burst(toX,
+  toY, colour)` runs.
+- `burst(x, y, colour)`: 36 `.firework` dots at even angles (+ random
+  0.15 rad), distance 10 + random 12 vw, `--dx`/`--dy` in vw, every fourth
+  dot white; removed on `animationend`; `playSound("pop")`.
+
+### 9.5 The check
+
+`_documents/checks/check-topfive.cjs` (needs the 8098 server): loads the
+SHELL, clears localStorage, opens Stack (slot 2's button is an icon, so
+`.game-button[1].click()`), reports 20 / 30 / 5 / 30 from the shell
+(places 1, 1, 3, 2), then inside the frame spies on `playSound` and
+fakes rounds (`reset()`, `state.slabs.push({})` to the count,
+`state.newBest`, `gameOver()`, wait `END_DELAY_MS`): 6 → green, 12 pops,
+36 in the sky; `backToStart()` → clean; 40 with newBest → gold, 16 pops;
+3 → nothing; with a full list of 90s, 6 → good, 6 pops, fanfareGood.
+Screenshots `topfive-green.png`, `topfive-gold.png`,
+`topfive-fireworks.png`. The browser's own `/favicon.ico` 404 is ignored
+(the console line has no URL); real missing files are caught by a
+response listener. `TOPFIVE OK`.
+
+### 9.6 The stamp
+
+`2026-1017-stack-victory` in 29 places: the 27 of before plus the
+helper's script tags in Candy Go Fish's and Pumpkin Patch's `index.html`
+(Stack's already had one). Without a stamp the phone kept an old
+`game-helper.js`.

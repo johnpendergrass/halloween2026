@@ -20,7 +20,7 @@
 
 // Bump this (and the ?v= tags in index.html) whenever code changes, so
 // phones fetch fresh copies instead of old cached ones.
-const APP_VERSION = "2026-1017-stack-sound";
+const APP_VERSION = "2026-1017-stack-victory";
 
 /* ------------------------------------------------------------------------
    1. Settings and the games list
@@ -395,14 +395,19 @@ function fillScores(game) {
     size). The app adds today's date. The score joins the list of the game
     now in the panel, the list is sorted best first and cut back to five,
     saved, and drawn again.
-    A value that is not a number, or is 0 or less, is not recorded. */
+    A value that is not a number, or is 0 or less, is not recorded.
+    RETURNS the score's place in the list: 1 for the top line down to 5
+    for the last, or 0 when it did not make the list (or was not
+    recorded). A game can celebrate a top-five result with it (Stack
+    o' Lantern's green TOP 5 SCORE! balloon, John, 2026-10-17). An equal
+    score sits BELOW the earlier one, so matching the best gives 2. */
 function reportScore(value, text, notes) {
-  if (!currentGame) return;
+  if (!currentGame) return 0;
   if (typeof value !== "number" || !Number.isFinite(value) || value <= 0) {
     console.info('"' + currentGame.title + '" reported the score ' +
                  JSON.stringify(value) + ", which is not recorded (a score " +
                  "must be a number above 0).");
-    return;
+    return 0;
   }
 
   const score = { value: value, date: todayAsText() };
@@ -427,6 +432,9 @@ function reportScore(value, text, notes) {
   writeSaved(storageKeyFor(currentGame), data);
 
   fillScores(currentGame);
+  // Where did it land? indexOf finds this very score object; -1 (cut
+  // off the end) becomes 0, the top line becomes 1.
+  return data.scores.indexOf(score) + 1;
 }
 
 /** The best saved score of the game now in the panel, as a number (0
@@ -815,3 +823,24 @@ async function startUp() {
 }
 
 startUp();
+
+/* ------------------------------------------------------------------------
+   7. No double-tap zoom
+
+   On the iPhone a quick double (or triple) tap zooms the page. When it
+   lands on a game, it is THIS page that zooms: the frame grows past the
+   screen, the top bar ends up behind the browser's address bar, and the
+   no-pinch rule in the CSS leaves no way back but a reload (John's phone,
+   2026-10-16 and 10-17). The viewport line's user-scalable=no, the
+   touch-action rules and a watchdog that rewrote the viewport line all
+   failed on Chrome for iPhone. What works: refusing the second tap's
+   default action. This copy covers taps on the top bar and the panel;
+   the same guard at the end of games/game-helper.js covers taps inside
+   every game (the full story is there).
+   --------------------------------------------------------------------- */
+let lastTouchEnd = 0;
+document.addEventListener("touchend", (event) => {
+  const now = Date.now();
+  if (now - lastTouchEnd < 350) event.preventDefault();   // the second tap: no zoom
+  lastTouchEnd = now;
+}, { passive: false });

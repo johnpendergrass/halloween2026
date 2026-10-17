@@ -5,10 +5,13 @@
 
     <!-- viewport-fit=cover lets the page reach under the iPhone notch and
      home bar; the CSS then uses env(safe-area-inset-*) to keep the frame
-     clear of them. -->
+     clear of them. maximum-scale=1 and user-scalable=no ask the browser
+     for no zoom; on the iPhone that is only a request (zoom stays for
+     accessibility), and what actually stops the double-tap zoom is the
+     touchend guard at the end of app.js and games/game-helper.js. -->
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1, viewport-fit=cover"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
     />
 
     <!-- FULL-SCREEN "APP" MODE.
@@ -31,7 +34,7 @@
 
     <!-- The ?v= tag forces phones to fetch fresh code after a publish.
      Change it (and APP_VERSION in app.js) whenever the code changes. -->
-    <link rel="stylesheet" href="./app/styles.css?v=2026-1017-stack-sound" />
+    <link rel="stylesheet" href="./app/styles.css?v=2026-1017-stack-victory" />
   </head>
 
   <body>
@@ -132,6 +135,6 @@
       </div>
     </div>
 
-    <script src="./app/app.js?v=2026-1017-stack-sound"></script>
+    <script src="./app/app.js?v=2026-1017-stack-victory"></script>
   </body>
 </html>

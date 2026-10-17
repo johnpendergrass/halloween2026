@@ -24,9 +24,9 @@
       "title": "Stack o' Lantern",
       "short_title": "Stack o' Lantern",
       "icon": "assets/stack.svg",
-      "designer": "Claude",
+      "designer": "",
       "credits": "v 0.19.2 10/2026 claude/jp",
-      "date": "September 29, 2026",
+      "date": "",
       "description": [
         "**Tap** to drop the pumpkin.\n**Line it up.** Stack it high.",
         "Sloppy drops get sliced.\nMiss, and it's __TIMBER!__",

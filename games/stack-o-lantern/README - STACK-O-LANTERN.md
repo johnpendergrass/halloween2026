@@ -14,8 +14,9 @@ three best milestones under it.
   2026-10-16 and 2026-10-17.
 - **Name:** "Stack o' Lantern" since 2026-10-17 (it was Stack-o'-Lantern);
   the folder stays `stack-o-lantern`.
-- **Status:** playable and checked, with sound (2026-10-17); victory sounds
-  and an easier difficulty ramp are next.
+- **Status:** playable and checked, with sound and an end-screen
+  celebration (2026-10-17 16:27): a gold or green balloon, a fanfare and
+  fireworks by how the round ranks. An easier difficulty ramp is next.
 - **The rules** every game follows are in
   [`../README - game design requirements.md`](../README%20-%20game%20design%20requirements.md).
 
@@ -25,7 +26,7 @@ three best milestones under it.
 index.html                 the stage (the high score corner, stars, moon, ground, tower), start and end screens
 stack-o-lantern.css        page setup and text classes (copied from the requirements), then the game's own styles
 stack-o-lantern.js         the game: settings, the milestone table, state, slabs, taps, camera, end screen
-sound.js                   the speaker switch and every sound, made in code (Web Audio); loaded before the game script
+sound.js                   the speaker switch and every sound, made in code (Web Audio): the landings, the rungs, three fanfares, the firework pop; loaded before the game script
 assets/stack.svg           the icon for the app's picker (256 x 256, square viewBox)
 assets/speaker.png         the speaker switch's picture (Go Fish's woofer at 160px)
 _documents/milestones.md            every milestone, its height or count and its words, as tables (a reading copy of the script's table)
@@ -131,6 +132,14 @@ README - STACK-O-LANTERN.md  this file
   calls `playSound("name")` at the landing. Every sound starts at full
   strength on the frame of its event and fades from there. The speaker in
   the top left corner mutes them; the choice is remembered on the device.
+- **The end screen celebrates** (John, 2026-10-17). The shell's
+  `reportScore` hands back the score's place in its five-line list, so
+  the game ranks the round: a NEW BEST gets the gold balloon, a fanfare of
+  three climbing arpeggios and 16 fireworks; a TOP FIVE the green balloon,
+  a four-note fanfare and 12; every other round of 5 or more a two-note
+  "ta-daa" and 6; under 5 nothing new. After the flurry the odd rocket
+  keeps going at random until the next tap. Rockets rise from behind the
+  moon and burst over the words (`startFireworks`, `FIREWORK_SHOWS`).
 - The base is pumpkin 1: the first drop reads 2.
 
 ## Where this game breaks the requirements, and why

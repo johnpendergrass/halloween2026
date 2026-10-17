@@ -1,6 +1,6 @@
 # Halloween 2026 — Specifications (design decisions)
 
-Last updated: 2026-10-17 14:41 (6m: a Settings button on the right of the top bar, Home → GAMES, Settings → THIS GAME; before that 2026-10-16 17:15: 2: no zoom on the shell page; 6f moved to the game's folder; 6i: Stack's switch dropped; before that: 15:34 names, 15:45 one control point, 15:00 tabled games removed)
+Last updated: 2026-10-17 16:27 (6n: the iPhone double-tap zoom, reportScore's place, Stack's byline; 14:41: 6m: a Settings button on the right of the top bar, Home → GAMES, Settings → THIS GAME; before that 2026-10-16 17:15: 2: no zoom on the shell page; 6f moved to the game's folder; 6i: Stack's switch dropped; before that: 15:34 names, 15:45 one control point, 15:00 tabled games removed)
 
 This file records WHAT the app looks like and WHY. Technical "how" lives in
 `specifications-technical.MD`. Companion notes in this folder:
@@ -628,3 +628,31 @@ different job from the old one (which opened the same panel as Home).
 Also that afternoon: Stack o' Lantern's credits line in the THIS GAME
 tab became "Credits: v 0.19.2 10/2026 claude/jp" (games.json), in Go
 Fish's format.
+
+## 6n. The iPhone double-tap zoom, the score's place, no byline for Stack (John, 2026-10-17)
+
+**The zoom.** A quick double or triple tap on a game zoomed the whole
+shell on John's iPhone (Chrome): the frame grew past the screen and the
+top bar sat behind the address bar, with no way back but a reload,
+because the no-pinch rule of 2026-10-16 (section 2) had closed the
+pinch that would have undone it. The 10-16 fix had treated the symptom
+from the wrong side. The decision: the page refuses the second tap of a
+double tap (a touch ending within 350 ms of the previous one), in every
+game through the helper and in the shell itself. The cost: that second
+tap's click is lost too, so a button needs a fresh tap after a fast one.
+Stack acts on the touch itself and never notices; Go Fish's cards lose
+only the fast second tap. The viewport line's no-zoom request and a
+no-double-tap rule on the frame stay as well, but on the iPhone they are
+requests only; the technical spec (4n) has the hunt.
+
+**The place.** `reportScore` now answers with the score's place in the
+five-line list, 1 to 5, or 0. Stack uses it for a green TOP 5 SCORE!
+balloon and a smaller celebration than a new best. Any game may use it
+or ignore it. An equal score sits below the earlier one, so a score that
+only matches the best is place 2: a tie is a top five, not a new best.
+
+**No byline.** Stack's THIS GAME tab showed "Claude, September 29,
+2026" under the title and a credits line at the bottom. John: "remove
+that. it is already at the bottom." Stack's `designer` and `date` are
+blank in `games.json`, so the byline hides (the shell hides any empty
+line); other games keep theirs.

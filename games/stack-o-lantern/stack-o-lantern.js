@@ -390,6 +390,8 @@ const endCompare = document.getElementById("endCompare");
 const bestBox = document.getElementById("bestBox");
 const bestLabel = document.getElementById("best");
 const newBest = document.getElementById("newBest");   // the NEW HIGH SCORE! balloon
+const topFive = document.getElementById("topFive");   // the green TOP 5 SCORE! balloon
+const fireworks = document.getElementById("fireworks");   // the end screen's fireworks layer
 
 // Everything that changes while playing lives here, so it is easy to see
 // (and to reset). Coordinates are "world" coordinates: x from the left
@@ -416,6 +418,7 @@ const state = {
   best: 0,             // the high score: the app's top saved count at start-up, then this visit's best
   bestBefore: 0,       // the best when this round started
   newBest: false,      // this round beat an earlier best (so "Best" glows at the end)
+  place: 0,            // where the last round landed in the app's five-line list (1..5), 0 if it did not
   lastTime: 0,         // timestamp of the previous animation frame (ms)
 };
 
@@ -793,8 +796,8 @@ function backToStart() {
   if (state.phase !== "over") return;
   clearTimeout(endTimer);
   hideTip();
-  bestBox.classList.remove("is-new-best");
-  newBest.hidden = true;
+  clearCornerGlow();
+  stopFireworks();
   reset();                        // a fresh base on the ground; the moon smiles
   state.phase = "ready";
   endScreen.hidden = true;
@@ -1040,8 +1043,8 @@ function start() {
   clearTimeout(endTimer);         // Stack again beat the end screen's minute
   reset();
   stopHints();
-  bestBox.classList.remove("is-new-best");   // the glow was for the last round only
-  newBest.hidden = true;                     // ...and so was the balloon
+  clearCornerGlow();              // the glow and the balloon were for the last round only
+  stopFireworks();
   stage.classList.remove("is-glowing");      // the moon's start/end-screen glow goes
   state.phase = "playing";
   startScreen.hidden = true;
@@ -1096,21 +1099,185 @@ function gameOver() {
   // "16 (10-17-2026) Giraffe" (John, 2026-10-17; it was the mode, "easy"
   // or "hard", for a day, and scores saved then keep that note). Under 5
   // there is no level and no note.
-  Halloween.reportScore(count, undefined, level ? [level.name] : undefined);
+  // The answer is the count's place in that list, 1 to 5, or 0.
+  state.place = Halloween.reportScore(count, undefined, level ? [level.name] : undefined);
 
   // Let the miss play out (the moon winces at it) before the end screen
   // covers it. Then the moon gives its verdict on the round, with a
-  // softer glow around it, and a new high score gets its balloon.
+  // softer glow around it, and the corner says how the round ranks.
   setTimeout(() => {
     endScreen.hidden = false;
     stage.classList.add("is-glowing");
     armEndTimer();                             // untouched for a minute, it gives way to the welcome screen
     moonReacts(moodForCount(count));
-    if (state.newBest) {
-      bestBox.classList.add("is-new-best");   // the number glows until the next start
-      newBest.hidden = false;                 // NEW HIGH SCORE! under it
+    const tier = endTier(count);
+    if (FANFARES[tier]) playSound(FANFARES[tier]);   // "none" has no fanfare
+    startFireworks(tier);                            // and no fireworks
+    if (tier === "best") {
+      bestBox.classList.add("is-new-best");   // the number glows gold until the next start
+      newBest.hidden = false;                 // NEW HIGH SCORE! beside it
+    } else if (tier === "topFive") {
+      bestBox.classList.add("is-top-five");   // the same in green
+      topFive.hidden = false;                 // TOP 5 SCORE!
     }
   }, END_DELAY_MS);
+}
+
+/** The end screen's fanfare for each tier (sound.js). Under 5 pumpkins
+    ("none") there is none: the miss sound was the last word. */
+const FANFARES = {
+  best: "fanfareBest",
+  topFive: "fanfareTopFive",
+  good: "fanfareGood",
+};
+
+/** How the round that just ended ranks, for the end screen's celebration
+    (John, 2026-10-17). From the top:
+      "best"     this round beat the best (the gold balloon),
+      "topFive"  it made the app's five-line list without topping it (green),
+      "good"     every other round of 5 pumpkins or more (a level was reached),
+      "none"     under 5 pumpkins: no cheer, the moon is sad and that is that.
+    Under 5 is checked first: with an empty list a tower of 3 would be
+    "number one", which would be silly. A tie with the best counts as
+    top five, not best (the app ranks the earlier score higher). */
+function endTier(count) {
+  if (count < 5) return "none";
+  if (state.newBest) return "best";
+  if (state.place > 0) return "topFive";
+  return "good";
+}
+
+/** Take the gold or green glow and balloon off the corner: they were for
+    the round just ended (John: "only after that round ... not forever!"). */
+function clearCornerGlow() {
+  bestBox.classList.remove("is-new-best", "is-top-five");
+  newBest.hidden = true;
+  topFive.hidden = true;
+}
+
+/* ---- Fireworks (John, 2026-10-17) ----------------------------------------
+   Rockets rise from behind the moon and burst into rings of dots over the
+   end screen (the layer sits under the moon and over the words; see the
+   CSS). A show is a number of bursts spread over a time, by tier; the
+   best round keeps a slow trickle going until the next tap. Each burst
+   pops (sound.js) at the moment the rocket arrives. */
+
+// Bright, saturated colours against the night sky (John: "bright and
+// colorful"). Every fourth dot of a burst is white, for sparkle.
+const FIREWORK_COLOURS = ["#ff5e3a", "#ffd23f", "#3dff7a", "#4dc9ff", "#ff4fd8", "#ff9a1f"];
+
+/** The show for each tier: how many bursts, spread over how long, in
+    which colours (the first N of the list), a slow trickle afterwards
+    (null = none; see trickle below: the shortest and longest pause, and
+    the most rockets in one salvo), and how far from
+    the moon the bursts may land: `reach` is in vw, left and right of the
+    moon's centre and up and down from it (the moon is at the top right,
+    so "left" and "down" are where the room is). The best round's
+    fireworks go out over the whole screen (John, 2026-10-17: "more
+    fireworks still, and they should go out further from the moon"; the
+    top five is "about 3/4" of it with the same rhythm after; the good
+    round "about half of the top five" and "reduced amounts" after). */
+const FIREWORK_SHOWS = {
+  good:    { bursts: 6,  over: 3000, colours: 6, trickle: { shortest: 2000, longest: 6000, most: 2 }, reach: { left: 75, right: 10, up: 36, down: 50 } },
+  topFive: { bursts: 12, over: 4000, colours: 6, trickle: { shortest: 800,  longest: 4000, most: 3 }, reach: { left: 75, right: 10, up: 36, down: 50 } },
+  best:    { bursts: 16, over: 5000, colours: 6, trickle: { shortest: 800,  longest: 4000, most: 3 }, reach: { left: 75, right: 10, up: 36, down: 50 } },
+};
+
+let fireworkTimers = [];        // every pending rocket and the trickle, so a tap can stop them
+
+/** Start the tier's show; "none" (under 5 pumpkins) has no entry. */
+function startFireworks(tier) {
+  const show = FIREWORK_SHOWS[tier];
+  if (!show) return;
+  const colours = FIREWORK_COLOURS.slice(0, show.colours);
+  const pick = () => colours[Math.floor(Math.random() * colours.length)];
+  for (let i = 0; i < show.bursts; i += 1) {
+    // Spread over the show's time, the first one at once, each a little
+    // off its even beat so they do not march.
+    const at = show.bursts === 1 ? 0 : (i / (show.bursts - 1)) * show.over + Math.random() * 250;
+    fireworkTimers.push(setTimeout(() => launchRocket(pick(), show.reach), at));
+  }
+  if (show.trickle) {
+    fireworkTimers.push(setTimeout(() => trickle(show, pick), show.over + 1200));
+  }
+}
+
+/** After the flurry: the odd rocket at random, until the next tap (John,
+    2026-10-17: "it should slow down, but still fire off randomly...
+    sometimes with a couple, sometimes with just one, but not on a regular
+    clock"). Each time: a pause of a random length between the show's
+    shortest and longest, then usually one rocket, sometimes two close
+    together, now and then three. Then it waits again. Every timer goes
+    in fireworkTimers, so stopFireworks ends it mid-pause or mid-salvo. */
+function trickle(show, pick) {
+  const pause = show.trickle.shortest + Math.random() * (show.trickle.longest - show.trickle.shortest);
+  fireworkTimers.push(setTimeout(() => {
+    const roll = Math.random();
+    const rockets = Math.min(show.trickle.most, roll < 0.55 ? 1 : roll < 0.85 ? 2 : 3);
+    for (let i = 0; i < rockets; i += 1) {
+      fireworkTimers.push(setTimeout(() => launchRocket(pick(), show.reach), i * (150 + Math.random() * 300)));
+    }
+    trickle(show, pick);          // and wait for the next one
+  }, pause));
+}
+
+/** Stop the show and clear the sky: the next round is starting. */
+function stopFireworks() {
+  fireworkTimers.forEach((timer) => clearTimeout(timer));
+  fireworkTimers = [];
+  fireworks.innerHTML = "";
+}
+
+/** One rocket: a dot that rises from the moon's centre to a random point
+    within the show's reach of it, and bursts there. The moon's centre is
+    measured, so the CSS owns its spot. A point lands at least 8vw from
+    the moon's centre, so no burst is hidden behind the moon. */
+function launchRocket(colour, reach) {
+  const stageBox = stage.getBoundingClientRect();
+  const moonBox = moon.getBoundingClientRect();
+  const vw = stageBox.width / 100;                    // one vw in px
+  const fromX = moonBox.left - stageBox.left + moonBox.width / 2;
+  const fromY = moonBox.top - stageBox.top + moonBox.height / 2;
+  // The burst point: anywhere in the reach, kept inside the stage (8vw
+  // from the sides, 6vw from the top, 10vw from the bottom).
+  const dx = (Math.random() * (reach.left + reach.right) - reach.left) * vw;
+  const dy = (Math.random() * (reach.up + reach.down) - reach.up) * vw;
+  const tooClose = Math.hypot(dx, dy) < 8 * vw;
+  const toX = Math.min(92 * vw, Math.max(8 * vw, fromX + dx));
+  const toY = Math.min(stageBox.height - 10 * vw, Math.max(6 * vw, fromY + (tooClose ? -12 * vw : dy)));
+
+  const rocket = document.createElement("span");
+  rocket.className = "rocket";
+  rocket.style.left = fromX + "px";
+  rocket.style.top = fromY + "px";
+  rocket.style.setProperty("--tx", (toX - fromX) + "px");
+  rocket.style.setProperty("--ty", (toY - fromY) + "px");
+  rocket.style.setProperty("--colour", colour);
+  rocket.addEventListener("animationend", () => {
+    rocket.remove();
+    burst(toX, toY, colour);
+  });
+  fireworks.appendChild(rocket);
+}
+
+/** The burst: a ring of dots flying out from the point, each a random
+    distance (10 to 22vw) at an even angle around the circle, and the pop. */
+function burst(x, y, colour) {
+  const count = 36;
+  for (let i = 0; i < count; i += 1) {
+    const angle = (i / count) * Math.PI * 2 + Math.random() * 0.15;
+    const distance = 10 + Math.random() * 12;
+    const dot = document.createElement("span");
+    dot.className = "firework";
+    dot.style.left = x + "px";
+    dot.style.top = y + "px";
+    dot.style.setProperty("--dx", Math.cos(angle) * distance + "vw");
+    dot.style.setProperty("--dy", Math.sin(angle) * distance + "vw");
+    dot.style.setProperty("--colour", i % 4 === 3 ? "#ffffff" : colour);
+    dot.addEventListener("animationend", () => dot.remove());
+    fireworks.appendChild(dot);
+  }
+  playSound("pop");
 }
 
 /** One animation frame. dt is in seconds, capped so a paused tab does not

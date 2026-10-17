@@ -168,7 +168,8 @@ function noiseBurst(context, { volume, length, cutoff, delay = 0 }) {
    (2026-10-17): a light tick off the walls; a bright tink for a perfect
    landing (two of them for a WIDER); a duller tink for a near miss
    ("nice", "close one"); a thunk for a poor one ("yikes", "oof"); and
-   a crack and thud for the miss that ends the round.
+   a crack and thud for the miss that ends the round. Then the end
+   screen's three fanfares (2026-10-17, later that day), one per tier.
    --------------------------------------------------------------------- */
 
 const SOUNDS = {
@@ -239,6 +240,80 @@ const SOUNDS = {
   miss: (context) => {
     tone(context, { wave: "triangle", from: 440, volume: 0.40, length: 0.16 });
     tone(context, { wave: "triangle", from: 220, to: 185, volume: 0.40, length: 0.45, delay: 0.13 });
+  },
+
+  // A FIREWORK bursting on the end screen: a short bright crack of noise
+  // with a low thump under it, then three faint crackles as the sparks
+  // spread. Played by the game at the moment the rocket bursts.
+  pop: (context) => {
+    noiseBurst(context, { volume: 0.30, length: 0.07, cutoff: 2500 });
+    tone(context, { from: 500, to: 120, volume: 0.25, length: 0.08 });
+    for (const at of [0.10, 0.17, 0.26]) {
+      noiseBurst(context, { volume: 0.10, length: 0.02, cutoff: 5000, delay: at });
+    }
+  },
+
+  // THE END SCREEN'S FANFARES. The game picks one by the round's tier
+  // (stack-o-lantern.js, endTier) when the end screen appears, after the
+  // miss has had its say. Each is longer than the last and ends on a held
+  // note, which is what makes a fanfare feel like an ending rather than a
+  // milestone (those are short and climb away).
+
+  // "Good job", every round of 5 pumpkins or more that made no list: a
+  // warm two-note "ta-daa", a short note then a held one a fifth up, with
+  // a faint octave on the held note.
+  fanfareGood: (context) => {
+    tone(context, { from: 392, volume: 0.30, length: 0.15 });                   // G
+    tone(context, { from: 587, volume: 0.32, length: 0.90, delay: 0.18 });      // D, held
+    tone(context, { from: 1174, volume: 0.08, length: 0.60, delay: 0.18 });     // its octave, faint
+  },
+
+  // A top-five score: four notes, "ta-da-da-DAA", climbing a major chord
+  // to the octave, the last note held with the fifth under it. The
+  // triangle doubling gives the melody a brassier edge than the sine
+  // chimes of the landings.
+  fanfareTopFive: (context) => {
+    const notes = [[523, 0.00], [659, 0.15], [784, 0.30]];                     // C E G
+    for (const [pitch, at] of notes) {
+      tone(context, { from: pitch, volume: 0.28, length: 0.14, delay: at });
+      tone(context, { wave: "triangle", from: pitch, volume: 0.08, length: 0.14, delay: at });
+    }
+    tone(context, { from: 1046, volume: 0.32, length: 1.10, delay: 0.45 });     // C, held
+    tone(context, { wave: "triangle", from: 1046, volume: 0.08, length: 0.80, delay: 0.45 });
+    tone(context, { from: 784, volume: 0.16, length: 1.10, delay: 0.45 });      // the G under it
+  },
+
+  // A NEW HIGH SCORE: the full fanfare (John, 2026-10-17: "three sets
+  // of climbing arpeggios, da da da ding, da da da ding, da da da ding
+  // ding ding!"). Each set is three quick notes up a major chord and a
+  // ding on the octave; each set starts a step higher and a little
+  // louder than the last; the third set ends on three dings, the last
+  // one long, with the chord under it and a shimmer on top (two
+  // oscillators a few hertz apart beat against each other, which the ear
+  // hears as a sparkle).
+  fanfareBest: (context) => {
+    const brass = (pitch, at, length, volume) => {
+      tone(context, { from: pitch, volume: volume, length: length, delay: at });
+      tone(context, { wave: "triangle", from: pitch, volume: volume * 0.3, length: length, delay: at });
+    };
+    const semitones = (root, n) => root * 2 ** (n / 12);
+    // One set: root, third, fifth, then the ding on the octave.
+    const set = (root, at, volume) => {
+      brass(root, at, 0.10, volume);                            // da
+      brass(semitones(root, 4), at + 0.11, 0.10, volume);       // da
+      brass(semitones(root, 7), at + 0.22, 0.10, volume);       // da
+      brass(root * 2, at + 0.33, 0.30, volume + 0.04);          // DING
+    };
+    set(523, 0.00, 0.24);      // in C
+    set(587, 0.62, 0.27);      // in D
+    set(659, 1.24, 0.30);      // in E, and then its ding comes three times:
+    brass(1318, 1.76, 0.30, 0.34);                              // ding
+    brass(1318, 1.96, 1.80, 0.36);                              // DING, the long last note...
+    tone(context, { from: 659,  volume: 0.14, length: 1.80, delay: 1.96 });   // ...with E
+    tone(context, { from: 830,  volume: 0.14, length: 1.80, delay: 1.96 });   // ...G sharp
+    tone(context, { from: 988,  volume: 0.14, length: 1.80, delay: 1.96 });   // ...and B under it
+    tone(context, { from: 2637, volume: 0.06, length: 1.40, delay: 1.96 });   // the shimmer: an octave up...
+    tone(context, { from: 2643, volume: 0.06, length: 1.40, delay: 1.96 });   // ...and 6 Hz off it
   },
 };
 

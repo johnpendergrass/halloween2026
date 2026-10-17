@@ -22,6 +22,12 @@
    itself and shows the five in the THIS GAME tab, e.g.
        1.  3-2 (10-15-2026)  vs. Ron  3 set game
 
+   reportScore RETURNS the score's place in that list (since 2026-10-17):
+   1 for the top line down to 5, or 0 when the score did not make the
+   list. A game may use it to say "TOP 5 SCORE!" or may ignore it. An
+   equal score lands below the earlier one, so a score that only matches
+   the best comes back as 2, not 1.
+
    That is all a game has to do. It must not use window.parent itself;
    this file is the one place that does. A game MAY keep its own settings
    in localStorage (rule 21 in "README - game design requirements.md"):
@@ -77,15 +83,17 @@ const Halloween = {
 
   /** Tell the app this game's result. `value` is a number (higher is
       better); `text` is optional and is shown in place of the number;
-      `notes` is optional, up to two short strings shown after the date. */
+      `notes` is optional, up to two short strings shown after the date.
+      Returns the score's place in the app's list, 1 to 5, or 0 when it
+      did not make the list (also 0 outside the app). */
   reportScore(value, text, notes) {
     const app = Halloween.findApp();
     if (app) {
-      app.reportScore(value, text, notes);
-    } else {
-      console.info("Halloween.reportScore: not inside the app, so the score " +
-                   value + " was not saved.");
+      return app.reportScore(value, text, notes);
     }
+    console.info("Halloween.reportScore: not inside the app, so the score " +
+                 value + " was not saved.");
+    return 0;
   },
 
   /** The app's top saved score for this game, as a number; 0 when there
@@ -95,3 +103,28 @@ const Halloween = {
     return app ? app.bestScore() : 0;
   },
 };
+
+/* ------------------------------------------------------------------------
+   NO DOUBLE-TAP ZOOM (2026-10-17)
+
+   On the iPhone a quick double (or triple) tap zooms the page, and when
+   the tap lands on a game inside the app's frame it is the APP's page
+   that zooms: the frame grows past the screen and the app's top bar
+   ends up behind the browser's address bar, with no way back but a
+   reload (John's phone, 2026-10-16 and 10-17). The viewport line's
+   user-scalable=no and touch-action rules did not stop it on Chrome for
+   iPhone. What does: the page refusing the second tap's default action.
+   A touch that ends within 350 ms of the previous one is the second
+   tap of a double tap, and preventDefault on its touchend cancels the
+   zoom. It also cancels that tap's click, so a button needs a fresh tap
+   after a fast one; a game that acts on pointerdown (Stack o' Lantern)
+   never notices. This file is in every game, so every game is covered;
+   app.js does the same for taps outside the frame.
+   --------------------------------------------------------------------- */
+
+let lastTouchEnd = 0;
+document.addEventListener("touchend", (event) => {
+  const now = Date.now();
+  if (now - lastTouchEnd < 350) event.preventDefault();   // the second tap: no zoom
+  lastTouchEnd = now;
+}, { passive: false });                                     // passive listeners cannot preventDefault

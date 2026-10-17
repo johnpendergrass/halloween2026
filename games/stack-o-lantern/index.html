@@ -2,11 +2,15 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- maximum-scale=1, user-scalable=no asks for no zoom when the page is
+         opened on its own (inside the app the app's viewport line rules). The
+         iPhone treats it as a request only; game-helper.js's guard is what
+         stops the double-tap zoom. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
     <title>Stack o' Lantern</title>
     <!-- Shown inside the app's game panel (an iframe), but also works on its
      own: open games/stack-o-lantern/index.html directly to test it. -->
-    <link rel="stylesheet" href="./stack-o-lantern.css?v=2026-1017-stack-sound" />
+    <link rel="stylesheet" href="./stack-o-lantern.css?v=2026-1017-stack-victory" />
   </head>
 
   <body>
@@ -26,9 +30,12 @@
       <!-- The top right corner: "High score" small, then this visit's best
            count (room for three digits). is-new-best (set at game over,
            cleared at the next start) makes the number glow gold. The
-           balloon beside it shows then too: a new best this visit. -->
+           balloon beside it shows then too: a new best this visit. A round
+           that made the app's five-line list without topping it gets the
+           green balloon and glow instead (is-top-five). Only one shows. -->
       <div class="score-corner text-medium" id="bestBox">
         <p class="new-best" id="newBest" hidden>NEW HIGH SCORE!</p>
+        <p class="new-best is-top-five" id="topFive" hidden>TOP 5 SCORE!</p>
         <span class="best-label">High score</span> <b id="best">0</b>
       </div>
 
@@ -39,6 +46,12 @@
               aria-pressed="true" aria-label="Sound on: tap to mute">
         <img src="./assets/speaker.png" alt="" draggable="false">
       </button>
+
+      <!-- Fireworks for the end screen (stack-o-lantern.js, startFireworks).
+           The layer sits between the end screen and the moon, so the
+           rockets come out from behind the moon and the sparks fly over
+           the words. It is empty until a round ends well. -->
+      <div class="fireworks" id="fireworks" aria-hidden="true"></div>
 
       <!-- The moon watches. Its mouth changes with the quality of a drop. -->
       <div class="moon is-happy" id="moon" aria-hidden="true">
@@ -111,8 +124,8 @@
 
     <!-- The helper comes first: it gives the game Halloween.reportScore(),
          which hands the score to the app (see games/game-helper.js). -->
-    <script src="../game-helper.js?v=2026-1017-stack-sound"></script>
-    <script src="./sound.js?v=2026-1017-stack-sound"></script>
-    <script src="./stack-o-lantern.js?v=2026-1017-stack-sound"></script>
+    <script src="../game-helper.js?v=2026-1017-stack-victory"></script>
+    <script src="./sound.js?v=2026-1017-stack-victory"></script>
+    <script src="./stack-o-lantern.js?v=2026-1017-stack-victory"></script>
   </body>
 </html>

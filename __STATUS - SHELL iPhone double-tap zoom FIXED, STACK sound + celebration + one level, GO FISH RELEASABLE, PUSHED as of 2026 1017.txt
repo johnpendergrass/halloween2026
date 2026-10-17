@@ -1,0 +1,23 @@
+Halloween 2026 - project status (the glance; the SHELL's details in claude-john-docs/, each game's in its own folder)
+
+2026 1017 1627  PUSHED by Claude at John's request. SHELL: the iPhone DOUBLE-TAP ZOOM fixed (a touchend guard in
+              game-helper.js and app.js; the viewport no-zoom request and a frame rule stay as requests only;
+              a watchdog and a diagnostic box tried and removed); reportScore returns the score's place (1..5
+              or 0); Stack's byline blank; stamp 2026-1017-stack-victory (29 places, the helper's tags too).
+              STACK: the end screen celebrates by tier (gold / green balloon, three fanfares, fireworks from
+              behind the moon with a random trickle). Root handoff 2026-1017-1221 removed.
+2026 1017 1441  PUSHED. SHELL: a ☰ Settings button; Stack's credits line. STACK: sound, the base is pumpkin 1.
+2026 1017 1332  PUSHED. SHELL: stamp only. STACK: the height ladder grown to 24 rungs (51 milestones).
+2026 1017 1221  PUSHED. SHELL: Halloween.bestScore(); Clear scores reloads the game. STACK: families, one level.
+2026 1016       PUSHED x2. STACK: the moon fixed, the end screen rebuilt; EASY / HARD (gone 1017); banter.
+2026 1016 pm   GO FISH! - Candy Edition RELEASABLE (John).   2026 1016 1534 SHELL: one control point.
+2026 1007-14   John + Codex built Go Fish, slot 8.   2026 0927-1001 Claude built the shell.
+
+NOT YET
+ - John's phone check from Pages once it serves 2026-1017-stack-victory: the double tap in every game, the fireworks
+ - Stack: an easier difficulty ramp (talk first); the MP3 voice per rung; more moon faces; two stale checks
+ - shell: the top-bar states and reportScore's place in check-shell.cjs; switches that do something (or drop the
+   column); icons for the other games; placeholder slots; requirements gaps; contribution workflow
+
+DETAIL  claude-john-docs/Claude-ToBe-Continued-2026-1017-1627.MD (the shell today, the iPhone story in order)
+        games/stack-o-lantern/_documents/claude-john-docs/ and games/candy-go-fish/_documents/claude-john-docs/

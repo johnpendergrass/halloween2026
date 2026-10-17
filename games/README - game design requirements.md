@@ -434,9 +434,12 @@ Sizes refer to the table in 1.3.
     `Halloween.reportScore(number, text)` or
     `Halloween.reportScore(number, text, [note, note])` from the helper
     file (2.5). The number is required and higher MUST mean better; the
-    notes are at most two short strings. A game MAY ask the app for its
-    top saved score with `Halloween.bestScore()` (2.5), for instance to
-    show a "High score" that agrees with the app's list.
+    notes are at most two short strings. `reportScore` returns the
+    score's place in the app's list, 1 to 5, or 0 when it did not make
+    the list (since 2026-10-17); a game MAY use it, say for a "top five"
+    cheer, or ignore it. A game MAY ask the app for its top saved score
+    with `Halloween.bestScore()` (2.5), for instance to show a "High
+    score" that agrees with the app's list.
 20. **Sound and settings.** A game MAY declare up to three on/off switches
     in its `games.json` entry; the app shows them beside the high scores
     and remembers them. A game cannot read its own switches, and MUST NOT
@@ -474,8 +477,9 @@ It gives your code an object called `Halloween`. **Available now:**
 
 ```js
 // When a game ends. The number is always given: the app ranks by it,
-// higher is better, and keeps the five best with today's date.
-Halloween.reportScore(42);
+// higher is better, and keeps the five best with today's date. The
+// answer is the score's place in that list, 1 to 5, or 0 if it missed.
+const place = Halloween.reportScore(42);
 
 // The same, but the list shows the text in place of the number.
 Halloween.reportScore(42, "Master Chef");

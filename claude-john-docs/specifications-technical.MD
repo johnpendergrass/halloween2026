@@ -1,6 +1,6 @@
 # Halloween 2026 — Technical Specifications
 
-Last updated: 2026-10-17 14:41 (4m: #settingsButton, pressTopButton, currentTab, afterDrawerSettles gone; stamp 2026-1017-stack-sound, 27 places; before that 2026-10-16 20:45: stamp 2026-1016-stack-endscreen, 26 places now: Stack's index has 3; nothing else in the shell; 17:15: 4: touch-action on the shell page; 4g moved to the game's folder; stamp 2026-1016-stack-milestones; before that: 15:34 top title, 15:45 one control point)
+Last updated: 2026-10-17 16:27 (4n: the touchend guard in the helper and app.js section 7, the viewport lines, .game-frame touch-action, reportScore returns the place, stamp 2026-1017-stack-victory in 29 places; 14:41: 4m: #settingsButton, pressTopButton, currentTab, afterDrawerSettles gone; stamp 2026-1017-stack-sound, 27 places; before that 2026-10-16 20:45: stamp 2026-1016-stack-endscreen, 26 places now: Stack's index has 3; nothing else in the shell; 17:15: 4: touch-action on the shell page; 4g moved to the game's folder; stamp 2026-1016-stack-milestones; before that: 15:34 top title, 15:45 one control point)
 
 ## 1. Stack and hosting
 
@@ -22,7 +22,7 @@ games.json                 THE LIST OF GAMES: "games" array (v2 entries, see 4a)
 manifest.json              Android/desktop full-screen ("standalone", portrait); icons: [] (TODO)
 app/styles.css             app CSS (frame, panels, drawer) - moved from the mockup
 app/app.js                 reads games.json at start-up; picker buttons, THIS GAME tab (text, high scores, switches), drawer (Home → GAMES, Settings → THIS GAME, a tap on #gameCover closes it), loadGame/startGame. Never edited by designers
-games/game-helper.js       THE HELPER a game includes to talk to the app: Halloween.reportScore() and, since 2026-10-17, Halloween.bestScore() (see 4j, 4l)
+games/game-helper.js       THE HELPER a game includes to talk to the app: Halloween.reportScore() (returns the place since 2026-10-17 16:27) and Halloween.bestScore() (see 4j, 4l, 4n); its tail is the no-double-tap-zoom guard every game gets (4n)
 app/default-icon.svg       the ghost shown on a button that has neither a usable icon nor a title
 games/pumpkin-patch/       slot 1, shown at start (was game0, then the "home" game until 2026-10-16): index.html, pumpkin-patch.css/.js, assets/ (2025 art, patch.svg icon)
 games/stack-o-lantern/     STACK-O'-LANTERN (Claude's stacker, was game4): index.html, stack-o-lantern.css/.js, assets/stack.svg
@@ -599,3 +599,53 @@ and the game's resources must match; see 6 below).
 - **Line endings**: app.js, styles.css and index.html were all LF by
   this session (`grep -c $'\r'` = 0); the earlier mixed-endings trap
   may be history, but check before a big edit.
+
+## 4n. The double-tap zoom guard, reportScore's place, the stamp (2026-10-17 16:27)
+
+**The guard.** At the end of `games/game-helper.js` (CRLF) and as
+section 7 of `app/app.js`:
+```js
+let lastTouchEnd = 0;
+document.addEventListener("touchend", (event) => {
+  const now = Date.now();
+  if (now - lastTouchEnd < 350) event.preventDefault();   // the second tap: no zoom
+  lastTouchEnd = now;
+}, { passive: false });
+```
+`passive: false` matters: a passive listener cannot `preventDefault`.
+Touches inside the iframe never reach the parent's listeners, so the
+helper's copy is the one that covers the games; `app.js`'s covers the top
+bar and the panel. `games/pumpkin-patch/index.html` now loads the helper
+(before its own script) for the guard alone.
+
+**What did not work, kept as requests.** `index.html`'s viewport line is
+`width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no,
+viewport-fit=cover` (Stack's and Pumpkin Patch's pages have the same
+without the cover); iOS ignores the no-zoom part for accessibility.
+`.game-frame { touch-action: manipulation }` in `styles.css`. A watchdog
+on `visualViewport.scale` that rewrote the viewport line (the classic
+reset) did nothing on Chrome for iPhone and was deleted. The diagnostic
+box that found the zoom (a fixed `#probe` div, a log in localStorage
+under `halloween2026:probe-log`, shown only when `frame.top < 0 ||
+scrollY || scale != 1 || visualViewport.offsetTop || innerHeight !=
+100svh`) is deleted too; the four iPhone screenshots are in
+`games/stack-o-lantern/_documents/`.
+
+**reportScore returns the place.** In `app.js`:
+```js
+  fillScores(currentGame);
+  // Where did it land? indexOf finds this very score object; -1 (cut
+  // off the end) becomes 0, the top line becomes 1.
+  return data.scores.indexOf(score) + 1;
+```
+The early returns return 0. The helper: `return app.reportScore(value,
+text, notes)`, else 0 with the console note. The requirements doc (rule
+19 and the snippet) say so.
+
+**games.json.** Stack: `"designer": ""`, `"date": ""` → `setTextOrHide`
+hides `#thisGameByline`.
+
+**The stamp.** `2026-1017-stack-victory`, 29 places: app/app.js 1,
+candy-go-fish index 20 (its helper tag now), js 1, stack index 4, pumpkin
+patch index 1 (its new helper tag), root index 2. The helper itself has
+no `?v=` inside; its loaders carry it.
