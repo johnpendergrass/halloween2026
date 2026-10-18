@@ -62,13 +62,19 @@
   // level the game first shipped with); John found all the music too loud,
   // so it is a quarter lower since 2026-10-16: scale 1. The slider's stops
   // (0, 20, 40, 60, 80, 100) and the default stop of 80 are unchanged.
+  // Music starts OFF (John, 2026-10-18: "OFF/ALWAYS as the initial default
+  // when loading the game"; it was on until then). The Sound popup's MUSIC
+  // tap turns it on and starts the tune at once; OK remembers the choice
+  // in this browser, and that note wins over these defaults on the next
+  // load (restoreSoundSettings in candy-go-fish.js).
   const channels = {
     ui: { enabled: true, volume: 1, scale: 1, gain: null },
-    music: { enabled: true, volume: 0.8, scale: 1, gain: null }
+    music: { enabled: false, volume: 0.8, scale: 1, gain: null }
   };
   // When the soundtrack plays: 'paused' = only while a dialog is open (the
   // game is paused behind it); 'continuous' = it keeps going during play.
-  let musicMode = 'paused';
+  // 'continuous' ("Always") is the default since 2026-10-18 (was 'paused').
+  let musicMode = 'continuous';
   let context;
   let enabled = true;
   let victoryTimer;

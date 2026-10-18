@@ -1,5 +1,8 @@
 Candy Go Fish (GO FISH! - Candy Edition, slot 8) - status (the glance; details in _documents/claude-john-docs/)
 
+2026 1018 1340  PUSHED by Claude at John's request. The music default is OFF and Always (it was ON and Paused);
+              a tap on MUSIC in the Sound popup starts the tune at once; a remembered note still wins.
+              Stamp 2026-1018-gofish-music (shared with the shell). check-gofish-music.cjs in codex-john-docs/.
 2026 1016 1534  Small tweaks for the new one-control-point shell (Claude, John's asks): score note is
               "<you> vs <opponent>" (set-size note dropped); name shows as GO FISH! over "Candy Edition" in
               THIS GAME and "GO FISH! - Candy Edition" in the top bar; welcome subtitle lost its "!";

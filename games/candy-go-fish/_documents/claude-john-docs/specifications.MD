@@ -1,6 +1,6 @@
 # Candy Go Fish — Specifications (design decisions)
 
-Last updated: 2026-10-16 15:34 (name in the shell, score note, welcome subtitle; the shell around the game has one control point and a 9:15 panel, see the root claude-john-docs). Before: 14:15 RELEASABLE, consolidated here from section 6k of the root spec; sub-headings keep their 6k numbering.
+Last updated: 2026-10-18 13:40 (the music default is OFF and Always, see the section at the end; before that 2026-10-16 15:34: name in the shell, score note, welcome subtitle; the shell around the game has one control point and a 9:15 panel, see the root claude-john-docs). Before: 14:15 RELEASABLE, consolidated here from section 6k of the root spec; sub-headings keep their 6k numbering.
 
 ## 6k. Candy Go Fish (slot 8; John + Codex, 2026-10-07 to 10-14; Claude from 10-14)
 
@@ -61,12 +61,13 @@ plan stays on file for later.
   tallest dialog (Rules, 94vh) so it fully covers whatever is underneath.
   Cancel bottom left (restores what was in force when it opened), Done
   bottom right (keeps and saves). Changes are heard as they are made.
-- Rows: Music ON/OFF; Soundtrack chosen with left/right arrows around the
-  name, like the character selectors; Play mode, a two-way switch between
-  "When paused" (music only while a dialog is open, the original
-  behaviour) and "Continuous" (keeps playing through the game, no ducking
-  under speeches for now); Volume, a slider feel with fixed stops 0, 20,
-  40, 60, 80, 100.
+- Rows: Music ON/OFF (OFF by default since 2026-10-18); Soundtrack chosen
+  with left/right arrows around the name, like the character selectors;
+  Play mode, a two-way switch between "When paused" (music only while a
+  dialog is open, the original behaviour and the default until
+  2026-10-18) and "Continuous" / "Always" (keeps playing through the game,
+  no ducking under speeches for now; the default since 2026-10-18);
+  Volume, a slider feel with fixed stops 0, 20, 40, 60, 80, 100.
 - Loudness: the level the game shipped with sits at 75 on that scale, so
   100 is a third louder; the default stop is 80.
 - Each tune remembers its position for the page session; switching fades
@@ -497,3 +498,16 @@ size and by `verify-shell.cjs`. John's four asks on the game's side:
 - **No exclamation mark on "Candy Edition"**, in the tab and now on the
   welcome screen too (GO FISH! keeps its own).
 
+## The music default: OFF and Always (John, 2026-10-18)
+
+"the MUSIC setting is ON/PAUSED. we should have it OFF/ALWAYS as the
+initial default when loading the game." So a fresh load has the music
+channel off and the play mode Always; the Sound popup shows MUSIC with
+the red slash and the switch on Always. John: "if the user taps the ON
+for MUSIC, that it will start playing immediately? that is what i want
+to happen." It does: the MUSIC tap enables the channel and starts the
+chosen tune at once with its three-second fade-in, whatever the mode;
+Cancel puts it back off and stops it, OK keeps it and remembers the
+settings in this browser. A remembered note still wins over the
+defaults on the next load, including a remembered "on". Nothing else in
+the popup changed.

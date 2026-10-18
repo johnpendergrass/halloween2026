@@ -1,6 +1,6 @@
 # Candy Go Fish — Technical Specifications
 
-Last updated: 2026-10-16 15:34 (score note, welcome subtitle, 9:15 panel; the name rules live in the shell's app/styles.css 5b, see the root technical spec 4b2). Before: 14:15 RELEASABLE, consolidated here from section 4k of the root file; sub-headings keep their 4k numbering.
+Last updated: 2026-10-18 13:40 (channels.music.enabled false and musicMode 'continuous' by default, restoreSoundSettings honours a saved true; before that 2026-10-16 15:34: score note, welcome subtitle, 9:15 panel; the name rules live in the shell's app/styles.css 5b, see the root technical spec 4b2). Before: 14:15 RELEASABLE, consolidated here from section 4k of the root file; sub-headings keep their 4k numbering.
 
 ## 4k. Candy Go Fish implementation notes (games/candy-go-fish/, 2026-10-14 reading)
 
@@ -59,7 +59,17 @@ the current tune, and does nothing in `musicMode === 'continuous'`.
 if a dialog wants music. Channels carry a `scale`: music is `1 / 0.75`, so
 `setChannelVolume('music', v)` with the slider's 0..1 gives up to a third
 more than the original level (0.75 = old level, default 0.8). Mode API:
-`musicMode` / `setMusicMode('paused' | 'continuous')`.
+`musicMode` / `setMusicMode('paused' | 'continuous')`. Defaults since
+2026-10-18: `channels.music.enabled` is `false` and `musicMode` is
+`'continuous'` (both were the other way). `restoreSoundSettings` in
+candy-go-fish.js now applies any boolean `saved.enabled` (it only applied
+`false` before, which was enough while the default was on); the popup's
+markup in index.html starts with `#musicEnabled` `aria-pressed="false"`
+and `#modeContinuous` pressed, though `syncAudioControls` redraws it at
+load anyway. The MUSIC tap path is unchanged: `applyMusicSettings` sees
+`enabled` change to true, calls `setChannelEnabled('music', true)` then
+`startWelcomeMusic()`, which plays the current tune with the 3 s fade
+regardless of mode.
 
 The popup lives in `index.html` as a second overlay `#musicOverlay`
 (`.music-options`, z-index 30, panel 90vw × 94vh, flex column with the
