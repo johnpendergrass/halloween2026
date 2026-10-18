@@ -1,9 +1,14 @@
 'use strict';
+// This script's cache stamp, the ?v= on its own <script> tag (index.html
+// carries the same stamp on every file; the shell bumps it for every push
+// to Pages). Read here, on the first line, because document.currentScript
+// is gone once the function below awaits. "unstamped" when there is none.
+const SCRIPT_STAMP = (document.currentScript && new URL(document.currentScript.src).searchParams.get('v')) || 'unstamped';
 (async function () {
   // The generated companion keeps direct file:// opening functional.
   let config = window.CandyConfig;
   if (location.protocol !== 'file:') {
-    try { const response = await fetch('./assets/json/game-config.json?v=2026-1018-gofish-music'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
+    try { const response = await fetch('./assets/json/game-config.json?v=2026-1018-gofish-defaults'); if (!response.ok) throw new Error('Config unavailable'); config = await response.json(); }
     catch (error) { console.warn('Using bundled candy configuration.', error); }
   }
   const piles = CandyPiles();
@@ -799,14 +804,28 @@
   // 21 allows; the bare "halloween2026:candy-go-fish" note belongs to the
   // shell (scores and switches) and is never touched here.
   const SOUND_STORAGE_KEY = 'halloween2026:candy-go-fish:music';
+  // The note carries the cache stamp it was written under. A new stamp
+  // (every push to Pages) drops every older note once, so a fresh version
+  // always starts from the defaults, music OFF and Always (John,
+  // 2026-10-18: his phone kept "music on, Paused" from before the defaults
+  // changed; "whenever the file is changed and redone on pages, that the
+  // defaults go back to what they were"). Notes from before this existed
+  // have no version and count as old.
+  const SOUND_SETTINGS_VERSION = SCRIPT_STAMP;
   function saveSoundSettings() {
-    try { localStorage.setItem(SOUND_STORAGE_KEY, JSON.stringify(musicSettings())); }
+    try { localStorage.setItem(SOUND_STORAGE_KEY, JSON.stringify({ version: SOUND_SETTINGS_VERSION, ...musicSettings() })); }
     catch (error) { console.warn('Sound settings were not saved in this browser.', error); }
   }
   function restoreSoundSettings() {
     let saved;
     try { saved = JSON.parse(localStorage.getItem(SOUND_STORAGE_KEY)); } catch (_) { saved = null; }
     if (!saved || typeof saved !== 'object') return;
+    if (saved.version !== SOUND_SETTINGS_VERSION) {
+      // Written under older defaults: forget it, so the new defaults stand
+      // until the player taps OK in the Sound popup again.
+      try { localStorage.removeItem(SOUND_STORAGE_KEY); } catch (_) { /* nothing to forget */ }
+      return;
+    }
     // Each value is checked before use: a hand-edited or outdated note must
     // never stop the game from starting.
     if (trackIds.includes(saved.track)) CandySound.selectTrack(saved.track);

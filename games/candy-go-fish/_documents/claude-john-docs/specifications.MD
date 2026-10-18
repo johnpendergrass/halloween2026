@@ -509,5 +509,15 @@ to happen." It does: the MUSIC tap enables the channel and starts the
 chosen tune at once with its three-second fade-in, whatever the mode;
 Cancel puts it back off and stops it, OK keeps it and remembers the
 settings in this browser. A remembered note still wins over the
-defaults on the next load, including a remembered "on". Nothing else in
-the popup changed.
+defaults on the next load, including a remembered "on", BUT only a note
+written under the current defaults: John's phone came back with "music
+on, Paused" from the old version ("are local settings used even when the
+version is bumped?" Yes, storage ignores the cache stamp), and he chose
+"the setting for a new version is always at the default". So the note
+carries the cache stamp it was written under; a note from an older
+stamp (or from before this existed) is dropped once and the defaults
+apply, until the player taps OK again. A defaults-only number was built
+first; John wanted the stamp: "whenever the file is changed and redone
+on pages, that the defaults go back to what they were. Music
+OFF/ALWAYS." So every push resets every player's sound choice; that is
+the intent. Nothing else in the popup changed.

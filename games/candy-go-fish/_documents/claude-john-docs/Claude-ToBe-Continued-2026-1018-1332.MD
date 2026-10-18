@@ -39,6 +39,22 @@ and pushed with this file.
    `HTMLMediaElement.prototype.play` calls. Cancel outside the popup
    throws (`musicBefore` is null); a check must open the popup first.
 
+## Added at 13:55: the remembered note carries the cache stamp
+
+John reloaded from Pages and the music was ON: his phone's note from the
+old version won, since storage ignores the cache stamp. "lets fix that
+so that the setting for a new version is always at the default", then,
+offered a defaults-only number: "whenever the file is changed and redone
+on pages, that the defaults go back to what they were. Music
+OFF/ALWAYS." So `SCRIPT_STAMP` (line 2 of candy-go-fish.js, read from
+the script tag's `?v=` before the async function's first await) is the
+note's version: OK writes `{ version: "<stamp>", ...settings }`; a note
+whose version differs (the old notes have none) is removed at load and
+the defaults stand. Every push bumps the stamp, so every push resets the
+sound settings for everyone; a push without a bump would not. The check
+gained the stale, written and current-stamp cases. Stamp
+`2026-1018-gofish-defaults`.
+
 ## ToDo
 
 - John's phone look from Pages at `2026-1018-gofish-music`: the popup's

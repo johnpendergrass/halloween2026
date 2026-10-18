@@ -34,8 +34,19 @@ const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary
     await page.evaluate(() => { document.getElementById('musicCancel').click(); });
     await page.waitForTimeout(300);
     out.afterCancel = await read();
-    // A remembered note wins: on + paused, reload.
+    // A note from an OLDER version (no version field, as before 2026-10-18)
+    // is dropped: the defaults show and the key is gone.
     await page.evaluate(() => localStorage.setItem('halloween2026:candy-go-fish:music', JSON.stringify({ enabled: true, volume: 0.6, track: 'haunted', mode: 'paused', ui: true })));
+    await page.reload(); await page.waitForTimeout(1500);
+    await spyPlay(); await openPopup();
+    out.stale = await read();
+    // OK writes the page's stamp as the version.
+    await page.evaluate(() => { document.getElementById('musicEnabled').click(); document.getElementById('musicDone').click(); });
+    await page.waitForTimeout(300);
+    out.written = await read();
+    out.stamp = await page.evaluate(() => new URL(document.querySelector('script[src*="candy-go-fish.js"]').src).searchParams.get('v'));
+    // A remembered note of the current stamp wins: on + paused, reload.
+    await page.evaluate((stamp) => localStorage.setItem('halloween2026:candy-go-fish:music', JSON.stringify({ version: stamp, enabled: true, volume: 0.6, track: 'haunted', mode: 'paused', ui: true })), out.stamp);
     await page.reload(); await page.waitForTimeout(1500);
     await spyPlay(); await openPopup();
     out.restored = await read();
@@ -44,6 +55,8 @@ const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary
   console.log(JSON.stringify(out, null, 1));
   const ok = !out.fresh.enabled && out.fresh.mode === 'continuous' && out.fresh.button === 'false' && out.fresh.always === 'true' && out.fresh.paused === 'false' && out.fresh.saved === null && out.fresh.plays === 0 && out.fresh.popupOpen
     && out.afterOn.enabled && out.afterOn.plays >= 1 && !out.afterCancel.enabled && !out.afterCancel.popupOpen
+    && !out.stale.enabled && out.stale.mode === 'continuous' && out.stale.saved === null
+    && out.written.enabled && out.stamp && JSON.parse(out.written.saved).version === out.stamp
     && out.restored.enabled && out.restored.mode === 'paused' && out.restored.button === 'true' && out.errors.length === 0;
   console.log(ok ? 'GOFISH MUSIC OK' : 'GOFISH MUSIC FAILED');
 })();

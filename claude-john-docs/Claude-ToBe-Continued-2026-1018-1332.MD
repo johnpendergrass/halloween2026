@@ -25,6 +25,14 @@ see its handoff), which needed the cache stamp bumped:
 ## Work done since 13:24 (shell side)
 
 1. The stamp bumped to `2026-1018-gofish-music` for the push. Nothing else.
+2. 13:55: bumped again to `2026-1018-gofish-defaults` for Go Fish's
+   settings version (its handoff). A shell-wide lesson worth keeping: a
+   game's localStorage note outlives every stamp, so a game whose saved
+   settings should follow the version must store the stamp in the note.
+   Go Fish reads its own `?v=` from `document.currentScript` on its first
+   line and keeps the note only while the stamp matches, so EVERY push
+   (every stamp bump) resets its sound settings, which is what John
+   wants there. The shell's own notes (scores, switches) do not do this.
 
 ## ToDo (shell)
 

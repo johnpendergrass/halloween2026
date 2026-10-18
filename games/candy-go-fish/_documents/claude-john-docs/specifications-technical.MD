@@ -69,7 +69,18 @@ and `#modeContinuous` pressed, though `syncAudioControls` redraws it at
 load anyway. The MUSIC tap path is unchanged: `applyMusicSettings` sees
 `enabled` change to true, calls `setChannelEnabled('music', true)` then
 `startWelcomeMusic()`, which plays the current tune with the 3 s fade
-regardless of mode.
+regardless of mode. `SCRIPT_STAMP` (candy-go-fish.js, line 2, OUTSIDE
+the async function because `document.currentScript` is null after its
+first await) is the `?v=` of the script's own tag, or "unstamped";
+`SOUND_SETTINGS_VERSION = SCRIPT_STAMP`. `saveSoundSettings` writes
+`{ version, ...settings }`; `restoreSoundSettings` removes the note and
+returns when `saved.version !== SOUND_SETTINGS_VERSION` (the old notes had
+no version). So the shell's stamp bump before every push resets the sound
+settings; a push WITHOUT a stamp bump would not (and would not refresh
+the cache either). Checked by `codex-john-docs/check-gofish-music.cjs`:
+an unversioned "on, Paused" note is dropped on load (defaults shown, the
+key gone); a note with the page's current stamp comes back; OK writes
+the stamp.
 
 The popup lives in `index.html` as a second overlay `#musicOverlay`
 (`.music-options`, z-index 30, panel 90vw × 94vh, flex column with the

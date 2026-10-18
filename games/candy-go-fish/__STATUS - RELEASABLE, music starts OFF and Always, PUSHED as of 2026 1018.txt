@@ -3,6 +3,9 @@ Candy Go Fish (GO FISH! - Candy Edition, slot 8) - status (the glance; details i
 2026 1018 1340  PUSHED by Claude at John's request. The music default is OFF and Always (it was ON and Paused);
               a tap on MUSIC in the Sound popup starts the tune at once; a remembered note still wins.
               Stamp 2026-1018-gofish-music (shared with the shell). check-gofish-music.cjs in codex-john-docs/.
+              Then 13:55: the remembered note carries the CACHE STAMP; every new version on Pages drops the old
+              note once, so each version starts music OFF / Always (John's phone had kept "on, Paused").
+              Stamp 2026-1018-gofish-defaults.
 2026 1016 1534  Small tweaks for the new one-control-point shell (Claude, John's asks): score note is
               "<you> vs <opponent>" (set-size note dropped); name shows as GO FISH! over "Candy Edition" in
               THIS GAME and "GO FISH! - Candy Edition" in the top bar; welcome subtitle lost its "!";
