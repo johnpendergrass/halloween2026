@@ -1,0 +1,30 @@
+Stack o' Lantern (folder stack-o-lantern, slot 2) - status
+
+2026 1018 1304  PUSHED by Claude at John's request. THE FLOOR: CROSSING_FASTEST 0.85 -> 0.70 -> 0.65 s, the RAMP
+              rows untouched, so nothing below 122 changed and the slab speeds up to pumpkin 150 (John: fewer
+              changes, "the player will feel cheated if something new changes without being told"). A frame probe
+              (probe-framerate.cjs): every frame held at a 10x CPU throttle; the display's refresh rate sets the
+              jump per frame (2.6vw at 60 Hz, inside the 3.2vw perfect band). THREE TIPS trimmed (no width
+              definitions; pencil pumpkin stays). PRACTICE LIST 1, 10, 20 ... 200. PRACTICE ROUNDS COUNT: best,
+              gold / green, fanfares, fireworks; the app's list says "**CHEAT**" after the level name (the shell
+              reads marks in notes); the end title stays plain; the panel reads "Start the game at this level. /
+              but levels above 1 / will be marked as CHEAT in high scores." (the 1 orange). check-startlevel
+              rewritten; check-cheat (inside the shell). Stamp 2026-1018-cheat.
+2026 1018 1214  PUSHED. THE LADDER: Rainier 85, Denali 95 (Chrysler, Big Ben out). BIG RUNGS 50/100/200 with a
+              longer arpeggio and rockets (2 / 8 / 8). PRACTICE per visit; picks 122..197 (gone 1304).
+2026 1017 1757  PUSHED. THE RAMP as a table of seconds per crossing. PRACTICE level on the welcome screen.
+2026 1017 1627  PUSHED. THE END SCREEN CELEBRATES by tier (balloons, fanfares, fireworks).
+2026 1017 1441  PUSHED. Sound; the base is pumpkin 1.   2026 1017 1221-1332  PUSHED. Families; 24 rungs.
+2026 1016       PUSHED x2. The moon fixed, the end screen rebuilt.   2026 0929-1001 Claude built the game.
+
+NOT YET
+ - John's phone at 2026-1018-cheat: the floor from practice 150 / 170 / 200 (0.70 is the notch back), the gold
+   balloon on a CHEAT best, the bold note, the big rungs' loudness and eight rockets at 100
+ - if speed alone is not enough at height: the perfect-tolerance table (1.6vw -> ~1.0 by 200), then a weaker
+   grow-back above 100
+ - move check-bigrungs.cjs (scratchpad; double spy, early backToStart) and the 10-17 sound checks into
+   _documents/checks/; check-moonspot.cjs and check-endgrid.cjs stale; probe-framerate / check-cheat have scratch headers
+ - the MP3 voice per rung (later); more moon faces
+
+DETAIL  _documents/claude-john-docs/Claude-ToBe-Continued-2026-1018-1304.MD, specifications.MD (9.5, 9.6),
+        specifications-technical.MD (12); _documents/milestones.md for every milestone; README - STACK-O-LANTERN.md

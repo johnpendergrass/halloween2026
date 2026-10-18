@@ -319,22 +319,49 @@ body {
   margin-left: 5cqw;
 }
 
-/* The game picker: three square icon-only buttons on a diagonal, slot 1
-   upper left, slot 2 in the middle, slot 3 lower right (John, 2026-10-18;
-   two rows of four cells from 2026-09-29 until then). The board is the
-   MIDDLE HALF of the tab's height: it starts a quarter of the way down and
-   ends a quarter from the bottom. The first cell is flush with the board's
-   top, the last flush with its bottom, the middle one centred; sideways
-   the outer cells keep 9.5cqw of air from the edges, the breathing room
-   the old four-wide board had, and the middle one is centred.
-   app.js gives each button the class cell-<slot>; a cell nobody claimed is
-   simply empty, so a game never moves when another is added.
+/* The game picker: a ROW of three square icon buttons, slot 1 at the
+   left, 2 in the middle, 3 at the right, each with its name under it
+   (John, 2026-10-18 afternoon: "three icons in a line. make them small
+   enough to have some breathing room"; that morning they sat on a
+   diagonal in the middle half of the tab, and from 2026-09-29 in two
+   rows of four). The tab is a column: the title, then the board centred
+   in all the room that is left, then the credits line (John: "HALLOWEEN
+   2026! / Small games with a Halloween feel. / Enjoy!", "Credits: ...").
+   app.js gives each button the class cell-<slot>, which is its place in
+   the row (order), so a game never moves when another is added.
    Sizes are in cqw so the board scales with the frame. On a phone a
-   button is about 70 px: well over the 44 px fingertip minimum. */
+   button is about 76 px: well over the 44 px fingertip minimum. */
+.games-tab {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;              /* the tab's full height, so the board's 25% and 50% mean something */
+}
+
+.games-title {
+  margin: 3cqw 0 0;             /* a little air under the tab row (John: "it crowds the top rule") */
+  text-align: center;
+  line-height: 1.35;
+}
+
+.games-title .rainbow {          /* the first line, HALLOWEEN 2026! */
+  font-size: clamp(20px, 7cqw, 36px);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.games-credits {
+  margin: 2cqw 0 0;
+  text-align: center;
+  opacity: 0.7;
+  font-size: 0.85em;
+}
+
 .game-buttons {
-  position: relative;            /* the board is placed inside it */
-  min-height: 100%;              /* the tab's full height, so 25% and 50% below mean something */
-  --game-button-size: 18cqw;
+  flex: 1;                       /* all the height between the title and the credits... */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;       /* ...with the board in the middle of it */
+  --game-button-size: 20cqw;
 }
 
 /* Start-up failed (usually a typo in games.json): the message replaces the
@@ -347,26 +374,29 @@ body {
   font-size: clamp(12px, 3.6cqw, 16px);
 }
 
+/* The row: the three squares with the air mostly between them (100 -
+   3 * 20 = 40cqw of air; space-around puts a third of it between each
+   pair and a sixth at each edge; John, 2026-10-18: "the three icons are
+   very close to one another. give them a bit more space between. not
+   much", so from space-evenly, where all four gaps were the same).
+   The labels hang below the squares (see .game-label), so the row
+   keeps that much room under itself to stay centred as a whole. */
 .game-board {
-  position: absolute;
-  top: 25%;
-  height: 50%;
-  min-height: var(--game-button-size);   /* a very short tab never squashes a button */
-  left: 0;
-  right: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  padding-bottom: 6cqw;          /* a label line and its gap */
 }
 
-/* The three cells. `translate` (not `transform`) centres the middle one,
-   so the pressed-in look's transform below still works on it. */
-.game-board .game-button { position: absolute; }
-.game-board .cell-1 { top: 0;     left: 9.5cqw; }
-.game-board .cell-2 { top: 50%;   left: 50%;  translate: -50% -50%; }
-.game-board .cell-3 { bottom: 0;  right: 9.5cqw; }
+.game-board .game-button { position: relative; }   /* the label is placed from it */
+.game-board .cell-1 { order: 1; }
+.game-board .cell-2 { order: 2; }
+.game-board .cell-3 { order: 3; }
 
 .game-button {
   width: var(--game-button-size);
   height: var(--game-button-size);
-  padding: 2cqw;                 /* the orange margin around the icon */
+  padding: 1.5cqw;               /* the orange margin around the icon (2cqw until 2026-10-18) */
   border-radius: 3cqw;
   background: var(--pumpkin);
   box-shadow: 0 1.2cqw 0 var(--pumpkin-dark);
@@ -379,6 +409,25 @@ body {
   height: 100%;
   object-fit: contain;
   pointer-events: none;          /* taps land on the button, not the image */
+}
+
+/* The name under a button (games.json "button_label", one short word):
+   hung below the square from inside it, wider than the square (the gaps
+   are 13cqw, so 5cqw each side keeps the labels apart) and never wrapping
+   on its own: a line break would be the label's own "\n". */
+.game-label {
+  position: absolute;
+  top: 100%;
+  left: -5cqw;
+  right: -5cqw;
+  margin-top: 1.2cqw;
+  text-align: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: clamp(11px, 3.4cqw, 18px);
+  line-height: 1.25;
+  white-space: nowrap;
+  pointer-events: none;
 }
 
 /* No usable icon: the short title, centred, at most two short lines.
@@ -651,14 +700,15 @@ body {
 }
 
 /* The rainbow mark (~~text~~): app.js wraps each letter in a span and these
-   seven colours repeat along the word. */
-.this-game .rainbow span:nth-child(7n+1) { color: #ff6b6b; }
-.this-game .rainbow span:nth-child(7n+2) { color: #ffa94d; }
-.this-game .rainbow span:nth-child(7n+3) { color: #ffe066; }
-.this-game .rainbow span:nth-child(7n+4) { color: #8ce99a; }
-.this-game .rainbow span:nth-child(7n+5) { color: #74c0fc; }
-.this-game .rainbow span:nth-child(7n+6) { color: #b197fc; }
-.this-game .rainbow span:nth-child(7n+7) { color: #f783ac; }
+   seven colours repeat along the word. Not scoped to .this-game since
+   2026-10-18: the GAMES tab's title uses it too. */
+.rainbow span:nth-child(7n+1) { color: #ff6b6b; }
+.rainbow span:nth-child(7n+2) { color: #ffa94d; }
+.rainbow span:nth-child(7n+3) { color: #ffe066; }
+.rainbow span:nth-child(7n+4) { color: #8ce99a; }
+.rainbow span:nth-child(7n+5) { color: #74c0fc; }
+.rainbow span:nth-child(7n+6) { color: #b197fc; }
+.rainbow span:nth-child(7n+7) { color: #f783ac; }
 
 /* A shaded emphasis line in the description or how-to-play text (a line
    that starts with "!! " in games.json; app.js makeParagraph). */

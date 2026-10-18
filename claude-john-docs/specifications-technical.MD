@@ -1,6 +1,6 @@
 # Halloween 2026 — Technical Specifications
 
-Last updated: 2026-10-18 12:14 (4p: the three-cell board, gameTab and shortName, high_scores, the *italic* mark, stamp 2026-1018-diagonal in 29 places; before that 2026-10-17 17:57: 4o: the choices feature in and out, stamp 2026-1017-stack-practice; 16:27: 4n: the touchend guard in the helper and app.js section 7, the viewport lines, .game-frame touch-action, reportScore returns the place, stamp 2026-1017-stack-victory in 29 places; 14:41: 4m: #settingsButton, pressTopButton, currentTab, afterDrawerSettles gone; stamp 2026-1017-stack-sound, 27 places; before that 2026-10-16 20:45: stamp 2026-1016-stack-endscreen, 26 places now: Stack's index has 3; nothing else in the shell; 17:15: 4: touch-action on the shell page; 4g moved to the game's folder; stamp 2026-1016-stack-milestones; before that: 15:34 top title, 15:45 one control point)
+Last updated: 2026-10-18 13:04 (4q: appendMarkedText in fillScores' notes; 4r: the GAMES tab column, GAMES_TAB_TITLE, button_label, .game-label, the row, the tab named from the label; stamp 2026-1018-cheat; before that 2026-10-18 12:14: 4p: the three-cell board, gameTab and shortName, high_scores, the *italic* mark, stamp 2026-1018-diagonal in 29 places; before that 2026-10-17 17:57: 4o: the choices feature in and out, stamp 2026-1017-stack-practice; 16:27: 4n: the touchend guard in the helper and app.js section 7, the viewport lines, .game-frame touch-action, reportScore returns the place, stamp 2026-1017-stack-victory in 29 places; 14:41: 4m: #settingsButton, pressTopButton, currentTab, afterDrawerSettles gone; stamp 2026-1017-stack-sound, 27 places; before that 2026-10-16 20:45: stamp 2026-1016-stack-endscreen, 26 places now: Stack's index has 3; nothing else in the shell; 17:15: 4: touch-action on the shell page; 4g moved to the game's folder; stamp 2026-1016-stack-milestones; before that: 15:34 top title, 15:45 one control point)
 
 ## 1. Stack and hosting
 
@@ -708,3 +708,60 @@ section 4's comment. The stamp is `2026-1017-stack-practice`, 29 places
   8098 with in-page clicks.
 - **The stamp**: `2026-1018-diagonal`, 29 places (app.js 1, root index
   2, Go Fish index 20 + js 1, Stack index 4, patch index 1).
+
+## 4r. The GAMES tab column, the row, button_label (2026-10-18 13:04)
+
+- index.html `#tab-app` holds `<div class="games-tab">` with
+  `<p class="games-title" id="gamesTitle">` (empty; app.js fills it),
+  `<div class="game-buttons" id="gameButtons">` and
+  `<p class="games-credits">Credits: jp/claude/chatty 10/2026</p>`.
+- app.js: `const GAMES_TAB_TITLE = "~~HALLOWEEN 2026!~~\nSmall games
+  with a Halloween feel.";` above `makeGameButtons`, which starts with
+  `appendMarkedText(document.getElementById("gamesTitle"),
+  GAMES_TAB_TITLE)`; for each game with a `button_label` it appends
+  `<span class="game-label">` filled by `appendMarkedText` inside the
+  button; `loadGame`: `gameTab.textContent = shortName(game.button_label
+  || game.short_title || game.title)`. The comments at the top of the
+  file and above `makeGameButtons` describe the row.
+- styles.css (section 5, the picker): `.games-tab { display: flex;
+  flex-direction: column; min-height: 100% }`; `.games-title` centred with `margin-top: 3cqw` ("it crowds the top rule"),
+  `.games-title .rainbow { font-size: clamp(20px, 7cqw, 36px);
+  font-weight: 800 }`; `.games-credits` (opacity 0.7, 0.85em, centred);
+  `.game-buttons { flex: 1; display: flex; flex-direction: column;
+  justify-content: center; --game-button-size: 20cqw }`; `.game-board {
+  display: flex; justify-content: space-around; align-items: flex-start;
+  padding-bottom: 6cqw }` (the labels' room, so the whole thing centres);
+  `.game-board .game-button { position: relative }`; `.cell-1..3 { order:
+  1..3 }`; `.game-label { position: absolute; top: 100%; left: -5cqw;
+  right: -5cqw; margin-top: 1.2cqw; white-space: nowrap; font-size:
+  clamp(11px, 3.4cqw, 18px); color: #fff; pointer-events: none }`;
+  `.game-button { padding: 1.5cqw }`; the seven `.rainbow span` rules
+  lost their `.this-game` prefix. The old `.game-buttons { min-height:
+  100% }`, the absolute board and the cell positions are gone.
+- games.json: `"button_label"` on pumpkin-patch ("Patch"),
+  stack-o-lantern ("Stack"), candy-go-fish ("Fish"); `_about` describes
+  it and the row.
+- Measured by the scratch `check-gamestab.cjs` (loads index.html, clicks
+  the GAMES tab, measures, shoots `gamestab-<width>.png`): at 390x844 the
+  tab is 303 px tall, the title 58, the squares 76 px (icons 65) at x 54
+  / 157 / 260, credits bottom at 288, no scrolling; at 375x667 the tab is
+  263, squares 68 (icons 57). NOTE the drawer starts open on GAMES, so a
+  check must not click Home first (that closes it).
+- README.md's current-work line mentions the new tab.
+
+## 4q. Marks in notes, the stamp (2026-10-18 13:04)
+
+- `fillScores` (app.js): `if (typeof notes[slot] === "string")
+  appendMarkedText(note, notes[slot]);` where it set `textContent`; the
+  comment above the function shows the "**CHEAT**" example.
+  `reportScore` is unchanged: a note is trimmed and cut to
+  `MAX_NOTE_LENGTH` (16) BEFORE the marks are read, so a long bold note
+  could lose its closing `**` and show the opening one; "**CHEAT**" is
+  9 characters.
+- `games/game-helper.js`: the notes line of the reportScore comment says
+  the marks work.
+- Checked by Stack's `_documents/checks/check-cheat.cjs` (a practice
+  round inside the shell on 8098; it clears localStorage there first):
+  `#thisGameScores .score-note b` reads CHEAT, the saved notes are
+  `["Space Needle", "**CHEAT**"]`; `cheat-list.png`.
+- Stamp `2026-1018-cheat`, 29 places (unchanged count).

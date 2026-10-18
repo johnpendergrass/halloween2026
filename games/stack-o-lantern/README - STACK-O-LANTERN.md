@@ -16,7 +16,8 @@ three best milestones under it.
   the folder stays `stack-o-lantern`.
 - **Status:** playable and checked, with sound, an end-screen
   celebration, a gentler ramp, three big rungs with fireworks and a
-  practice level (2026-10-18 12:14). The difficulty at height is next.
+  practice level (2026-10-18 12:14); the floor at 0.65 s, practice rounds
+  count as CHEAT in the app's list (2026-10-18 13:04).
 - **The rules** every game follows are in
   [`../README - game design requirements.md`](../README%20-%20game%20design%20requirements.md).
 
@@ -149,14 +150,15 @@ README - STACK-O-LANTERN.md  this file
   moon and burst over the words (`startFireworks`, `FIREWORK_SHOWS`).
 - **The ramp** (John, 2026-10-17) is a table of seconds per crossing in
   the script: 2.4 s for the first slab, 0.0141 s less per pumpkin to 1.0
-  s at 100, half as steep after, never under 0.85 s (`RAMP`,
+  s at 100, half as steep after, never under 0.65 s (`RAMP`,
   `crossingFor`). The next slab always slides the opposite way to the one
   just dropped.
 - **Practice** (John, 2026-10-17): the base on the welcome screen reads
-  "Level 1"; tap it for the Practice start panel (1 to 100, then 122,
-  147, 172 and 197 for the sky rungs). A round from a higher level
-  counts from there at that level's speed, rings no rung below it, and
-  reports no score. Stack again returns to the welcome screen, where the
+  "Level 1"; tap it for the Practice start panel (1, then every ten to
+  200). A round from a higher level counts from there at that level's
+  speed and rings no rung below it. It scores like any other round and
+  gets the same celebration, but the app's list says CHEAT after the
+  level name (2026-10-18; before that practice rounds were not scored). Stack again returns to the welcome screen, where the
   level is in view. The pick lasts the visit: every launch starts at 1.
 - The base is pumpkin 1: the first drop reads 2.
 

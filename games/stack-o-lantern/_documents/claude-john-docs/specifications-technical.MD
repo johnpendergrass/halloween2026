@@ -1,6 +1,6 @@
 # Stack o' Lantern — Technical Specifications
 
-Last updated: 2026-10-18 12:14 (/update; SECTION 11: the ladder regenerated, fireworks on three entries, bigMilestone, startRungFireworks, chosenStartLevel, PRACTICE_LEVELS and the disabled rows, check-startlevel steps, stamp 2026-1018-diagonal; before that 2026-10-17 17:57: SECTION 10: CROSSING_START / CROSSING_FASTEST / RAMP / crossingFor, the practice level (PRACTICE_KEY, applyStartLevel, the badge, the panel), Stack again → backToStart, lastDirection, check-startlevel, stamp 2026-1017-stack-practice. 16:27: SECTION 9: reportScore's place, endTier, the balloons, FANFARES, the fireworks layer and shows, check-topfive, stamp 2026-1017-stack-victory in 29 places. 14:41: SECTION 8: sound.js, the switch, sound/pitch in the table, stackedCount counts the base, the rung jumps the queue, stamp 2026-1017-stack-sound in 27 places. 12:21: SECTION 6 IS CURRENT and overrides sections 2 and 3 where they differ: families and bestEarned, no MODES, no info bar, .score-corner, the staircase, the minute, Halloween.bestScore; stamp 2026-1017-stack-families. Earlier: 2026-10-16 20:45 /update, the checks under _documents/checks/, stamp 2026-1016-stack-endscreen; 20:20 #count gone, state.newBest; 19:55 popCount; 19:25 the moon at 26vw; 18:30 GRID_PATTERNS / fillMilestoneGrid; 17:15 first file in the game's own folder)
+Last updated: 2026-10-18 13:04 (/update; SECTION 12: CROSSING_FASTEST 0.65, probe-framerate, the tips, PRACTICE_LEVELS of tens, updateLabels and gameOver for CHEAT rounds, fillScores' marks, check-startlevel rewritten, check-cheat, stamp 2026-1018-cheat; before that 2026-10-18 12:14: SECTION 11: the ladder regenerated, fireworks on three entries, bigMilestone, startRungFireworks, chosenStartLevel, PRACTICE_LEVELS and the disabled rows, check-startlevel steps, stamp 2026-1018-diagonal; before that 2026-10-17 17:57: SECTION 10: CROSSING_START / CROSSING_FASTEST / RAMP / crossingFor, the practice level (PRACTICE_KEY, applyStartLevel, the badge, the panel), Stack again → backToStart, lastDirection, check-startlevel, stamp 2026-1017-stack-practice. 16:27: SECTION 9: reportScore's place, endTier, the balloons, FANFARES, the fireworks layer and shows, check-topfive, stamp 2026-1017-stack-victory in 29 places. 14:41: SECTION 8: sound.js, the switch, sound/pitch in the table, stackedCount counts the base, the rung jumps the queue, stamp 2026-1017-stack-sound in 27 places. 12:21: SECTION 6 IS CURRENT and overrides sections 2 and 3 where they differ: families and bestEarned, no MODES, no info bar, .score-corner, the staircase, the minute, Halloween.bestScore; stamp 2026-1017-stack-families. Earlier: 2026-10-16 20:45 /update, the checks under _documents/checks/, stamp 2026-1016-stack-endscreen; 20:20 #count gone, state.newBest; 19:55 popCount; 19:25 the moon at 26vw; 18:30 GRID_PATTERNS / fillMilestoneGrid; 17:15 first file in the game's own folder)
 
 How the game is built, for whoever edits it next. The design and the
 reasons are in `specifications.MD` beside this. Files: `index.html`,
@@ -525,10 +525,10 @@ helper's script tags in Candy Go Fish's and Pumpkin Patch's `index.html`
 `START_SPEED`, `MAX_SPEED` and `SPEED_GROWTH` are gone. In their place:
 ```js
 const CROSSING_START = 2.4;     // seconds across the stage for the first slab
-const CROSSING_FASTEST = 0.85;  // never quicker than this
+const CROSSING_FASTEST = 0.65;  // never quicker than this (0.85 until 2026-10-18)
 const RAMP = [                  // seconds taken off the crossing per pumpkin, by stretch
   { from: 1,   step: 0.0141 },  // 2.4 s at pumpkin 1 down to 1.0 s at pumpkin 100
-  { from: 100, step: 0.0071 },  // half as steep after that (the floor arrives about 121)
+  { from: 100, step: 0.0071 },  // half as steep after that (the floor arrives at 150)
 ];
 function crossingFor(count) {
   let seconds = CROSSING_START;
@@ -676,3 +676,47 @@ the change; the "shortened title" example in both is Rainier now.
 ### 11.4 The stamp
 
 `2026-1018-diagonal`, 29 places (Stack's index 4).
+
+## 12. The floor, the tips, the list of tens, CHEAT rounds (2026-10-18 afternoon)
+
+### 12.1 The floor
+`CROSSING_FASTEST = 0.65` (0.85 until this day, 0.70 for an hour); the
+RAMP rows unchanged, so `crossingFor` floors at pumpkin 150. The scratch
+`probe-framerate.cjs` (scratchpad; worth moving into checks/) starts a
+practice round at 172 and samples 180 frames per CPU throttle through
+`Emulation.setCPUThrottlingRate`: frame gaps and `|dx|` of `state.mover.x`.
+Found: 8.3 ms frames (headless Chrome at 120 Hz here) at 1x, 6x, 10x;
+drops only at 20x.
+
+### 12.2 The tips
+Three `tip` strings in MILESTONES (Toothpick, Eye of the Needle, Needle)
+and the same cells in `milestones.md`; `compare-milestones.py` still
+agrees (its known miss of the last row aside).
+
+### 12.3 The practice list and CHEAT rounds
+- `PRACTICE_LEVELS = [1, ...Array.from({ length: 20 }, (_, i) => (i + 1) * 10)]`;
+  `PRACTICE_TOP` and `PRACTICE_HIGH` gone; `openPractice` builds 21
+  plain options (no disabled rows); OK still keeps the old level on a
+  pick outside the list.
+- `updateLabels` no longer returns early for `startLevel > 1`: the
+  corner's best and `newBest` work in a practice round.
+- `gameOver`: `const cheat = state.startLevel > 1`; the notes are
+  `[level.name, "**CHEAT**"].filter(Boolean)` and `reportScore` is always
+  called (`state.place` from its answer). The title is the plain level
+  name (a `.cheat-mark` span after it lived for an hour).
+- index.html: the panel's three lines and its comment.
+- Shell `app/app.js` `fillScores`: a note is filled with
+  `appendMarkedText(note, notes[slot])` instead of `textContent`;
+  `games/game-helper.js` says so in its notes line. A note is still cut
+  to `MAX_NOTE_LENGTH` (16) BEFORE the marks are read, so "**CHEAT**"
+  (9 characters) is safe; a longer bold note could lose its closing
+  mark.
+- `check-startlevel.cjs`: the spy records `notes` and answers place 1;
+  expects 21 options ('1,10,20' ... '170,180,190,200'), the practice end
+  reported 51 with 'Space Needle,**CHEAT**', title 'SPACE NEEDLE',
+  gold (51 beat the corner's 1), best '51'; the real round after it
+  reports 7 with no notes (the check's pushed slabs earn no rung) and no
+  CHEAT in the title. Passes. Scratch `check-cheat.cjs` ran the same
+  round INSIDE the shell (frame found by url) and shot `cheat-end.png`
+  and `cheat-list.png`: the bold note in the list, the saved notes.
+- No stamp bump yet (local only).

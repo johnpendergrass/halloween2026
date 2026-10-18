@@ -20,7 +20,7 @@
 
 // Bump this (and the ?v= tags in index.html) whenever code changes, so
 // phones fetch fresh copies instead of old cached ones.
-const APP_VERSION = "2026-1018-diagonal";
+const APP_VERSION = "2026-1018-cheat";
 
 /* ------------------------------------------------------------------------
    1. Settings and the games list
@@ -45,11 +45,11 @@ const APP_VERSION = "2026-1018-diagonal";
    --------------------------------------------------------------------- */
 
 const GAMES_FILE = "./games.json";
-// The button board is three fixed cells on a diagonal: slot 1 upper left,
-// slot 2 in the middle, slot 3 lower right (John, 2026-10-18; until then
-// two rows of four). A game always sits in its own cell, so slot 1 is
-// always upper left; a cell nobody claimed stays empty. Where each cell
-// sits is the CSS's business (styles.css, .game-board .cell-N).
+// The button board is a row of three fixed cells: slot 1 at the left, 2
+// in the middle, 3 at the right (John, 2026-10-18 afternoon; a diagonal
+// that morning, two rows of four until then). A game always sits in its
+// own cell, so slot 1 is always first; a cell nobody claimed stays empty.
+// Where each cell sits is the CSS's business (styles.css, .game-board .cell-N).
 const LAST_SLOT = 3;
 const DEFAULT_ICON = "./app/default-icon.svg";   // only when there is no text either
 
@@ -363,6 +363,8 @@ function dateForList(savedDate) {
     (right-adjusted) or "---" where there is none yet, then the date the
     score was made, then up to two short notes the game added, e.g.
       1.  3-2 (10-15-2026)  vs. Ron  3 set game
+    A note may use the text marks (**bold** and the rest, see MARK):
+    Stack o' Lantern's practice rounds send "**CHEAT**" (2026-10-18).
     A saved score looks like
       { "value": 42, "date": "2026-10-01" }                         or
       { "value": 42, "text": "Master Chef", "date": "2026-10-01" }  or
@@ -400,7 +402,7 @@ function fillScores(game) {
     for (let slot = 0; slot < MAX_SCORE_NOTES; slot += 1) {
       const note = document.createElement("span");
       note.className = "score-note";
-      note.textContent = typeof notes[slot] === "string" ? notes[slot] : "";
+      if (typeof notes[slot] === "string") appendMarkedText(note, notes[slot]);
       row.appendChild(note);
     }
     list.appendChild(row);
@@ -624,7 +626,9 @@ function loadGame(game) {
   // only the accented part of a long name (shortName), since the tab is
   // half the bar. The CSS makes it uppercase and cuts anything still too
   // long with an ellipsis.
-  gameTab.textContent = shortName(game.short_title || game.title);
+  // The tab reads the one-word label when the game has one (PATCH, STACK,
+  // FISH; John, 2026-10-18 afternoon), else the short title's accent.
+  gameTab.textContent = shortName(game.button_label || game.short_title || game.title);
   fillThisGameTab(game);
   markCurrentButton(game);
 }
@@ -725,18 +729,32 @@ function makeIconButton(game) {
   return button;
 }
 
-/** The GAMES tab: the board, three cells on a diagonal from the upper
-    left (slot 1) to the lower right (slot 3). Every button gets the class
-    cell-<slot>, and the CSS puts that cell in its place, so slot 1 is
-    always upper left however many games there are; a cell nobody claimed
-    is simply empty. */
+/** The GAMES tab: the title, then the board, a row of three cells from
+    slot 1 at the left to slot 3 at the right, each button with its name
+    under it. Every button gets the class cell-<slot>, and the CSS puts
+    that cell in its place, so slot 1 is always first however many games
+    there are; a cell nobody claimed is simply empty. */
+// The words above the board in the GAMES tab (John, 2026-10-18). The same
+// marks as games.json's text: the first line is ~~rainbow~~, \n breaks a line.
+const GAMES_TAB_TITLE = "~~HALLOWEEN 2026!~~\nSmall games with a Halloween feel.";
+
 function makeGameButtons() {
+  appendMarkedText(document.getElementById("gamesTitle"), GAMES_TAB_TITLE);
   const holder = document.getElementById("gameButtons");
   const board = document.createElement("div");
   board.className = "game-board";
   games.forEach((game) => {
     const button = makeIconButton(game);
     button.classList.add("cell-" + game.goes_in_slot);
+    if (game.button_label) {
+      // The name under the button (games.json "button_label", one short
+      // word, the marks allowed; John, 2026-10-18). It hangs below the
+      // orange square from inside it, so the square stays square.
+      const label = document.createElement("span");
+      label.className = "game-label";
+      appendMarkedText(label, game.button_label);
+      button.appendChild(label);
+    }
     board.appendChild(button);
   });
   holder.appendChild(board);

@@ -35,10 +35,10 @@ const BONUS_WIDTH = 3;          // ...the slab grows this much wider (up to STAR
 // 25, the cap at 29) made it "hard at around 25 or so". One level only
 // (an EASY / HARD toggle lived for one day, 2026-10-16).
 const CROSSING_START = 2.4;     // seconds across the stage for the first slab
-const CROSSING_FASTEST = 0.85;  // never quicker than this (John: "about 0.85")
+const CROSSING_FASTEST = 0.65;  // never quicker than this (0.85 until 2026-10-18, then 0.70 for an hour; John: "lets try the .65")
 const RAMP = [                  // seconds taken off the crossing per pumpkin, by stretch
   { from: 1,   step: 0.0141 },  // 2.4 s at pumpkin 1 down to 1.0 s at pumpkin 100
-  { from: 100, step: 0.0071 },  // half as steep after that (the floor arrives about 121)
+  { from: 100, step: 0.0071 },  // half as steep after that (the floor arrives at 150)
 ];
 
 // Milestones: little achievements inside one round (John, 2026-10-16;
@@ -198,11 +198,11 @@ const MILESTONES = [
     hint: "twenty *perfects* in a row",
     sound: false, pitch: 23 },
   { family: "accuracy", kind: "pencil", at: 3, name: "Toothpick", what: "3 in a row on a pencil pumpkin",
-    tip: "Three landings in a row on pencil pumpkins, an eighth of the starting width or less. Who are you?",
+    tip: "Three landings in a row on pencil pumpkins. Who are you?",
     hint: "three in a row on pencil-thin pumpkins",
     sound: false, pitch: 20 },
   { family: "accuracy", kind: "tiny", at: 6, name: "Eye of the Needle", what: "6 in a row on a tiny pumpkin",
-    tip: "Six landings in a row on a tiny pumpkin, a quarter of the starting width or less. How?",
+    tip: "Six landings in a row on a tiny pumpkin. How?",
     hint: "six in a row on a tiny pumpkin",
     sound: false, pitch: 18 },
   { family: "accuracy", kind: "perfect", at: 10, name: "Laser", what: "10 *perfects* in a row",
@@ -214,7 +214,7 @@ const MILESTONES = [
     hint: "ten in a row on a small pumpkin",
     sound: false, pitch: 13 },
   { family: "accuracy", kind: "tiny", at: 3, name: "Needle", what: "3 in a row on a tiny pumpkin",
-    tip: "Three landings in a row on a tiny pumpkin, a quarter of the starting width or less. Threading it.",
+    tip: "Three landings in a row on a tiny pumpkin. Threading it.",
     hint: "three in a row on a tiny pumpkin",
     sound: false, pitch: 10 },
   { family: "accuracy", kind: "pencil", at: 1, name: "Pencil Pusher", what: "landed on a pencil pumpkin",
@@ -405,7 +405,7 @@ const topFive = document.getElementById("topFive");   // the green TOP 5 SCORE! 
 const fireworks = document.getElementById("fireworks");   // the end screen's fireworks layer
 const levelBadge = document.getElementById("levelBadge");       // "Level 1" over the base on the welcome screen
 const practicePanel = document.getElementById("practicePanel"); // the picker that opens from the badge
-const practiceLevel = document.getElementById("practiceLevel"); // its <select>, 1..100
+const practiceLevel = document.getElementById("practiceLevel"); // its <select>: 1, 10, 20 ... 200
 
 // Everything that changes while playing lives here, so it is easy to see
 // (and to reset). Coordinates are "world" coordinates: x from the left
@@ -434,7 +434,7 @@ const state = {
   bestBefore: 0,       // the best when this round started
   newBest: false,      // this round beat an earlier best (so "Best" glows at the end)
   place: 0,            // where the last round landed in the app's five-line list (1..5), 0 if it did not
-  startLevel: 1,       // the practice level (the badge on the welcome screen): the base counts as this many; 1 = a real round
+  startLevel: 1,       // the practice level (the badge on the welcome screen): the base counts as this many; above 1 the round is marked CHEAT in the app's list
   lastTime: 0,         // timestamp of the previous animation frame (ms)
 };
 
@@ -697,8 +697,7 @@ function showHint() {
     the number glow; the first round of a visit sets the best without
     beating one, so no glow then. */
 function updateLabels() {
-  if (state.startLevel > 1) return;     // a practice round: the high score is not in play
-  const count = stackedCount();
+  const count = stackedCount();         // a practice round counts too, since 2026-10-18 (marked CHEAT)
   if (count > state.best) state.best = count;
   if (state.bestBefore > 0 && count > state.bestBefore) state.newBest = true;
   bestLabel.textContent = state.best;
@@ -1105,20 +1104,24 @@ function start() {
    the next round starts, 1 to 100. Above 1 the base counts as that many
    pumpkins (stackedCount), the ramp's speed is that level's, the height
    rungs below the level are marked earned without a banner (so the end
-   title is right and the first drop does not ring them all), and the
-   round is not reported (gameOver) nor counted as a best (updateLabels).
-   The pick lasts for the visit only: every launch of the game starts at
-   level 1 (John, 2026-10-18: "it retains the level the cheat was set
-   to... it should go back to the default of 1"; until then it was kept
-   on the device under the game's own key). It first lived as a drop-down
-   in the shell's THIS GAME tab, for an hour; John moved it here. */
+   title is right and the first drop does not ring them all). The round
+   counts like any other: it is reported to the app, can be the best and
+   gets the end screen's celebration, but the app's list carries CHEAT
+   after the level name (John, 2026-10-18: "include the cheat scores in
+   the high scores list and celebrations, but with a **CHEAT** after the
+   level name"; the end title showed it too for an hour: "just a regular
+   display is fine"; until that day practice rounds were not scored at
+   all). The pick lasts for the visit only: every launch of
+   the game starts at level 1 (John, 2026-10-18: "it retains the level
+   the cheat was set to... it should go back to the default of 1"; until
+   then it was kept on the device under the game's own key). It first
+   lived as a drop-down in the shell's THIS GAME tab, for an hour; John
+   moved it here. */
 
-// The levels the panel offers: every level to 100, then four high ones a
-// few drops short of the sky rungs (125, 150, 175, 200), so those can be
-// seen without a tower of a hundred first (John, 2026-10-18).
-const PRACTICE_TOP = 100;
-const PRACTICE_HIGH = [122, 147, 172, 197];
-const PRACTICE_LEVELS = [...Array.from({ length: PRACTICE_TOP }, (_, i) => i + 1), ...PRACTICE_HIGH];
+// The levels the panel offers: 1, then every ten to 200 (John,
+// 2026-10-18: "multiples of 10 upto 200"; before that 1..100 and four
+// high picks). The game goes on past 200; this is only where it starts.
+const PRACTICE_LEVELS = [1, ...Array.from({ length: 20 }, (_, i) => (i + 1) * 10)];
 let chosenStartLevel = 1;        // the panel's pick, for this visit
 
 /** The practice level in force: the pick when it is one the panel
@@ -1160,15 +1163,6 @@ function openPractice() {
       option.value = String(level);
       option.textContent = String(level);
       practiceLevel.appendChild(option);
-      if (level !== PRACTICE_LEVELS[PRACTICE_LEVELS.length - 1] && level >= PRACTICE_TOP) {
-        // A "..." row after 100 and between the high levels, to show the
-        // jumps. It is disabled, so it cannot be picked; OK ignores it anyway.
-        const gap = document.createElement("option");
-        gap.value = "";
-        gap.textContent = "...";
-        gap.disabled = true;
-        practiceLevel.appendChild(gap);
-      }
     }
   }
   practiceLevel.value = String(readStartLevel());
@@ -1186,7 +1180,7 @@ levelBadge.addEventListener("click", openPractice);
 practicePanel.addEventListener("pointerdown", (event) => event.stopPropagation());
 document.getElementById("practiceDone").addEventListener("click", () => {
   const pick = Number(practiceLevel.value);
-  if (PRACTICE_LEVELS.includes(pick)) saveStartLevel(pick);   // the "..." row changes nothing
+  if (PRACTICE_LEVELS.includes(pick)) saveStartLevel(pick);   // anything else changes nothing
   showBadge();
   closePractice();
 });
@@ -1219,6 +1213,7 @@ function gameOver() {
   // under 5 pumpkins there is no level, so the miss word is the title and
   // the line is one of the four old ones.
   const level = bestEarned("height");
+  const cheat = state.startLevel > 1;                   // a practice round: CHEAT goes to the app's list, not the title (John, 2026-10-18)
   endWord.textContent = level ? level.name.toUpperCase() : word;
   endNumber.textContent = count;                        // "You stacked / 23 / pumpkins!"
   endNoun.textContent = count === 1 ? "pumpkin!" : "pumpkins!";
@@ -1238,16 +1233,15 @@ function gameOver() {
 
   // Tell the app, which keeps this game's five best counts and shows them
   // in the THIS GAME tab (games/game-helper.js). A count of 0 is ignored.
-  // The level's name rides along as the note, so the list reads
+  // The level's name rides along as the first note, so the list reads
   // "16 (10-17-2026) Giraffe" (John, 2026-10-17; it was the mode, "easy"
   // or "hard", for a day, and scores saved then keep that note). Under 5
-  // there is no level and no note.
-  // The answer is the count's place in that list, 1 to 5, or 0. A round
-  // started above level 1 is practice and is not reported (John: "no
-  // scores will be recorded").
-  state.place = state.startLevel === 1
-    ? Halloween.reportScore(count, undefined, level ? [level.name] : undefined)
-    : 0;
+  // there is no level and no note. A practice round adds **CHEAT** as
+  // the second note, in the app's bold mark (John, 2026-10-18; before
+  // that practice rounds were not reported).
+  // The answer is the count's place in that list, 1 to 5, or 0.
+  const notes = [level ? level.name : "", cheat ? "**CHEAT**" : ""].filter(Boolean);
+  state.place = Halloween.reportScore(count, undefined, notes.length > 0 ? notes : undefined);
 
   // Let the miss play out (the moon winces at it) before the end screen
   // covers it. Then the moon gives its verdict on the round, with a

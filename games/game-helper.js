@@ -85,7 +85,8 @@ const Halloween = {
 
   /** Tell the app this game's result. `value` is a number (higher is
       better); `text` is optional and is shown in place of the number;
-      `notes` is optional, up to two short strings shown after the date.
+      `notes` is optional, up to two short strings shown after the date
+      (the text marks work in them: "**CHEAT**" shows bold).
       Returns the score's place in the app's list, 1 to 5, or 0 when it
       did not make the list (also 0 outside the app). */
   reportScore(value, text, notes) {

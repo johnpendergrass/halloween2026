@@ -819,6 +819,13 @@ body {
 }
 
 /* The last line of the note, a touch smaller. */
+/* The "1" in the panel's warning, in the OK button's orange and a size up
+   (John, 2026-10-18: "Emphasize the '1'"; the text around it is bold already). */
+.practice-one {
+  color: #e8741c;
+  font-size: 1.3em;
+}
+
 .practice-fine {
   font-size: 0.85em;
   opacity: 0.85;

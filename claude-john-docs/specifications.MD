@@ -1,6 +1,6 @@
 # Halloween 2026 — Specifications (design decisions)
 
-Last updated: 2026-10-18 12:14 (6p: three games on a diagonal board, the tab named for the game, the Pumpkin Patch's tab, no switches, an *italic* mark; before that 2026-10-17 17:57: 6o: the choices feature tried and removed; 16:27: 6n: the iPhone double-tap zoom, reportScore's place, Stack's byline; 14:41: 6m: a Settings button on the right of the top bar, Home → GAMES, Settings → THIS GAME; before that 2026-10-16 17:15: 2: no zoom on the shell page; 6f moved to the game's folder; 6i: Stack's switch dropped; before that: 15:34 names, 15:45 one control point, 15:00 tabled games removed)
+Last updated: 2026-10-18 13:04 (6q: the marks in a score's notes, for Stack's CHEAT rounds; 6r: the GAMES tab rebuilt: a rainbow title, a row of three labelled icons, credits; the second tab PATCH / STACK / FISH; before that 2026-10-18 12:14: 6p: three games on a diagonal board, the tab named for the game, the Pumpkin Patch's tab, no switches, an *italic* mark; before that 2026-10-17 17:57: 6o: the choices feature tried and removed; 16:27: 6n: the iPhone double-tap zoom, reportScore's place, Stack's byline; 14:41: 6m: a Settings button on the right of the top bar, Home → GAMES, Settings → THIS GAME; before that 2026-10-16 17:15: 2: no zoom on the shell page; 6f moved to the game's folder; 6i: Stack's switch dropped; before that: 15:34 names, 15:45 one control point, 15:00 tabled games removed)
 
 This file records WHAT the app looks like and WHY. Technical "how" lives in
 `specifications-technical.MD`. Companion notes in this folder:
@@ -712,3 +712,50 @@ own README says the switch went.
 score. / They are bragging rights only." in italics: `*italic*` joined
 the marks of 6i (`**bold**` is tried first, so the longer mark wins). A
 mark cannot span a `\n`: one mark per line.
+
+## 6r. The GAMES tab: a title, a row of three named icons, credits (John, 2026-10-18 afternoon)
+
+John's words, in order: "a colorful title 'HALLOWEEN 2026!/Small games
+with a Halloween feel./Enjoy!' and down at the bottom of the tab a
+'Credits: jp/claude/chatty 10/2026'"; "make the actual icon in the
+button a bit larger? the icon is the important thing"; "lable the button
+below with Patch, Stack, and Fish"; "remove the diagonal and just use
+three icons in a line. make them small enough to have some breathing
+room"; "you can remove 'Enjoy!'"; "the names of Patch, Stack and Fish
+are fine too. they fit nicely" (two-line names with a rainbow "Candy
+Edition" were asked for and withdrawn within minutes); "adjust the name
+of the game in the games tab to be these short names".
+
+So the tab is a column. At the top, "HALLOWEEN 2026!" in the rainbow
+mark (the seven colours the THIS GAME tab already had, now usable
+anywhere), 7cqw and extra bold, over "Small games with a Halloween feel."
+in the tab's normal size. In the middle, in whatever room is left, a row
+of three orange squares (20cqw each; of the 40cqw of air a third sits
+between each pair and a sixth at each edge, after "the three icons are
+very close to one another. give them a bit more space between. not
+much" on the phone, where the four gaps had been equal), the icon filling more of the square than before
+(padding 1.5cqw, was 2cqw), and under each square its one-word name
+from games.json `button_label`: Patch, Stack, Fish. At the bottom,
+"Credits: jp/claude/chatty 10/2026", dim and small like the THIS GAME
+credits. The drawer's second tab reads the same word in capitals (PATCH,
+STACK, FISH) instead of the short title's accent.
+
+Why a row and not the morning's diagonal: the drawer is about 300 px
+tall on a phone and the title and credits take 100 of it; the diagonal's
+"middle half" shrank to one square's height and the three squares ended
+up in a row anyway, overlapping. John chose the row outright. Why the
+label hangs from inside the button: the square stays square and the
+pressed-in look still works; the label is 5cqw wider than the square on
+each side (the gaps are 13cqw) and never wraps on its own.
+
+## 6q. A score's notes may use the marks (John, 2026-10-18 afternoon)
+
+Stack o' Lantern's practice rounds now count, and John wanted them
+"in the high scores list and celebrations, but with a **CHEAT** after
+the level name". The list already had two note cells after the date and
+the app already had the text marks, so the shell's part is one line:
+a note is filled with the marks read, and Stack sends "**CHEAT**" as its
+second note. The list reads "1. 51 (10-18-2026) Space Needle **CHEAT**".
+Candy Go Fish's notes ("vs. Ron", "3 set game") have no marks and look
+the same as before. Why bold and not a colour: the note cells are small
+and dim (0.75em, 85% opacity); bold is the one mark that reads there.

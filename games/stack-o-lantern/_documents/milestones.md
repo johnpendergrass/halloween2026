@@ -98,11 +98,11 @@ line, and most lines mention the pumpkin tower.
 | Rank | Counter | At | Name | Banner | Tip (end-screen bubble) | Hint | Sound | Pitch |
 |---|---|---|---|---|---|---|---|---|
 | 1 | perfect | 20 | Machine | 20 *perfects* in a row | Twenty *perfect* drops in a row. Are you even a person? | twenty *perfects* in a row | no | 23 |
-| 2 | pencil | 3 | Toothpick | 3 in a row on a pencil pumpkin | Three landings in a row on pencil pumpkins, an eighth of the starting width or less. Who are you? | three in a row on pencil-thin pumpkins | no | 20 |
-| 3 | tiny | 6 | Eye of the Needle | 6 in a row on a tiny pumpkin | Six landings in a row on a tiny pumpkin, a quarter of the starting width or less. How? | six in a row on a tiny pumpkin | no | 18 |
+| 2 | pencil | 3 | Toothpick | 3 in a row on a pencil pumpkin | Three landings in a row on pencil pumpkins. Who are you? | three in a row on pencil-thin pumpkins | no | 20 |
+| 3 | tiny | 6 | Eye of the Needle | 6 in a row on a tiny pumpkin | Six landings in a row on a tiny pumpkin. How? | six in a row on a tiny pumpkin | no | 18 |
 | 4 | perfect | 10 | Laser | 10 *perfects* in a row | Ten *perfect* drops in a row. The moon stopped blinking somewhere around seven. | ten *perfects* in a row | no | 15 |
 | 5 | small | 10 | High Wire | 10 in a row on a small pumpkin | Ten landings in a row on a small pumpkin. No net. | ten in a row on a small pumpkin | no | 13 |
-| 6 | tiny | 3 | Needle | 3 in a row on a tiny pumpkin | Three landings in a row on a tiny pumpkin, a quarter of the starting width or less. Threading it. | three in a row on a tiny pumpkin | no | 10 |
+| 6 | tiny | 3 | Needle | 3 in a row on a tiny pumpkin | Three landings in a row on a tiny pumpkin. Threading it. | three in a row on a tiny pumpkin | no | 10 |
 | 7 | pencil | 1 | Pencil Pusher | landed on a pencil pumpkin | A landing on a pencil pumpkin. Stacking those is hard. | land one on a pencil pumpkin | no | 8 |
 | 8 | perfect | 5 | Sharp Eye | 5 *perfects* in a row | Five *perfect* drops in a row. Every edge lined up within a hair. | five *perfects* in a row | no | 5 |
 | 9 | small | 5 | Tightrope | 5 in a row on a small pumpkin | Five landings in a row on a small pumpkin. Steady. | five in a row on a small pumpkin | no | 3 |

@@ -1,6 +1,6 @@
 # Stack o' Lantern — Specifications (design decisions)
 
-Last updated: 2026-10-18 12:14 (/update; SECTION 9: Rainier and Denali on the ladder, the big rungs with fireworks, the practice level per visit, the high picks, the bragging-rights line; before that 2026-10-17 17:57: SECTION 8: the ramp as seconds per crossing, the practice level on the welcome screen, Stack again goes home, back and forth. 16:27: SECTION 7: the end screen's three tiers, the green balloon, three fanfares, fireworks from behind the moon, no byline. 14:41: SECTION 6: sound, the base is pumpkin 1, a rung jumps the banner queue, the shell's Settings button. 12:21: SECTION 5 IS THE CURRENT DESIGN: milestone families, the level as the title, one level, no info bar, the corner, the staircase, the minute, the shell reading back scores. Sections 1 to 4 are the 2026-09-29 and 2026-10-16 record; section 2 (EASY / HARD) and the 3x3 grid in section 3 are history now. Earlier: 2026-10-16 20:45 /update; 20:20 no Stacked count in the bar, Best glows on a new best; 19:55 count pops off each pumpkin; 19:10 the moon fixed at one spot; 18:30 the end screen laid out around the moon; 17:15 first file in the game's own folder)
+Last updated: 2026-10-18 13:04 (/update; 9.5 the floor 0.65 s and the frame probe, 9.6 three tips trimmed, the practice list of tens, CHEAT rounds in the app's list; before that 2026-10-18 12:14: SECTION 9: Rainier and Denali on the ladder, the big rungs with fireworks, the practice level per visit, the high picks, the bragging-rights line; before that 2026-10-17 17:57: SECTION 8: the ramp as seconds per crossing, the practice level on the welcome screen, Stack again goes home, back and forth. 16:27: SECTION 7: the end screen's three tiers, the green balloon, three fanfares, fireworks from behind the moon, no byline. 14:41: SECTION 6: sound, the base is pumpkin 1, a rung jumps the banner queue, the shell's Settings button. 12:21: SECTION 5 IS THE CURRENT DESIGN: milestone families, the level as the title, one level, no info bar, the corner, the staircase, the minute, the shell reading back scores. Sections 1 to 4 are the 2026-09-29 and 2026-10-16 record; section 2 (EASY / HARD) and the 3x3 grid in section 3 are history now. Earlier: 2026-10-16 20:45 /update; 20:20 no Stacked count in the bar, Best glows on a new best; 19:55 count pops off each pumpkin; 19:10 the moon fixed at one spot; 18:30 the end screen laid out around the moon; 17:15 first file in the game's own folder)
 
 The game is called **Stack o' Lantern** since 2026-10-17 (it was
 "Stack-o'-Lantern"; the folder stays `stack-o-lantern`).
@@ -550,7 +550,8 @@ cap at about 0.85".
 
 So the ramp is a TABLE in seconds: the first slab crosses in 2.4 s; each
 pumpkin placed takes a step off the next crossing, 0.0141 s a pumpkin
-up to 100 (1.0 s there), 0.0071 s after; never under 0.85 s (about 121).
+up to 100 (1.0 s there), 0.0071 s after; never under 0.65 s (reached at
+150; the floor was 0.85 s, reached about 121, until 2026-10-18, see 9.5).
 
 | Pumpkins | Crossing |
 |---|---|
@@ -559,7 +560,8 @@ up to 100 (1.0 s there), 0.0071 s after; never under 0.85 s (about 121).
 | 50 | 1.71 s |
 | 75 | 1.36 s |
 | 100 | 1.0 s |
-| 121 and up | 0.85 s |
+| 125 | 0.83 s |
+| 150 and up | 0.65 s |
 
 John reaches "70 or so" on it; the stretch over 100 is on the list to
 rethink. The slicing (a sloppy drop trims the slab) is now the harder
@@ -686,3 +688,71 @@ like the ramp); keep the speed falling past 121; weaken the grow-back
 above 100; a hair off every landing at height. Claude's suggestion: the
 tolerance, perhaps with a mild speed change. John: "we will try
 something" after this /update.
+
+**Tried first (2026-10-18 afternoon): the floor lowered, 0.85 to 0.70
+to 0.65 s.** John: "i want to stick with fewer changes, because the
+player will feel cheated if something new changes without being told.
+let's try continuing the speed ramp first." Both RAMP rows stay; only
+`CROSSING_FASTEST` moved (0.70 for an hour, then "lets try the .65 you
+wanted"), so nothing changes below pumpkin 122 and the ramp now carries
+on to pumpkin 150 exactly (0.29 s at 200 is where the rows would run out
+with no floor). Why not lower: at 60 frames a second the slab jumps
+100vw / (crossing * 60) per frame, 2.0vw at 0.85 s, 2.4vw at 0.70 s,
+2.6vw at 0.65 s, 5.7vw at 0.29 s, against a perfect band 3.2vw wide
+(`PERFECT_TOLERANCE` either side); once the jump passes the band a
+perfect becomes luck between two frames. 0.65 is about the last notch
+with a margin for slower phones. To be felt on the phone from the
+practice picks 147, 172, 197.
+
+John asked whether a mainstream phone would keep up with his (an iPhone
+16, ProMotion 120 Hz). A scratch probe (`probe-framerate.cjs`: a practice
+round at 172, 180 frames sampled per CPU throttle) answered: the game
+held every frame of headless Chrome's 120 Hz at 1x, 6x and 10x CPU
+throttle (8.3 ms frames, 1.28vw jumps); only at 20x did frames drop (p95
+16.7 ms, worst 58 ms = a 7.7vw jump). So the processor is not the limit
+on any phone made this decade; the display's refresh rate is. A 60 Hz
+phone jumps 2.56vw a frame at the floor, still inside the 3.2vw band, so
+every pass offers at least one perfect frame; the band would be skipped
+only under about 0.52 s at 60 Hz, or if a phone fell to 30 fps. Verdict:
+0.65 is fine for mainstream phones; John's sees the slab twice as
+smoothly, not a different game.
+
+### 9.6 The afternoon: the floor, three tips, the list of tens, CHEAT rounds (2026-10-18)
+
+The floor is in 9.5 (0.65 s, reached at 150; the frame probe).
+
+**Three tips lost their definitions.** John: "one of your milestone text
+blurbs says something like 'on a tiny pumpkin, which is less than...' -
+we really do not need the definition.. just 'tiny pumpkin' for the
+really small (needle) slices, and 'small pumpkin' for the bit larger
+ones." Toothpick, Eye of the Needle and Needle now say "pencil pumpkins"
+/ "a tiny pumpkin" with no "an eighth / a quarter of the starting width
+or less". The three size words stay (small, tiny, pencil): "no i really
+like your use of pencil pumpkin. that is a good milestone!"
+
+**The practice list is 1, 10, 20 ... 200.** John: "lets make it in
+multiples of 10 upto 200. 1, 10, 20, 30, ... 200. Of course the game
+continues past 200, so that would just be the starting level." The
+"..." rows and the four high picks of the morning are gone with it; 21
+rows.
+
+**Practice rounds count, marked CHEAT.** John: "i want to include the
+cheat scores in the high scores list and celebrations, but with a
+**CHEAT** after the level name." So a round from any level is reported,
+can be the best (the corner, the gold balloon) or top five (green), and
+gets the fanfare and fireworks like any other. The mark: the app's list
+gets "**CHEAT**" as the second note after the level's name, and the
+app's list now renders the text marks in notes, so it shows bold ("1. 51
+(10-18-2026) Space Needle **CHEAT**"). The end title showed " CHEAT" at
+half size in green for an hour; John: "do not have the CHEAT shown in
+the end game title... just a regular display is fine."
+The panel's text (John's words, the 1 in bold): "Start the game at
+this level. / but levels above **1** / will be marked as CHEAT in high
+scores." Why the shell side is one
+line: the notes column already existed and the marks already existed;
+only `fillScores` had to use `appendMarkedText` for a note.
+
+A detail seen in the check: a practice round beats the corner's best
+the normal way, so a first visit's practice from 50 ends in a gold NEW
+HIGH SCORE at 51 (the corner's best was 1, the base). That is the rule
+John asked for, and the list says CHEAT beside it.

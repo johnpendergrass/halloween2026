@@ -10,7 +10,7 @@
     <title>Stack o' Lantern</title>
     <!-- Shown inside the app's game panel (an iframe), but also works on its
      own: open games/stack-o-lantern/index.html directly to test it. -->
-    <link rel="stylesheet" href="./stack-o-lantern.css?v=2026-1018-diagonal" />
+    <link rel="stylesheet" href="./stack-o-lantern.css?v=2026-1018-cheat" />
   </head>
 
   <body>
@@ -100,15 +100,16 @@
            the end screen, where the base is scrolled or covered. -->
       <button class="level-badge text-small" id="levelBadge" type="button" hidden>Level 1</button>
 
-      <!-- The practice panel: pick where the next round starts. A round
-           started above level 1 is practice and is not scored. -->
+      <!-- The practice panel: pick where the next round starts (1, 10, 20
+           ... 200). A round started above level 1 counts, marked CHEAT
+           in the app's list (John, 2026-10-18). -->
       <div class="overlay practice-panel" id="practicePanel" hidden>
         <div class="practice-box">
           <p class="title text-medium text-on-art">Practice start</p>
           <p class="text-small text-on-art">
-            Start the next game at this level.<br />
-            For practice only.<br />
-            <span class="practice-fine">No scores are recorded above level 1.</span>
+            Start the game at this level.<br />
+            but levels above <b class="practice-one">1</b><br />
+            <span class="practice-fine">will be marked as CHEAT in high scores.</span>
           </p>
           <!-- The picker on the left, Reset to 1 on the right. -->
           <div class="practice-row">
@@ -157,8 +158,8 @@
 
     <!-- The helper comes first: it gives the game Halloween.reportScore(),
          which hands the score to the app (see games/game-helper.js). -->
-    <script src="../game-helper.js?v=2026-1018-diagonal"></script>
-    <script src="./sound.js?v=2026-1018-diagonal"></script>
-    <script src="./stack-o-lantern.js?v=2026-1018-diagonal"></script>
+    <script src="../game-helper.js?v=2026-1018-cheat"></script>
+    <script src="./sound.js?v=2026-1018-cheat"></script>
+    <script src="./stack-o-lantern.js?v=2026-1018-cheat"></script>
   </body>
 </html>
