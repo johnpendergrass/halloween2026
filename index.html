@@ -34,7 +34,7 @@
 
     <!-- The ?v= tag forces phones to fetch fresh code after a publish.
      Change it (and APP_VERSION in app.js) whenever the code changes. -->
-    <link rel="stylesheet" href="./app/styles.css?v=2026-1017-stack-practice" />
+    <link rel="stylesheet" href="./app/styles.css?v=2026-1018-diagonal" />
   </head>
 
   <body>
@@ -83,13 +83,14 @@
           <div class="drawer-content" id="drawerContent">
             <div class="drawer-tabs">
               <button class="is-active" data-tab="app">GAMES</button>
+              <!-- app.js renames this tab for the game as soon as one loads. -->
               <button data-tab="game">THIS GAME</button>
             </div>
 
             <!-- GAMES tab: app.js fills in one icon button per game in games.json:
-             a board of two rows by four fixed cells; a game sits in the cell
-             its goes_in_slot names (1-4 upper row, 5-8 lower row). The game
-             in slot 1 is the one shown when the app starts. -->
+             a board of three fixed cells on a diagonal; a game sits in the
+             cell its goes_in_slot names (1 upper left, 2 middle, 3 lower
+             right). The game in slot 1 is the one shown when the app starts. -->
             <div class="drawer-body" id="tab-app">
               <div class="game-buttons" id="gameButtons"></div>
             </div>
@@ -97,9 +98,10 @@
             <!-- THIS GAME tab: app.js fills every part from the current
              game's games.json entry (fillThisGameTab). Empty fields are
              hidden, so a half-filled entry still reads cleanly.
-             Under the icon and name: the game's ten high scores, and,
+             Under the icon and name: the game's five high scores, and,
              only for a game that declared switches in games.json, a
-             second column with up to three of them. -->
+             second column with up to three of them. A game whose entry
+             says "high_scores": false gets neither. -->
             <div class="drawer-body this-game" id="tab-game" hidden>
               <div class="this-game-head">
                 <img class="this-game-icon" id="thisGameIcon" alt="" draggable="false" hidden />
@@ -135,6 +137,6 @@
       </div>
     </div>
 
-    <script src="./app/app.js?v=2026-1017-stack-practice"></script>
+    <script src="./app/app.js?v=2026-1018-diagonal"></script>
   </body>
 </html>

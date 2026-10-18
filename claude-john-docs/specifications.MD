@@ -1,6 +1,6 @@
 # Halloween 2026 — Specifications (design decisions)
 
-Last updated: 2026-10-17 17:57 (6o: the choices feature tried and removed; 16:27: 6n: the iPhone double-tap zoom, reportScore's place, Stack's byline; 14:41: 6m: a Settings button on the right of the top bar, Home → GAMES, Settings → THIS GAME; before that 2026-10-16 17:15: 2: no zoom on the shell page; 6f moved to the game's folder; 6i: Stack's switch dropped; before that: 15:34 names, 15:45 one control point, 15:00 tabled games removed)
+Last updated: 2026-10-18 12:14 (6p: three games on a diagonal board, the tab named for the game, the Pumpkin Patch's tab, no switches, an *italic* mark; before that 2026-10-17 17:57: 6o: the choices feature tried and removed; 16:27: 6n: the iPhone double-tap zoom, reportScore's place, Stack's byline; 14:41: 6m: a Settings button on the right of the top bar, Home → GAMES, Settings → THIS GAME; before that 2026-10-16 17:15: 2: no zoom on the shell page; 6f moved to the game's folder; 6i: Stack's switch dropped; before that: 15:34 names, 15:45 one control point, 15:00 tabled games removed)
 
 This file records WHAT the app looks like and WHY. Technical "how" lives in
 `specifications-technical.MD`. Companion notes in this folder:
@@ -124,7 +124,7 @@ still scrolls). The iframe cannot move the shell by itself.
   its two bottom corners are now clipped by the frame's rounding (a few
   pixels of the game, decoration only; see the rules doc's size table).
 
-## 3a. The GAMES tab: an icon picker with an eight-cell board (John, 2026-09-29)
+## 3a. The GAMES tab: an icon picker with an eight-cell board (John, 2026-09-29) — THREE CELLS ON A DIAGONAL SINCE 2026-10-18, see 6p
 
 - **Layout (v2, evening of 2026-09-29)**: a **board of two rows by four
   fixed cells**, centred in the tab. (Until 2026-10-16 the home game's
@@ -165,7 +165,7 @@ still scrolls). The iframe cannot move the shell by itself.
   folder and names it in games.json. (The picker itself was the app's own
   one-time change; John first read it as designers editing app files.)
 
-## 3b. The THIS GAME tab (2026-09-29)
+## 3b. The THIS GAME tab (2026-09-29; named for the game since 2026-10-18, see 6p)
 
 Filled from the current game's games.json entry every time a game loads:
 icon (same spec/check, in a small orange tile), title, "designer, date",
@@ -669,3 +669,46 @@ clicks on it the popup comes up"), and the shell went back to how it
 was: two helper calls, switches that games cannot read, no choices. The
 rule stands, and now has a precedent: a setting that changes how a game
 plays belongs in the game's page.
+
+## 6p. Three games on a diagonal, the tab named for the game, the patch's tab (John, 2026-10-18)
+
+**The board.** "lets reduce the number of games offered in the GAMES tab
+to just three. The three that are there right now. First should be
+Patch, 2nd Stack o Lantern, and 3rd Go Fish. put the icons in a diagonal
+row - but that row is bounded by the middle half of the vertical space."
+So the two-by-four board of 3a is history: the board is THREE fixed
+cells on a diagonal, slot 1 upper left, slot 2 in the middle, slot 3
+lower right, inside the middle half of the tab's height (a quarter of
+air above, a quarter below; the first cell flush with the band's top,
+the last with its bottom). The outer cells keep the 9.5cqw of side air
+the old board had. Claude's choices, open to change: the diagonal runs
+down to the right, and on a phone it is shallow (each button steps down
+about 30 px while being about 69 px tall). `goes_in_slot` is 1..3 now;
+Candy Go Fish moved from slot 8 to 3; game3..game7 are benched with an
+empty slot but keep their folders (6h still holds: a neutral folder to
+copy).
+
+**The tab.** "lets change the name of the THIS GAME tab to the actual
+game name." The drawer's second tab reads the game's name in capitals
+(PATCH, STACK O' LANTERN), plain like GAMES beside it. A long name does
+not fit half the bar ("GO FISH! - CANDY E..."), so a name with an
+`__accent__` gives the tab its accented part only: GO FISH!. John: "lets
+just leave it at GO FISH!".
+
+**The Pumpkin Patch.** Its "Slow / Fast" switch never did anything (no
+game can read its switches, 6i); John first had the silhouettes paced up
+instead (rise 1-3 s, wait 1-2, hidden 2-6; was 2-4, 1-4, 4-12), then
+"lets remove the fast/slow switch in the tab". No game declares a switch
+now; the switch column is kept as a feature. Then the tab itself: "clear
+the high scores for this game. move the general text up" → a new
+optional games.json field, `"high_scores": false`, hides the whole
+scores-and-switches block for a game that never reports a score; and the
+words: "How to Play // Nothing to do here. // Just sit back and watch."
+then the credits "jp/claude/chatty 10/2025" (no byline next to the icon:
+designer and date blank), centred, a blank line under the heading. Its
+own README says the switch went.
+
+**An italic mark.** For Stack's tab line "Milestones do not affect the
+score. / They are bragging rights only." in italics: `*italic*` joined
+the marks of 6i (`**bold**` is tried first, so the longer mark wins). A
+mark cannot span a `\n`: one mark per line.

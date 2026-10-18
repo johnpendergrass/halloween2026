@@ -1,0 +1,27 @@
+Halloween 2026 - project status (the glance; the SHELL's details in claude-john-docs/, each game's in its own folder)
+
+2026 1018 1214  PUSHED by Claude at John's request. SHELL: the GAMES tab is THREE cells on a diagonal (Patch 1,
+              Stack 2, Go Fish 3; game3..7 benched, folders kept), inside the middle half of the tab; the second
+              tab is named for the game (PATCH / STACK O' LANTERN / GO FISH!); games.json "high_scores": false
+              hides the scores block (the Pumpkin Patch: three centred lines + credits, no byline, no switch, a
+              brisker patch); an *italic* mark; stamp 2026-1018-diagonal. STACK: Rainier 85 + Denali 95 (Chrysler,
+              Big Ben out), big rungs 50/100/200 with fireworks, practice level per visit, picks 122..197.
+2026 1017 1757  PUSHED. SHELL: unchanged (a choices drop-down built and removed within the hour); stamp
+              2026-1017-stack-practice. STACK: the ramp as seconds per crossing, a practice level, Stack again goes
+              to the welcome screen, back and forth.
+2026 1017 1627  PUSHED. SHELL: the iPhone DOUBLE-TAP ZOOM fixed (touchend guard); reportScore returns the place.
+              STACK: the end screen celebrates by tier.
+2026 1017 1441  PUSHED. SHELL: a Settings button; Stack's credits line. STACK: sound, the base is pumpkin 1.
+2026 1016 pm   GO FISH! - Candy Edition RELEASABLE (John).   2026 1016 1534 SHELL: one control point.
+2026 1007-14   John + Codex built Go Fish, slot 8 (slot 3 since 1018).   2026 0927-1001 Claude built the shell.
+
+NOT YET
+ - John's phone check from Pages once it serves 2026-1018-diagonal: the board, the tab names, the patch's tab,
+   the big rungs' loudness and rockets
+ - Stack: DIFFICULTY AT HEIGHT (only the speed ramps, and it floors about 121): the tolerance table is the
+   suggestion; John: "we will try something"
+ - shell: check-shell.cjs (the board, the tab name, high_scores, the top-bar states); the switch column
+   (no game declares one now: keep or drop); requirements doc says slots 1..8 in places; contribution workflow
+
+DETAIL  claude-john-docs/Claude-ToBe-Continued-2026-1018-1214.MD (spec 6p, technical 4p)
+        games/stack-o-lantern/_documents/claude-john-docs/ (same minute; spec 9, technical 11); games/candy-go-fish/_documents/

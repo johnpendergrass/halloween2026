@@ -1,6 +1,6 @@
 # Stack o' Lantern - the milestones and heights
 
-The game's complete list as of 2026-10-17, in the order the script holds
+The game's complete list as of 2026-10-18 (Chrysler and Big Ben out, Rainier and Denali in), in the order the script holds
 them. This is a READING copy: the words that run are in the `MILESTONES`
 table near the top of `stack-o-lantern.js`. To change a milestone, change
 it there (and here, so the two keep matching).
@@ -31,6 +31,13 @@ commonest milestone is 0 and the rarest 23 (nearly two octaves up), spread
 evenly by rank. Only the HEIGHT family rings for now, so the ding climbs as
 the tower does; the others keep a pitch in case.
 
+Three rungs are BIG (John, 2026-10-18): **Space Needle (50), Everest (100)
+and Moon Landing (200)**. Their banner rings a longer, louder arpeggio
+(the chord, then the octave held for most of a second), and fireworks go
+up from behind the moon in the middle of the round, each with its pop:
+**two at 50, eight at 100 and eight at 200** (the script's `fireworks` field on
+those three entries). Play is not stopped; a miss cuts the rockets.
+
 ## The counters
 
 | Counter | What it counts | Reset by |
@@ -56,7 +63,7 @@ Every five pumpkins to 100 (buildings in their real height order, then
 the mountains, Everest at 100), the sky at 125 / 150 / 175, the Moon at
 200. The end title is 9vw capitals on ONE line: measured in the page,
 anything wider than SHANGHAI TOWER wraps. A title shortened to fit
-(Liberty, Chrysler, Everest, Hubble...) carries its full name in the
+(Liberty, Rainier, Everest, Hubble...) carries its full name in the
 line, and most lines mention the pumpkin tower.
 
 | Rank | Pumpkins | Name | Banner | Line under the count | Hint | Sound | Pitch |
@@ -66,16 +73,16 @@ line, and most lines mention the pumpkin tower.
 | 3 | 150 | Space Station | 150 pumpkins high | The International Space Station just drifted past. The astronauts waved at the pumpkins. | a hundred and fifty pumpkins high | yes | 21 |
 | 4 | 125 | Stratosphere | 125 pumpkins high | Airliners cruise far below your pumpkins now. The captain has turned on the seatbelt sign. | a hundred and twenty-five pumpkins high | yes | 20 |
 | 5 | 100 | Everest | 100 pumpkins high | Mount Everest, top of the world. The Sherpas would like a word about carrying pumpkins. | a hundred pumpkins high | yes | 19 |
-| 6 | 95 | Kilimanjaro | 95 pumpkins high | Mount Kilimanjaro, the roof of Africa. Hemingway would have written a short, sad book about your pumpkins. | ninety-five pumpkins high | yes | 18 |
-| 7 | 90 | Fuji | 90 pumpkins high | Mount Fuji has a snowy cap and a thousand paintings. Your peak is orange and wobbling. | ninety pumpkins high | yes | 17 |
-| 8 | 85 | Vesuvius | 85 pumpkins high | Mount Vesuvius buried Pompeii. Your pumpkin tower buried the skyline. | eighty-five pumpkins high | yes | 16 |
-| 9 | 80 | Burj Khalifa | 80 pumpkins high | Dubai called. They want their skyline back. | eighty pumpkins high | yes | 15 |
-| 10 | 75 | Shanghai Tower | 75 pumpkins high | Tourists on the top floor are staring at a pumpkin. | seventy-five pumpkins high | yes | 14 |
-| 11 | 70 | Empire State | 70 pumpkins high | King Kong wants to climb your pumpkins. Tell him the Empire State Building is around the corner. | seventy pumpkins high | yes | 13 |
-| 12 | 65 | Eiffel Tower | 65 pumpkins high | Paris looked at your pumpkins and shrugged. For Paris, that is a standing ovation. | sixty-five pumpkins high | yes | 12 |
-| 13 | 60 | Chrysler | 60 pumpkins high | The Chrysler Building: steel eagles, a chrome crown, and still shorter than a pile of gourds. | sixty pumpkins high | yes | 11 |
-| 14 | 55 | Space Needle | 55 pumpkins high | Seattle's saucer on a stick, out-stacked by squash. Rain expected anyway. | fifty-five pumpkins high | yes | 10 |
-| 15 | 50 | Big Ben | 50 pumpkins high | The clock stopped to count your pumpkins. London will be late for everything. | fifty pumpkins high | yes | 9 |
+| 6 | 95 | Denali | 95 pumpkins high | Denali, the Great One, roof of North America. The grizzlies have never seen a pumpkin this high up. | ninety-five pumpkins high | yes | 18 |
+| 7 | 90 | Kilimanjaro | 90 pumpkins high | Mount Kilimanjaro, the roof of Africa. Hemingway would have written a short, sad book about your pumpkins. | ninety pumpkins high | yes | 17 |
+| 8 | 85 | Rainier | 85 pumpkins high | Mount Rainier is out. Seattle stops to look, as it always does, and then notices the pumpkins. | eighty-five pumpkins high | yes | 16 |
+| 9 | 80 | Fuji | 80 pumpkins high | Mount Fuji has a snowy cap and a thousand paintings. Your peak is orange and wobbling. | eighty pumpkins high | yes | 15 |
+| 10 | 75 | Vesuvius | 75 pumpkins high | Mount Vesuvius buried Pompeii. Your pumpkin tower buried the skyline. | seventy-five pumpkins high | yes | 14 |
+| 11 | 70 | Burj Khalifa | 70 pumpkins high | Dubai called. They want their skyline back. | seventy pumpkins high | yes | 13 |
+| 12 | 65 | Shanghai Tower | 65 pumpkins high | Tourists on the top floor are staring at a pumpkin. | sixty-five pumpkins high | yes | 12 |
+| 13 | 60 | Empire State | 60 pumpkins high | King Kong wants to climb your pumpkins. Tell him the Empire State Building is around the corner. | sixty pumpkins high | yes | 11 |
+| 14 | 55 | Eiffel Tower | 55 pumpkins high | Paris looked at your pumpkins and shrugged. For Paris, that is a standing ovation. | fifty-five pumpkins high | yes | 10 |
+| 15 | 50 | Space Needle | 50 pumpkins high | Seattle's saucer on a stick, out-stacked by squash. Rain expected anyway. | fifty pumpkins high | yes | 9 |
 | 16 | 45 | Liberty | 45 pumpkins high | The Statue of Liberty, torch up, eyes on your tower. She has seen a lot. Never a pumpkin stack. | forty-five pumpkins high | yes | 8 |
 | 17 | 40 | Sequoia | 40 pumpkins high | Three thousand years to grow one of these. Your pumpkin pile took a coffee break. | forty pumpkins high | yes | 7 |
 | 18 | 35 | Notre Dame | 35 pumpkins high | The gargoyles are worried. The hunchback is impressed. | thirty-five pumpkins high | yes | 6 |

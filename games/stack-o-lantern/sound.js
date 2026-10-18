@@ -233,6 +233,26 @@ const SOUNDS = {
     tone(context, { from: fifth * 2, volume: 0.10, length: 0.15, delay: 0.24 });   // a bright edge on the last note
   },
 
+  // A BIG rung (50, 100, 200; John, 2026-10-18: "like the height sound,
+  // but maybe a bit longer and louder"): the same climbing chord at the
+  // rung's pitch, a touch louder, then the octave on top held for most
+  // of a second with the chord ringing under it. About 1.1 s in all,
+  // against the ordinary rung's 0.65 s. The fireworks pop beside it.
+  bigMilestone: (context, pitch = 0) => {
+    const root = 659 * 2 ** (pitch / 12);
+    const third = root * 1.26;
+    const fifth = root * 1.5;
+    const octave = root * 2;
+    tone(context, { from: root,   volume: 0.38, length: 0.12, delay: 0.10 });
+    tone(context, { from: third,  volume: 0.38, length: 0.12, delay: 0.17 });
+    tone(context, { from: fifth,  volume: 0.40, length: 0.14, delay: 0.24 });
+    tone(context, { from: octave, volume: 0.42, length: 0.85, delay: 0.33 });   // the held top note
+    tone(context, { wave: "triangle", from: octave, volume: 0.10, length: 0.60, delay: 0.33 });
+    tone(context, { from: fifth,  volume: 0.18, length: 0.85, delay: 0.33 });   // the chord under it
+    tone(context, { from: root,   volume: 0.14, length: 0.85, delay: 0.33 });
+    tone(context, { from: octave * 2, volume: 0.08, length: 0.30, delay: 0.33 });   // a shimmer on top
+  },
+
   // TIMBER: the classic two falling notes, "dee-dup" (John, 2026-10-17;
   // the first try, a crack and a thud, "does not register well"). The
   // first note sits below the duller tink, the second an octave below

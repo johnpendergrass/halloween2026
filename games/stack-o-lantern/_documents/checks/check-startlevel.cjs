@@ -34,7 +34,8 @@ const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary
     const look = () => page.evaluate(() => ({
       phase: state.phase, badge: document.getElementById('levelBadge').textContent, badgeShown: !document.getElementById('levelBadge').hidden,
       panelShown: !document.getElementById('practicePanel').hidden, startShown: !document.getElementById('startScreen').hidden,
-      saved: localStorage.getItem('halloween2026:stack-o-lantern:start-level'),
+      saved: localStorage.getItem('halloween2026:stack-o-lantern:start-level'),   // always null since 2026-10-18
+      chosen: chosenStartLevel,
     }));
 
     // 1.
@@ -46,6 +47,8 @@ const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary
     await page.waitForTimeout(200);
     out.opened = await look();
     out.options = await page.evaluate(() => document.getElementById('practiceLevel').options.length);
+    out.lastOptions = await page.evaluate(() => [...document.getElementById('practiceLevel').options].slice(-4).map(o => o.value).join());
+    out.gapRows = await page.evaluate(() => [100, 102, 104, 106].map(i => { const o = document.getElementById('practiceLevel').options[i]; return o.textContent + (o.disabled ? '-' : '+'); }).join());
     await page.screenshot({ path: path.join(__dirname, 'startlevel-panel.png') });
     await page.evaluate(() => { document.getElementById('practiceLevel').value = '50'; document.getElementById('practiceDone').click(); });
     out.picked = await look();
@@ -92,15 +95,23 @@ const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary
       gameOver(); await new Promise(r => setTimeout(r, END_DELAY_MS + 300));
     });
     out.realEnd = await page.evaluate(() => ({ startLevel: state.startLevel, reported: window.__reported.slice() }));
+
+    // 6. a relaunch forgets the pick (2026-10-18): set 50, reload, the badge is Level 1 again.
+    await page.evaluate(() => { document.getElementById('playAgain').click(); });
+    await page.waitForTimeout(200);
+    await page.evaluate(() => { document.getElementById('levelBadge').click(); document.getElementById('practiceLevel').value = '50'; document.getElementById('practiceDone').click(); });
+    await page.reload(); await page.waitForTimeout(400);
+    out.relaunched = await look();
     out.errors = errors;
   } finally {
     await browser.close();
   }
   console.log(JSON.stringify(out, null, 1));
   const ok = out.fresh.badge === 'Level 1' && out.fresh.badgeShown && !out.fresh.panelShown && out.fresh.phase === 'ready'
-    && out.opened.phase === 'ready' && out.opened.panelShown && out.options === 100
-    && out.picked.badge === 'Level 50' && !out.picked.panelShown && out.picked.saved === '50'
-    && out.cancelled.badge === 'Level 50' && !out.cancelled.panelShown && out.cancelled.saved === '50'
+    && out.opened.phase === 'ready' && out.opened.panelShown && out.options === 108 && out.lastOptions === ',172,,197' && out.gapRows === '...-,...-,...-,...-'
+    && out.picked.badge === 'Level 50' && !out.picked.panelShown && out.picked.saved === null && out.picked.chosen === 50
+    && out.cancelled.badge === 'Level 50' && !out.cancelled.panelShown && out.cancelled.chosen === 50
+    && out.relaunched.badge === 'Level 1' && out.relaunched.chosen === 1
     && out.practice.phase === 'playing' && !out.practice.badgeShown && out.practice.startLevel === 50 && out.practice.count === 50
     && out.practice.speed === out.practice.expectedSpeed && out.practice.preEarned === '50,45,40,35,30,25,20,15,10,5'
     && out.afterDrop.count === 51 && out.afterDrop.pop === '51' && out.afterDrop.banner === ''

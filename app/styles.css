@@ -284,11 +284,21 @@ body {
   border-bottom: 1px solid #ffffff33;
 }
 
+/* The two tabs share the width. The second one carries the game's name
+   (since 2026-10-18), so it is uppercased to match GAMES and a name too
+   long for half the bar is cut with an ellipsis rather than wrapping or
+   pushing GAMES aside. */
 .drawer-tabs button {
   flex: 1;
+  min-width: 0;                  /* lets the ellipsis happen instead of growing */
   min-height: 44px;
+  padding: 0 2cqw;
   font-weight: 700;
   font-size: clamp(13px, 4.2cqw, 22px);
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   opacity: 0.55;
 }
 
@@ -309,24 +319,21 @@ body {
   margin-left: 5cqw;
 }
 
-/* The game picker: square icon-only buttons on the board, a space exactly
-   two button rows tall (the home game's lone button above it went with the
-   "home" slot on 2026-10-16). app.js fills it with an upper row (slots 1..4) and a
-   lower row (slots 5..8). Each row is a grid of four fixed cells and every
-   button is placed in the cell its slot names, so empty cells stay empty
-   and a game never moves when another is added. When only one row has
-   games, the board centres that row vertically.
-   Sizes are in cqw so the board scales with the frame. Four buttons plus
-   three gaps are 81cqw wide, leaving about 9cqw of breathing room each
-   side. On a phone a button is about 70 px: well over the 44 px fingertip
-   minimum. Two rows plus gaps fit inside the open drawer with room to
-   spare, so the board is centred in the tab's height. */
+/* The game picker: three square icon-only buttons on a diagonal, slot 1
+   upper left, slot 2 in the middle, slot 3 lower right (John, 2026-10-18;
+   two rows of four cells from 2026-09-29 until then). The board is the
+   MIDDLE HALF of the tab's height: it starts a quarter of the way down and
+   ends a quarter from the bottom. The first cell is flush with the board's
+   top, the last flush with its bottom, the middle one centred; sideways
+   the outer cells keep 9.5cqw of air from the edges, the breathing room
+   the old four-wide board had, and the middle one is centred.
+   app.js gives each button the class cell-<slot>; a cell nobody claimed is
+   simply empty, so a game never moves when another is added.
+   Sizes are in cqw so the board scales with the frame. On a phone a
+   button is about 70 px: well over the 44 px fingertip minimum. */
 .game-buttons {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100%;
+  position: relative;            /* the board is placed inside it */
+  min-height: 100%;              /* the tab's full height, so 25% and 50% below mean something */
   --game-button-size: 18cqw;
 }
 
@@ -341,21 +348,20 @@ body {
 }
 
 .game-board {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;       /* a lone row sits in the middle */
-  gap: 3cqw;
-  height: calc(2 * var(--game-button-size) + 3cqw);
+  position: absolute;
+  top: 25%;
+  height: 50%;
+  min-height: var(--game-button-size);   /* a very short tab never squashes a button */
+  left: 0;
+  right: 0;
 }
 
-/* One row of the board: four cells, always the same width, so the row is
-   81cqw wide even when three cells are empty. app.js sets each button's
-   grid-column. */
-.board-row {
-  display: grid;
-  grid-template-columns: repeat(4, var(--game-button-size));
-  gap: 3cqw;
-}
+/* The three cells. `translate` (not `transform`) centres the middle one,
+   so the pressed-in look's transform below still works on it. */
+.game-board .game-button { position: absolute; }
+.game-board .cell-1 { top: 0;     left: 9.5cqw; }
+.game-board .cell-2 { top: 50%;   left: 50%;  translate: -50% -50%; }
+.game-board .cell-3 { bottom: 0;  right: 9.5cqw; }
 
 .game-button {
   width: var(--game-button-size);
@@ -758,6 +764,18 @@ body {
   border-left-color: #e8741c;
   text-align: center;
   font-style: italic;
+}
+
+/* The Pumpkin Patch (John, 2026-10-18): three centred lines and nothing
+   else (no scores block, no byline). The heading keeps a blank line's
+   worth of space (the body's line height) under it before the two lines
+   of text. */
+.look-pumpkin-patch {
+  text-align: center;
+}
+
+.look-pumpkin-patch .this-game-heading {
+  margin-bottom: 1.6em;
 }
 
 /* ------------------------------------------------------------------------

@@ -86,15 +86,19 @@ const RAMP = [                  // seconds taken off the crossing per pumpkin, b
 const MILESTONES = [
   // HEIGHT: one per band, every five pumpkins to 100 (buildings in real
   // height order, then the mountains, Everest at 100), the sky at 125 /
-  // 150 / 175 and the Moon at 200 (John, 2026-10-17). The line puns on
+  // 150 / 175 and the Moon at 200 (John, 2026-10-17; Chrysler and Big Ben
+  // out, Rainier and Denali in, 2026-10-18). The line puns on
   // the title without repeating it, EXCEPT that a title shortened to fit
-  // the 9vw one-line frame (Liberty, Chrysler, Everest, Hubble...)
+  // the 9vw one-line frame (Liberty, Rainier, Everest, Hubble...)
   // carries its full name in the line; and most lines mention the
   // pumpkin tower. Widest title that fits: SHANGHAI TOWER.
+  // A rung with `fireworks: N` is a BIG one (John, 2026-10-18: 50, 100
+  // and 200): its banner rings the longer, louder arpeggio and N rockets
+  // go up from behind the moon, mid-round (see startRungFireworks).
   { family: "height", kind: "height", at: 200, name: "Moon Landing", what: "200 pumpkins high",
     line: "Houston, we have a tower. Please come down now.",
     hint: "two hundred pumpkins high",
-    sound: true, pitch: 23 },
+    sound: true, pitch: 23, fireworks: 8 },
   { family: "height", kind: "height", at: 175, name: "Hubble", what: "175 pumpkins high",
     line: "The Hubble Space Telescope turned around to get a better look at a stack of pumpkins.",
     hint: "a hundred and seventy-five pumpkins high",
@@ -110,47 +114,47 @@ const MILESTONES = [
   { family: "height", kind: "height", at: 100, name: "Everest", what: "100 pumpkins high",
     line: "Mount Everest, top of the world. The Sherpas would like a word about carrying pumpkins.",
     hint: "a hundred pumpkins high",
-    sound: true, pitch: 19 },
-  { family: "height", kind: "height", at: 95, name: "Kilimanjaro", what: "95 pumpkins high",
-    line: "Mount Kilimanjaro, the roof of Africa. Hemingway would have written a short, sad book about your pumpkins.",
+    sound: true, pitch: 19, fireworks: 8 },
+  { family: "height", kind: "height", at: 95, name: "Denali", what: "95 pumpkins high",
+    line: "Denali, the Great One, roof of North America. The grizzlies have never seen a pumpkin this high up.",
     hint: "ninety-five pumpkins high",
     sound: true, pitch: 18 },
-  { family: "height", kind: "height", at: 90, name: "Fuji", what: "90 pumpkins high",
-    line: "Mount Fuji has a snowy cap and a thousand paintings. Your peak is orange and wobbling.",
+  { family: "height", kind: "height", at: 90, name: "Kilimanjaro", what: "90 pumpkins high",
+    line: "Mount Kilimanjaro, the roof of Africa. Hemingway would have written a short, sad book about your pumpkins.",
     hint: "ninety pumpkins high",
     sound: true, pitch: 17 },
-  { family: "height", kind: "height", at: 85, name: "Vesuvius", what: "85 pumpkins high",
-    line: "Mount Vesuvius buried Pompeii. Your pumpkin tower buried the skyline.",
+  { family: "height", kind: "height", at: 85, name: "Rainier", what: "85 pumpkins high",
+    line: "Mount Rainier is out. Seattle stops to look, as it always does, and then notices the pumpkins.",
     hint: "eighty-five pumpkins high",
     sound: true, pitch: 16 },
-  { family: "height", kind: "height", at: 80, name: "Burj Khalifa", what: "80 pumpkins high",
-    line: "Dubai called. They want their skyline back.",
+  { family: "height", kind: "height", at: 80, name: "Fuji", what: "80 pumpkins high",
+    line: "Mount Fuji has a snowy cap and a thousand paintings. Your peak is orange and wobbling.",
     hint: "eighty pumpkins high",
     sound: true, pitch: 15 },
-  { family: "height", kind: "height", at: 75, name: "Shanghai Tower", what: "75 pumpkins high",
-    line: "Tourists on the top floor are staring at a pumpkin.",
+  { family: "height", kind: "height", at: 75, name: "Vesuvius", what: "75 pumpkins high",
+    line: "Mount Vesuvius buried Pompeii. Your pumpkin tower buried the skyline.",
     hint: "seventy-five pumpkins high",
     sound: true, pitch: 14 },
-  { family: "height", kind: "height", at: 70, name: "Empire State", what: "70 pumpkins high",
-    line: "King Kong wants to climb your pumpkins. Tell him the Empire State Building is around the corner.",
+  { family: "height", kind: "height", at: 70, name: "Burj Khalifa", what: "70 pumpkins high",
+    line: "Dubai called. They want their skyline back.",
     hint: "seventy pumpkins high",
     sound: true, pitch: 13 },
-  { family: "height", kind: "height", at: 65, name: "Eiffel Tower", what: "65 pumpkins high",
-    line: "Paris looked at your pumpkins and shrugged. For Paris, that is a standing ovation.",
+  { family: "height", kind: "height", at: 65, name: "Shanghai Tower", what: "65 pumpkins high",
+    line: "Tourists on the top floor are staring at a pumpkin.",
     hint: "sixty-five pumpkins high",
     sound: true, pitch: 12 },
-  { family: "height", kind: "height", at: 60, name: "Chrysler", what: "60 pumpkins high",
-    line: "The Chrysler Building: steel eagles, a chrome crown, and still shorter than a pile of gourds.",
+  { family: "height", kind: "height", at: 60, name: "Empire State", what: "60 pumpkins high",
+    line: "King Kong wants to climb your pumpkins. Tell him the Empire State Building is around the corner.",
     hint: "sixty pumpkins high",
     sound: true, pitch: 11 },
-  { family: "height", kind: "height", at: 55, name: "Space Needle", what: "55 pumpkins high",
-    line: "Seattle's saucer on a stick, out-stacked by squash. Rain expected anyway.",
+  { family: "height", kind: "height", at: 55, name: "Eiffel Tower", what: "55 pumpkins high",
+    line: "Paris looked at your pumpkins and shrugged. For Paris, that is a standing ovation.",
     hint: "fifty-five pumpkins high",
     sound: true, pitch: 10 },
-  { family: "height", kind: "height", at: 50, name: "Big Ben", what: "50 pumpkins high",
-    line: "The clock stopped to count your pumpkins. London will be late for everything.",
+  { family: "height", kind: "height", at: 50, name: "Space Needle", what: "50 pumpkins high",
+    line: "Seattle's saucer on a stick, out-stacked by squash. Rain expected anyway.",
     hint: "fifty pumpkins high",
-    sound: true, pitch: 9 },
+    sound: true, pitch: 9, fireworks: 2 },
   { family: "height", kind: "height", at: 45, name: "Liberty", what: "45 pumpkins high",
     line: "The Statue of Liberty, torch up, eyes on your tower. She has seen a lot. Never a pumpkin stack.",
     hint: "forty-five pumpkins high",
@@ -590,7 +594,8 @@ function celebrateNext() {
   const entry = state.toCelebrate.shift();
   if (!entry) { state.celebrating = false; return; }
   state.celebrating = true;
-  if (entry.sound) playSound("milestone", entry.pitch);
+  if (entry.sound) playSound(entry.fireworks ? "bigMilestone" : "milestone", entry.pitch);
+  if (entry.fireworks) startRungFireworks(entry.fireworks);
   milestoneName.textContent = entry.name;
   fillMarked(milestoneWhat, entry.what);
   milestone.hidden = false;
@@ -1102,24 +1107,33 @@ function start() {
    rungs below the level are marked earned without a banner (so the end
    title is right and the first drop does not ring them all), and the
    round is not reported (gameOver) nor counted as a best (updateLabels).
-   The pick is kept on the device under the game's own key (rule 21 of
-   the requirements: "halloween2026:<folder>:..."), wrapped in try/catch
-   because some browsers refuse storage. It first lived as a drop-down in
-   the shell's THIS GAME tab, for an hour; John moved it here. */
+   The pick lasts for the visit only: every launch of the game starts at
+   level 1 (John, 2026-10-18: "it retains the level the cheat was set
+   to... it should go back to the default of 1"; until then it was kept
+   on the device under the game's own key). It first lived as a drop-down
+   in the shell's THIS GAME tab, for an hour; John moved it here. */
 
-const PRACTICE_KEY = "halloween2026:stack-o-lantern:start-level";
+// The levels the panel offers: every level to 100, then four high ones a
+// few drops short of the sky rungs (125, 150, 175, 200), so those can be
+// seen without a tower of a hundred first (John, 2026-10-18).
 const PRACTICE_TOP = 100;
+const PRACTICE_HIGH = [122, 147, 172, 197];
+const PRACTICE_LEVELS = [...Array.from({ length: PRACTICE_TOP }, (_, i) => i + 1), ...PRACTICE_HIGH];
+let chosenStartLevel = 1;        // the panel's pick, for this visit
 
-/** The saved practice level, 1 when there is none or it makes no sense. */
+/** The practice level in force: the pick when it is one the panel
+    offers, else 1. */
 function readStartLevel() {
-  let saved = 1;
-  try { saved = Number(localStorage.getItem(PRACTICE_KEY)); } catch (error) { saved = 1; }
-  return Number.isFinite(saved) ? Math.min(PRACTICE_TOP, Math.max(1, Math.floor(saved))) : 1;
+  return PRACTICE_LEVELS.includes(chosenStartLevel) ? chosenStartLevel : 1;
 }
 
 function saveStartLevel(level) {
-  try { localStorage.setItem(PRACTICE_KEY, String(level)); } catch (error) { /* then it is 1 next visit */ }
+  chosenStartLevel = level;
 }
+
+// Until 2026-10-18 the level was saved on the device under this key;
+// a device that still has it is tidied up once.
+try { localStorage.removeItem("halloween2026:stack-o-lantern:start-level"); } catch (error) { /* no storage, nothing to tidy */ }
 
 /** At the start of a round: take the level and set the tower up for it. */
 function applyStartLevel() {
@@ -1141,11 +1155,20 @@ function showBadge() {
     built once, the first time. */
 function openPractice() {
   if (practiceLevel.options.length === 0) {
-    for (let level = 1; level <= PRACTICE_TOP; level += 1) {
+    for (const level of PRACTICE_LEVELS) {
       const option = document.createElement("option");
       option.value = String(level);
       option.textContent = String(level);
       practiceLevel.appendChild(option);
+      if (level !== PRACTICE_LEVELS[PRACTICE_LEVELS.length - 1] && level >= PRACTICE_TOP) {
+        // A "..." row after 100 and between the high levels, to show the
+        // jumps. It is disabled, so it cannot be picked; OK ignores it anyway.
+        const gap = document.createElement("option");
+        gap.value = "";
+        gap.textContent = "...";
+        gap.disabled = true;
+        practiceLevel.appendChild(gap);
+      }
     }
   }
   practiceLevel.value = String(readStartLevel());
@@ -1162,7 +1185,8 @@ levelBadge.addEventListener("pointerdown", (event) => event.stopPropagation());
 levelBadge.addEventListener("click", openPractice);
 practicePanel.addEventListener("pointerdown", (event) => event.stopPropagation());
 document.getElementById("practiceDone").addEventListener("click", () => {
-  saveStartLevel(Number(practiceLevel.value));
+  const pick = Number(practiceLevel.value);
+  if (PRACTICE_LEVELS.includes(pick)) saveStartLevel(pick);   // the "..." row changes nothing
   showBadge();
   closePractice();
 });
@@ -1187,6 +1211,7 @@ function gameOver() {
   state.toCelebrate = [];
   milestone.hidden = true;
   stage.querySelectorAll(".spark").forEach((spark) => spark.remove());
+  stopFireworks();   // a big rung's rockets too; the end screen has its own show
   moonReacts("is-sad");
   showReaction(word, "is-miss");
 
@@ -1306,6 +1331,23 @@ const FIREWORK_SHOWS = {
 };
 
 let fireworkTimers = [];        // every pending rocket and the trickle, so a tap can stop them
+
+/** A big rung's fireworks, mid-round (John, 2026-10-18: "a moon firework,
+    with maybe two fireworks at 50, four at 100 and six at 200"; then
+    "even longer" at 100, eight, and 200 "the same not more"). The
+    rockets leave the moon one after another, a third of a second apart,
+    and burst around it: a smaller reach than the end screen's, since the
+    tower is in play below. No trickle: play goes on. They share
+    fireworkTimers, so a miss (gameOver) or a new round cuts them. */
+const RUNG_ROCKET_GAP_MS = 330;
+const RUNG_REACH = { left: 60, right: 10, up: 30, down: 30 };
+function startRungFireworks(bursts) {
+  const pick = () => FIREWORK_COLOURS[Math.floor(Math.random() * FIREWORK_COLOURS.length)];
+  for (let i = 0; i < bursts; i += 1) {
+    const at = i * RUNG_ROCKET_GAP_MS + Math.random() * 120;
+    fireworkTimers.push(setTimeout(() => launchRocket(pick(), RUNG_REACH), at));
+  }
+}
 
 /** Start the tier's show; "none" (under 5 pumpkins) has no entry. */
 function startFireworks(tier) {
@@ -1444,6 +1486,6 @@ document.addEventListener("keydown", (event) => {
 // the corner starts over too.
 state.best = Halloween.bestScore();
 reset();
-showBadge();                    // "Level 1" (or the saved practice level) over the base
+showBadge();                    // "Level 1" over the base (a practice level lasts the visit only)
 startHints();                   // the goal line cycles while the start screen waits
 requestAnimationFrame(frame);

@@ -20,7 +20,7 @@
 
 // Bump this (and the ?v= tags in index.html) whenever code changes, so
 // phones fetch fresh copies instead of old cached ones.
-const APP_VERSION = "2026-1017-stack-practice";
+const APP_VERSION = "2026-1018-diagonal";
 
 /* ------------------------------------------------------------------------
    1. Settings and the games list
@@ -45,14 +45,12 @@ const APP_VERSION = "2026-1017-stack-practice";
    --------------------------------------------------------------------- */
 
 const GAMES_FILE = "./games.json";
-// The button board is two rows of four fixed cells. A slot number is a
-// cell: 1..4 across the upper row, 5..8 across the lower row, and a game
-// always sits in its own cell (slot 1 is always top far left). Cells nobody
-// claimed stay empty. The one exception: when only ONE row has games, that
-// row is drawn in the middle of the board's space instead of at the top or
-// bottom of it.
-const LAST_SLOT = 8;
-const SLOTS_PER_ROW = 4;
+// The button board is three fixed cells on a diagonal: slot 1 upper left,
+// slot 2 in the middle, slot 3 lower right (John, 2026-10-18; until then
+// two rows of four). A game always sits in its own cell, so slot 1 is
+// always upper left; a cell nobody claimed stays empty. Where each cell
+// sits is the CSS's business (styles.css, .game-board .cell-N).
+const LAST_SLOT = 3;
 const DEFAULT_ICON = "./app/default-icon.svg";   // only when there is no text either
 
 // The icon spec, in real pixels. Designers are told "256 x 256, square",
@@ -160,7 +158,7 @@ function setTextOrHide(id, text) {
       !! text      a paragraph starting with "!! " is a shaded emphasis line
     The text is built from nodes, never from innerHTML, so a stray "<" in a
     games.json entry is shown as it is. */
-const MARK = /(\*\*.+?\*\*|__.+?__|~~.+?~~|\n)/;
+const MARK = /(\*\*.+?\*\*|\*.+?\*|__.+?__|~~.+?~~|\n)/;   // ** before *: the longer mark wins
 
 function hasParagraphs(text) {
   return Array.isArray(text) ? text.some(Boolean) : Boolean(text);
@@ -169,7 +167,16 @@ function hasParagraphs(text) {
 /** The marks taken out again, for places that want plain words: the
     button's spoken name, the iframe's title, warnings in the console. */
 function plainText(text) {
-  return String(text || "").replace(/\*\*|__|~~/g, "").replace(/\n/g, " ");
+  return String(text || "").replace(/\*\*|\*|__|~~/g, "").replace(/\n/g, " ");
+}
+
+/** The name a small label gets: the first __accent__ of the text if it
+    has one, else all of it, as plain words. "__GO FISH!__ - Candy
+    Edition" gives "GO FISH!", which fits where the whole name would be
+    cut short (the game's tab, since 2026-10-18). */
+function shortName(text) {
+  const accent = String(text || "").match(/__(.+?)__/);
+  return accent ? accent[1] : plainText(text);
 }
 
 /** Append `text` to `parent` with its marks turned into elements. */
@@ -182,6 +189,11 @@ function appendMarkedText(parent, text) {
       const bold = document.createElement("b");
       bold.textContent = piece.slice(2, -2);
       parent.appendChild(bold);
+    } else if (piece.startsWith("*")) {
+      // *italic* (2026-10-18), the same mark Stack's own script uses.
+      const italic = document.createElement("i");
+      italic.textContent = piece.slice(1, -1);
+      parent.appendChild(italic);
     } else if (piece.startsWith("__")) {
       const accent = document.createElement("span");
       accent.className = "accent";
@@ -238,6 +250,10 @@ function fillThisGameTab(game) {
   // hold rules for it (section 5b). A game without such rules looks as usual.
   const tab = document.getElementById("tab-game");
   tab.className = "drawer-body this-game look-" + game.folder_name;
+  // A game that never reports a score (games.json "high_scores": false,
+  // the Pumpkin Patch) gets no High Scores block at all, so its text
+  // moves up (John, 2026-10-18). The switches share that block.
+  document.querySelector(".this-game-panels").hidden = game.high_scores === false;
   fillScores(game);
   fillSwitches(game);
   setMarkedOrHide("thisGameTitle", game.title);
@@ -587,6 +603,7 @@ function fillSwitches(game) {
 
 const gameFrame = document.getElementById("gameFrame");
 const topTitle = document.getElementById("topTitle");
+const gameTab = document.querySelector('[data-tab="game"]');   // the second tab's label
 
 /** Show a game's page in the game panel and put its name in the top panel.
     Changing the iframe's src throws the old game away completely. */
@@ -602,6 +619,12 @@ function loadGame(game) {
   topTitle.className = "top-title look-" + game.folder_name;
   topTitle.replaceChildren();
   appendMarkedText(topTitle, game.short_title || game.title);
+  // The second tab is named for the game too (John, 2026-10-18; it said
+  // THIS GAME before): plain words, since GAMES beside it is plain, and
+  // only the accented part of a long name (shortName), since the tab is
+  // half the bar. The CSS makes it uppercase and cuts anything still too
+  // long with an ellipsis.
+  gameTab.textContent = shortName(game.short_title || game.title);
   fillThisGameTab(game);
   markCurrentButton(game);
 }
@@ -702,30 +725,19 @@ function makeIconButton(game) {
   return button;
 }
 
-/** The GAMES tab: the board, an upper row for slots 1..4 and a lower row
-    for slots 5..8. Each row is
-    a four-column CSS grid, and every button is told which column is its
-    cell, so slot 1 is always far left and slot 4 always far right, however
-    many games there are. A row with no games is not drawn at all, and the
-    board's CSS then centres the remaining row in the two-row space. */
+/** The GAMES tab: the board, three cells on a diagonal from the upper
+    left (slot 1) to the lower right (slot 3). Every button gets the class
+    cell-<slot>, and the CSS puts that cell in its place, so slot 1 is
+    always upper left however many games there are; a cell nobody claimed
+    is simply empty. */
 function makeGameButtons() {
   const holder = document.getElementById("gameButtons");
   const board = document.createElement("div");
   board.className = "game-board";
-  const upperRow = games.filter((game) => game.goes_in_slot <= SLOTS_PER_ROW);
-  const lowerRow = games.filter((game) => game.goes_in_slot > SLOTS_PER_ROW);
-  [upperRow, lowerRow].forEach((rowGames) => {
-    if (rowGames.length === 0) return;   // an empty row is not drawn
-    const row = document.createElement("div");
-    row.className = "board-row";
-    rowGames.forEach((game) => {
-      const button = makeIconButton(game);
-      // Slots 1 and 5 are column 1, 2 and 6 column 2, and so on.
-      const column = ((game.goes_in_slot - 1) % SLOTS_PER_ROW) + 1;
-      button.style.gridColumn = String(column);
-      row.appendChild(button);
-    });
-    board.appendChild(row);
+  games.forEach((game) => {
+    const button = makeIconButton(game);
+    button.classList.add("cell-" + game.goes_in_slot);
+    board.appendChild(button);
   });
   holder.appendChild(board);
 }

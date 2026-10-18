@@ -1,6 +1,6 @@
 # Stack o' Lantern — Technical Specifications
 
-Last updated: 2026-10-17 17:57 (/update; SECTION 10: CROSSING_START / CROSSING_FASTEST / RAMP / crossingFor, the practice level (PRACTICE_KEY, applyStartLevel, the badge, the panel), Stack again → backToStart, lastDirection, check-startlevel, stamp 2026-1017-stack-practice. 16:27: SECTION 9: reportScore's place, endTier, the balloons, FANFARES, the fireworks layer and shows, check-topfive, stamp 2026-1017-stack-victory in 29 places. 14:41: SECTION 8: sound.js, the switch, sound/pitch in the table, stackedCount counts the base, the rung jumps the queue, stamp 2026-1017-stack-sound in 27 places. 12:21: SECTION 6 IS CURRENT and overrides sections 2 and 3 where they differ: families and bestEarned, no MODES, no info bar, .score-corner, the staircase, the minute, Halloween.bestScore; stamp 2026-1017-stack-families. Earlier: 2026-10-16 20:45 /update, the checks under _documents/checks/, stamp 2026-1016-stack-endscreen; 20:20 #count gone, state.newBest; 19:55 popCount; 19:25 the moon at 26vw; 18:30 GRID_PATTERNS / fillMilestoneGrid; 17:15 first file in the game's own folder)
+Last updated: 2026-10-18 12:14 (/update; SECTION 11: the ladder regenerated, fireworks on three entries, bigMilestone, startRungFireworks, chosenStartLevel, PRACTICE_LEVELS and the disabled rows, check-startlevel steps, stamp 2026-1018-diagonal; before that 2026-10-17 17:57: SECTION 10: CROSSING_START / CROSSING_FASTEST / RAMP / crossingFor, the practice level (PRACTICE_KEY, applyStartLevel, the badge, the panel), Stack again → backToStart, lastDirection, check-startlevel, stamp 2026-1017-stack-practice. 16:27: SECTION 9: reportScore's place, endTier, the balloons, FANFARES, the fireworks layer and shows, check-topfive, stamp 2026-1017-stack-victory in 29 places. 14:41: SECTION 8: sound.js, the switch, sound/pitch in the table, stackedCount counts the base, the rung jumps the queue, stamp 2026-1017-stack-sound in 27 places. 12:21: SECTION 6 IS CURRENT and overrides sections 2 and 3 where they differ: families and bestEarned, no MODES, no info bar, .score-corner, the staircase, the minute, Halloween.bestScore; stamp 2026-1017-stack-families. Earlier: 2026-10-16 20:45 /update, the checks under _documents/checks/, stamp 2026-1016-stack-endscreen; 20:20 #count gone, state.newBest; 19:55 popCount; 19:25 the moon at 26vw; 18:30 GRID_PATTERNS / fillMilestoneGrid; 17:15 first file in the game's own folder)
 
 How the game is built, for whoever edits it next. The design and the
 reasons are in `specifications.MD` beside this. Files: `index.html`,
@@ -610,3 +610,69 @@ all removed again the same hour. The shell's section-4 comment notes it.
 ### 10.6 The stamp
 
 `2026-1017-stack-practice`, 29 places (unchanged count).
+
+## 11. The ladder, the big rungs, practice per visit, the high picks (2026-10-18 12:14)
+
+### 11.1 The ladder
+
+The HEIGHT block of `MILESTONES` and the HEIGHT table of
+`_documents/milestones.md` were regenerated together by a scratch
+`ladder.py` (a LADDER list of (at, name), the kept lines read from the
+script, NEW_LINES for Rainier and Denali, hints by count, pitch = 24 -
+rank), so the two files match field for field. A compare script
+(`compare-milestones.py`, scratchpad) parses both and prints every
+difference; it misses the table's last entry by a regex slip (checked
+by hand). The script's header comment and the markdown's date line note
+the change; the "shortened title" example in both is Rainier now.
+
+### 11.2 The big rungs
+
+- **The table**: `fireworks: 2` on Space Needle (50), `fireworks: 8` on
+  Everest (100) and Moon Landing (200); absent elsewhere. The table's
+  comment explains the field.
+- **`celebrateNext`**: `if (entry.sound) playSound(entry.fireworks ?
+  "bigMilestone" : "milestone", entry.pitch); if (entry.fireworks)
+  startRungFireworks(entry.fireworks);`.
+- **`startRungFireworks(bursts)`** (by `fireworkTimers`, before
+  `startFireworks`): `RUNG_ROCKET_GAP_MS = 330`, `RUNG_REACH = { left:
+  60, right: 10, up: 30, down: 30 }`; rocket i at `i * 330 + random 120`
+  ms via `launchRocket(pick(), RUNG_REACH)`; timers into
+  `fireworkTimers`; no trickle.
+- **`gameOver`** calls `stopFireworks()` after removing the sparks, so
+  a rung's rockets do not run into the end screen's own show.
+- **`sound.js`** `bigMilestone(context, pitch)`: root / third / fifth at
+  0.10 / 0.17 / 0.24 (0.38, 0.38, 0.40; 0.12, 0.12, 0.14 s), the octave
+  at 0.33 held 0.85 s (0.42) with a triangle (0.10, 0.60 s), the fifth
+  (0.18) and root (0.14) under it for 0.85 s, and `octave * 2` (0.08,
+  0.30 s) as shimmer.
+- **Check** (scratchpad `check-bigrungs.cjs`, Chrome with
+  `--autoplay-policy=no-user-gesture-required`): practice rounds from 49
+  and 99 (a `playSound` spy; the banner, rockets in `#fireworks`, pops),
+  200 by `state.toCelebrate = [entry]; celebrateNext()`. It wraps the
+  spy once per round (so later rounds log every sound twice) and calls
+  `backToStart()` before `END_DELAY_MS`, which lets the previous end
+  screen's show fire mid-round: fix both before moving it into
+  `_documents/checks/`.
+
+### 11.3 The practice level per visit, and the picks
+
+- `PRACTICE_KEY`, `readStartLevel`'s localStorage read and
+  `saveStartLevel`'s write are gone. `let chosenStartLevel = 1`;
+  `saveStartLevel(level)` sets it; `readStartLevel()` returns it when
+  `PRACTICE_LEVELS.includes(chosenStartLevel)`, else 1. At load, once:
+  `localStorage.removeItem("halloween2026:stack-o-lantern:start-level")`
+  in try/catch.
+- `PRACTICE_TOP = 100`, `PRACTICE_HIGH = [122, 147, 172, 197]`,
+  `PRACTICE_LEVELS = [1..100, ...PRACTICE_HIGH]`. `openPractice` builds
+  an option per level and, after 100, 122, 147 and 172, a disabled
+  `<option value="">...</option>` (108 rows). OK: `const pick =
+  Number(practiceLevel.value); if (PRACTICE_LEVELS.includes(pick))
+  saveStartLevel(pick)`.
+- **`check-startlevel.cjs`**: `look()` reports `saved` (always null now)
+  and `chosen`; expects 108 options, the last four values `",172,,197"`,
+  the rows at 100 / 102 / 104 / 106 "..." and disabled; step 6 picks 50,
+  reloads, expects Level 1. Passes.
+
+### 11.4 The stamp
+
+`2026-1018-diagonal`, 29 places (Stack's index 4).

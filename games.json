@@ -6,17 +6,13 @@
       "title": "The Pumpkin Patch",
       "short_title": "Patch",
       "icon": "assets/patch.svg",
-      "designer": "John, Claude, Chatty",
-      "credits": "originally from Halloween 2025",
-      "date": "October 31, 2025",
-      "description": "Spooky silhouettes rise from the pumpkin patch!  Not interactive - just watch and enjoy!",
-      "how_to_play": "Just sit back and watch the spooky silhouettes rise from the pumpkin patch!",
-      "settings": [
-        {
-          "label": "Slow / Fast",
-          "default": 0
-        }
-      ]
+      "designer": "",
+      "credits": "jp/claude/chatty 10/2025",
+      "date": "",
+      "description": "",
+      "how_to_play": "Nothing to do here.\nJust sit back and watch.",
+      "settings": [],
+      "high_scores": false
     },
     {
       "folder_name": "stack-o-lantern",
@@ -31,6 +27,7 @@
         "**Tap** to drop the pumpkin.\n**Line it up.** Stack it high.",
         "Sloppy drops get sliced.\nMiss, and it's __TIMBER!__",
         "Earn **milestones** on the way up.\nSharp Eye. Quick Draw. Toothpick.",
+        "*Milestones do not affect the score.*\n*They are bragging rights only.*",
         "How high can you go?\n**Scarecrow**... or **Moon Landing**?",
         "!! The moon is judging you."
       ],
@@ -65,7 +62,7 @@
     },
     {
       "folder_name": "game3",
-      "goes_in_slot": 3,
+      "goes_in_slot": "",
       "title": "Game 3",
       "short_title": "Game 3",
       "icon": "",
@@ -78,7 +75,7 @@
     },
     {
       "folder_name": "game4",
-      "goes_in_slot": 4,
+      "goes_in_slot": "",
       "title": "Game 4",
       "short_title": "Game 4",
       "icon": "",
@@ -91,7 +88,7 @@
     },
     {
       "folder_name": "game5",
-      "goes_in_slot": 5,
+      "goes_in_slot": "",
       "title": "Game 5",
       "short_title": "Game 5",
       "icon": "",
@@ -104,7 +101,7 @@
     },
     {
       "folder_name": "game6",
-      "goes_in_slot": 6,
+      "goes_in_slot": "",
       "title": "Game 6",
       "short_title": "Game 6",
       "icon": "",
@@ -117,7 +114,7 @@
     },
     {
       "folder_name": "game7",
-      "goes_in_slot": 7,
+      "goes_in_slot": "",
       "title": "Game 7",
       "short_title": "Game 7",
       "icon": "",
@@ -143,7 +140,7 @@
     },
     {
       "folder_name": "candy-go-fish",
-      "goes_in_slot": 8,
+      "goes_in_slot": 3,
       "title": "__GO FISH!__\nCandy Edition",
       "short_title": "__GO FISH!__ - Candy Edition",
       "icon": "assets/candy-dish/icon-candy-plate.png",
@@ -177,15 +174,16 @@
     ],
     "fields": {
       "folder_name": "The game's folder under games/. LOWERCASE ONLY (GitHub Pages is case-sensitive). Required.",
-      "goes_in_slot": "Where the game appears: a whole number 1 to 8 for a fixed cell on the button board. The game in slot 1 is also the one shown when the app starts (behind the open GAMES tab). The board is two rows of four: 1 2 3 4 across the upper row, 5 6 7 8 across the lower row. A game always sits in its own cell, so slot 1 is always top left and slot 8 always bottom right; cells nobody uses stay empty. If only one row has games, that row is drawn in the middle. 9 or above, or \"\", means the game is listed but not shown - an easy way to bench a game. If two entries claim the same slot, the first one in the file wins.",
+      "goes_in_slot": "Where the game appears: a whole number 1 to 3 for a fixed cell on the button board. The game in slot 1 is also the one shown when the app starts (behind the open GAMES tab). The board is three cells on a diagonal: slot 1 upper left, slot 2 in the middle, slot 3 lower right. A game always sits in its own cell; a cell nobody uses stays empty. 4 or above, or \"\", means the game is listed but not shown - an easy way to bench a game. If two entries claim the same slot, the first one in the file wins.",
       "title": "The game's full name, shown in the THIS GAME tab (and on the button when there is no usable icon). May use the text marks described under description, including \"\\n\" for a second, smaller line in the tab when the game's own look asks for it; the button's spoken name uses the plain words.",
       "short_title": "A short name shown in the narrow top bar, and on the button when there is no usable icon (the button fits about ten characters per line, two lines). About 12 characters is comfortable; the bar holds about 24 on the smallest phone and cuts anything longer with an ellipsis. May use the marks: an __accent__ is orange in the top bar, the rest white. Leave it the same as title if the title is short.",
       "icon": "Path to the game's icon, relative to the game's folder, e.g. assets/icon.png. SPEC: a square 256 x 256 real pixels, PNG with a transparent background (or an SVG with a square viewBox). Draw anything that fills the square; it is shown inside an orange rounded button with a small orange margin, so plan for orange around it. Wiggle room: each side may be 200 to 300 pixels and the two sides may differ by up to 10; the app scales it. Outside that, or missing, or a bad path: the button shows short_title as text instead (and says why in the browser console).",
       "designer": "Who made the game. Free text.",
       "credits": "Where art, sound or ideas came from. Free text, may be empty.",
       "date": "When the game was finished or last changed. Free text, for display only.",
-      "description": "One or two sentences about the game, shown in the THIS GAME tab. One string, or a list of strings shown as separate paragraphs. Marks understood: **bold**, __accent__ (the game's accent style; bold unless styles.css section 5b says more), ~~rainbow~~ (a colour per letter), \"\\n\" for a new line inside a paragraph, and a paragraph starting with \"!! \" for a shaded emphasis line. No HTML.",
+      "description": "One or two sentences about the game, shown in the THIS GAME tab. One string, or a list of strings shown as separate paragraphs. Marks understood: **bold**, *italic*, __accent__ (the game's accent style; bold unless styles.css section 5b says more), ~~rainbow~~ (a colour per letter), \"\\n\" for a new line inside a paragraph, and a paragraph starting with \"!! \" for a shaded emphasis line. No HTML.",
       "how_to_play": "Short instructions, shown in the THIS GAME tab. One string, or a list of strings shown as separate paragraphs, with the same marks as description. Keep it to a few sentences.",
+      "high_scores": "Optional: false hides the High Scores block from the game's THIS GAME tab, for a game that never reports a score (the Pumpkin Patch, which is only watched). Leave it out, or true, for any game that calls Halloween.reportScore().",
       "settings": "Optional: up to three on/off switches for your game, shown in the THIS GAME tab next to the high scores. (There is no app-wide Sound switch any more; sound is your game's own job.) A list of { \"label\": \"Easy / Hard\", \"default\": 0 } entries. The switch's left position is 0 and its right position is 1, so a label written as \"Left / Right\" lines up with the switch. Keep a label to about 20 characters. default is where the switch starts (0 or 1); after that the app remembers each player's choice on their own device. [] or no settings field = no switches of your own. A fourth entry is ignored. AS THINGS STAND the switches are only shown and remembered: no game can read them, so they change nothing in a game. A setting your game really needs is your game's own job (its own options screen, say)."
     },
     "good_to_know": [

@@ -15,8 +15,8 @@ three best milestones under it.
 - **Name:** "Stack o' Lantern" since 2026-10-17 (it was Stack-o'-Lantern);
   the folder stays `stack-o-lantern`.
 - **Status:** playable and checked, with sound, an end-screen
-  celebration, a gentler ramp and a practice level (2026-10-17 17:57).
-  The difficulty over 100 is to be looked at.
+  celebration, a gentler ramp, three big rungs with fireworks and a
+  practice level (2026-10-18 12:14). The difficulty at height is next.
 - **The rules** every game follows are in
   [`../README - game design requirements.md`](../README%20-%20game%20design%20requirements.md).
 
@@ -57,13 +57,20 @@ README - STACK-O-LANTERN.md  this file
    there. Stars move less than the tower, for depth; the moon never
    moves: the same spot on every screen, the anchor of the layout.
 9. Every 7th slab is a pale "ghost pumpkin"; the others cycle six oranges.
-10. **Milestones** (John, 2026-10-16 and 2026-10-17), 37 of them in four
+10. **Milestones** (John, 2026-10-16 to 2026-10-18), 51 of them in four
     families, each earned once per round and celebrated with a gold
     banner and a burst of 16 stars (one banner at a time; when a run
     earns a pile, only the most recent waits, the rest expire unshown):
-    - **Height**, one per band: Scarecrow 5, Hoop Height 10, Giraffe 15,
-      Treetops 20, Haunted House 25, Notre Dame 35, Empire State 50,
-      Shanghai Tower 75, Burj Khalifa 100, Moon Landing 200.
+    - **Height**, 24 rungs, every five pumpkins to 100 then the sky:
+      Scarecrow 5, Hoop Height 10, Giraffe 15, Haunted House 20,
+      Treetops 25, Tower of Pisa 30, Notre Dame 35, Sequoia 40, Liberty
+      45, Space Needle 50, Eiffel Tower 55, Empire State 60, Shanghai
+      Tower 65, Burj Khalifa 70, Vesuvius 75, Fuji 80, Rainier 85,
+      Kilimanjaro 90, Denali 95, Everest 100, Stratosphere 125, Space
+      Station 150, Hubble 175, Moon Landing 200 (the full list with every
+      line is `_documents/milestones.md`). Space Needle, Everest and
+      Moon Landing are BIG rungs: a longer, louder ring and fireworks
+      from behind the moon mid-round (two, eight and eight).
     - **Accuracy**: Machine / Laser / Sharp Eye (20 / 10 / 5 perfects in
       a row), Toothpick / Pencil Pusher (3 in a row / 1 on a pencil
       pumpkin, an eighth of the start width or less), Eye of the Needle
@@ -146,10 +153,11 @@ README - STACK-O-LANTERN.md  this file
   `crossingFor`). The next slab always slides the opposite way to the one
   just dropped.
 - **Practice** (John, 2026-10-17): the base on the welcome screen reads
-  "Level 1"; tap it for the Practice start panel (1 to 100). A round from
-  a higher level counts from there at that level's speed, rings no rung
-  below it, and reports no score. Stack again returns to the welcome
-  screen, where the level is in view.
+  "Level 1"; tap it for the Practice start panel (1 to 100, then 122,
+  147, 172 and 197 for the sky rungs). A round from a higher level
+  counts from there at that level's speed, rings no rung below it, and
+  reports no score. Stack again returns to the welcome screen, where the
+  level is in view. The pick lasts the visit: every launch starts at 1.
 - The base is pumpkin 1: the first drop reads 2.
 
 ## Where this game breaks the requirements, and why

@@ -33,9 +33,9 @@ function imageFor(name) {
 
 // Timings in seconds, [shortest, longest]; a random time in between is used
 // each time. Sinking takes 1 second less than the rise did.
-const RISE_TIME = [2, 4];
-const WAIT_AT_TOP = [1, 4];
-const WAIT_HIDDEN = [4, 12]; // 2025 used 5-15; John wanted ~20% faster
+const RISE_TIME = [1, 3];    // 2-4 until 2026-10-18: John wanted a brisker patch
+const WAIT_AT_TOP = [1, 2];  // was 1-4
+const WAIT_HIDDEN = [2, 6];  // was 4-12 (and 5-15 in 2025)
 const FIRST_WAIT = [0, 1];   // after the page loads
 
 // Where the character's LEFT edge may be, in % of the painting's width.

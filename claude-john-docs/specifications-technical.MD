@@ -1,6 +1,6 @@
 # Halloween 2026 — Technical Specifications
 
-Last updated: 2026-10-17 17:57 (4o: the choices feature in and out, stamp 2026-1017-stack-practice; 16:27: 4n: the touchend guard in the helper and app.js section 7, the viewport lines, .game-frame touch-action, reportScore returns the place, stamp 2026-1017-stack-victory in 29 places; 14:41: 4m: #settingsButton, pressTopButton, currentTab, afterDrawerSettles gone; stamp 2026-1017-stack-sound, 27 places; before that 2026-10-16 20:45: stamp 2026-1016-stack-endscreen, 26 places now: Stack's index has 3; nothing else in the shell; 17:15: 4: touch-action on the shell page; 4g moved to the game's folder; stamp 2026-1016-stack-milestones; before that: 15:34 top title, 15:45 one control point)
+Last updated: 2026-10-18 12:14 (4p: the three-cell board, gameTab and shortName, high_scores, the *italic* mark, stamp 2026-1018-diagonal in 29 places; before that 2026-10-17 17:57: 4o: the choices feature in and out, stamp 2026-1017-stack-practice; 16:27: 4n: the touchend guard in the helper and app.js section 7, the viewport lines, .game-frame touch-action, reportScore returns the place, stamp 2026-1017-stack-victory in 29 places; 14:41: 4m: #settingsButton, pressTopButton, currentTab, afterDrawerSettles gone; stamp 2026-1017-stack-sound, 27 places; before that 2026-10-16 20:45: stamp 2026-1016-stack-endscreen, 26 places now: Stack's index has 3; nothing else in the shell; 17:15: 4: touch-action on the shell page; 4g moved to the game's folder; stamp 2026-1016-stack-milestones; before that: 15:34 top title, 15:45 one control point)
 
 ## 1. Stack and hosting
 
@@ -18,7 +18,7 @@ Last updated: 2026-10-17 17:57 (4o: the choices feature in and out, stamp 2026-1
 
 ```text
 index.html                 the app: 9:16 frame, top panel, game panel with <iframe id=gameFrame>, drawer
-games.json                 THE LIST OF GAMES: "games" array (v2 entries, see 4a) then an "_about" block documenting every field
+games.json                 THE LIST OF GAMES: "games" array (v2 entries, see 4a; goes_in_slot 1..3 and the optional high_scores since 2026-10-18, 4p) then an "_about" block documenting every field
 manifest.json              Android/desktop full-screen ("standalone", portrait); icons: [] (TODO)
 app/styles.css             app CSS (frame, panels, drawer) - moved from the mockup
 app/app.js                 reads games.json at start-up; picker buttons, THIS GAME tab (text, high scores, switches), drawer (Home → GAMES, Settings → THIS GAME, a tap on #gameCover closes it), loadGame/startGame. Never edited by designers
@@ -656,3 +656,55 @@ Built and removed within the hour (see the game's technical spec 10.5
 for what it was). Nothing of it remains in code but a sentence in app.js
 section 4's comment. The stamp is `2026-1017-stack-practice`, 29 places
 (the same count as 16:27).
+
+## 4p. The three-cell board, the game-named tab, high_scores, the italic mark, the stamp (2026-10-18 12:14)
+
+- **app.js**: `LAST_SLOT = 3`, `SLOTS_PER_ROW` gone. `makeGameButtons()`
+  makes one `div.game-board` and appends every button with the class
+  `cell-<slot>`; no rows. `pickButtonGames` unchanged (1..LAST_SLOT).
+- **styles.css**: `.game-buttons { position: relative; min-height: 100%
+  }` (the percentage resolves because `.drawer-body` is a definite-height
+  flex item); `.game-board { position: absolute; top: 25%; height: 50%;
+  min-height: var(--game-button-size); left: 0; right: 0 }`; `.game-board
+  .game-button { position: absolute }`; `.cell-1 { top: 0; left: 9.5cqw
+  }`, `.cell-2 { top: 50%; left: 50%; translate: -50% -50% }` (`translate`,
+  not `transform`, so `.is-current`'s transform still applies), `.cell-3
+  { bottom: 0; right: 9.5cqw }`. `.board-row` gone. Measured headless
+  at 390x844 / 375x667 / 1200x900: board top at 27.7% of the padded tab
+  body (25% of its content box), bottom at 72.6%; buttons 69 / 61 / 82
+  px; the vertical step 30 / 24 / 37 px; no errors.
+- **The tab**: `const gameTab = document.querySelector('[data-tab="game"]')`
+  (section 5, by `topTitle`); `loadGame` sets `gameTab.textContent =
+  shortName(game.short_title || game.title)`; `shortName(text)` (section
+  3, before `appendMarkedText`) returns the first `__..__` group or
+  `plainText(text)`. CSS `.drawer-tabs button`: `min-width: 0; padding: 0
+  2cqw; text-transform: uppercase; white-space: nowrap; overflow: hidden;
+  text-overflow: ellipsis`. `index.html` keeps "THIS GAME" as the text
+  before the first load, with a comment.
+- **high_scores**: `fillThisGameTab` sets
+  `document.querySelector(".this-game-panels").hidden = game.high_scores
+  === false` before `fillScores` / `fillSwitches` (`[hidden]` is
+  `!important`, so the grid rule loses). `_about.fields.high_scores`
+  documents it. `index.html`'s tab comment says five scores and names the
+  field.
+- **The italic mark**: `MARK = /(\*\*.+?\*\*|\*.+?\*|__.+?__|~~.+?~~|\n)/`
+  (the double first), `appendMarkedText` builds `<i>` for a piece that
+  starts with one `*`, `plainText` strips single `*` too. `_about`'s
+  description note lists `*italic*`.
+- **games.json**: candy-go-fish slot 3; game3..game7 `""`; pumpkin-patch
+  `settings: []`, `high_scores: false`, `designer` / `date` /
+  `description` "", `how_to_play` "Nothing to do here.\nJust sit back and
+  watch.", `credits` "jp/claude/chatty 10/2025"; stack-o-lantern's
+  description gained "*Milestones do not affect the score.*\n*They are
+  bragging rights only.*" after the Sharp Eye line.
+- **styles.css 5b**: `.look-pumpkin-patch { text-align: center }`,
+  `.look-pumpkin-patch .this-game-heading { margin-bottom: 1.6em }`.
+- **pumpkin-patch.js**: `RISE_TIME [1, 3]`, `WAIT_AT_TOP [1, 2]`,
+  `WAIT_HIDDEN [2, 6]`.
+- **Line endings**: `app/styles.css` is mixed again (the picker block is
+  CRLF); the day's edit scripts try LF then CRLF per passage.
+- **Checks** (scratchpad, not kept): `check-diagonal.cjs`,
+  `check-tabname.cjs`, `check-patchtab.cjs`, `check-italics.cjs`, all on
+  8098 with in-page clicks.
+- **The stamp**: `2026-1018-diagonal`, 29 places (app.js 1, root index
+  2, Go Fish index 20 + js 1, Stack index 4, patch index 1).

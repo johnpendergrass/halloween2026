@@ -85,6 +85,7 @@ face inward. All 19 images are fetched at start-up so none pops in late.
 
 No. The app just loads the page; 🏠 in the top panel leaves it.
 
-Its `games.json` entry declares one switch, "Slow / Fast", which the app
-shows in the THIS GAME tab. It does nothing yet: a game cannot read its
-switches so far.
+It declares no switches (its "Slow / Fast" switch was removed on
+2026-10-18: it never did anything, since a game cannot read its switches,
+and the pace was simply made brisker in the timing settings instead). It
+loads `../game-helper.js` only for the no-double-tap-zoom guard.

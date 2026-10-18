@@ -1,6 +1,6 @@
 # Stack o' Lantern — Specifications (design decisions)
 
-Last updated: 2026-10-17 17:57 (/update; SECTION 8: the ramp as seconds per crossing, the practice level on the welcome screen, Stack again goes home, back and forth. 16:27: SECTION 7: the end screen's three tiers, the green balloon, three fanfares, fireworks from behind the moon, no byline. 14:41: SECTION 6: sound, the base is pumpkin 1, a rung jumps the banner queue, the shell's Settings button. 12:21: SECTION 5 IS THE CURRENT DESIGN: milestone families, the level as the title, one level, no info bar, the corner, the staircase, the minute, the shell reading back scores. Sections 1 to 4 are the 2026-09-29 and 2026-10-16 record; section 2 (EASY / HARD) and the 3x3 grid in section 3 are history now. Earlier: 2026-10-16 20:45 /update; 20:20 no Stacked count in the bar, Best glows on a new best; 19:55 count pops off each pumpkin; 19:10 the moon fixed at one spot; 18:30 the end screen laid out around the moon; 17:15 first file in the game's own folder)
+Last updated: 2026-10-18 12:14 (/update; SECTION 9: Rainier and Denali on the ladder, the big rungs with fireworks, the practice level per visit, the high picks, the bragging-rights line; before that 2026-10-17 17:57: SECTION 8: the ramp as seconds per crossing, the practice level on the welcome screen, Stack again goes home, back and forth. 16:27: SECTION 7: the end screen's three tiers, the green balloon, three fanfares, fireworks from behind the moon, no byline. 14:41: SECTION 6: sound, the base is pumpkin 1, a rung jumps the banner queue, the shell's Settings button. 12:21: SECTION 5 IS THE CURRENT DESIGN: milestone families, the level as the title, one level, no info bar, the corner, the staircase, the minute, the shell reading back scores. Sections 1 to 4 are the 2026-09-29 and 2026-10-16 record; section 2 (EASY / HARD) and the 3x3 grid in section 3 are history now. Earlier: 2026-10-16 20:45 /update; 20:20 no Stacked count in the bar, Best glows on a new best; 19:55 count pops off each pumpkin; 19:10 the moon fixed at one spot; 18:30 the end screen laid out around the moon; 17:15 first file in the game's own folder)
 
 The game is called **Stack o' Lantern** since 2026-10-17 (it was
 "Stack-o'-Lantern"; the folder stays `stack-o-lantern`).
@@ -612,3 +612,77 @@ slice was moving before the drop, it should move the opposite way next.
 back and forth." The game remembers the direction at the drop and the
 next slab comes in from the other side, bounce or no bounce. "that works
 fine. good job."
+
+## 9. 2026-10-18 morning: the ladder reworked, big rungs, practice per visit (John and Claude)
+
+### 9.1 Rainier and Denali
+
+"Remove Chrysler and Big Ben, and add in mountains Mt Rainier and Mt
+Denali. Reorder the items for correct height and come up with some nice
+quips about the new items. Keep Everest as the 100 item." Real heights
+settle the order (Vesuvius 1,281 m, Fuji 3,776, Rainier 4,392,
+Kilimanjaro 5,895, Denali 6,190, Everest 8,849; every mountain is above
+Burj Khalifa's 828), so the stretch from 50 to 95 is now Space Needle,
+Eiffel Tower, Empire State, Shanghai Tower, Burj Khalifa, Vesuvius,
+Fuji, Rainier, Kilimanjaro, Denali, then Everest at 100. The rungs below
+50 and the sky above 100 are as they were; every kept rung carries its
+old line to its new count. The names drop "Mount" like Fuji and Everest
+(the line carries the full name). Rainier: "Mount Rainier is out.
+Seattle stops to look, as it always does, and then notices the
+pumpkins." Denali: "Denali, the Great One, roof of North America. The
+grizzlies have never seen a pumpkin this high up." `milestones.md` was
+checked against the script first (51 and 51, every field equal) and
+regenerated with it.
+
+### 9.2 The big rungs
+
+"i would like to add a special celebration at levels 50, 100 and 200.
+Sort of like the height sound, but maybe a bit longer and louder? Would
+it be possible to have a moon firework, with maybe two fireworks at 50,
+four at 100 and six at 200? with the fireworks sound?" Then: "lets make
+the level 100 even longer fireworks - maybe 8 or so. and so the 200
+needs the same not more." So Space Needle (50), Everest (100) and Moon
+Landing (200) are BIG rungs: the banner rings a longer, louder arpeggio
+(the climbing chord at the rung's pitch, then the octave held for most
+of a second with the chord under it, about 1.1 s against 0.65), and
+rockets leave the moon a third of a second apart and burst around it,
+each with its pop: two at 50, eight at 100, eight at 200. The reach is
+smaller than the end screen's (the tower is in play below); no trickle;
+play goes on; a miss cuts rockets still in the air. The count lives on
+the three entries of the milestone table, so the table stays the source.
+
+### 9.3 The practice level, per visit; the high picks
+
+"currently it retains the level the cheat was set to. when relaunching
+the game it should go back to the default of 1." The pick now lasts the
+visit only (it carries from round to round until the page is loaded
+again; the shell's game switch or Clear scores reloads it too); nothing
+is saved on the device, and a level an older version saved is removed
+once. Then: "add new cheat heights of 122, 147, 172 and 197 to the end"
+(three drops short of the sky rungs), "a '...' after 100, a blank line
+that either cannot be chosen, or is ignored if it is chosen", "and have
+that ... after the 123, etc #'s also": the picker reads 1..100, "...",
+122, "...", 147, "...", 172, "...", 197; the "..." rows are disabled,
+and OK ignores them if a browser lets one through.
+
+### 9.4 The shell, for this game
+
+- The THIS GAME tab is named STACK O' LANTERN (the shell names the tab
+  for the game since this morning), and its text gained, under the
+  Sharp Eye line, "*Milestones do not affect the score.* / *They are
+  bragging rights only.*" in italics (a new `*italic*` mark in the
+  shell's text marks).
+- Stack is slot 2 of a three-cell diagonal board (the shell's record has
+  the rest).
+
+### 9.5 Next: difficulty at height
+
+"we need to make the higher levels harder. right now the only
+difficulty ramp is the speed, right?" Yes: the crossing time floors at
+0.85 s about pumpkin 121 and nothing else scales with the tower; a
+perfect run keeps full width forever. The options on the table: tighten
+the perfect tolerance with height (1.6vw to about 1.0 by 200, as a table
+like the ramp); keep the speed falling past 121; weaken the grow-back
+above 100; a hair off every landing at height. Claude's suggestion: the
+tolerance, perhaps with a mild speed change. John: "we will try
+something" after this /update.
