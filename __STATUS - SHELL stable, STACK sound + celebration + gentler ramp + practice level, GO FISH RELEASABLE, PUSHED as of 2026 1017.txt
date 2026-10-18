@@ -1,6 +1,11 @@
 Halloween 2026 - project status (the glance; the SHELL's details in claude-john-docs/, each game's in its own folder)
 
-2026 1017 1627  PUSHED by Claude at John's request. SHELL: the iPhone DOUBLE-TAP ZOOM fixed (a touchend guard in
+2026 1017 1757  PUSHED by Claude at John's request. SHELL: unchanged in the end (a "choices" drop-down a game
+              could read was built for Stack's starting level and removed within the hour: it belongs in the
+              game); stamp 2026-1017-stack-practice. STACK: the ramp as a table of seconds per crossing (1.0 s
+              at 100, floor 0.85), a practice level on the welcome screen, Stack again goes to the welcome
+              screen, the next slab always slides the other way. Root handoff 2026-1017-1332 removed.
+2026 1017 1627  PUSHED. SHELL: the iPhone DOUBLE-TAP ZOOM fixed (a touchend guard in
               game-helper.js and app.js; the viewport no-zoom request and a frame rule stay as requests only;
               a watchdog and a diagnostic box tried and removed); reportScore returns the score's place (1..5
               or 0); Stack's byline blank; stamp 2026-1017-stack-victory (29 places, the helper's tags too).
@@ -14,10 +19,10 @@ Halloween 2026 - project status (the glance; the SHELL's details in claude-john-
 2026 1007-14   John + Codex built Go Fish, slot 8.   2026 0927-1001 Claude built the shell.
 
 NOT YET
- - John's phone check from Pages once it serves 2026-1017-stack-victory: the double tap in every game, the fireworks
- - Stack: an easier difficulty ramp (talk first); the MP3 voice per rung; more moon faces; two stale checks
+ - John's phone check from Pages once it serves 2026-1017-stack-practice: the practice panel, the fireworks
+ - Stack: the difficulty over 100 ("very close, but may need some tuning"); the MP3 voice per rung; moon faces
  - shell: the top-bar states and reportScore's place in check-shell.cjs; switches that do something (or drop the
    column); icons for the other games; placeholder slots; requirements gaps; contribution workflow
 
-DETAIL  claude-john-docs/Claude-ToBe-Continued-2026-1017-1627.MD (the shell today, the iPhone story in order)
+DETAIL  claude-john-docs/Claude-ToBe-Continued-2026-1017-1757.MD (and 1627 for the iPhone story in order)
         games/stack-o-lantern/_documents/claude-john-docs/ and games/candy-go-fish/_documents/claude-john-docs/

@@ -56,6 +56,8 @@
    THAT IS ALL THERE IS: reportScore to tell, bestScore to ask. A game
    cannot read its own switches in the THIS GAME tab, and the app has no
    sound switch of its own (since 2026-10-15): sound is the game's job.
+   A setting that changes how a game plays belongs in the game's own page
+   (Stack o' Lantern's practice level lives on its welcome screen).
 
    NOT HERE, ON PURPOSE: pausing. The player can open the app's bottom
    panel at any time; it covers about the lower half of the game, and the

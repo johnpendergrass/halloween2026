@@ -1,6 +1,6 @@
 # Stack o' Lantern — Technical Specifications
 
-Last updated: 2026-10-17 16:27 (/update; SECTION 9: reportScore's place, endTier, the balloons, FANFARES, the fireworks layer and shows, check-topfive, stamp 2026-1017-stack-victory in 29 places. 14:41: SECTION 8: sound.js, the switch, sound/pitch in the table, stackedCount counts the base, the rung jumps the queue, stamp 2026-1017-stack-sound in 27 places. 12:21: SECTION 6 IS CURRENT and overrides sections 2 and 3 where they differ: families and bestEarned, no MODES, no info bar, .score-corner, the staircase, the minute, Halloween.bestScore; stamp 2026-1017-stack-families. Earlier: 2026-10-16 20:45 /update, the checks under _documents/checks/, stamp 2026-1016-stack-endscreen; 20:20 #count gone, state.newBest; 19:55 popCount; 19:25 the moon at 26vw; 18:30 GRID_PATTERNS / fillMilestoneGrid; 17:15 first file in the game's own folder)
+Last updated: 2026-10-17 17:57 (/update; SECTION 10: CROSSING_START / CROSSING_FASTEST / RAMP / crossingFor, the practice level (PRACTICE_KEY, applyStartLevel, the badge, the panel), Stack again → backToStart, lastDirection, check-startlevel, stamp 2026-1017-stack-practice. 16:27: SECTION 9: reportScore's place, endTier, the balloons, FANFARES, the fireworks layer and shows, check-topfive, stamp 2026-1017-stack-victory in 29 places. 14:41: SECTION 8: sound.js, the switch, sound/pitch in the table, stackedCount counts the base, the rung jumps the queue, stamp 2026-1017-stack-sound in 27 places. 12:21: SECTION 6 IS CURRENT and overrides sections 2 and 3 where they differ: families and bestEarned, no MODES, no info bar, .score-corner, the staircase, the minute, Halloween.bestScore; stamp 2026-1017-stack-families. Earlier: 2026-10-16 20:45 /update, the checks under _documents/checks/, stamp 2026-1016-stack-endscreen; 20:20 #count gone, state.newBest; 19:55 popCount; 19:25 the moon at 26vw; 18:30 GRID_PATTERNS / fillMilestoneGrid; 17:15 first file in the game's own folder)
 
 How the game is built, for whoever edits it next. The design and the
 reasons are in `specifications.MD` beside this. Files: `index.html`,
@@ -517,3 +517,96 @@ response listener. `TOPFIVE OK`.
 helper's script tags in Candy Go Fish's and Pumpkin Patch's `index.html`
 (Stack's already had one). Without a stamp the phone kept an old
 `game-helper.js`.
+
+## 10. The ramp table, the practice level, back and forth (2026-10-17 17:57)
+
+### 10.1 The ramp
+
+`START_SPEED`, `MAX_SPEED` and `SPEED_GROWTH` are gone. In their place:
+```js
+const CROSSING_START = 2.4;     // seconds across the stage for the first slab
+const CROSSING_FASTEST = 0.85;  // never quicker than this
+const RAMP = [                  // seconds taken off the crossing per pumpkin, by stretch
+  { from: 1,   step: 0.0141 },  // 2.4 s at pumpkin 1 down to 1.0 s at pumpkin 100
+  { from: 100, step: 0.0071 },  // half as steep after that (the floor arrives about 121)
+];
+function crossingFor(count) {
+  let seconds = CROSSING_START;
+  for (let pumpkin = 2; pumpkin <= count; pumpkin += 1) {
+    const stretch = RAMP.filter((row) => row.from < pumpkin).pop();
+    seconds -= stretch.step;
+  }
+  return Math.max(CROSSING_FASTEST, seconds);
+}
+```
+`spawnMover`: `speed = 100 / crossingFor(stackedCount())` (the stage is
+100vw wide; the speed is that of the tower as it stands). A loop of at
+most a couple of hundred steps per spawn, kept plain so the table can
+have any number of rows. Pumpkin 100 → 2.4 − 0.0141 × 99 = 1.004 s.
+
+### 10.2 The practice level
+
+`index.html`: `<button class="level-badge" id="levelBadge" hidden>` after
+the start screen; `<div class="overlay practice-panel" id="practicePanel"
+hidden>` with `.practice-box` (title, the three-line note with
+`.practice-fine`, `.practice-row` = `.practice-pick` label + `<select
+id="practiceLevel">` and `#practiceReset`, `.practice-buttons` =
+`#practiceCancel` + `#practiceDone` reading "OK"). CSS: `.level-badge`
+absolute at `left: 50%; bottom: calc(var(--ground-h) + var(--slab-h) /
+2)`, `translate(-50%, 50%)`, `z-index: 11` (over the start overlay),
+plain white 3.6vw bold text with the stage's text shadow, 44px tall by
+padding; `.practice-panel` `z-index: 13`, a dim; the select and its
+`option`s opaque `#3a2f44` with white text (a desktop browser painted
+white on white otherwise). Script:
+- `state.startLevel` (1), `PRACTICE_KEY =
+  "halloween2026:stack-o-lantern:start-level"`, `PRACTICE_TOP = 100`.
+- `readStartLevel()` (try/catch, clamped 1..100), `saveStartLevel(n)`.
+- `stackedCount()` = `state.slabs.length + state.startLevel - 1`.
+- `applyStartLevel()` in `start()` after `reset()`: reads the level;
+  above 1 pushes every height entry with `at <= startLevel` into
+  `state.earned` (no banner, no arpeggio).
+- `updateLabels()` returns at once when `startLevel > 1`; `gameOver`
+  sets `state.place = 0` without calling `reportScore` then.
+- `showBadge()` (text "Level N", shown) at load and in `backToStart()`;
+  `start()` hides it. `openPractice()` builds the 100 options once and
+  sets the select to the saved level; `closePractice()`; OK saves, shows
+  the badge, closes; Reset sets the select to "1" (OK still needed);
+  Cancel closes. The badge and the panel `stopPropagation` on
+  `pointerdown` so the stage's start tap does not fire under them.
+- `#playAgain` → `backToStart` (was `start`); Enter/Space on the end
+  screen → `backToStart`.
+
+### 10.3 Back and forth
+
+`state.lastDirection` (0 at reset); `drop()` sets it to
+`mover.direction` the moment the slab is dropped; `spawnMover`:
+`fromLeft = state.lastDirection !== 1` (the first slab from the left,
+then always the side opposite to the last travel). Until today it was
+`state.slabs.length % 2 === 1`.
+
+### 10.4 Checks
+
+`check-startlevel.cjs` (the game page alone on 8098; `Halloween.
+reportScore` replaced by a spy): the badge "Level 1" shown and the panel
+hidden; a tap on the badge opens the panel (100 options) without
+starting; OK with 50 → badge "Level 50", the key "50"; Cancel keeps it;
+a stage tap starts a practice round (badge hidden, `startLevel` 50,
+count 50, speed = `100 / crossingFor(50)`, rungs 5..50 earned); a
+lined-up drop pops 51 with no banner; `gameOver` → `place` 0, nothing
+reported, no balloon; Stack again → the welcome screen with "Level 50";
+back to 1 → a round of 7 reports 7. Screenshots `startlevel-welcome.png`,
+`startlevel-panel.png`. `check-families.cjs`: a `__tap()` after each
+Stack again, and `__dropWhen` resolves "no mover" instead of throwing
+inside a frame callback (which hung the check). Run the checks one at a
+time.
+
+### 10.5 The shell's hour
+
+For the first build the shell had `games.json` `"choices"`, `fillChoices`
+/ `makeChoice` / `currentChoice` / `saveChoice` / `choice(name)` in
+app.js, `Halloween.choice(name)` in the helper and `.choice` styles;
+all removed again the same hour. The shell's section-4 comment notes it.
+
+### 10.6 The stamp
+
+`2026-1017-stack-practice`, 29 places (unchanged count).

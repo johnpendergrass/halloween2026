@@ -14,9 +14,9 @@ three best milestones under it.
   2026-10-16 and 2026-10-17.
 - **Name:** "Stack o' Lantern" since 2026-10-17 (it was Stack-o'-Lantern);
   the folder stays `stack-o-lantern`.
-- **Status:** playable and checked, with sound and an end-screen
-  celebration (2026-10-17 16:27): a gold or green balloon, a fanfare and
-  fireworks by how the round ranks. An easier difficulty ramp is next.
+- **Status:** playable and checked, with sound, an end-screen
+  celebration, a gentler ramp and a practice level (2026-10-17 17:57).
+  The difficulty over 100 is to be looked at.
 - **The rules** every game follows are in
   [`../README - game design requirements.md`](../README%20-%20game%20design%20requirements.md).
 
@@ -140,6 +140,16 @@ README - STACK-O-LANTERN.md  this file
   "ta-daa" and 6; under 5 nothing new. After the flurry the odd rocket
   keeps going at random until the next tap. Rockets rise from behind the
   moon and burst over the words (`startFireworks`, `FIREWORK_SHOWS`).
+- **The ramp** (John, 2026-10-17) is a table of seconds per crossing in
+  the script: 2.4 s for the first slab, 0.0141 s less per pumpkin to 1.0
+  s at 100, half as steep after, never under 0.85 s (`RAMP`,
+  `crossingFor`). The next slab always slides the opposite way to the one
+  just dropped.
+- **Practice** (John, 2026-10-17): the base on the welcome screen reads
+  "Level 1"; tap it for the Practice start panel (1 to 100). A round from
+  a higher level counts from there at that level's speed, rings no rung
+  below it, and reports no score. Stack again returns to the welcome
+  screen, where the level is in view.
 - The base is pumpkin 1: the first drop reads 2.
 
 ## Where this game breaks the requirements, and why

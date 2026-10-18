@@ -1,6 +1,6 @@
 # Halloween 2026 — Technical Specifications
 
-Last updated: 2026-10-17 16:27 (4n: the touchend guard in the helper and app.js section 7, the viewport lines, .game-frame touch-action, reportScore returns the place, stamp 2026-1017-stack-victory in 29 places; 14:41: 4m: #settingsButton, pressTopButton, currentTab, afterDrawerSettles gone; stamp 2026-1017-stack-sound, 27 places; before that 2026-10-16 20:45: stamp 2026-1016-stack-endscreen, 26 places now: Stack's index has 3; nothing else in the shell; 17:15: 4: touch-action on the shell page; 4g moved to the game's folder; stamp 2026-1016-stack-milestones; before that: 15:34 top title, 15:45 one control point)
+Last updated: 2026-10-17 17:57 (4o: the choices feature in and out, stamp 2026-1017-stack-practice; 16:27: 4n: the touchend guard in the helper and app.js section 7, the viewport lines, .game-frame touch-action, reportScore returns the place, stamp 2026-1017-stack-victory in 29 places; 14:41: 4m: #settingsButton, pressTopButton, currentTab, afterDrawerSettles gone; stamp 2026-1017-stack-sound, 27 places; before that 2026-10-16 20:45: stamp 2026-1016-stack-endscreen, 26 places now: Stack's index has 3; nothing else in the shell; 17:15: 4: touch-action on the shell page; 4g moved to the game's folder; stamp 2026-1016-stack-milestones; before that: 15:34 top title, 15:45 one control point)
 
 ## 1. Stack and hosting
 
@@ -649,3 +649,10 @@ hides `#thisGameByline`.
 candy-go-fish index 20 (its helper tag now), js 1, stack index 4, pumpkin
 patch index 1 (its new helper tag), root index 2. The helper itself has
 no `?v=` inside; its loaders carry it.
+
+## 4o. The choices feature, in and out; the stamp (2026-10-17 17:57)
+
+Built and removed within the hour (see the game's technical spec 10.5
+for what it was). Nothing of it remains in code but a sentence in app.js
+section 4's comment. The stamp is `2026-1017-stack-practice`, 29 places
+(the same count as 16:27).

@@ -772,3 +772,118 @@ body {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
+
+/* THE LEVEL WORDS (John, 2026-10-17): "Level 1" written on the base slab
+   while the welcome screen shows, above the overlay (z 10) so it can be
+   tapped. The base is at the stage's centre, SLAB_H tall on GROUND_H of
+   ground (the CSS variables), so the words' centre is ground + half a
+   slab up. It is a real button for the tap, but drawn as plain text (a
+   dark pill was tried: "lose the badge... just clickable text"); the
+   padding keeps the tap target 44px tall without showing. */
+.level-badge {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--ground-h) + var(--slab-h) / 2);
+  transform: translate(-50%, 50%);
+  z-index: 11;
+  min-height: 44px;
+  padding: 2vw 6vw;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 3.6vw;
+  font-weight: 700;
+  text-shadow: 0 0.3vw 0.6vw rgb(0 0 0 / 70%);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+/* THE PRACTICE PANEL: an overlay like the start screen, with a box in
+   the middle; the box stops taps from reaching the stage (the script). */
+.practice-panel {
+  z-index: 13;                 /* above the badge and the corners */
+  background: rgb(0 0 0 / 55%);
+}
+
+.practice-box {
+  width: 80vw;
+  padding: 5vw;
+  border: 0.5vw solid #e8741c;
+  border-radius: 4vw;
+  background: #2a2230;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4vw;
+  align-items: center;
+}
+
+/* The last line of the note, a touch smaller. */
+.practice-fine {
+  font-size: 0.85em;
+  opacity: 0.85;
+}
+
+/* The picker's row: the Level picker at the left, Reset to 1 at the right. */
+.practice-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3vw;
+}
+
+.practice-pick {
+  display: flex;
+  align-items: center;
+  gap: 3vw;
+  font-weight: 700;
+}
+
+.practice-reset {
+  min-height: 44px;
+  padding: 2vw 4vw;
+  border: 0.4vw solid rgb(255 255 255 / 50%);
+  border-radius: 2.5vw;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+
+.practice-pick select {
+  min-width: 22vw;
+  min-height: 44px;
+  padding: 0 3vw;
+  border: 0.4vw solid rgb(255 255 255 / 50%);
+  border-radius: 2.5vw;
+  background: #3a2f44;         /* opaque: a desktop browser paints the open list with it */
+  color: #fff;
+  font: inherit;
+}
+
+/* The open list's rows, spelled out: a desktop browser otherwise drew
+   white words on a white list, so the numbers only showed when tapped. */
+.practice-pick select option {
+  background: #3a2f44;
+  color: #fff;
+}
+
+.practice-buttons {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 3vw;
+}
+
+.practice-buttons .play-again { margin-top: 0; }
+
+.practice-cancel {
+  min-height: 44px;
+  padding: 2vw 5vw;
+  border: 0;
+  background: transparent;
+  color: rgb(255 255 255 / 75%);
+  text-decoration: underline;
+  cursor: pointer;
+}

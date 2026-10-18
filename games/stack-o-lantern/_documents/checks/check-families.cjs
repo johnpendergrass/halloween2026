@@ -24,6 +24,7 @@ const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary
         const t0 = performance.now();
         function poll() {
           const s = window.__slabs();
+          if (s.length < 2) { resolve('no mover'); return; }   // not in a round: say so instead of hanging
           if (test(Math.abs(s[0].left - s[1].left), s[0].width)) { window.__tap(); resolve(true); return; }
           if (performance.now() - t0 > 8000) { resolve(false); return; }
           requestAnimationFrame(poll);
@@ -96,8 +97,10 @@ const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary
       await page.screenshot({ path: path.join(__dirname, `families-row-${n}.png`) });
     }
 
-    // A two-pumpkin round: no level, so the title is a low word.
+    // A two-pumpkin round: no level, so the title is a low word. Stack
+    // again goes to the welcome screen (since 2026-10-17); a tap starts.
     await page.locator('#playAgain').tap(); await page.waitForTimeout(200);
+    await page.evaluate(() => window.__tap()); await page.waitForTimeout(100);
     for (let i = 0; i < 2; i++) { await page.evaluate(() => window.__dropWhen(d => d <= 0.9)); await page.waitForTimeout(100); }
     for (let i = 0; i < 12; i++) {
       await page.evaluate(() => window.__dropWhen(d => d > 25)); await page.waitForTimeout(150);
@@ -117,6 +120,7 @@ const { chromium } = require('C:/Users/johnp/.cache/codex-runtimes/codex-primary
     // A third round that beats the first: the number glows, the balloon
     // shows, the moon glows; all three go at the next start.
     await page.locator('#playAgain').tap(); await page.waitForTimeout(200);
+    await page.evaluate(() => window.__tap()); await page.waitForTimeout(100);
     out.duringPlay = await page.evaluate(() => ({ balloon: document.getElementById('newBest').hidden ? 'hidden' : 'shown', over: document.getElementById('stage').classList.contains('is-glowing') }));
     for (let i = 0; i < 15; i++) { await page.evaluate(() => window.__dropWhen(d => d <= 0.9)); await page.waitForTimeout(100); }
     for (let i = 0; i < 12; i++) {

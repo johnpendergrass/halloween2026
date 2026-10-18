@@ -1,6 +1,6 @@
 # Halloween 2026 — Specifications (design decisions)
 
-Last updated: 2026-10-17 16:27 (6n: the iPhone double-tap zoom, reportScore's place, Stack's byline; 14:41: 6m: a Settings button on the right of the top bar, Home → GAMES, Settings → THIS GAME; before that 2026-10-16 17:15: 2: no zoom on the shell page; 6f moved to the game's folder; 6i: Stack's switch dropped; before that: 15:34 names, 15:45 one control point, 15:00 tabled games removed)
+Last updated: 2026-10-17 17:57 (6o: the choices feature tried and removed; 16:27: 6n: the iPhone double-tap zoom, reportScore's place, Stack's byline; 14:41: 6m: a Settings button on the right of the top bar, Home → GAMES, Settings → THIS GAME; before that 2026-10-16 17:15: 2: no zoom on the shell page; 6f moved to the game's folder; 6i: Stack's switch dropped; before that: 15:34 names, 15:45 one control point, 15:00 tabled games removed)
 
 This file records WHAT the app looks like and WHY. Technical "how" lives in
 `specifications-technical.MD`. Companion notes in this folder:
@@ -656,3 +656,16 @@ only matches the best is place 2: a tie is a top five, not a new best.
 that. it is already at the bottom." Stack's `designer` and `date` are
 blank in `games.json`, so the byline hides (the shell hides any empty
 line); other games keep theirs.
+
+## 6o. A game setting in the tab, tried and withdrawn (John, 2026-10-17)
+
+For one hour the THIS GAME tab had a drop-down above the high scores,
+"Starting level" for Stack o' Lantern, which the game read through a
+third helper call. It was John's ask ("a useful debugging feature for
+now") and it bent the rule of 6i that a game cannot read its own tab.
+Offered the alternative, John chose the game's own welcome screen ("i
+would rather that the anchor pumpkin slice show its level ... if the user
+clicks on it the popup comes up"), and the shell went back to how it
+was: two helper calls, switches that games cannot read, no choices. The
+rule stands, and now has a precedent: a setting that changes how a game
+plays belongs in the game's page.

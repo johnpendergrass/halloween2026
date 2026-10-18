@@ -26,13 +26,20 @@ const MIN_OVERLAP = 0.8;        // less overlap than this = a miss
 const PERFECT_TOLERANCE = 1.6;  // edges this close count as perfect (about 6 px on a phone)
 const PERFECT_STREAK = 3;       // every this-many perfects in a row...
 const BONUS_WIDTH = 3;          // ...the slab grows this much wider (up to START_WIDTH)
-const START_SPEED = 42;         // vw per second
-const MAX_SPEED = 110;
-
-// One level (John, 2026-10-17: "hard seems fine as the only level"). An
-// EASY / HARD toggle lived in an info bar above the stage for one day
-// (2026-10-16); these are its HARD rules, the game as first built.
-const SPEED_GROWTH = 1.035;     // speed is multiplied by this for every slab placed
+// THE RAMP: how fast the slab slides, as the seconds it takes to cross
+// the stage, by the number of pumpkins in the tower (the base is 1).
+// Each pumpkin placed makes the next crossing a little quicker, by the
+// step of the stretch it is in. John, 2026-10-17: "getting to 1.0 at
+// 100, and then slowing down the subtraction by 50% from there on",
+// after the first build's multiplier (x1.035 per slab, 1.0 s already at
+// 25, the cap at 29) made it "hard at around 25 or so". One level only
+// (an EASY / HARD toggle lived for one day, 2026-10-16).
+const CROSSING_START = 2.4;     // seconds across the stage for the first slab
+const CROSSING_FASTEST = 0.85;  // never quicker than this (John: "about 0.85")
+const RAMP = [                  // seconds taken off the crossing per pumpkin, by stretch
+  { from: 1,   step: 0.0141 },  // 2.4 s at pumpkin 1 down to 1.0 s at pumpkin 100
+  { from: 100, step: 0.0071 },  // half as steep after that (the floor arrives about 121)
+];
 
 // Milestones: little achievements inside one round (John, 2026-10-16;
 // reworked into four families on 2026-10-17 from his list). THIS TABLE
@@ -392,6 +399,9 @@ const bestLabel = document.getElementById("best");
 const newBest = document.getElementById("newBest");   // the NEW HIGH SCORE! balloon
 const topFive = document.getElementById("topFive");   // the green TOP 5 SCORE! balloon
 const fireworks = document.getElementById("fireworks");   // the end screen's fireworks layer
+const levelBadge = document.getElementById("levelBadge");       // "Level 1" over the base on the welcome screen
+const practicePanel = document.getElementById("practicePanel"); // the picker that opens from the badge
+const practiceLevel = document.getElementById("practiceLevel"); // its <select>, 1..100
 
 // Everything that changes while playing lives here, so it is easy to see
 // (and to reset). Coordinates are "world" coordinates: x from the left
@@ -401,6 +411,7 @@ const state = {
   phase: "ready",      // "ready" (start screen), "playing", or "over"
   slabs: [],           // placed slabs, bottom first: { element, x, width }
   mover: null,         // the sliding slab: { element, x, width, direction, speed }
+  lastDirection: 0,    // which way the last slab was sliding when dropped (+1 right, -1 left; 0 = none yet)
   pieces: [],          // falling bits: { element, x, y, vx, vy, angle, spin }
   camera: 0,           // how far up the world the view has scrolled
   streak: 0,           // perfect drops in a row
@@ -419,6 +430,7 @@ const state = {
   bestBefore: 0,       // the best when this round started
   newBest: false,      // this round beat an earlier best (so "Best" glows at the end)
   place: 0,            // where the last round landed in the app's five-line list (1..5), 0 if it did not
+  startLevel: 1,       // the practice level (the badge on the welcome screen): the base counts as this many; 1 = a real round
   lastTime: 0,         // timestamp of the previous animation frame (ms)
 };
 
@@ -470,7 +482,11 @@ function towerTop() {
     2026-10-17: "in my mind it is already 1"; until then it did not
     count), so the first drop reads 2 and Scarecrow comes on the fourth. */
 function stackedCount() {
-  return state.slabs.length;
+  // The base is pumpkin 1. A round started at level 50 (the practice
+  // panel) has a base that counts as 50, so the first drop
+  // reads 51 and the first slab slides at the ramp's speed for a tower of
+  // 50 (the speed is always that of the tower as it stands).
+  return state.slabs.length + state.startLevel - 1;
 }
 
 /** The colour of slab number `index` (0 = the base). */
@@ -676,6 +692,7 @@ function showHint() {
     the number glow; the first round of a visit sets the best without
     beating one, so no glow then. */
 function updateLabels() {
+  if (state.startLevel > 1) return;     // a practice round: the high score is not in play
   const count = stackedCount();
   if (count > state.best) state.best = count;
   if (state.bestBefore > 0 && count > state.bestBefore) state.newBest = true;
@@ -802,6 +819,7 @@ function backToStart() {
   state.phase = "ready";
   endScreen.hidden = true;
   startScreen.hidden = false;     // the stage keeps its glow: both screens have it
+  showBadge();
   startHints();
 }
 
@@ -818,12 +836,31 @@ function placeSlab(element, x, width) {
   state.slabs.push({ element, x, width });
 }
 
-/** Start a new slab sliding in from alternate sides, as wide as the
-    slab it must land on, a little faster than the one before. */
+/** The seconds a slab takes to cross the stage when the tower holds
+    `count` pumpkins: the start, less one step for every pumpkin after the
+    first, each step from the RAMP stretch that pumpkin is in, never under
+    the floor. A plain loop, so the table can have any number of rows. */
+function crossingFor(count) {
+  let seconds = CROSSING_START;
+  for (let pumpkin = 2; pumpkin <= count; pumpkin += 1) {
+    const stretch = RAMP.filter((row) => row.from < pumpkin).pop();
+    seconds -= stretch.step;
+  }
+  return Math.max(CROSSING_FASTEST, seconds);
+}
+
+/** Start a new slab sliding in from the side opposite to the way the
+    last one was going when it was dropped (the first from the left), as
+    wide as the slab it must land on, a little faster than the one before.
+    Until 2026-10-17 the sides simply alternated by slab number, which
+    reads the same while slabs are dropped before their first bounce;
+    once they bounce (fast slabs, a practice round at a high level) a
+    slab dropped on its way back was followed by one from the same way
+    (John: "I prefer the regular method"). */
 function spawnMover() {
   const top = state.slabs[state.slabs.length - 1];
-  const fromLeft = state.slabs.length % 2 === 1;
-  const speed = Math.min(MAX_SPEED, START_SPEED * Math.pow(SPEED_GROWTH, state.slabs.length - 1));
+  const fromLeft = state.lastDirection !== 1;   // the last one went right (came from the left)? then from the right
+  const speed = 100 / crossingFor(stackedCount());       // the stage is 100vw wide
   const x = fromLeft ? -top.width : 100;
   const element = makeSlabElement(x, towerTop() + HOVER, top.width, toneFor(state.slabs.length));
   element.classList.add("has-stem");
@@ -900,6 +937,7 @@ function drop() {
   const tiny = mover.width <= START_WIDTH / 4;
   const pencil = mover.width <= START_WIDTH / 8;
   state.mover = null;
+  state.lastDirection = mover.direction;        // the next slab comes the other way
 
   // Perfect: the edges match within the tolerance. Snap it into line.
   if (Math.abs(mover.x - top.x) <= PERFECT_TOLERANCE) {
@@ -1015,6 +1053,7 @@ function reset() {
   state.slabs = [];
   state.pieces = [];
   state.mover = null;
+  state.lastDirection = 0;
   state.camera = 0;
   state.streak = 0;
   state.cleanStreak = 0;
@@ -1042,6 +1081,8 @@ function reset() {
 function start() {
   clearTimeout(endTimer);         // Stack again beat the end screen's minute
   reset();
+  applyStartLevel();
+  levelBadge.hidden = true;       // the base scrolls away; the badge is for the welcome screen
   stopHints();
   clearCornerGlow();              // the glow and the balloon were for the last round only
   stopFireworks();
@@ -1052,6 +1093,83 @@ function start() {
   playSound("start");             // the "go" ding, and the phone's audio wake-up (see sound.js)
   spawnMover();
 }
+
+/* ---- The practice level (John, 2026-10-17) -------------------------------
+   "a useful debugging feature": the badge over the base slab on the
+   welcome screen reads "Level 1"; a tap on it opens a panel to pick where
+   the next round starts, 1 to 100. Above 1 the base counts as that many
+   pumpkins (stackedCount), the ramp's speed is that level's, the height
+   rungs below the level are marked earned without a banner (so the end
+   title is right and the first drop does not ring them all), and the
+   round is not reported (gameOver) nor counted as a best (updateLabels).
+   The pick is kept on the device under the game's own key (rule 21 of
+   the requirements: "halloween2026:<folder>:..."), wrapped in try/catch
+   because some browsers refuse storage. It first lived as a drop-down in
+   the shell's THIS GAME tab, for an hour; John moved it here. */
+
+const PRACTICE_KEY = "halloween2026:stack-o-lantern:start-level";
+const PRACTICE_TOP = 100;
+
+/** The saved practice level, 1 when there is none or it makes no sense. */
+function readStartLevel() {
+  let saved = 1;
+  try { saved = Number(localStorage.getItem(PRACTICE_KEY)); } catch (error) { saved = 1; }
+  return Number.isFinite(saved) ? Math.min(PRACTICE_TOP, Math.max(1, Math.floor(saved))) : 1;
+}
+
+function saveStartLevel(level) {
+  try { localStorage.setItem(PRACTICE_KEY, String(level)); } catch (error) { /* then it is 1 next visit */ }
+}
+
+/** At the start of a round: take the level and set the tower up for it. */
+function applyStartLevel() {
+  state.startLevel = readStartLevel();
+  if (state.startLevel === 1) return;
+  MILESTONES.forEach((entry) => {
+    if (entry.family === "height" && entry.at <= state.startLevel) state.earned.push(entry);
+  });
+}
+
+/** The badge over the base on the welcome screen, with the level it
+    would start at. */
+function showBadge() {
+  levelBadge.textContent = "Level " + readStartLevel();
+  levelBadge.hidden = false;
+}
+
+/** Open the panel with the <select> on the saved level. The options are
+    built once, the first time. */
+function openPractice() {
+  if (practiceLevel.options.length === 0) {
+    for (let level = 1; level <= PRACTICE_TOP; level += 1) {
+      const option = document.createElement("option");
+      option.value = String(level);
+      option.textContent = String(level);
+      practiceLevel.appendChild(option);
+    }
+  }
+  practiceLevel.value = String(readStartLevel());
+  practicePanel.hidden = false;
+}
+
+function closePractice() {
+  practicePanel.hidden = true;
+}
+
+// The badge and the panel sit inside the stage, where a touch-down starts
+// the round: their touches stop here (like the sound switch's).
+levelBadge.addEventListener("pointerdown", (event) => event.stopPropagation());
+levelBadge.addEventListener("click", openPractice);
+practicePanel.addEventListener("pointerdown", (event) => event.stopPropagation());
+document.getElementById("practiceDone").addEventListener("click", () => {
+  saveStartLevel(Number(practiceLevel.value));
+  showBadge();
+  closePractice();
+});
+document.getElementById("practiceCancel").addEventListener("click", closePractice);
+document.getElementById("practiceReset").addEventListener("click", () => {
+  practiceLevel.value = "1";      // OK still has to be tapped; Cancel keeps the old level
+});
 
 /** The end word for a count: the first band the count reaches, then a
     random one of its words. */
@@ -1099,8 +1217,12 @@ function gameOver() {
   // "16 (10-17-2026) Giraffe" (John, 2026-10-17; it was the mode, "easy"
   // or "hard", for a day, and scores saved then keep that note). Under 5
   // there is no level and no note.
-  // The answer is the count's place in that list, 1 to 5, or 0.
-  state.place = Halloween.reportScore(count, undefined, level ? [level.name] : undefined);
+  // The answer is the count's place in that list, 1 to 5, or 0. A round
+  // started above level 1 is practice and is not reported (John: "no
+  // scores will be recorded").
+  state.place = state.startLevel === 1
+    ? Halloween.reportScore(count, undefined, level ? [level.name] : undefined)
+    : 0;
 
   // Let the miss play out (the moon winces at it) before the end screen
   // covers it. Then the moon gives its verdict on the round, with a
@@ -1304,13 +1426,15 @@ function onTap(event) {
 
 // pointerdown fires the instant a finger touches: no click delay.
 stage.addEventListener("pointerdown", onTap);
-document.getElementById("playAgain").addEventListener("click", start);
+// Stack again returns to the welcome screen (the base with its level
+// badge in view); the next tap there starts the round (John, 2026-10-17).
+document.getElementById("playAgain").addEventListener("click", backToStart);
 
 // A bonus for people at a keyboard. Touch alone is enough (rule 11).
 document.addEventListener("keydown", (event) => {
   if (event.code === "Space" || event.code === "Enter") {
     event.preventDefault();
-    if (state.phase === "over") start(); else onTap(event);
+    if (state.phase === "over") backToStart(); else onTap(event);
   }
 });
 
@@ -1320,5 +1444,6 @@ document.addEventListener("keydown", (event) => {
 // the corner starts over too.
 state.best = Halloween.bestScore();
 reset();
+showBadge();                    // "Level 1" (or the saved practice level) over the base
 startHints();                   // the goal line cycles while the start screen waits
 requestAnimationFrame(frame);

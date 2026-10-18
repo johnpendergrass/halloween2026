@@ -1,6 +1,6 @@
 # Stack o' Lantern — Specifications (design decisions)
 
-Last updated: 2026-10-17 16:27 (/update; SECTION 7: the end screen's three tiers, the green balloon, three fanfares, fireworks from behind the moon, no byline. 14:41: SECTION 6: sound, the base is pumpkin 1, a rung jumps the banner queue, the shell's Settings button. 12:21: SECTION 5 IS THE CURRENT DESIGN: milestone families, the level as the title, one level, no info bar, the corner, the staircase, the minute, the shell reading back scores. Sections 1 to 4 are the 2026-09-29 and 2026-10-16 record; section 2 (EASY / HARD) and the 3x3 grid in section 3 are history now. Earlier: 2026-10-16 20:45 /update; 20:20 no Stacked count in the bar, Best glows on a new best; 19:55 count pops off each pumpkin; 19:10 the moon fixed at one spot; 18:30 the end screen laid out around the moon; 17:15 first file in the game's own folder)
+Last updated: 2026-10-17 17:57 (/update; SECTION 8: the ramp as seconds per crossing, the practice level on the welcome screen, Stack again goes home, back and forth. 16:27: SECTION 7: the end screen's three tiers, the green balloon, three fanfares, fireworks from behind the moon, no byline. 14:41: SECTION 6: sound, the base is pumpkin 1, a rung jumps the banner queue, the shell's Settings button. 12:21: SECTION 5 IS THE CURRENT DESIGN: milestone families, the level as the title, one level, no info bar, the corner, the staircase, the minute, the shell reading back scores. Sections 1 to 4 are the 2026-09-29 and 2026-10-16 record; section 2 (EASY / HARD) and the 3x3 grid in section 3 are history now. Earlier: 2026-10-16 20:45 /update; 20:20 no Stacked count in the bar, Best glows on a new best; 19:55 count pops off each pumpkin; 19:10 the moon fixed at one spot; 18:30 the end screen laid out around the moon; 17:15 first file in the game's own folder)
 
 The game is called **Stack o' Lantern** since 2026-10-17 (it was
 "Stack-o'-Lantern"; the folder stays `stack-o-lantern`).
@@ -531,3 +531,84 @@ The THIS GAME tab showed "Claude, September 29, 2026" under Stack's
 title and a credits line at the bottom. John: "remove that. it is
 already at the bottom." Stack's `designer` and `date` in `games.json`
 are blank, so the shell hides the byline; the credits line stays.
+
+## 8. 2026-10-17 evening: the ramp, the practice level, back and forth (John and Claude)
+
+### 8.1 The ramp, in seconds
+
+"it gets hard at around 25 or so" (John). The first build multiplied the
+speed by 1.035 for every slab: 2.4 s a crossing at pumpkin 1, 1.0 s at
+25, the cap of 110 vw/s (0.9 s) at 29, so the game was as hard as it
+ever got from 29 on. John thought in crossing seconds, not multipliers,
+and in subtraction, not growth: "what if it were linear, subtracting
+... per level"; then front-loaded steps (which put the floor at 68, too
+early for "75 easily"); then "a linear subtraction with no ramp, with
+the starting value where it is now, but the value at level 100 is 1.0
+s"; and finally "getting to 1.0 at 100, and then slowing down the
+subtraction by 50% from there on. still faster, but doable", with "the
+cap at about 0.85".
+
+So the ramp is a TABLE in seconds: the first slab crosses in 2.4 s; each
+pumpkin placed takes a step off the next crossing, 0.0141 s a pumpkin
+up to 100 (1.0 s there), 0.0071 s after; never under 0.85 s (about 121).
+
+| Pumpkins | Crossing |
+|---|---|
+| 1 | 2.4 s |
+| 25 | 2.06 s |
+| 50 | 1.71 s |
+| 75 | 1.36 s |
+| 100 | 1.0 s |
+| 121 and up | 0.85 s |
+
+John reaches "70 or so" on it; the stretch over 100 is on the list to
+rethink. The slicing (a sloppy drop trims the slab) is now the harder
+half of the game.
+
+### 8.2 The practice level
+
+"i have a hard time getting above 70 or so!" The tool: start a round at
+a chosen level. It was built first where John asked, as a drop-down in
+the shell's THIS GAME tab ("we can consider it a useful debugging
+feature for now"), which needed a new shell feature and a third helper
+call and bent the rule that a game cannot read its tab. Within the hour
+John preferred the game's own screen: "i would rather that the anchor
+pumpkin slice show its level (default = 1), but if the user clicks on
+it the popup comes up that allows choosing a level from 1-100. Say that
+this is for practice only, and that no scores will be recorded." The
+shell went back to how it was.
+
+So: the base slab on the welcome screen carries the words "Level 1"
+(plain text; a dark pill was tried and dropped: "lose the badge... just
+clickable text"). A tap on them opens the PRACTICE panel, an in-game box:
+"Practice start" / "Start the next game at this level." / "For practice
+only." / a smaller "No scores are recorded above level 1." / the Level
+picker at the left and "Reset to 1" at the right / Cancel at the left
+and OK at the right. The pick is kept on the device under the game's own
+key. A round from level 50: the base and the first slab are full width,
+the base counts as 50 so the first drop reads 51, the first slab slides
+at the ramp's speed for a tower of 50, the height rungs up to 50 are
+marked earned without a banner (the end title is still the level
+reached), and the round is not reported to the shell, cannot be a new
+best, and gets no balloon (it still gets the good-job fanfare and
+fireworks at 5 or more).
+
+### 8.3 Stack again goes to the welcome screen
+
+The words on the base are only reachable on the welcome screen, and the
+end screen's Stack again button sits over the base. John: "have the
+stack again just replay the welcome screen, where the anchor slab is
+visible? and click to start starts the next game?" So it does, at once
+(the end screen's minute timeout already went there). One tap more per
+round; a breath between rounds; one place between rounds.
+
+### 8.4 Back and forth
+
+John, in a practice round: "the next slice comes from the same
+direction". Measured, the sides alternated by slab number in both modes;
+what he felt was a bounce: a fast slab dropped on its way back was
+followed by one from the same side. His rule: "whatever direction the
+slice was moving before the drop, it should move the opposite way next.
+back and forth." The game remembers the direction at the drop and the
+next slab comes in from the other side, bounce or no bounce. "that works
+fine. good job."

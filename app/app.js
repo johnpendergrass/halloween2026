@@ -20,7 +20,7 @@
 
 // Bump this (and the ?v= tags in index.html) whenever code changes, so
 // phones fetch fresh copies instead of old cached ones.
-const APP_VERSION = "2026-1017-stack-victory";
+const APP_VERSION = "2026-1017-stack-practice";
 
 /* ------------------------------------------------------------------------
    1. Settings and the games list
@@ -284,6 +284,9 @@ function fillThisGameTab(game) {
 
    THE SWITCHES ARE NOT CONNECTED TO THE GAMES. They are shown and
    remembered, but no game can read them, so they change nothing in a game.
+   (For an hour on 2026-10-17 the tab also had drop-down "choices" a game
+   could read, for Stack's starting level; John moved that into the game
+   itself, where a setting that changes play belongs.)
    --------------------------------------------------------------------- */
 
 const STORAGE_PREFIX = "halloween2026:";
