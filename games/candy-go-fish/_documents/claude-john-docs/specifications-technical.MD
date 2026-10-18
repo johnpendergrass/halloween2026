@@ -1,5 +1,7 @@
 # Candy Go Fish — Technical Specifications
 
+**PROJECT FINISHED 2026-10-18 (John: "it will likely be opened for bug fixes, but i am not planning any additional games or features"). This file describes the game as it ships; bug fixes only from here.**
+
 Last updated: 2026-10-18 13:40 (channels.music.enabled false and musicMode 'continuous' by default, restoreSoundSettings honours a saved true; before that 2026-10-16 15:34: score note, welcome subtitle, 9:15 panel; the name rules live in the shell's app/styles.css 5b, see the root technical spec 4b2). Before: 14:15 RELEASABLE, consolidated here from section 4k of the root file; sub-headings keep their 4k numbering.
 
 ## 4k. Candy Go Fish implementation notes (games/candy-go-fish/, 2026-10-14 reading)

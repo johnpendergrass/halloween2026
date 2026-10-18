@@ -1,5 +1,7 @@
 # The Pumpkin Patch (slot 1, folder `pumpkin-patch`)
 
+**FINISHED 2026-10-18 with the whole collection (John): bug fixes only.**
+
 The game in slot 1, which the app shows when it starts, under the open App
 tab. Until 2026-10-16 it was the "home" game that 🏠 returned to; now 🏠
 only opens the panel, and the patch is reached through its button like any

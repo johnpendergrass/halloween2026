@@ -1,5 +1,7 @@
 # GO FISH! — Candy Edition!
 
+**FINISHED 2026-10-18 with the whole collection (John): bug fixes only.**
+
 RELEASABLE Halloween 2026 mini game (John, 2026-10-16: every todo closed, phone reviews done), shell slot 8. Plain HTML/CSS/JavaScript, no framework or build. HTTP and direct index.html opening work.
 
 Start with [_documents/_START-HERE.md](_documents/_START-HERE.md) and the authoritative [October 15 handoff](_documents/codex-john-docs/CURRENT-STATE-2026-1015.md). Older design/handoff notes are historical where superseded.

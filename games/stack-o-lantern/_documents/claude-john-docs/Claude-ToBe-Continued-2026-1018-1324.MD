@@ -1,5 +1,7 @@
 # Stack o' Lantern — To Be Continued (2026-10-18 13:24) — the speaker's hit box three times its picture
 
+**Added 2026-10-18 14:31: THE PROJECT IS FINISHED (John). Bug fixes only; nothing in the ToDo below is planned any more. The root handoff of 14:31 has the bug-fix routine.**
+
 Read: the 13:04 handoff of this day beside this one (the floor at 0.65 s,
 the tips, the practice list of tens, CHEAT rounds), then
 `specifications.MD` (9.5 to 9.7) and `specifications-technical.MD`

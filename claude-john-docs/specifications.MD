@@ -1,5 +1,7 @@
 # Halloween 2026 — Specifications (design decisions)
 
+**PROJECT FINISHED 2026-10-18 (John: "it will likely be opened for bug fixes, but i am not planning any additional games or features"). This file describes the game as it ships; bug fixes only from here.**
+
 Last updated: 2026-10-18 13:04 (6q: the marks in a score's notes, for Stack's CHEAT rounds; 6r: the GAMES tab rebuilt: a rainbow title, a row of three labelled icons, credits; the second tab PATCH / STACK / FISH; before that 2026-10-18 12:14: 6p: three games on a diagonal board, the tab named for the game, the Pumpkin Patch's tab, no switches, an *italic* mark; before that 2026-10-17 17:57: 6o: the choices feature tried and removed; 16:27: 6n: the iPhone double-tap zoom, reportScore's place, Stack's byline; 14:41: 6m: a Settings button on the right of the top bar, Home → GAMES, Settings → THIS GAME; before that 2026-10-16 17:15: 2: no zoom on the shell page; 6f moved to the game's folder; 6i: Stack's switch dropped; before that: 15:34 names, 15:45 one control point, 15:00 tabled games removed)
 
 This file records WHAT the app looks like and WHY. Technical "how" lives in

@@ -1,5 +1,7 @@
 # Candy Go Fish — To Be Continued (2026-10-18 13:32) — RELEASABLE; the music starts OFF and Always
 
+**Added 2026-10-18 14:31: THE PROJECT IS FINISHED (John). Bug fixes only; nothing in the ToDo below is planned any more. The root handoff of 14:31 has the bug-fix routine.**
+
 The game's own handoff folder. Read first: this file, then
 `specifications.MD` (the dated section at the end) and
 `specifications-technical.MD` beside it, then the 2026-10-16 15:34

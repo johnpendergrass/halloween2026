@@ -1,5 +1,7 @@
 # Halloween 2026 — Technical Specifications
 
+**PROJECT FINISHED 2026-10-18 (John: "it will likely be opened for bug fixes, but i am not planning any additional games or features"). This file describes the game as it ships; bug fixes only from here.**
+
 Last updated: 2026-10-18 13:04 (4q: appendMarkedText in fillScores' notes; 4r: the GAMES tab column, GAMES_TAB_TITLE, button_label, .game-label, the row, the tab named from the label; stamp 2026-1018-cheat; before that 2026-10-18 12:14: 4p: the three-cell board, gameTab and shortName, high_scores, the *italic* mark, stamp 2026-1018-diagonal in 29 places; before that 2026-10-17 17:57: 4o: the choices feature in and out, stamp 2026-1017-stack-practice; 16:27: 4n: the touchend guard in the helper and app.js section 7, the viewport lines, .game-frame touch-action, reportScore returns the place, stamp 2026-1017-stack-victory in 29 places; 14:41: 4m: #settingsButton, pressTopButton, currentTab, afterDrawerSettles gone; stamp 2026-1017-stack-sound, 27 places; before that 2026-10-16 20:45: stamp 2026-1016-stack-endscreen, 26 places now: Stack's index has 3; nothing else in the shell; 17:15: 4: touch-action on the shell page; 4g moved to the game's folder; stamp 2026-1016-stack-milestones; before that: 15:34 top title, 15:45 one control point)
 
 ## 1. Stack and hosting

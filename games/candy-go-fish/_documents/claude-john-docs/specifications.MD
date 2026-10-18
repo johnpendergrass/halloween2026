@@ -1,5 +1,7 @@
 # Candy Go Fish — Specifications (design decisions)
 
+**PROJECT FINISHED 2026-10-18 (John: "it will likely be opened for bug fixes, but i am not planning any additional games or features"). This file describes the game as it ships; bug fixes only from here.**
+
 Last updated: 2026-10-18 13:40 (the music default is OFF and Always, see the section at the end; before that 2026-10-16 15:34: name in the shell, score note, welcome subtitle; the shell around the game has one control point and a 9:15 panel, see the root claude-john-docs). Before: 14:15 RELEASABLE, consolidated here from section 6k of the root spec; sub-headings keep their 6k numbering.
 
 ## 6k. Candy Go Fish (slot 8; John + Codex, 2026-10-07 to 10-14; Claude from 10-14)

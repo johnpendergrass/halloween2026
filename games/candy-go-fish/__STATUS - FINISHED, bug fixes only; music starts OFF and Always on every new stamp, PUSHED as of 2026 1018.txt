@@ -1,0 +1,16 @@
+Candy Go Fish (GO FISH! - Candy Edition, slot 3) - status (the glance; details in _documents/claude-john-docs/)
+
+2026 1018 1431  FINISHED with the whole collection (John): bug fixes only.
+2026 1018 1340-1355  PUSHED. The music default is OFF and Always (it was ON and Paused); a tap on MUSIC in the
+              Sound popup starts the tune at once. The remembered note carries the CACHE STAMP, so every new
+              version on Pages starts from the defaults. check-gofish-music.cjs in codex-john-docs/.
+2026 1016 1534  Small tweaks for the new one-control-point shell: score note "<you> vs <opponent>", the name as
+              GO FISH! over "Candy Edition", the 9:15 panel. PUSHED 17:15.
+2026 1016 pm   RELEASABLE (John): every todo closed, phone reviews closed, docs moved here, PUSHED.
+2026 1007-14   John + Codex built the game.
+
+NOT YET
+ - nothing planned. For a bug fix: the Codex verify scripts and check-gofish-music.cjs in
+   _documents/codex-john-docs/ run on 8098; the stamp is in 29 places and resets the sound note by design.
+
+DETAIL  _documents/_START-HERE.md (reading order), _documents/claude-john-docs/Claude-ToBe-Continued-2026-1018-1332.MD

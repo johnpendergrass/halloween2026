@@ -1,0 +1,19 @@
+Stack o' Lantern (folder stack-o-lantern, slot 2) - status
+
+2026 1018 1431  FINISHED with the whole collection (John): bug fixes only; the ideas below the line are closed.
+2026 1018 1324  PUSHED. THE SPEAKER'S HIT BOX is three times its picture (a thumb beside the speaker toggles the
+              sound instead of dropping a pumpkin). Stamp 2026-1018-speaker then.
+2026 1018 1304  PUSHED. THE FLOOR: CROSSING_FASTEST 0.65 s (the ramp runs on to pumpkin 150). THREE TIPS trimmed.
+              PRACTICE LIST 1, 10, 20 ... 200. PRACTICE ROUNDS COUNT: best, gold / green, fanfares, fireworks;
+              the app's list says "**CHEAT**" after the level name; the end title stays plain.
+2026 1018 1214  PUSHED. THE LADDER: Rainier 85, Denali 95. BIG RUNGS 50/100/200 with rockets (2 / 8 / 8).
+2026 1017       PUSHED x4. The ramp table, a practice level, the end screen's tiers, sound, families, 24 rungs.
+2026 1016       PUSHED x2. The moon fixed, the end screen rebuilt.   2026 0929-1001 Claude built the game.
+
+NOT YET
+ - nothing planned. Closed, not pending: the perfect-tolerance table at height, the MP3 voice per rung, more
+   moon faces, the stale checks (moonspot, endgrid), check-bigrungs in the scratchpad.
+ - for a bug fix: the checks in _documents/checks/ run one at a time on 8098; the stamp is in 29 places.
+
+DETAIL  _documents/claude-john-docs/Claude-ToBe-Continued-2026-1018-1324.MD and -1304.MD, specifications.MD (9),
+        specifications-technical.MD (12); _documents/milestones.md for every milestone; README - STACK-O-LANTERN.md
