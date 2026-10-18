@@ -1,0 +1,28 @@
+Halloween 2026 - project status (the glance; the SHELL's details in claude-john-docs/, each game's in its own folder)
+
+2026 1018 1324  PUSHED by Claude at John's request. SHELL unchanged; stamp 2026-1018-speaker for STACK's speaker
+              button, now three times its picture (taps beside the speaker no longer drop a pumpkin).
+2026 1018 1304  PUSHED. SHELL: the GAMES tab is a column: "HALLOWEEN 2026!" in rainbow over "Small games with a
+              Halloween feel.", a ROW of three bigger icons with Patch / Stack / Fish under them (games.json
+              button_label; the morning's diagonal is gone), "Credits: jp/claude/chatty 10/2026" at the bottom;
+              the second tab reads PATCH / STACK / FISH; a score's notes may use the text marks (the list shows
+              Stack's "**CHEAT**" bold). STACK: the speed floor 0.65 s (the ramp runs on to 150); three tips
+              trimmed; the practice list 1, 10, 20 ... 200; practice rounds COUNT with CHEAT in the app's list.
+2026 1018 1214  PUSHED. SHELL: three cells on a diagonal, the second tab named for the game, high_scores: false,
+              an *italic* mark. STACK: Rainier 85 + Denali 95, big rungs 50/100/200 with fireworks.
+2026 1017 1757  PUSHED. STACK: the ramp as seconds per crossing, a practice level, Stack again goes home.
+2026 1017 1627  PUSHED. SHELL: the iPhone DOUBLE-TAP ZOOM fixed; reportScore returns the place. STACK: tiers.
+2026 1017 1441  PUSHED. SHELL: a Settings button. STACK: sound, the base is pumpkin 1.
+2026 1016 pm   GO FISH! - Candy Edition RELEASABLE (John).   2026 1016 1534 SHELL: one control point.
+2026 1007-14   John + Codex built Go Fish, slot 8 (slot 3 since 1018).   2026 0927-1001 Claude built the shell.
+
+NOT YET
+ - John's phone check from Pages once it serves 2026-1018-speaker: the GAMES tab, the tab names, the patch's
+   tab, the bold CHEAT note, the speaker's reach, the floor from practice 150+, the big rungs' loudness
+ - Stack: if speed alone is not enough at height, the perfect-tolerance table is the next knob
+ - shell: check-shell.cjs (the row, the tab name, high_scores, a marked note, the top-bar states); the switch
+   column (no game declares one now: keep or drop); requirements doc says slots 1..8 in places; contribution
+   workflow
+
+DETAIL  claude-john-docs/Claude-ToBe-Continued-2026-1018-1324.MD and -1304.MD (spec 6r, 6q; technical 4r, 4q)
+        games/stack-o-lantern/_documents/claude-john-docs/ (spec 9.5-9.7, technical 12); games/candy-go-fish/_documents/

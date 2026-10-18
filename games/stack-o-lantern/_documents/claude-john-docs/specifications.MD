@@ -1,6 +1,6 @@
 # Stack o' Lantern — Specifications (design decisions)
 
-Last updated: 2026-10-18 13:04 (/update; 9.5 the floor 0.65 s and the frame probe, 9.6 three tips trimmed, the practice list of tens, CHEAT rounds in the app's list; before that 2026-10-18 12:14: SECTION 9: Rainier and Denali on the ladder, the big rungs with fireworks, the practice level per visit, the high picks, the bragging-rights line; before that 2026-10-17 17:57: SECTION 8: the ramp as seconds per crossing, the practice level on the welcome screen, Stack again goes home, back and forth. 16:27: SECTION 7: the end screen's three tiers, the green balloon, three fanfares, fireworks from behind the moon, no byline. 14:41: SECTION 6: sound, the base is pumpkin 1, a rung jumps the banner queue, the shell's Settings button. 12:21: SECTION 5 IS THE CURRENT DESIGN: milestone families, the level as the title, one level, no info bar, the corner, the staircase, the minute, the shell reading back scores. Sections 1 to 4 are the 2026-09-29 and 2026-10-16 record; section 2 (EASY / HARD) and the 3x3 grid in section 3 are history now. Earlier: 2026-10-16 20:45 /update; 20:20 no Stacked count in the bar, Best glows on a new best; 19:55 count pops off each pumpkin; 19:10 the moon fixed at one spot; 18:30 the end screen laid out around the moon; 17:15 first file in the game's own folder)
+Last updated: 2026-10-18 13:24 (/update; 9.7 the speaker's hit box three times its picture; before that 13:04: 9.5 the floor 0.65 s and the frame probe, 9.6 three tips trimmed, the practice list of tens, CHEAT rounds in the app's list; before that 2026-10-18 12:14: SECTION 9: Rainier and Denali on the ladder, the big rungs with fireworks, the practice level per visit, the high picks, the bragging-rights line; before that 2026-10-17 17:57: SECTION 8: the ramp as seconds per crossing, the practice level on the welcome screen, Stack again goes home, back and forth. 16:27: SECTION 7: the end screen's three tiers, the green balloon, three fanfares, fireworks from behind the moon, no byline. 14:41: SECTION 6: sound, the base is pumpkin 1, a rung jumps the banner queue, the shell's Settings button. 12:21: SECTION 5 IS THE CURRENT DESIGN: milestone families, the level as the title, one level, no info bar, the corner, the staircase, the minute, the shell reading back scores. Sections 1 to 4 are the 2026-09-29 and 2026-10-16 record; section 2 (EASY / HARD) and the 3x3 grid in section 3 are history now. Earlier: 2026-10-16 20:45 /update; 20:20 no Stacked count in the bar, Best glows on a new best; 19:55 count pops off each pumpkin; 19:10 the moon fixed at one spot; 18:30 the end screen laid out around the moon; 17:15 first file in the game's own folder)
 
 The game is called **Stack o' Lantern** since 2026-10-17 (it was
 "Stack-o'-Lantern"; the folder stays `stack-o-lantern`).
@@ -756,3 +756,21 @@ A detail seen in the check: a practice round beats the corner's best
 the normal way, so a first visit's practice from 50 ends in a gold NEW
 HIGH SCORE at 51 (the corner's best was 1, the base). That is the rule
 John asked for, and the list says CHEAT beside it.
+
+### 9.7 The speaker's hit box (2026-10-18 13:24)
+
+John: "is there any way to stop a tap on the speaker icon, turning
+sound on/off, from triggering a pumpkin drop?" The switch already
+stopped its own touch (sound.js swallows pointerdown, the click toggles),
+so the drops came from thumbs landing just outside the picture: 8.5vw is
+about 33 px, under the 44 px fingertip minimum. Two ways were weighed,
+"any tap above the moon level is ignored" and a bigger target; John:
+"making the speaker target bigger is more elegant. do that", then
+"imagine the speaker icon was 3x its size - can we have the hit box that
+size?" So the button is 25.5vw square, about 100 px, with 8.5vw of clear
+padding all round; the picture does not move (the button starts above
+and left of the stage's corner, where the stage clips it), so all the
+extra reach is to the right and below, where thumbs land. The muted
+slash is centred on the button, so it stays on the picture. Checked
+with real touch taps up to 40 px outside the picture: every one toggles
+the sound and none starts a round.

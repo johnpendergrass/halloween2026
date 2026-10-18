@@ -149,14 +149,22 @@ body {
    the dark sky. Muted wears Go Fish's red slash, drawn here, so one
    picture does both. The script stops taps on it reaching the stage, so
    flipping the switch never drops a pumpkin. */
+/* The button is three times its picture (John, 2026-10-18: a thumb aimed
+   at the speaker landed just outside the 8.5vw circle, on the stage, and
+   dropped a pumpkin; "imagine the speaker icon was 3x its size - can we
+   have the hit box that size?"): 8.5vw of clear padding all round makes
+   a 25.5vw target, about 100 px on a phone. The picture stays where it
+   was (top 2.5vw, left 3vw), so the button starts above and left of the
+   stage's corner (the part outside is clipped and does nothing), and the
+   slash below is centred on the button, so it stays on the picture too. */
 .sound-corner {
   position: absolute;
-  top: 2.5vw;                /* John: a bit lower, it crowded the top edge */
-  left: 3vw;
+  top: -6vw;
+  left: -5.5vw;
   z-index: 12;
-  width: 8.5vw;
-  height: 8.5vw;
-  padding: 0;
+  width: 25.5vw;
+  height: 25.5vw;
+  padding: 8.5vw;
   border: 0;
   background: transparent;
   cursor: pointer;

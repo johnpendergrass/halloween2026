@@ -17,7 +17,8 @@ three best milestones under it.
 - **Status:** playable and checked, with sound, an end-screen
   celebration, a gentler ramp, three big rungs with fireworks and a
   practice level (2026-10-18 12:14); the floor at 0.65 s, practice rounds
-  count as CHEAT in the app's list (2026-10-18 13:04).
+  count as CHEAT in the app's list (2026-10-18 13:04); the speaker's hit box
+  three times its picture (13:24).
 - **The rules** every game follows are in
   [`../README - game design requirements.md`](../README%20-%20game%20design%20requirements.md).
 
