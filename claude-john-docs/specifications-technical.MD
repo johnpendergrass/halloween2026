@@ -767,3 +767,22 @@ section 4's comment. The stamp is `2026-1017-stack-practice`, 29 places
   `#thisGameScores .score-note b` reads CHEAT, the saved notes are
   `["Space Needle", "**CHEAT**"]`; `cheat-list.png`.
 - Stamp `2026-1018-cheat`, 29 places (unchanged count).
+
+## 4s. The closing clean-up (2026-10-18 14:45)
+
+- `git rm -r games/game1 ... games/game8`; the eight `games.json`
+  entries removed by a regex per entry (`edit-gamesjson.py` in the
+  scratchpad), the result parsed to be sure. `pickButtonGames` needs no
+  change: it already ignored them (`goes_in_slot: ""`).
+- `games/README - game design requirements.md`: eleven passages
+  (`edit-requirements.py`), listed in the 14:45 handoff. Rule 6's check
+  sizes are now the appendix's 9:15 numbers (338 × 563, 547 × 912).
+- New files: `app/README - ROADMAP.md`, `app/README - app.js.md`,
+  `app/README - styles.css.md`, `app/README - default-icon.svg.md`,
+  `games/README - game-helper.js.md`, `start-local/README - starting
+  local.txt`. Root `README.md` replaced whole. The ROADMAP's stamp table
+  is by file: index.html 2, app.js 1, pumpkin-patch 1, stack-o-lantern
+  4, candy-go-fish/index.html 20, candy-go-fish.js 1 = 29.
+- Stamp `2026-1018-cleanup` (29 places; `games.json` changed).
+- Checked by the scratch `check-gamestab.cjs` on 8098: three cells, no
+  page or console errors at 390 and 375 wide.

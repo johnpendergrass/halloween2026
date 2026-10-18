@@ -3,12 +3,15 @@
 *For anyone making a mini game for Halloween 2026, and for their AI
 assistants.*
 
-Version 4, 2026-10-01, amended 2026-10-15 (the app's Sound switch is
-gone, scores may carry two short notes). This version
-covers **sizes, text, artwork and colours**, and, new in version 4, **how
-your game lives with the app**: the bottom panel, pausing, high scores,
-sound and settings (1.8, 2.5 and rules 18 to 22). Later versions will add
-file-size limits, naming rules, and how to test and submit.
+Version 5, 2026-10-18: the FINAL version. The collection was declared
+finished on 2026-10-18 (bug fixes only, no new games or features) and
+this document was brought into line with the app as it ships, in case
+the shell is ever reused for another collection. It covers **sizes,
+text, artwork and colours** and **how your game lives with the app**:
+the bottom panel, pausing, high scores, sound and settings (1.8, 2.5 and
+rules 18 to 22). File-size limits, naming rules beyond rule 1 and a
+submission process were never written; see the end. (Version 4 was
+2026-10-01, amended 2026-10-15.)
 
 - **Part 1 is for designers.** Everything is measured on one drawing
   canvas, in real pixels.
@@ -21,12 +24,14 @@ file-size limits, naming rules, and how to test and submit.
 > treat every MUST as a requirement and check your work against it before
 > finishing.
 
-**Demo games.** `games/stack-o-lantern/` (Stack-o'-Lantern) and
-`games/pumpkin-patch/` (the watch-only patch in slot 1) are demos, written to follow these
-rules. They may change. Where a demo departs from a rule, its own
-`README - <NAME>.md` has a section *"Where this game breaks the
-requirements, and why"*. If the demo and this document disagree and the
-demo's README does not explain it, **this document is right**.
+**The three games that ship** were written to follow these rules:
+`games/pumpkin-patch/` (the watch-only patch in slot 1),
+`games/stack-o-lantern/` (slot 2, the worked example for everything in
+2.5) and `games/candy-go-fish/` (slot 3, written by John with Codex; its
+docs are in its own `_documents/` folder). Where a game departs from a
+rule, its own README has a section *"Where this game breaks the
+requirements, and why"*. If a game and this document disagree and the
+game's README does not explain it, **this document is right**.
 
 *This is the only copy of this file. It lives in `games/` and is maintained
 by the project owner. Don't copy it into your game folder: link to it.*
@@ -41,7 +46,7 @@ Your game lives in the **game panel**, the big middle area of the app:
 
 ```text
 ┌─────────────────────┐
-│  app top panel      │  the app's: Home button, game name
+│  app top panel      │  the app's: Home, game name, Settings
 ├─────────────────────┤  ← app's lavender line (not in your space)
 │                     │
 │                     │
@@ -191,8 +196,8 @@ Square cells filling the full width (1296):
 
 **Your colours are entirely up to you.** You may match these so your game
 feels part of the app, borrow them, or ignore them.
-*These are the current test colours and may change before release.* Only
-colours the app itself uses are listed; the demo games choose their own.
+*These are the colours the app shipped with.* Only colours the app
+itself uses are listed; each game chooses its own.
 
 | Colour | Hex | Where the app uses it |
 |---|---|---|
@@ -228,10 +233,11 @@ does very little to your game, so a few things are your game's own job.
 ### The bottom panel does not pause your game
 
 - **The player can call up the app's bottom panel at any time**, also in
-  the middle of a game (the Home button in the app's top panel). It
-  slides up over **about the lower half of your canvas (55%)** and stays
-  there until the player closes it. Taps on the panel do not reach your
-  game.
+  the middle of a game: the Home button in the app's top panel opens it
+  on the GAMES tab, the Settings button (three lines) on the game's own
+  tab. It slides up over **about the lower half of your canvas (55%)**
+  and stays there until the player closes it. Taps on the panel do not
+  reach your game.
 - **Nothing happens to your game when it opens or closes.** The app does
   not pause it, stop it, or tell it. Whatever moves keeps moving behind the
   panel, and a clock keeps counting. Your game has no way to know whether
@@ -243,23 +249,29 @@ does very little to your game, so a few things are your game's own job.
 - The same goes for starting and restarting: your own start screen, your
   own "play again".
 - When the player picks another game, your page is simply closed.
-  Nothing of it is kept, except scores it has reported. (Home only opens
-  the panel; a tap on your game while the panel is open closes the panel
-  again, and that tap never reaches your game.)
+  Nothing of it is kept, except scores it has reported. (Home and
+  Settings only open and close the panel; a tap on your game while the
+  panel is open closes the panel again, and that tap never reaches your
+  game.)
 
 ### High scores
 
 - The app keeps **the five best scores of each game** and shows them in
-  the bottom panel's **THIS GAME** tab, each with the date it was made,
-  for example `1.  42  (10-01-2026)`. The list is shown for every game,
-  with `---` where there is no score yet. The player can clear a game's
-  list there.
+  the bottom panel's second tab, each with the date it was made, for
+  example `1.  42  (10-01-2026)`. (This document calls that tab **THIS
+  GAME**; on screen it carries the game's own one-word name in capitals,
+  PATCH, STACK or FISH, from `button_label` in `games.json`.) The list
+  shows `---` where there is no score yet, and the player can clear a
+  game's list there. A game that never reports a score may hide the list
+  with `"high_scores": false` in its entry (the Pumpkin Patch does).
 - Your game only has to tell the app the result when a game ends: **a
   number**, where higher is better. It may add **a short text to show in
   place of the number**, for example "Master Chef". The list is still
   ordered by the number. About 11 characters fit. It may also add **up to
   two short notes** (about 16 characters each) shown after the date, such
   as the opponent or the variant: `1.  3-2  (10-15-2026)  vs. Ron  3 set game`.
+  A note may use the text marks described in `games.json` (Stack
+  o' Lantern's practice rounds carry `**CHEAT**`, shown in bold).
 - Scores are kept **on the player's own phone or PC**. Players do not see
   each other's scores.
 - A game without scores does nothing; its list just stays empty.
@@ -371,7 +383,7 @@ Sizes refer to the table in 1.3.
 
 **Page**
 
-1. MUST be a normal web page at `games/<game-id>/index.html`, with its CSS,
+1. MUST be a normal web page at `games/<folder_name>/index.html`, with its CSS,
    JS and `assets/` in that same folder. MUST use relative paths (`./...`)
    and MUST NOT load anything from outside its own folder. The one
    exception is the app's helper file, `../game-helper.js` (2.5).
@@ -387,7 +399,7 @@ Sizes refer to the table in 1.3.
    `canvasToScreen()` / shares of `window.innerWidth` in JS. `px` is allowed
    only as a **floor** inside `max()`, and for lines of 1 to 3 px. No `px`
    ceilings (no `clamp(..., Npx)`).
-6. Check the layout at 338 × 526 CSS px (smallest phone) and 547 × 850
+6. Check the layout at 338 × 563 CSS px (smallest phone) and 547 × 912
    (PC). See the appendix for more sizes.
 
 **Touch**
@@ -543,13 +555,24 @@ The canvas is shrunk to fit each device.
 
 ---
 
-## Coming in later versions
+## Never written (the project is finished)
 
-- A way for games to use their own switches
-- Sound rules (iPhones play nothing until the first tap)
-- Your `games.json` entry and your icon (for now, the `_about` block at
-  the bottom of `games.json` explains every field)
-- File-size limits, folder and file naming rules, how to test and submit
+These were listed as "coming in later versions" while the collection was
+being built. The collection was declared finished on 2026-10-18 and none
+of them was written; a new collection built on this shell would have to
+decide them for itself:
 
-Not coming: the app pausing your game. That stays your game's own job
-(rule 18).
+- A way for games to read their own switches (today the app only shows
+  and remembers them)
+- Sound rules (iPhones play nothing until the first tap; each shipped
+  game solved it with its own on-screen control)
+- File-size limits, folder and file naming rules beyond rule 1, and how
+  to test and submit
+
+What IS documented: your `games.json` entry and your icon (the `_about`
+block at the bottom of `games.json` explains every field, including
+`button_label` and `high_scores`), and the app's own files
+(`app/README - ROADMAP.md`, which maps the whole repository).
+
+Not coming, ever: the app pausing your game. That stays your game's own
+job (rule 18).

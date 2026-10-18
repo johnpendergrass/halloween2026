@@ -761,3 +761,23 @@ second note. The list reads "1. 51 (10-18-2026) Space Needle **CHEAT**".
 Candy Go Fish's notes ("vs. Ron", "3 set game") have no marks and look
 the same as before. Why bold and not a colour: the note cells are small
 and dim (0.75em, 85% opacity); bold is the one mark that reads there.
+
+## 6s. The closing clean-up (John, 2026-10-18, after FINISHED)
+
+"we should actually clean up the folders and files somewhat before
+officially ending things." The eight placeholder game folders
+(`games/game1` to `game8`) and their `games.json` entries are gone: they
+were the shells of the original plan in which friends would each take
+one over, and that plan was dropped. `games.json` now lists exactly the
+three games that ship. The requirements document is version 5, final,
+brought into line with the shell as it ships (Home and Settings, the tab
+named for the game, `high_scores: false`, marks in notes, the 9:15 check
+sizes) without changing a rule; its "coming later" list became "never
+written", so a future reader does not wait for it. New READMEs, written
+for a novice who opens the repository cold: `app/README - ROADMAP.md`
+(the map of every file and who reads what), one per app code file
+(`app.js`, `styles.css`, `default-icon.svg`, `game-helper.js`), and
+`start-local/README - starting local.txt`. The root README was rewritten
+for the finished state. Why READMEs beside the files rather than one big
+document: John's question was "what would help him get up to speed?",
+and the answer is a map first, then a short guide wherever he lands.

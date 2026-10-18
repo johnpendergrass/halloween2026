@@ -37,110 +37,6 @@
       "settings": []
     },
     {
-      "folder_name": "game1",
-      "goes_in_slot": "",
-      "title": "Game 1",
-      "short_title": "Game 1",
-      "icon": "",
-      "designer": "",
-      "credits": "",
-      "date": "",
-      "description": "Placeholder for a game not written yet.",
-      "how_to_play": "",
-      "settings": []
-    },
-    {
-      "folder_name": "game2",
-      "goes_in_slot": "",
-      "title": "Game 2",
-      "short_title": "Game 2",
-      "icon": "",
-      "designer": "",
-      "credits": "",
-      "date": "",
-      "description": "Placeholder for a game not written yet.",
-      "how_to_play": "",
-      "settings": []
-    },
-    {
-      "folder_name": "game3",
-      "goes_in_slot": "",
-      "title": "Game 3",
-      "short_title": "Game 3",
-      "icon": "",
-      "designer": "",
-      "credits": "",
-      "date": "",
-      "description": "Placeholder for a game not written yet.",
-      "how_to_play": "",
-      "settings": []
-    },
-    {
-      "folder_name": "game4",
-      "goes_in_slot": "",
-      "title": "Game 4",
-      "short_title": "Game 4",
-      "icon": "",
-      "designer": "",
-      "credits": "",
-      "date": "",
-      "description": "Placeholder for a game not written yet.",
-      "how_to_play": "",
-      "settings": []
-    },
-    {
-      "folder_name": "game5",
-      "goes_in_slot": "",
-      "title": "Game 5",
-      "short_title": "Game 5",
-      "icon": "",
-      "designer": "",
-      "credits": "",
-      "date": "",
-      "description": "Placeholder for a game not written yet.",
-      "how_to_play": "",
-      "settings": []
-    },
-    {
-      "folder_name": "game6",
-      "goes_in_slot": "",
-      "title": "Game 6",
-      "short_title": "Game 6",
-      "icon": "",
-      "designer": "",
-      "credits": "",
-      "date": "",
-      "description": "Placeholder for a game not written yet.",
-      "how_to_play": "",
-      "settings": []
-    },
-    {
-      "folder_name": "game7",
-      "goes_in_slot": "",
-      "title": "Game 7",
-      "short_title": "Game 7",
-      "icon": "",
-      "designer": "",
-      "credits": "",
-      "date": "",
-      "description": "Placeholder for a game not written yet.",
-      "how_to_play": "",
-      "settings": []
-    },
-    {
-      "folder_name": "game8",
-      "goes_in_slot": "",
-      "title": "Game 8",
-      "short_title": "Game 8",
-      "icon": "",
-      "designer": "",
-      "credits": "",
-      "date": "",
-      "description": "Placeholder for a game not written yet.",
-      "how_to_play": "",
-      "settings": []
-    },
-    {
       "folder_name": "candy-go-fish",
       "goes_in_slot": 3,
       "title": "__GO FISH!__\nCandy Edition",
@@ -166,7 +62,7 @@
     "what_this_file_is": [
       "Halloween 2026 - the list of games. THE ONE PLACE to add, rename, reorder or describe a game.",
       "The app reads this file when it starts and makes one button per game in the bottom panel.",
-      "Add a game: put its files in games/<folder_name>/ (with an index.html inside) and add an entry above.",
+      "Add a game: put its files in games/<folder_name>/ (with an index.html inside) and add an entry above. Copy one of the three entries; the eight empty game1..game8 placeholders that stood here while the collection was being built were removed on 2026-10-18, when it was finished.",
       "Nothing in app/ ever changes. app.js reads this file; a game designer never edits app.js.",
       "What goes here: anything the player might want while BROWSING games, before tapping one.",
       "Also here: up to three simple on/off switches for your game (see settings below), which the app draws and remembers for you.",
@@ -192,7 +88,6 @@
     },
     "good_to_know": [
       "High scores need nothing in this file: a game includes games/game-helper.js and calls Halloween.reportScore(42) at game over; the app keeps the five best per game on the player's device and shows them in the THIS GAME tab. A game may add up to two short notes to a score, such as the opponent or the variant: Halloween.reportScore(3, \"3-2\", [\"vs. Ron\", \"3 set game\"]). See the top of games/game-helper.js.",
-      "High scores need nothing in this file: a game includes games/game-helper.js and calls Halloween.reportScore(42) at game over; the app keeps the five best per game on the player's device and shows them in the THIS GAME tab. See the top of games/game-helper.js.",
       "The app never pauses a game. The player can open the bottom panel at any time, it covers about the lower half of the game, and the game is not paused or told. A game that needs a pause builds its own. See 1.8 in games/README - game design requirements.md.",
       "A game may have its THIS GAME tab drawn in its own style: app.js puts the class look-<folder_name> on the tab, and section 5b of app/styles.css may hold rules for it (Candy Go Fish does this). Ask before adding yours; a game without rules there looks like the others."
     ]
